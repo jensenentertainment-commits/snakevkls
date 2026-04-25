@@ -69,14 +69,14 @@ export default function LocationsPage() {
             id
           )
         `)
-        .order("code", { ascending: true }),
+        .order("code", { ascending: true }), 
     ]);
 
     if (zonesRes.error) console.error("Feil ved henting av soner:", zonesRes.error);
     if (locationsRes.error) console.error("Feil ved henting av lokasjoner:", locationsRes.error);
 
     setZones((zonesRes.data as Zone[]) ?? []);
-    setLocations((locationsRes.data as LocationRow[]) ?? []);
+    setLocations((locationsRes.data as unknown as LocationRow[]) ?? []);
     setLoading(false);
   }
 

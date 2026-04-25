@@ -106,13 +106,13 @@ export default function IssuesPage() {
       if (productsRes.error) {
         console.error("Feil ved henting av produkter:", productsRes.error);
       } else {
-        setProducts((productsRes.data as ProductRow[]) ?? []);
+       setProducts((productsRes.data as unknown as ProductRow[]) ?? []);
       }
 
       if (locationsRes.error) {
-        console.error("Feil ved henting av lokasjoner:", locationsRes.error);
+        console.error("Feil ved henting av lokasjoner:", locationsRes.error); 
       } else {
-        setLocations((locationsRes.data as LocationRow[]) ?? []);
+        setLocations((locationsRes.data as unknown as LocationRow[]) ?? []);
       }
 
       setLoading(false);

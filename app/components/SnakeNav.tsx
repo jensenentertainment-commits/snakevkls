@@ -31,6 +31,7 @@ export default function SnakeNav() {
         <NavLink href="/products" label="Produkter" />
         <NavLink href="/locations" label="Lokasjoner" />
         <NavLink href="/issues" label="Avvik" />
+        <NavLink href="/settings" label="Innstillinger" />
       </nav>
     </header>
   );

@@ -41,6 +41,7 @@ export default function ProductsPage() {
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<ProductRow | null>(null);
   const [newLocation, setNewLocation] = useState("");
+const [newQuantity, setNewQuantity] = useState("0");
 
   useEffect(() => {
     async function loadData() {
@@ -94,32 +95,39 @@ export default function ProductsPage() {
     loadData();
   }, []);
 
-  async function handleSaveLocation() {
-    if (!editing || !newLocation) return;
+ async function handleSaveLocation() {
+  if (!editing || !newLocation) return;
 
-    const existingInventory = editing.inventory?.[0];
+  const quantity = Number(newQuantity);
+  if (Number.isNaN(quantity) || quantity < 0) return;
 
-    const { error } = existingInventory
-      ? await supabase
-          .from("inventory")
-          .update({ location_id: newLocation })
-          .eq("id", existingInventory.id)
-      : await supabase.from("inventory").insert({
-          product_id: editing.id,
+  const existingInventory = editing.inventory?.[0];
+
+  const { error } = existingInventory
+    ? await supabase
+        .from("inventory")
+        .update({
           location_id: newLocation,
-          quantity: 0,
-          is_primary: true,
-        });
+          quantity,
+        })
+        .eq("id", existingInventory.id)
+    : await supabase.from("inventory").insert({
+        product_id: editing.id,
+        location_id: newLocation,
+        quantity,
+        is_primary: true,
+      });
 
-    if (error) {
-      console.error("Feil ved lagring av inventory:", error);
-      return;
-    }
-
-    setEditing(null);
-    setNewLocation("");
-    window.location.reload();
+  if (error) {
+    console.error("Feil ved lagring av inventory:", error);
+    return;
   }
+
+  setEditing(null);
+  setNewLocation("");
+  setNewQuantity("0");
+  window.location.reload();
+}
 
   const filteredProducts = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -354,12 +362,23 @@ export default function ProductsPage() {
                 </option>
               ))}
             </select>
+<label className="mt-4 block text-sm font-medium text-neutral-700">
+  Antall
+</label>
 
+<input
+  type="number"
+  min="0"
+  value={newQuantity}
+  onChange={(e) => setNewQuantity(e.target.value)}
+  className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-4 text-base text-neutral-900 outline-none transition focus:border-[#055a7d] sm:py-3 sm:text-sm"
+/>
             <div className="mt-6 grid grid-cols-2 gap-2">
               <button
                 onClick={() => {
                   setEditing(null);
                   setNewLocation("");
+                  setNewQuantity("0");
                 }}
                 className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
               >

@@ -42,6 +42,10 @@ export default function LocationsPage() {
   const [newActive, setNewActive] = useState(true);
 const [qrLocation, setQrLocation] = useState<LocationRow | null>(null);
 const [qrDataUrl, setQrDataUrl] = useState("");
+const [editingLocation, setEditingLocation] = useState<LocationRow | null>(null);
+const [editCode, setEditCode] = useState("");
+const [editZoneId, setEditZoneId] = useState("");
+const [editActive, setEditActive] = useState(true);
 
   useEffect(() => {
     loadAll();
@@ -117,6 +121,55 @@ async function handleShowQr(location: LocationRow) {
   setQrLocation(location);
   setQrDataUrl(dataUrl);
 }
+
+async function handleSaveEditLocation() {
+  if (!editingLocation) return;
+
+  const code = editCode.trim().toUpperCase();
+
+  if (!code) {
+    alert("Lokasjonskode mangler");
+    return;
+  }
+
+  console.log("Forsøker å lagre:", {
+    id: editingLocation.id,
+    code,
+    zone_id: editZoneId || null,
+    active: editActive,
+  });
+
+  const { data, error } = await supabase
+    .from("locations")
+    .update({
+      code,
+      zone_id: editZoneId || null,
+      active: editActive,
+    })
+    .eq("id", editingLocation.id)
+    .select("id, code, zone_id, active");
+
+  console.log("Supabase update response:", { data, error });
+
+  if (error) {
+    alert(`Kunne ikke lagre: ${error.message}`);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert(
+      "Ingen rad ble oppdatert. Mest sannsynlig RLS/policy eller feil id."
+    );
+    return;
+  }
+
+  setEditingLocation(null);
+  setEditCode("");
+  setEditZoneId("");
+  setEditActive(true);
+
+  await loadAll();
+}
   async function handleToggleActive(location: LocationRow) {
     const { error } = await supabase
       .from("locations")
@@ -163,8 +216,7 @@ async function handleShowQr(location: LocationRow) {
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-10 py-10 text-white lg:grid-cols-[1fr_auto] lg:items-end">
-              <div>
+            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-10 py-10 text-white lg:grid-cols-[1fr_auto] lg:items-end"><div>
                 <p className="text-xs uppercase tracking-[0.22em] text-white/65">
                   SNAKE / Lokasjoner
                 </p>
@@ -177,14 +229,24 @@ async function handleShowQr(location: LocationRow) {
                 </p>
               </div>
 
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="inline-flex w-fit items-center gap-2 rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
-              >
-                <Plus className="h-4 w-4" />
-                Ny lokasjon
-              </button>
-            </div>
+              <div className="flex flex-wrap gap-3 lg:justify-end">
+  <button
+    onClick={() => setShowCreateModal(true)}
+    className="inline-flex w-fit items-center gap-2 rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
+  >
+    <Plus className="h-4 w-4" />
+    Ny lokasjon
+  </button>
+
+  <Link
+    href="/locations/labels"
+    className="inline-flex w-fit items-center rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-white/15"
+  >
+    Print labels
+  </Link>
+</div>
+</div>
+
 
             <div className="grid gap-4 bg-[#f6f7f8] px-8 py-6 md:grid-cols-4">
               <StatCard icon={<Layers />} label="Totale" value={locations.length} tone="blue" />
@@ -346,7 +408,17 @@ async function handleShowQr(location: LocationRow) {
     >
       {location.active ? "Deaktiver" : "Aktiver"}
     </button>
-
+<button
+  onClick={() => {
+    setEditingLocation(location);
+    setEditCode(location.code);
+    setEditZoneId(location.zone_id ?? "");
+    setEditActive(location.active);
+  }}
+  className="font-semibold text-neutral-700 underline-offset-4 hover:underline"
+>
+  Rediger
+</button>
     <button
       onClick={() => handleShowQr(location)}
       className="font-semibold text-[#a77e05] underline-offset-4 hover:underline"
@@ -498,6 +570,77 @@ async function handleShowQr(location: LocationRow) {
         >
           Last ned
         </a>
+        
+      </div>
+    </div>
+  </div>
+  
+)}
+{editingLocation && (
+  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
+    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+        Rediger lokasjon
+      </p>
+
+      <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+        {editingLocation.code}
+      </h2>
+
+      <div className="mt-6 space-y-4">
+        <div>
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
+            Lokasjonskode
+          </label>
+          <input
+            value={editCode}
+            onChange={(e) => setEditCode(e.target.value)}
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-neutral-700">
+            Sone
+          </label>
+          <select
+            value={editZoneId}
+            onChange={(e) => setEditZoneId(e.target.value)}
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          >
+            <option value="">Ingen sone</option>
+            {zones.map((zone) => (
+              <option key={zone.id} value={zone.id}>
+                {zone.code} — {zone.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">
+          <input
+            type="checkbox"
+            checked={editActive}
+            onChange={(e) => setEditActive(e.target.checked)}
+          />
+          Aktiv lokasjon
+        </label>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-2">
+        <button
+          onClick={() => setEditingLocation(null)}
+          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
+        >
+          Avbryt
+        </button>
+
+        <button
+          onClick={handleSaveEditLocation}
+          className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white"
+        >
+          Lagre
+        </button>
       </div>
     </div>
   </div>

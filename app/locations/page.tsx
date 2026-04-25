@@ -6,6 +6,7 @@ import { MapPin, Search, Layers, CheckCircle2, AlertTriangle, Plus } from "lucid
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import QRCode from "qrcode";
 
 type Zone = {
   id: string;
@@ -39,6 +40,8 @@ export default function LocationsPage() {
   const [newCode, setNewCode] = useState("");
   const [newZoneId, setNewZoneId] = useState("");
   const [newActive, setNewActive] = useState(true);
+const [qrLocation, setQrLocation] = useState<LocationRow | null>(null);
+const [qrDataUrl, setQrDataUrl] = useState("");
 
   useEffect(() => {
     loadAll();
@@ -101,7 +104,19 @@ export default function LocationsPage() {
     setShowCreateModal(false);
     loadAll();
   }
+async function handleShowQr(location: LocationRow) {
+  const url = `${window.location.origin}/locations/${encodeURIComponent(
+    location.code
+  )}`;
 
+  const dataUrl = await QRCode.toDataURL(url, {
+    width: 320,
+    margin: 2,
+  });
+
+  setQrLocation(location);
+  setQrDataUrl(dataUrl);
+}
   async function handleToggleActive(location: LocationRow) {
     const { error } = await supabase
       .from("locations")
@@ -249,15 +264,16 @@ export default function LocationsPage() {
     <MobileEmpty text="Ingen lokasjoner funnet." />
   ) : (
     filteredLocations.map((location) => (
-      <MobileLocationCard
-        key={location.id}
-        location={location}
-        onToggle={() => handleToggleActive(location)}
-      />
+     <MobileLocationCard
+  key={location.id}
+  location={location}
+  onToggle={() => handleToggleActive(location)}
+  onQr={() => handleShowQr(location)}
+/>
     ))
   )}
 </div>
-                <div className="overflow-x-auto">
+                <div className="hidden overflow-x-auto lg:block">
                   <table className="min-w-full border-collapse">
                     <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
                       <tr>
@@ -284,10 +300,13 @@ export default function LocationsPage() {
                               className="border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
                             >
                               <td className="px-5 py-5 text-sm font-semibold text-neutral-950">
-                                <span className="inline-flex items-center gap-2">
-                                  <MapPin className="h-4 w-4 text-[#055a7d]" />
-                                  {location.code}
-                                </span>
+                                <Link
+  href={`/locations/${encodeURIComponent(location.code)}`}
+  className="inline-flex items-center gap-2 font-semibold text-neutral-950 hover:text-[#055a7d]"
+>
+  <MapPin className="h-4 w-4 text-[#055a7d]" />
+  {location.code}
+</Link>
                               </td>
 
                               <td className="px-5 py-5 text-sm">
@@ -320,13 +339,22 @@ export default function LocationsPage() {
                               </td>
 
                               <td className="px-5 py-5 text-sm">
-                                <button
-                                  onClick={() => handleToggleActive(location)}
-                                  className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
-                                >
-                                  {location.active ? "Deaktiver" : "Aktiver"}
-                                </button>
-                              </td>
+  <div className="flex gap-3">
+    <button
+      onClick={() => handleToggleActive(location)}
+      className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+    >
+      {location.active ? "Deaktiver" : "Aktiver"}
+    </button>
+
+    <button
+      onClick={() => handleShowQr(location)}
+      className="font-semibold text-[#a77e05] underline-offset-4 hover:underline"
+    >
+      QR
+    </button>
+  </div>
+</td>
                             </tr>
                           );
                         })
@@ -427,6 +455,53 @@ export default function LocationsPage() {
           </div>
         </div>
       )}
+      {qrLocation && (
+  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
+    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-sm sm:rounded-3xl">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+        QR-kode
+      </p>
+
+      <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+        {qrLocation.code}
+      </h2>
+
+      <p className="mt-2 text-sm text-neutral-500">
+        Skann for å åpne lokasjonen direkte i Snake.
+      </p>
+
+      {qrDataUrl && (
+        <div className="mt-6 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+          <img
+            src={qrDataUrl}
+            alt={`QR-kode for ${qrLocation.code}`}
+            className="mx-auto h-64 w-64"
+          />
+        </div>
+      )}
+
+      <div className="mt-6 grid grid-cols-2 gap-2">
+        <button
+          onClick={() => {
+            setQrLocation(null);
+            setQrDataUrl("");
+          }}
+          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
+        >
+          Lukk
+        </button>
+
+        <a
+          href={qrDataUrl}
+          download={`snake-${qrLocation.code}.png`}
+          className="rounded-2xl bg-[#055a7d] px-5 py-3 text-center text-sm font-semibold text-white"
+        >
+          Last ned
+        </a>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }
@@ -434,9 +509,11 @@ export default function LocationsPage() {
 function MobileLocationCard({
   location,
   onToggle,
+  onQr,
 }: {
   location: LocationRow;
   onToggle: () => void;
+  onQr: () => void;
 }) {
   const productCount = location.inventory?.length ?? 0;
 
@@ -483,12 +560,21 @@ function MobileLocationCard({
         </div>
       </div>
 
-      <button
-        onClick={onToggle}
-        className="mt-4 w-full rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
-      >
-        {location.active ? "Deaktiver lokasjon" : "Aktiver lokasjon"}
-      </button>
+       <div className="mt-4 grid grid-cols-2 gap-2">
+        <button
+          onClick={onToggle}
+          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
+        >
+          {location.active ? "Deaktiver" : "Aktiver"}
+        </button>
+
+        <button
+          onClick={onQr}
+          className="rounded-2xl border border-[#a77e05]/25 bg-[#a77e05]/10 px-4 py-3 text-sm font-semibold text-[#a77e05]"
+        >
+          QR
+        </button>
+      </div>
     </article>
   );
 }

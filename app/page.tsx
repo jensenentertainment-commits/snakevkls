@@ -120,16 +120,16 @@ export default function HomePage() {
 
 function StatusStrip() {
   return (
-    <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 shadow-xl shadow-black/20 backdrop-blur">
-      <div className="grid gap-3 sm:grid-cols-3">
+    <div className="rounded-[22px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-4">
+      <div className="grid gap-2 md:grid-cols-3 md:gap-4">
         <StatusItem mark="V1" label="Versjon" value="1.0" />
         <StatusItem
-          icon={<Cuboid className="h-5 w-5" />}
+          icon={<Cuboid className="h-4 w-4 md:h-5 md:w-5" />}
           label="Moduler"
           value="3 aktive"
         />
         <StatusItem
-          icon={<Clock className="h-5 w-5" />}
+          icon={<Clock className="h-4 w-4 md:h-5 md:w-5" />}
           label="Neste modul"
           value="Plukk"
         />
@@ -150,14 +150,16 @@ function StatusItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/8 p-3 sm:bg-transparent sm:p-0 sm:border-r sm:border-white/15 sm:last:border-r-0">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/12 text-lg font-bold text-white">
+    <div className="flex items-center gap-3 rounded-2xl bg-white/8 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white md:h-11 md:w-11 md:text-lg">
         {mark ?? icon}
       </div>
 
       <div>
-        <p className="text-sm text-white/58">{label}</p>
-        <p className="mt-0.5 text-lg font-semibold text-white">{value}</p>
+        <p className="text-xs text-white/58 md:text-sm">{label}</p>
+        <p className="mt-0.5 text-base font-semibold text-white md:text-lg">
+          {value}
+        </p>
       </div>
     </div>
   );

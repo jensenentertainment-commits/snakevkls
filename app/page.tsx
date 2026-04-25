@@ -1,65 +1,291 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Search,
+  MapPin,
+  AlertTriangle,
+  PackageCheck,
+  Boxes,
+  Activity,
+  Clock,
+  Cuboid,
+} from "lucide-react";
 
-export default function Home() {
+import SnakeNav from "./components/SnakeNav";
+import SnakeFooter from "./components/SnakeFooter";
+
+export default function HomePage() {
+  const hasIssues = true;
+  const issueCount = 3;
+
+  const modules = [
+    {
+      href: "/products",
+      icon: <Search />,
+      title: "Varesøk",
+      label: "Aktiv",
+      text: "Finn produkt...",
+      body: "...",
+      action: "Åpne varesøk",
+      featured: true,
+    },
+    {
+      href: "/locations",
+      icon: <MapPin />,
+      title: "Lokasjoner",
+      label: "Aktiv",
+      text: "...",
+      body: "...",
+      action: "Administrer lokasjoner",
+    },
+    {
+      href: "/issues",
+      icon: <AlertTriangle />,
+      title: "Avvik",
+      label: hasIssues ? `${issueCount} avvik` : "OK",
+      text: "Varer uten lokasjon...",
+      body: "...",
+      action: "Åpne avvik",
+      featured: hasIssues,
+    },
+    {
+      icon: <PackageCheck />,
+      title: "Plukk",
+      label: "Snart",
+      text: "...",
+      body: "...",
+      muted: true,
+    },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="min-h-screen text-white">
+      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
+        <SnakeNav />
+
+        <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
+          <div className="grid gap-7 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-8 sm:py-9 lg:grid-cols-[1fr_auto] lg:items-start lg:px-10 lg:py-10">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
+                SNAKE VKLS
+              </p>
+
+              <h1 className="mt-3 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:mt-4 md:text-6xl">
+                Varekompaniets interne lagersystem.
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
+                Finn produkter, kontroller lokasjoner og bygg ryddigere
+                lagerdata før plukk og ordrebehandling.
+              </p>
+            </div>
+
+            <StatusStrip />
+          </div>
+
+          <div className="bg-[#f6f7f8] px-8 py-8">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {modules.map((module) => (
+                <ModuleCard key={module.title} {...module} />
+              ))}
+            </div>
+
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
+              <WideCard
+                href="/locations"
+                icon={<Boxes />}
+                title="Lagerstruktur"
+                text="Gyldige lokasjonsvalg, aktive plasser og faste plasseringer."
+                action="Gå til lagerstruktur"
+              />
+
+              <WideCard
+                icon={<Activity />}
+                title="Systemstatus"
+                text={
+                  hasIssues
+                    ? `${issueCount} registrerte avvik krever oppfølging.`
+                    : "Ingen registrerte avvik akkurat nå."
+                }
+                action="Se systemstatus"
+              />
+            </div>
+          </div>
+        </section>
+
+        <SnakeFooter />
+      </div>
+    </main>
+  );
+}
+
+function StatusStrip() {
+  return (
+    <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 shadow-xl shadow-black/20 backdrop-blur">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <StatusItem mark="V1" label="Versjon" value="1.0" />
+        <StatusItem
+          icon={<Cuboid className="h-5 w-5" />}
+          label="Moduler"
+          value="3 aktive"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <StatusItem
+          icon={<Clock className="h-5 w-5" />}
+          label="Neste modul"
+          value="Plukk"
+        />
+      </div>
     </div>
   );
+}
+
+function StatusItem({
+  icon,
+  mark,
+  label,
+  value,
+}: {
+  icon?: React.ReactNode;
+  mark?: string;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl bg-white/8 p-3 sm:bg-transparent sm:p-0 sm:border-r sm:border-white/15 sm:last:border-r-0">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/12 text-lg font-bold text-white">
+        {mark ?? icon}
+      </div>
+
+      <div>
+        <p className="text-sm text-white/58">{label}</p>
+        <p className="mt-0.5 text-lg font-semibold text-white">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function ModuleCard({
+  href,
+  icon,
+  title,
+  label,
+  text,
+  body,
+  action,
+  featured,
+  muted,
+}: {
+  href?: string;
+  icon: React.ReactNode;
+  title: string;
+  label: string;
+  text: string;
+  body: string;
+  action?: string;
+  featured?: boolean;
+  muted?: boolean;
+}) {
+  const card = (
+    <div
+     className={`group flex min-h-[240px] flex-col rounded-[24px] border bg-white p-5 shadow-sm transition duration-200 sm:min-h-[315px] sm:p-6 ${
+        featured
+          ? "border-[#b58a14]/55 shadow-[0_0_0_1px_rgba(181,138,20,0.14),0_18px_42px_rgba(0,0,0,0.10)]"
+          : "border-neutral-200"
+      } ${
+        muted
+          ? "opacity-55 grayscale-[0.2]"
+          : "hover:-translate-y-1 hover:shadow-xl"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div
+          className={`flex h-16 w-16 items-center justify-center rounded-full border ${
+            featured
+              ? "border-[#b58a14]/30 bg-[#b58a14]/10 text-[#b58a14]"
+              : "border-[#055a7d]/15 bg-[#055a7d]/7 text-[#055a7d]"
+          }`}
+        >
+          <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
+        </div>
+
+        <span
+          className={`rounded-full px-3 py-1.5 text-xs font-bold uppercase ${
+            featured
+              ? "bg-[#b58a14]/10 text-[#a77e04]"
+              : muted
+                ? "bg-neutral-100 text-neutral-400"
+                : "bg-[#055a7d]/8 text-[#055a7d]"
+          }`}
+        >
+          {label}
+        </span>
+      </div>
+
+      <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">
+        {title}
+      </h2>
+
+      <p className="mt-3 text-base leading-6 text-neutral-700">{text}</p>
+
+      <div className="my-5 h-px bg-neutral-200" />
+
+      <p className="text-sm leading-6 text-neutral-500">{body}</p>
+
+      <div className="mt-auto pt-6">
+        <span
+          className={`text-sm font-bold ${
+            featured
+              ? "text-[#b58a14]"
+              : muted
+                ? "text-neutral-400"
+                : "text-[#055a7d] group-hover:text-[#042834]"
+          }`}
+        >
+          {action ?? "Kommer snart"}
+          {action ? " →" : ""}
+        </span>
+      </div>
+    </div>
+  );
+
+  if (!href || muted) return card;
+  return <Link href={href}>{card}</Link>;
+}
+
+function WideCard({
+  href,
+  icon,
+  title,
+  text,
+  action,
+}: {
+  href?: string;
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+  action: string;
+}) {
+  const card = (
+    <div className="group rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-xl">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#055a7d]/15 bg-[#055a7d]/7 text-[#055a7d] sm:h-16 sm:w-16">
+          <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold tracking-[-0.02em] text-neutral-950">
+            {title}
+          </h3>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-600">
+            {text}
+          </p>
+          <p className="mt-3 text-sm font-bold text-[#055a7d] group-hover:text-[#042834]">
+            {action} →
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (!href) return card;
+  return <Link href={href}>{card}</Link>;
 }

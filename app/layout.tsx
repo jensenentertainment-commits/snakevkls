@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SNAKE VKLS",
   description: "Varekompaniets interne lagersystem",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, MapPin, Package } from "lucide-react";
+import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
@@ -37,48 +37,165 @@ export default function LocationDetailPage() {
   const [location, setLocation] = useState<LocationDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadLocation() {
-      setLoading(true);
+  const [skuInput, setSkuInput] = useState("");
+  const [quantityInput, setQuantityInput] = useState("1");
+  const [saving, setSaving] = useState(false);
 
-      const { data, error } = await supabase
-        .from("locations")
-        .select(`
+  useEffect(() => {
+    if (code) loadLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code]);
+
+  async function loadLocation() {
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from("locations")
+      .select(`
+        id,
+        code,
+        active,
+        zone_id,
+        zones (
           id,
           code,
-          active,
-          zone_id,
-          zones (
+          name
+        ),
+        inventory (
+          id,
+          quantity,
+          products (
             id,
-            code,
-            name
-          ),
-          inventory (
-            id,
-            quantity,
-            products (
-              id,
-              sku,
-              product_name,
-              variant_name
-            )
+            sku,
+            product_name,
+            variant_name
           )
-        `)
-        .eq("code", code)
-        .maybeSingle();
+        )
+      `)
+      .eq("code", code)
+      .maybeSingle();
 
-      if (error) {
-        console.error("Feil ved henting av lokasjon:", error);
-        setLocation(null);
-      } else {
-        setLocation((data as unknown as LocationDetail) ?? null);
-      }
-
-      setLoading(false);
+    if (error) {
+      console.error("Feil ved henting av lokasjon:", error);
+      setLocation(null);
+    } else {
+      setLocation((data as unknown as LocationDetail) ?? null);
     }
 
-    if (code) loadLocation();
-  }, [code]);
+    setLoading(false);
+  }
+
+  async function handleUpdateQuantity(inventoryId: string, quantity: number) {
+    if (quantity < 0) return;
+
+    const { error } = await supabase
+      .from("inventory")
+      .update({ quantity })
+      .eq("id", inventoryId);
+
+    if (error) {
+      alert(`Kunne ikke oppdatere antall: ${error.message}`);
+      return;
+    }
+
+    await loadLocation();
+  }
+
+  async function handleRemoveInventory(inventoryId: string) {
+    const confirmed = window.confirm("Fjerne produktet fra denne lokasjonen?");
+    if (!confirmed) return;
+
+    const { error } = await supabase
+      .from("inventory")
+      .delete()
+      .eq("id", inventoryId);
+
+    if (error) {
+      alert(`Kunne ikke fjerne produkt: ${error.message}`);
+      return;
+    }
+
+    await loadLocation();
+  }
+
+  async function handleAddProductToLocation() {
+    if (!location) return;
+
+    const sku = skuInput.trim();
+    const quantity = Number(quantityInput);
+
+    if (!sku) {
+      alert("Skriv inn SKU");
+      return;
+    }
+
+    if (Number.isNaN(quantity) || quantity < 0) {
+      alert("Antall må være 0 eller høyere");
+      return;
+    }
+
+    setSaving(true);
+
+    const { data: product, error: productError } = await supabase
+      .from("products")
+      .select("id, sku, product_name")
+      .ilike("sku", sku)
+      .maybeSingle();
+
+    if (productError) {
+      setSaving(false);
+      alert(`Kunne ikke finne produkt: ${productError.message}`);
+      return;
+    }
+
+    if (!product) {
+      setSaving(false);
+      alert(`Fant ingen produkt med SKU: ${sku}`);
+      return;
+    }
+
+    const { data: existingInventory, error: existingError } = await supabase
+      .from("inventory")
+      .select("id, quantity")
+      .eq("product_id", product.id)
+      .eq("location_id", location.id)
+      .maybeSingle();
+
+    if (existingError) {
+      setSaving(false);
+      alert(`Kunne ikke sjekke eksisterende lagerlinje: ${existingError.message}`);
+      return;
+    }
+
+    const { error } = existingInventory
+      ? await supabase
+          .from("inventory")
+          .update({
+            quantity: (existingInventory.quantity ?? 0) + quantity,
+          })
+          .eq("id", existingInventory.id)
+      : await supabase.from("inventory").insert({
+          product_id: product.id,
+          location_id: location.id,
+          quantity,
+          is_primary: false,
+        });
+
+    setSaving(false);
+
+    if (error) {
+      alert(`Kunne ikke legge til produkt: ${error.message}`);
+      return;
+    }
+
+    setSkuInput("");
+    setQuantityInput("1");
+    await loadLocation();
+  }
+
+  const totalQuantity =
+    location?.inventory?.reduce((sum, item) => sum + (item.quantity ?? 0), 0) ??
+    0;
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -106,19 +223,15 @@ export default function LocationDetailPage() {
                 </h1>
 
                 <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                  Skann QR-koden på hyllen for å åpne denne siden direkte og se
-                  hva som ligger på lokasjonen.
+                  Bruk denne siden etter QR-scan for å se, justere og registrere
+                  varer på lokasjonen.
                 </p>
               </div>
 
               {location && (
-                <div className="rounded-2xl bg-white/12 px-5 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/55">
-                    Status
-                  </p>
-                  <p className="mt-1 text-lg font-semibold">
-                    {location.active ? "Aktiv" : "Inaktiv"}
-                  </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <HeroStat label="Status" value={location.active ? "Aktiv" : "Inaktiv"} />
+                  <HeroStat label="Antall totalt" value={String(totalQuantity)} />
                 </div>
               )}
             </div>
@@ -126,24 +239,12 @@ export default function LocationDetailPage() {
 
           <div className="bg-[#f6f7f8] px-5 py-5 sm:px-8 sm:py-6">
             {loading ? (
-              <div className="rounded-2xl bg-white p-6 text-sm text-neutral-500">
-                Laster lokasjon...
-              </div>
+              <InfoBox text="Laster lokasjon..." />
             ) : !location ? (
-              <div className="rounded-2xl bg-white p-6">
-                <h2 className="text-xl font-semibold">Lokasjon ikke funnet</h2>
-                <p className="mt-2 text-sm text-neutral-600">
-                  Fant ingen lokasjon med kode: <strong>{code}</strong>
-                </p>
-              </div>
+              <InfoBox text={`Fant ingen lokasjon med kode: ${code}`} />
             ) : (
               <div className="grid gap-4 md:grid-cols-3">
-                <InfoCard
-                  label="Lokasjon"
-                  value={location.code}
-                  icon={<MapPin />}
-                  tone="blue"
-                />
+                <InfoCard label="Lokasjon" value={location.code} icon={<MapPin />} tone="blue" />
                 <InfoCard
                   label="Sone"
                   value={
@@ -165,8 +266,55 @@ export default function LocationDetailPage() {
           </div>
 
           {location && (
-            <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-              <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+            <div className="grid gap-6 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7 lg:grid-cols-[0.95fr_1.05fr]">
+              <section className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+                    Legg til produkt
+                  </h2>
+                  <p className="mt-1 text-sm text-neutral-500">
+                    Søk med SKU og legg produktet på denne lokasjonen.
+                  </p>
+                </div>
+
+                <div className="space-y-4 p-6">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-neutral-700">
+                      SKU
+                    </label>
+                    <input
+                      value={skuInput}
+                      onChange={(e) => setSkuInput(e.target.value)}
+                      placeholder="f.eks. KEU-001"
+                      className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-neutral-700">
+                      Antall
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={quantityInput}
+                      onChange={(e) => setQuantityInput(e.target.value)}
+                      className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleAddProductToLocation}
+                    disabled={saving}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {saving ? "Lagrer..." : "Legg til på lokasjon"}
+                  </button>
+                </div>
+              </section>
+
+              <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
                     Produkter på lokasjon
@@ -183,35 +331,18 @@ export default function LocationDetailPage() {
                 ) : (
                   <div className="divide-y divide-neutral-100">
                     {location.inventory.map((item) => (
-                      <div
+                      <InventoryRow
                         key={item.id}
-                        className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between"
-                      >
-                        <div>
-                          <p className="font-semibold text-neutral-950">
-                            {item.products?.sku || "Mangler SKU"}
-                          </p>
-                          <p className="mt-1 text-sm text-neutral-700">
-                            {item.products?.product_name ?? "Ukjent produkt"}
-                          </p>
-                          {item.products?.variant_name && (
-                            <p className="mt-1 text-sm text-neutral-500">
-                              {item.products.variant_name}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="rounded-2xl bg-neutral-50 px-4 py-3 text-sm">
-                          <span className="text-neutral-500">Antall: </span>
-                          <span className="font-semibold text-neutral-950">
-                            {item.quantity}
-                          </span>
-                        </div>
-                      </div>
+                        item={item}
+                        onUpdateQuantity={(quantity) =>
+                          handleUpdateQuantity(item.id, quantity)
+                        }
+                        onRemove={() => handleRemoveInventory(item.id)}
+                      />
                     ))}
                   </div>
                 )}
-              </div>
+              </section>
             </div>
           )}
         </section>
@@ -220,6 +351,82 @@ export default function LocationDetailPage() {
       </div>
     </main>
   );
+}
+
+function InventoryRow({
+  item,
+  onUpdateQuantity,
+  onRemove,
+}: {
+  item: LocationDetail["inventory"][number];
+  onUpdateQuantity: (quantity: number) => void;
+  onRemove: () => void;
+}) {
+  const [localQuantity, setLocalQuantity] = useState(String(item.quantity ?? 0));
+
+  return (
+    <div className="px-6 py-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="font-semibold text-neutral-950">
+            {item.products?.sku || "Mangler SKU"}
+          </p>
+          <p className="mt-1 text-sm text-neutral-700">
+            {item.products?.product_name ?? "Ukjent produkt"}
+          </p>
+          {item.products?.variant_name && (
+            <p className="mt-1 text-sm text-neutral-500">
+              {item.products.variant_name}
+            </p>
+          )}
+        </div>
+
+        <button
+          onClick={onRemove}
+          className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+        >
+          <Trash2 className="h-4 w-4" />
+          Fjern
+        </button>
+      </div>
+
+      <div className="mt-4 grid grid-cols-[1fr_auto] gap-2">
+        <input
+          type="number"
+          min="0"
+          value={localQuantity}
+          onChange={(e) => setLocalQuantity(e.target.value)}
+          className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+        />
+
+        <button
+          onClick={() => {
+            const quantity = Number(localQuantity);
+            if (Number.isNaN(quantity) || quantity < 0) return;
+            onUpdateQuantity(quantity);
+          }}
+          className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white"
+        >
+          Lagre
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function HeroStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-white/12 px-5 py-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-white/55">
+        {label}
+      </p>
+      <p className="mt-1 text-lg font-semibold">{value}</p>
+    </div>
+  );
+}
+
+function InfoBox({ text }: { text: string }) {
+  return <div className="rounded-2xl bg-white p-6 text-sm text-neutral-500">{text}</div>;
 }
 
 function InfoCard({
@@ -248,9 +455,7 @@ function InfoCard({
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
             {label}
           </p>
-          <p className="mt-3 text-lg font-semibold text-neutral-950">
-            {value}
-          </p>
+          <p className="mt-3 text-lg font-semibold text-neutral-950">{value}</p>
         </div>
 
         <div className="[&>svg]:h-6 [&>svg]:w-6">{icon}</div>

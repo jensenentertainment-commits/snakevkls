@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
+
+type LabelFormat = "zebra" | "shipping" | "brother";
 
 type LocationLabel = {
   id: string;
@@ -23,12 +26,34 @@ export default function LocationLabelsPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
   const [copies, setCopies] = useState(1);
-  const [labelSize, setLabelSize] = useState<"60x40" | "50x30">("60x40");
+  const [labelFormat, setLabelFormat] = useState<LabelFormat>("zebra");
 
-  const labelDimensions = {
-    "60x40": { width: "60mm", height: "40mm", qr: "20mm" },
-    "50x30": { width: "50mm", height: "30mm", qr: "16mm" },
-  }[labelSize];
+const labelDimensions = {
+  zebra: {
+    name: "Zebra 100 × 55",
+    width: "100mm",
+    height: "55mm",
+    qr: "24mm",
+    codeSize: "35px",
+    layout: "landscape",
+  },
+  shipping: {
+    name: "Fraktetikett 102 × 109",
+    width: "109mm",
+    height: "102mm",
+    qr: "34mm",
+    codeSize: "46px",
+    layout: "portrait",
+  },
+  brother: {
+    name: "Brother DK-22246 103 mm",
+    width: "103mm",
+    height: "70mm",
+    qr: "28mm",
+    codeSize: "42px",
+    layout: "portrait",
+  },
+}[labelFormat];
 
   const printable = useMemo(() => {
     if (selected.length === 0) return labels;
@@ -76,7 +101,7 @@ export default function LocationLabelsPage() {
           const url = `${origin}/locations/${encodeURIComponent(location.code)}`;
 
           const qr = await QRCode.toDataURL(url, {
-            width: 220,
+            width: 360,
             margin: 1,
           });
 
@@ -110,12 +135,37 @@ export default function LocationLabelsPage() {
   return (
     <main className="min-h-screen bg-neutral-100 text-neutral-950 print:bg-white">
       <style>{`
-        :root {
-          --label-width: ${labelDimensions.width};
-          --label-height: ${labelDimensions.height};
-          --qr-size: ${labelDimensions.qr};
-        }
+  :root {
+    --label-width: ${labelDimensions.width};
+    --label-height: ${labelDimensions.height};
+    --qr-size: ${labelDimensions.qr};
+    --code-size: ${labelDimensions.codeSize};
+    
+  }
 
+  .label-card {
+    width: var(--label-width);
+    height: var(--label-height);
+  }
+
+  .label-qr {
+    width: var(--qr-size);
+    height: var(--qr-size);
+  }
+
+  .label-code {
+    font-size: var(--code-size);
+  }
+
+  
+@media print {
+  .preview-scroll {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+}
         @media print {
           @page {
             size: var(--label-width) var(--label-height);
@@ -145,57 +195,86 @@ export default function LocationLabelsPage() {
             box-shadow: none !important;
             border-radius: 0 !important;
             border: none !important;
-            padding: 3mm !important;
+            padding: 4mm !important;
           }
 
           .label-qr {
             width: var(--qr-size) !important;
             height: var(--qr-size) !important;
           }
+
+          .label-code {
+            font-size: var(--code-size) !important;
+            .label-zone {
+  font-size: var(--zone-size) !important;
+}
+          }
         }
       `}</style>
 
       <div className="mx-auto max-w-7xl px-6 py-8 print:px-0 print:py-0">
-        <header className="no-print mb-8 rounded-3xl bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <header className="no-print sticky top-4 z-10 mb-8 rounded-3xl bg-white/95 p-6 shadow-sm backdrop-blur">
+          <Link
+            href="/locations"
+            className="mb-5 inline-flex text-sm font-semibold text-[#055a7d] hover:underline"
+          >
+            ← Tilbake til lokasjoner
+          </Link>
+
+          <div className="grid gap-5 lg:grid-cols-[1fr_760px] lg:items-end">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
                 SNAKE / Labels
               </p>
+
               <h1 className="mt-2 text-3xl font-semibold tracking-tight">
                 Lokasjonsetiketter
               </h1>
+
               <p className="mt-2 text-sm text-neutral-600">
-                Velg lokasjoner, antall kopier og etikettstørrelse før utskrift.
+                Velg format, lokasjoner og antall kopier før utskrift.
               </p>
+
               <p className="mt-2 text-xs text-neutral-500">
+                Format: {labelDimensions.name}.{" "}
                 {selected.length === 0
                   ? `Alle ${labels.length} aktive lokasjoner printes.`
                   : `${selected.length} av ${labels.length} lokasjoner valgt.`}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex min-h-[92px] flex-wrap content-start justify-start gap-2 lg:justify-end">
               <button
-                onClick={() => setLabelSize("60x40")}
+                onClick={() => setLabelFormat("zebra")}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  labelSize === "60x40"
+                  labelFormat === "zebra"
                     ? "bg-[#055a7d] text-white"
                     : "bg-neutral-100 text-neutral-700"
                 }`}
               >
-                60 × 40
+                Zebra 100×55
               </button>
 
               <button
-                onClick={() => setLabelSize("50x30")}
+                onClick={() => setLabelFormat("shipping")}
                 className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  labelSize === "50x30"
+                  labelFormat === "shipping"
                     ? "bg-[#055a7d] text-white"
                     : "bg-neutral-100 text-neutral-700"
                 }`}
               >
-                50 × 30
+                Frakt 102×109
+              </button>
+
+              <button
+                onClick={() => setLabelFormat("brother")}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                  labelFormat === "brother"
+                    ? "bg-[#055a7d] text-white"
+                    : "bg-neutral-100 text-neutral-700"
+                }`}
+              >
+                Brother 103
               </button>
 
               <button
@@ -223,9 +302,12 @@ export default function LocationLabelsPage() {
 
               <button
                 onClick={() => window.print()}
-                className="rounded-xl bg-[#b58a14] px-5 py-2 text-sm font-semibold text-white"
+                disabled={labels.length === 0}
+                className="rounded-xl bg-[#b58a14] px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
               >
-                Skriv ut
+                {selected.length === 0
+                  ? `Skriv ut alle (${labels.length} × ${copies})`
+                  : `Skriv ut valgte (${selected.length} × ${copies})`}
               </button>
             </div>
           </div>
@@ -240,45 +322,64 @@ export default function LocationLabelsPage() {
             Ingen aktive lokasjoner funnet.
           </div>
         ) : (
-          <section className="label-grid grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {printableWithCopies.map((location) => (
-              <article
-                key={location.printKey}
-                className="label-card relative flex flex-col justify-between rounded-2xl border-2 border-neutral-900 bg-white p-4 text-center shadow-sm"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(location.id)}
-                  onChange={() => toggleSelect(location.id)}
-                  className="no-print absolute left-3 top-3 h-4 w-4"
-                />
+          <div className="h-[620px] overflow-y-auto rounded-3xl bg-neutral-100 p-4">
+          <section className="label-grid grid min-h-[520px] grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {printableWithCopies.map((location) => {
+              const isLandscape = labelDimensions.layout === "landscape";
 
-                <div>
-                  <p className="truncate text-[22px] font-black leading-none tracking-tight">
-                    {location.code}
-                  </p>
-
-                  <p className="mt-1 truncate text-[10px] font-bold uppercase tracking-[0.14em] text-neutral-500">
-                    {location.zones
-                      ? `${location.zones.code} — ${location.zones.name}`
-                      : "Uten sone"}
-                  </p>
-                </div>
-
-                <div className="mx-auto flex items-center justify-center">
-                  <img
-                    src={location.qr}
-                    alt={`QR-kode for ${location.code}`}
-                    className="label-qr h-28 w-28"
+              return (
+                <article
+                  key={location.printKey}
+                  className="label-card relative rounded-2xl border-2 border-neutral-900 bg-white p-4 text-center shadow-sm"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(location.id)}
+                    onChange={() => toggleSelect(location.id)}
+                    className="no-print absolute left-3 top-3 h-4 w-4"
                   />
-                </div>
 
-                <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-neutral-400">
-                  SNAKE VKLS
-                </p>
-              </article>
-            ))}
+                  {isLandscape ? (
+  <div className="flex h-full items-center justify-between gap-5">
+    <div className="flex min-w-0 flex-1 flex-col justify-center text-left">
+      <p className="label-code whitespace-nowrap font-black leading-none tracking-tight">
+        {location.code}
+      </p>
+
+      <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
+        SNAKE VKLS
+      </p>
+    </div>
+
+    <img
+      src={location.qr}
+      alt={`QR-kode for ${location.code}`}
+      className="label-qr shrink-0"
+    />
+  </div>
+
+                  ) : (
+       <div className="flex h-full flex-col items-center justify-between text-center">
+  <p className="label-code whitespace-nowrap font-black leading-none tracking-tight">
+    {location.code}
+  </p>
+
+  <img
+    src={location.qr}
+    alt={`QR-kode for ${location.code}`}
+    className="label-qr"
+  />
+
+  <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
+    SNAKE VKLS
+  </p>
+</div>
+                  )}
+                </article>
+              );
+            })}
           </section>
+          </div>
         )}
       </div>
     </main>

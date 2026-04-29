@@ -496,7 +496,16 @@ inventory (
   }
 }
 
-function getMeta(product: ProductRow) {
+type PlacementStatus = "location" | "zone" | "missing";
+
+type ProductMeta = {
+  quantity: number;
+  locationCode: string | null;
+  zoneLabel: string | null;
+  status: PlacementStatus;
+};
+
+function getMeta(product: ProductRow): ProductMeta {
   const inventory = product.inventory?.[0];
 
   const locationCode = inventory?.locations?.code ?? null;
@@ -504,7 +513,11 @@ function getMeta(product: ProductRow) {
   const directZone = inventory?.zones ?? null;
   const zone = locationZone || directZone;
 
-  const status = locationCode ? "location" : zone ? "zone" : "missing";
+  const status: PlacementStatus = locationCode
+    ? "location"
+    : zone
+      ? "zone"
+      : "missing";
 
   return {
     quantity: inventory?.quantity ?? 0,
@@ -619,7 +632,7 @@ function MobileProductCard({
   );
 }
 
-function Status({ status }: { status: "location" | "zone" | "missing" }) {
+function Status({ status }: { status: PlacementStatus }) {
   if (status === "missing") {
     return <StatusPill text="Mangler" tone="danger" />;
   }

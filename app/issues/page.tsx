@@ -8,13 +8,14 @@ import {
   CheckCircle2,
   Layers,
   MapPinOff,
-  PackageX,
   Search,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+
+type Severity = "critical" | "warning" | "info";
+type IssueFilter = "all" | Severity;
 
 type ProductRow = {
   id: string;
@@ -46,7 +47,7 @@ type LocationRow = {
 
 type IssueItem = {
   id: string;
-  severity: "critical" | "warning" | "info";
+  severity: Severity;
   type: string;
   title: string;
   description: string;
@@ -60,66 +61,61 @@ export default function IssuesPage() {
   const [locations, setLocations] = useState<LocationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [severityFilter, setSeverityFilter] = useState<IssueFilter>("all");
 
   useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-
-      const [productsRes, locationsRes] = await Promise.all([
-        supabase
-          .from("products")
-          .select(`
-            id,
-            sku,
-            product_name,
-            variant_name,
-            inventory (
-              id,
-              quantity,
-              locations (
-                id,
-                code
-              )
-            )
-          `)
-          .order("product_name", { ascending: true }),
-
-        supabase
-          .from("locations")
-          .select(`
-            id,
-            code,
-            active,
-            zone_id,
-            zones (
-              id,
-              code,
-              name
-            ),
-            inventory (
-              id
-            )
-          `)
-          .order("code", { ascending: true }),
-      ]);
-
-      if (productsRes.error) {
-        console.error("Feil ved henting av produkter:", productsRes.error);
-      } else {
-       setProducts((productsRes.data as unknown as ProductRow[]) ?? []);
-      }
-
-      if (locationsRes.error) {
-        console.error("Feil ved henting av lokasjoner:", locationsRes.error); 
-      } else {
-        setLocations((locationsRes.data as unknown as LocationRow[]) ?? []);
-      }
-
-      setLoading(false);
-    }
-
     loadData();
   }, []);
+
+  async function loadData() {
+    setLoading(true);
+
+    const [productsRes, locationsRes] = await Promise.all([
+      supabase
+        .from("products")
+        .select(`
+          id,
+          sku,
+          product_name,
+          variant_name,
+          inventory (
+            id,
+            quantity,
+            locations (
+              id,
+              code
+            )
+          )
+        `)
+        .eq("active", true)
+        .order("product_name", { ascending: true }),
+
+      supabase
+        .from("locations")
+        .select(`
+          id,
+          code,
+          active,
+          zone_id,
+          zones (
+            id,
+            code,
+            name
+          ),
+          inventory (
+            id
+          )
+        `)
+        .order("code", { ascending: true }),
+    ]);
+
+    if (productsRes.error) console.error("Feil ved henting av produkter:", productsRes.error);
+    if (locationsRes.error) console.error("Feil ved henting av lokasjoner:", locationsRes.error);
+
+    setProducts((productsRes.data as unknown as ProductRow[]) ?? []);
+    setLocations((locationsRes.data as unknown as LocationRow[]) ?? []);
+    setLoading(false);
+  }
 
   const issues = useMemo(() => {
     const productsWithoutLocation = products.filter(
@@ -215,16 +211,25 @@ export default function IssuesPage() {
   }, [products, locations]);
 
   const filteredIssues = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return issues.list;
+    let result = issues.list;
 
-    return issues.list.filter((issue) =>
-      [issue.type, issue.title, issue.description, issue.meta ?? ""]
-        .join(" ")
-        .toLowerCase()
-        .includes(q)
-    );
-  }, [issues.list, query]);
+    if (severityFilter !== "all") {
+      result = result.filter((issue) => issue.severity === severityFilter);
+    }
+
+    const q = query.trim().toLowerCase();
+
+    if (q) {
+      result = result.filter((issue) =>
+        [issue.type, issue.title, issue.description, issue.meta ?? ""]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+
+    return result;
+  }, [issues.list, query, severityFilter]);
 
   const totalIssues = issues.list.length;
   const criticalCount = issues.list.filter((i) => i.severity === "critical").length;
@@ -236,63 +241,98 @@ export default function IssuesPage() {
       <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
         <SnakeNav />
 
-        <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="grid gap-7 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-8 sm:py-9 lg:grid-cols-[1fr_auto] lg:items-end lg:px-10 lg:py-10">
+        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
+          <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
                 SNAKE / Avvik
               </p>
 
-              <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-[-0.04em] sm:mt-4 sm:text-5xl">
-  Avvik som trenger handling.
-</h1>
+              <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
+                Avvik
+              </h1>
 
-              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                Her samles lagerdata som kan skape feil i søk, lokasjon og plukk.
-                Start øverst — kritiske avvik bør ryddes først.
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
+                Lagerdata som kan skape feil i søk, lokasjon og plukk.
+                Kritiske avvik bør ryddes først.
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white/12 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-              <p className="text-xs uppercase tracking-[0.18em] text-white/55">
-                Totale avvik
-              </p>
-              <p className="mt-2 text-5xl font-semibold tracking-tight">
-                {loading ? "…" : totalIssues}
-              </p>
-            </div>
-          </div>
+            <div className="w-full">
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+                Søk
+              </label>
 
-          <div className="grid gap-3 bg-[#f6f7f8] px-5 py-5 sm:grid-cols-2 sm:px-8 sm:py-6 lg:grid-cols-4">
-            <StatCard icon={<AlertTriangle />} label="Kritisk" value={criticalCount} tone="danger" />
-            <StatCard icon={<Layers />} label="Bør sjekkes" value={warningCount} tone="gold" />
-            <StatCard icon={<CheckCircle2 />} label="Info" value={infoCount} tone="neutral" />
-            <StatCard icon={<MapPinOff />} label="Totalt" value={totalIssues} tone="blue" />
-          </div>
-
-          <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-8">
-            <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  Prioritert arbeidsliste
-                </h2>
-                <p className="mt-2 text-sm text-neutral-500">
-                  Sortert etter alvorlighet. Bruk denne som ryddeliste før plukk.
-                </p>
-              </div>
-
-              <div className="relative w-full lg:w-[360px]">
+              <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Søk i avvik"
-                  className="w-full rounded-2xl border border-neutral-300 bg-white py-3.5 pl-12 pr-4 text-sm outline-none transition focus:border-[#055a7d]"
+                  placeholder="Søk i avvik, SKU eller lokasjon"
+                  className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
                 />
               </div>
             </div>
+          </div>
 
+          <div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
+            <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-center">
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { key: "all", label: "Alle", value: totalIssues },
+                  { key: "critical", label: "Kritisk", value: criticalCount },
+                  { key: "warning", label: "Sjekk", value: warningCount },
+                  { key: "info", label: "Info", value: infoCount },
+                ].map((filter) => (
+                  <button
+                    key={filter.key}
+                    onClick={() => setSeverityFilter(filter.key as IssueFilter)}
+                    className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+                      severityFilter === filter.key
+                        ? "bg-[#b58a14] text-white"
+                        : "bg-white/10 text-white"
+                    }`}
+                  >
+                    {filter.label}{" "}
+                    <span className="ml-1 opacity-70">{loading ? "…" : filter.value}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 text-white">
+                <MiniStat label="Produkt" value={issues.productsWithoutLocation.length + issues.productsWithoutSku.length + issues.productsWithMultipleLocations.length} />
+                <MiniStat label="Lokasjon" value={issues.locationsWithoutProducts.length + issues.locationsWithoutZone.length} />
+                <MiniStat label="Totalt" value={totalIssues} />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+              <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div>
+                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+                    Prioritert arbeidsliste
+                  </h2>
+
+                  <p className="mt-1 text-sm text-neutral-500">
+                    {loading
+                      ? "Henter avvik..."
+                      : `${filteredIssues.length} av ${totalIssues} avvik vises`}
+                  </p>
+                </div>
+
+                {query && (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+                  >
+                    Nullstill søk
+                  </button>
+                )}
+              </div>
+
               {loading ? (
                 <EmptyState text="Laster avvik..." />
               ) : filteredIssues.length === 0 ? (
@@ -306,7 +346,7 @@ export default function IssuesPage() {
               )}
             </div>
 
-            <div className="mt-8 grid gap-4 lg:grid-cols-2">
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
               <MiniSection
                 title="Produkter"
                 items={[
@@ -368,6 +408,7 @@ function IssueRow({ issue }: { issue: IssueItem }) {
             >
               {severityStyles.label}
             </span>
+
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
               {issue.type}
             </span>
@@ -400,6 +441,17 @@ function IssueRow({ issue }: { issue: IssueItem }) {
   );
 }
 
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl bg-white/10 px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
+        {label}
+      </p>
+      <p className="mt-1 text-xl font-semibold text-white">{value}</p>
+    </div>
+  );
+}
+
 function MiniSection({
   title,
   items,
@@ -410,6 +462,7 @@ function MiniSection({
   return (
     <section className="rounded-[24px] border border-neutral-200 bg-neutral-50 p-6">
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+
       <div className="mt-4 space-y-3">
         {items.map(([label, value]) => (
           <div
@@ -422,44 +475,6 @@ function MiniSection({
         ))}
       </div>
     </section>
-  );
-}
-
-function StatCard({
-  icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  tone: "danger" | "gold" | "neutral" | "blue";
-}) {
-  const styles = {
-    danger: "border-t-red-500 text-red-600",
-    gold: "border-t-[#a77e05] text-[#a77e05]",
-    neutral: "border-t-neutral-300 text-neutral-500",
-    blue: "border-t-[#055a7d] text-[#055a7d]",
-  };
-
-  return (
-    <div
-      className={`rounded-2xl border border-neutral-200 border-t-4 bg-white p-5 shadow-sm ${styles[tone]}`}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
-            {label}
-          </p>
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">
-            {value}
-          </p>
-        </div>
-
-        <div className="[&>svg]:h-6 [&>svg]:w-6">{icon}</div>
-      </div>
-    </div>
   );
 }
 

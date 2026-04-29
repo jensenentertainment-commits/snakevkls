@@ -6,6 +6,16 @@ import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 
+type PlacementStatus = "location" | "zone" | "missing";
+
+type ProductMeta = {
+  quantity: number;
+  locationCode: string | null;
+  zoneLabel: string | null;
+  zoneId: string | null;
+  status: PlacementStatus;
+};
+
 type ProductRow = {
   id: string;
   sku: string | null;
@@ -61,6 +71,16 @@ export default function ProductsPage() {
   const [newLocation, setNewLocation] = useState("");
   const [newQuantity, setNewQuantity] = useState("0");
 
+  const [selected, setSelected] = useState<string[]>([]);
+  const [batchOpen, setBatchOpen] = useState(false);
+  const [batchZone, setBatchZone] = useState("");
+
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "missing" | "zone" | "location" | "diff"
+  >("all");
+
+  const [zoneFilter, setZoneFilter] = useState("all");
+
   useEffect(() => {
     loadData();
   }, []);
@@ -79,8 +99,8 @@ export default function ProductsPage() {
           image_url,
           vendor,
           product_type,
-shopify_quantity,
-inventory (
+          shopify_quantity,
+          inventory (
             id,
             quantity,
             zone_id,
@@ -127,16 +147,57 @@ inventory (
     setLoading(false);
   }
 
+  async function handleBatchSave() {
+    if (!batchZone || selected.length === 0) return;
+
+    const selectedProducts = products.filter((product) =>
+      selected.includes(product.id)
+    );
+
+    for (const product of selectedProducts) {
+      const existing = product.inventory?.[0];
+      const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
+
+      if (existing) {
+        await supabase
+          .from("inventory")
+          .update({
+            zone_id: batchZone,
+            location_id: null,
+            quantity,
+          })
+          .eq("id", existing.id);
+      } else {
+        await supabase.from("inventory").insert({
+          product_id: product.id,
+          zone_id: batchZone,
+          location_id: null,
+          quantity,
+          is_primary: true,
+        });
+      }
+    }
+
+    setBatchOpen(false);
+    setSelected([]);
+    setBatchZone("");
+
+    await loadData();
+  }
+
   async function handleSave() {
     if (!editing) return;
 
     const quantity = Number(newQuantity);
+
     if (Number.isNaN(quantity) || quantity < 0) {
       alert("Antall må være 0 eller høyere");
       return;
     }
 
-    const selectedLocation = locations.find((location) => location.id === newLocation);
+    const selectedLocation = locations.find(
+      (location) => location.id === newLocation
+    );
 
     const zoneId = selectedLocation?.zone_id || newZone || null;
 
@@ -170,30 +231,71 @@ inventory (
     setNewZone("");
     setNewLocation("");
     setNewQuantity("0");
+
     await loadData();
   }
 
   const filtered = useMemo(() => {
+    let result = products;
     const q = query.trim().toLowerCase();
-    if (!q) return products;
 
-    return products.filter((product) => {
-      const meta = getMeta(product);
+    if (q) {
+      result = result.filter((product) => {
+        const meta = getMeta(product);
 
-      return [
-        product.sku ?? "",
-        product.product_name,
-        product.variant_name ?? "",
-        product.vendor ?? "",
-        product.product_type ?? "",
-        meta.locationCode ?? "",
-        meta.zoneLabel ?? "",
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(q);
-    });
-  }, [products, query]);
+        return [
+          product.sku ?? "",
+          product.product_name,
+          product.variant_name ?? "",
+          product.vendor ?? "",
+          product.product_type ?? "",
+          meta.locationCode ?? "",
+          meta.zoneLabel ?? "",
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
+      });
+    }
+
+    if (statusFilter !== "all") {
+      result = result.filter((product) => {
+        const meta = getMeta(product);
+        const diff = (product.shopify_quantity ?? 0) - meta.quantity;
+
+        if (statusFilter === "missing") return meta.status === "missing";
+        if (statusFilter === "zone") return meta.status === "zone";
+        if (statusFilter === "location") return meta.status === "location";
+        if (statusFilter === "diff") return diff !== 0;
+
+        return true;
+      });
+    }
+
+    if (zoneFilter !== "all") {
+      result = result.filter((product) => {
+        const meta = getMeta(product);
+        return meta.zoneId === zoneFilter;
+      });
+    }
+
+    return result;
+  }, [products, query, statusFilter, zoneFilter]);
+
+  function openModal(product: ProductRow) {
+    const inventory = product.inventory?.[0];
+
+    const zoneId =
+      inventory?.locations?.zone_id ||
+      inventory?.locations?.zones?.id ||
+      inventory?.zone_id ||
+      "";
+
+    setEditing(product);
+    setNewZone(zoneId);
+    setNewLocation(inventory?.locations?.id ?? "");
+    setNewQuantity(String(inventory?.quantity ?? 0));
+  }
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -201,43 +303,110 @@ inventory (
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <div className="grid gap-7 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-8 sm:py-9 lg:grid-cols-[1fr_auto] lg:items-end lg:px-10 lg:py-10">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-                SNAKE / Produkter
-              </p>
-              <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-                Varesøk
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-                Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig
-                merket.
-              </p>
-            </div>
+         
+  <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
+    <div>
+      <p className="text-xs uppercase tracking-[0.22em] text-white/65">
+        SNAKE / Produkter
+      </p>
 
-            <div className="w-full lg:w-[420px]">
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-                Søk
-              </label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="SKU, produktnavn, sone eller lokasjon"
-                  className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
+      <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
+        Varesøk
+      </h1>
 
-          <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+      <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
+        Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket.
+      </p>
+    </div>
+
+    <div className="w-full">
+      <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+        Søk
+      </label>
+
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="SKU, produktnavn, sone eller lokasjon"
+          className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
+    <div className="grid gap-4 lg:grid-cols-[1fr_320px_360px] lg:items-center">
+      <div className="flex flex-wrap gap-2">
+        {[
+          { key: "all", label: "Alle" },
+          { key: "missing", label: "Mangler" },
+          { key: "zone", label: "Har sone" },
+          { key: "location", label: "Har lokasjon" },
+          { key: "diff", label: "Avvik" },
+        ].map((filter) => (
+          <button
+            key={filter.key}
+            onClick={() =>
+              setStatusFilter(
+                filter.key as "all" | "missing" | "zone" | "location" | "diff"
+              )
+            }
+            className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+              statusFilter === filter.key
+                ? "bg-[#b58a14] text-white"
+                : "bg-white/10 text-white"
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+<div className="min-h-[64px]">
+  {selected.length > 0 ? (
+    <div className="flex h-full items-center justify-between gap-4 rounded-2xl bg-[#b58a14] px-4 py-3 text-white">
+      <span className="text-sm font-semibold">
+        {selected.length} valgt
+      </span>
+
+      <button
+        onClick={() => setBatchOpen(true)}
+        className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
+      >
+        Sett sone
+      </button>
+    </div>
+  ) : (
+    <div className="h-full rounded-2xl px-4 py-3" />
+  )}
+</div>
+      <select
+        value={zoneFilter}
+        onChange={(e) => setZoneFilter(e.target.value)}
+        className="w-full rounded-xl border border-white/20 bg-white px-3 py-2 text-sm text-neutral-950 outline-none"
+      >
+        <option value="all">Alle soner</option>
+        {zones.map((zone) => (
+          <option key={zone.id} value={zone.id}>
+            {zone.code} — {zone.name}
+          </option>
+        ))}
+      </select>
+
+      
+    </div>
+  </div>
+
+  <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
               <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                 <div>
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
                     Produktliste
                   </h2>
+
                   <p className="mt-1 text-sm text-neutral-500">
                     {loading
                       ? "Henter produkter..."
@@ -265,6 +434,14 @@ inventory (
                     <MobileProductCard
                       key={product.id}
                       product={product}
+                      selected={selected.includes(product.id)}
+                      onToggleSelected={() =>
+                        setSelected((prev) =>
+                          prev.includes(product.id)
+                            ? prev.filter((id) => id !== product.id)
+                            : [...prev, product.id]
+                        )
+                      }
                       onEdit={() => openModal(product)}
                     />
                   ))
@@ -275,6 +452,22 @@ inventory (
                 <table className="min-w-full border-collapse">
                   <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
                     <tr>
+                      <th className="px-5 py-4 font-semibold">
+                        <input
+                          type="checkbox"
+                          checked={
+                            selected.length === filtered.length &&
+                            filtered.length > 0
+                          }
+                          onChange={() =>
+                            setSelected(
+                              selected.length === filtered.length
+                                ? []
+                                : filtered.map((product) => product.id)
+                            )
+                          }
+                        />
+                      </th>
                       <th className="px-5 py-4 font-semibold">SKU</th>
                       <th className="px-5 py-4 font-semibold">Produkt</th>
                       <th className="px-5 py-4 font-semibold">Plassering</th>
@@ -287,13 +480,19 @@ inventory (
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan={6} className="px-5 py-12 text-sm text-neutral-500">
+                        <td
+                          colSpan={7}
+                          className="px-5 py-12 text-sm text-neutral-500"
+                        >
                           Laster produkter...
                         </td>
                       </tr>
                     ) : filtered.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-5 py-12 text-sm text-neutral-500">
+                        <td
+                          colSpan={7}
+                          className="px-5 py-12 text-sm text-neutral-500"
+                        >
                           Ingen treff.
                         </td>
                       </tr>
@@ -306,9 +505,25 @@ inventory (
                             key={product.id}
                             className="border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
                           >
+                            <td className="px-5 py-5 text-sm">
+                              <input
+                                type="checkbox"
+                                checked={selected.includes(product.id)}
+                                onChange={() =>
+                                  setSelected((prev) =>
+                                    prev.includes(product.id)
+                                      ? prev.filter((id) => id !== product.id)
+                                      : [...prev, product.id]
+                                  )
+                                }
+                              />
+                            </td>
+
                             <td className="px-5 py-5 text-sm font-semibold text-neutral-950">
                               {product.sku || (
-                                <span className="text-red-600">Mangler SKU</span>
+                                <span className="text-red-600">
+                                  Mangler SKU
+                                </span>
                               )}
                             </td>
 
@@ -320,10 +535,9 @@ inventory (
                               <PlacementDisplay meta={meta} />
                             </td>
 
-                          
- <td className="px-5 py-5 text-sm font-medium text-neutral-800">
-  <QuantityDiff product={product} meta={meta} />
-</td>
+                            <td className="px-5 py-5 text-sm font-medium text-neutral-800">
+                              <QuantityDiff product={product} meta={meta} />
+                            </td>
 
                             <td className="px-5 py-5 text-sm">
                               <Status status={meta.status} />
@@ -369,6 +583,7 @@ inventory (
             <label className="mt-6 block text-sm font-medium text-neutral-700">
               Sone
             </label>
+
             <select
               value={newZone}
               onChange={(e) => setNewZone(e.target.value)}
@@ -385,11 +600,14 @@ inventory (
             <label className="mt-4 block text-sm font-medium text-neutral-700">
               Lokasjon
             </label>
+
             <select
               value={newLocation}
               onChange={(e) => {
                 const locationId = e.target.value;
-                const location = locations.find((item) => item.id === locationId);
+                const location = locations.find(
+                  (item) => item.id === locationId
+                );
 
                 setNewLocation(locationId);
 
@@ -410,6 +628,7 @@ inventory (
             <label className="mt-4 block text-sm font-medium text-neutral-700">
               Antall
             </label>
+
             <input
               type="number"
               min="0"
@@ -441,15 +660,78 @@ inventory (
           </div>
         </div>
       )}
+
+      {batchOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-[400px] rounded-2xl bg-white p-6 text-black shadow-2xl">
+            <h2 className="text-xl font-semibold">
+              Sett sone ({selected.length})
+            </h2>
+
+            <select
+              value={batchZone}
+              onChange={(e) => setBatchZone(e.target.value)}
+              className="mt-4 w-full rounded-xl border border-neutral-300 p-3 text-sm"
+            >
+              <option value="">Velg sone</option>
+              {zones.map((zone) => (
+                <option key={zone.id} value={zone.id}>
+                  {zone.code} — {zone.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setBatchOpen(false)}
+                className="rounded-xl border border-neutral-300 p-3 text-sm font-semibold"
+              >
+                Avbryt
+              </button>
+
+              <button
+                onClick={handleBatchSave}
+                className="rounded-xl bg-[#b58a14] p-3 text-sm font-semibold text-white"
+              >
+                Lagre
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
+}
 
-  function QuantityDiff({
+function getMeta(product: ProductRow): ProductMeta {
+  const inventory = product.inventory?.[0];
+
+  const locationCode = inventory?.locations?.code ?? null;
+  const locationZone = inventory?.locations?.zones ?? null;
+  const directZone = inventory?.zones ?? null;
+  const zone = locationZone || directZone;
+
+  const status: PlacementStatus = locationCode
+    ? "location"
+    : zone
+      ? "zone"
+      : "missing";
+
+  return {
+    quantity: inventory?.quantity ?? 0,
+    locationCode,
+    zoneLabel: zone ? `${zone.code} — ${zone.name}` : null,
+    zoneId: zone?.id ?? null,
+    status,
+  };
+}
+
+function QuantityDiff({
   product,
   meta,
 }: {
   product: ProductRow;
-  meta: ReturnType<typeof getMeta>;
+  meta: ProductMeta;
 }) {
   const shopifyQuantity = product.shopify_quantity ?? 0;
   const snakeQuantity = meta.quantity ?? 0;
@@ -480,53 +762,6 @@ inventory (
   );
 }
 
-  function openModal(product: ProductRow) {
-    const inventory = product.inventory?.[0];
-
-    const zoneId =
-      inventory?.locations?.zone_id ||
-      inventory?.locations?.zones?.id ||
-      inventory?.zone_id ||
-      "";
-
-    setEditing(product);
-    setNewZone(zoneId);
-    setNewLocation(inventory?.locations?.id ?? "");
-    setNewQuantity(String(inventory?.quantity ?? 0));
-  }
-}
-
-type PlacementStatus = "location" | "zone" | "missing";
-
-type ProductMeta = {
-  quantity: number;
-  locationCode: string | null;
-  zoneLabel: string | null;
-  status: PlacementStatus;
-};
-
-function getMeta(product: ProductRow): ProductMeta {
-  const inventory = product.inventory?.[0];
-
-  const locationCode = inventory?.locations?.code ?? null;
-  const locationZone = inventory?.locations?.zones ?? null;
-  const directZone = inventory?.zones ?? null;
-  const zone = locationZone || directZone;
-
-  const status: PlacementStatus = locationCode
-    ? "location"
-    : zone
-      ? "zone"
-      : "missing";
-
-  return {
-    quantity: inventory?.quantity ?? 0,
-    locationCode,
-    zoneLabel: zone ? `${zone.code} — ${zone.name}` : null,
-    status,
-  };
-}
-
 function ProductIdentity({ product }: { product: ProductRow }) {
   return (
     <div className="flex items-center gap-4">
@@ -546,18 +781,22 @@ function ProductIdentity({ product }: { product: ProductRow }) {
 
       <div className="min-w-0">
         <p className="font-semibold text-neutral-950">{product.product_name}</p>
+
         <p className="mt-1 text-xs text-neutral-500">
           {product.vendor || product.product_type || "Uten kategori"}
         </p>
+
         {product.variant_name && (
-          <p className="mt-1 text-xs text-neutral-400">{product.variant_name}</p>
+          <p className="mt-1 text-xs text-neutral-400">
+            {product.variant_name}
+          </p>
         )}
       </div>
     </div>
   );
 }
 
-function PlacementDisplay({ meta }: { meta: ReturnType<typeof getMeta> }) {
+function PlacementDisplay({ meta }: { meta: ProductMeta }) {
   if (meta.locationCode) {
     return (
       <span className="rounded-lg border border-[#055a7d]/20 bg-[#055a7d]/5 px-2 py-1 text-xs font-semibold text-[#055a7d]">
@@ -579,9 +818,13 @@ function PlacementDisplay({ meta }: { meta: ReturnType<typeof getMeta> }) {
 
 function MobileProductCard({
   product,
+  selected,
+  onToggleSelected,
   onEdit,
 }: {
   product: ProductRow;
+  selected: boolean;
+  onToggleSelected: () => void;
   onEdit: () => void;
 }) {
   const meta = getMeta(product);
@@ -591,6 +834,7 @@ function MobileProductCard({
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <ProductIdentity product={product} />
+
           <p className="mt-3 text-sm font-semibold text-neutral-950">
             {product.sku || <span className="text-red-600">Mangler SKU</span>}
           </p>
@@ -604,6 +848,7 @@ function MobileProductCard({
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-500">
             Plassering
           </p>
+
           <div className="mt-2">
             <PlacementDisplay meta={meta} />
           </div>
@@ -611,23 +856,38 @@ function MobileProductCard({
 
         <div className="flex items-center justify-between border-t border-neutral-200 pt-3">
           <span className="text-sm text-neutral-500">Antall</span>
+
           <div className="text-right">
-  <p className="text-base font-semibold text-neutral-950">
-    {meta.quantity}
-  </p>
-  <p className="text-xs text-neutral-400">
-    Shopify: {product.shopify_quantity ?? 0}
-  </p>
-</div>
+            <p className="text-base font-semibold text-neutral-950">
+              {meta.quantity}
+            </p>
+
+            <p className="text-xs text-neutral-400">
+              Shopify: {product.shopify_quantity ?? 0}
+            </p>
+          </div>
         </div>
       </div>
 
-      <button
-        onClick={onEdit}
-        className="mt-4 w-full rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
-      >
-        Endre plassering
-      </button>
+      <div className="mt-4 grid grid-cols-[auto_1fr] gap-3">
+        <button
+          onClick={onToggleSelected}
+          className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
+            selected
+              ? "border-[#b58a14] bg-[#b58a14] text-white"
+              : "border-neutral-300 bg-white text-neutral-700"
+          }`}
+        >
+          {selected ? "Valgt" : "Velg"}
+        </button>
+
+        <button
+          onClick={onEdit}
+          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
+        >
+          Endre plassering
+        </button>
+      </div>
     </article>
   );
 }

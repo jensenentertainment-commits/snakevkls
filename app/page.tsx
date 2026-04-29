@@ -8,33 +8,59 @@ import {
   Activity,
   Clock,
   Cuboid,
+  ArrowRight,
 } from "lucide-react";
 
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
 
+type IssueCardState = {
+  border: string;
+  bg: string;
+  badge: string;
+  icon: string;
+  action: string;
+  hover: string;
+};
+
 export default function HomePage() {
   const hasIssues = true;
   const issueCount = 3;
-
+const issueState: IssueCardState = hasIssues
+  ? {
+      border: "border-red-300",
+      bg: "bg-red-50",
+      badge: "bg-red-100 text-red-700",
+      icon: "border-red-200 bg-red-100 text-red-600 ring-red-100",
+      action: "text-red-700",
+      hover: "hover:border-red-300 hover:shadow-[0_18px_45px_rgba(239,68,68,0.14)]",
+    }
+  : {
+      border: "border-green-300",
+      bg: "bg-green-50",
+      badge: "bg-green-100 text-green-700",
+      icon: "border-green-200 bg-green-100 text-green-600 ring-green-100",
+      action: "text-green-700",
+      hover: "hover:border-green-300 hover:shadow-[0_18px_45px_rgba(34,197,94,0.12)]",
+    };
   const modules = [
     {
       href: "/products",
       icon: <Search />,
       title: "Varesøk",
       label: "Aktiv",
-      text: "Finn produkt...",
-      body: "...",
+      text: "Finn produkter, SKU-er og lagerstatus raskt.",
+      body: "Søk på produktnavn, variant, SKU, sone og lokasjon. Brukes som hovedinngang til lagerdata.",
       action: "Åpne varesøk",
-      featured: true,
+      
     },
     {
       href: "/locations",
       icon: <MapPin />,
       title: "Lokasjoner",
       label: "Aktiv",
-      text: "...",
-      body: "...",
+      text: "Administrer soner og lagerplasser.",
+      body: "Opprett, rediger og kontroller lokasjoner. QR og labels gjør strukturen fysisk brukbar.",
       action: "Administrer lokasjoner",
     },
     {
@@ -42,56 +68,81 @@ export default function HomePage() {
       icon: <AlertTriangle />,
       title: "Avvik",
       label: hasIssues ? `${issueCount} avvik` : "OK",
-      text: "Varer uten lokasjon...",
-      body: "...",
+      text: "Finn det som må ryddes før plukk.",
+      body: "Produkter uten lokasjon, manglende SKU, tomme lokasjoner og strukturfeil samles her.",
       action: "Åpne avvik",
-      featured: hasIssues,
+      
     },
     {
       icon: <PackageCheck />,
       title: "Plukk",
       label: "Snart",
-      text: "...",
-      body: "...",
+      text: "Plukkflyt kommer senere.",
+      body: "Modulen aktiveres når lagerstruktur og produktplasseringer er stabile nok.",
       muted: true,
     },
   ];
 
   return (
-    <main className="min-h-screen text-white">
+    <main className="min-h-screen bg-[#062f3b] text-white">
       <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
         <SnakeNav />
 
-        <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="grid gap-7 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-8 sm:py-9 lg:grid-cols-[1fr_auto] lg:items-start lg:px-10 lg:py-10">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-                SNAKE VKLS
-              </p>
+        <section className="overflow-hidden rounded-[32px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#06617f] via-[#05495b] to-[#032c35] px-5 py-8 text-white sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+            <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
 
-              <h1 className="mt-3 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:mt-4 md:text-6xl">
-                Varekompaniets interne lagersystem.
-              </h1>
+            <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
+                  SNAKE VKLS
+                </p>
 
-              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                Finn produkter, kontroller lokasjoner og bygg ryddigere
-                lagerdata før plukk og ordrebehandling.
+                <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-5xl md:text-6xl">
+                  Varekompaniets interne lagersystem.
+                </h1>
+
+                <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
+                  Finn produkter, kontroller lokasjoner og bygg ryddigere
+                  lagerdata før plukk og ordrebehandling.
+                </p>
+              </div>
+
+              <StatusStrip />
+            </div>
+          </div>
+
+          <div className="px-5 py-6 sm:px-8 sm:py-8">
+            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
+                  Moduler
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-950">
+                  Arbeidsflate
+                </h2>
+              </div>
+
+              <p className="max-w-xl text-sm leading-6 text-neutral-600">
+                Start med varesøk og avvik. Lokasjoner brukes når lageret skal
+                ryddes fysisk.
               </p>
             </div>
 
-            <StatusStrip />
-          </div>
-
-          <div className="bg-[#f6f7f8] px-8 py-8">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {modules.map((module) => (
-                <ModuleCard key={module.title} {...module} />
-              ))}
+             {modules.map((module) => (
+  <ModuleCard
+    key={module.title}
+    {...module}
+    issueState={module.title === "Avvik" ? issueState : undefined}
+  />
+))}
             </div>
 
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
               <WideCard
-                href="/locations"
+                href="/"
                 icon={<Boxes />}
                 title="Lagerstruktur"
                 text="Gyldige lokasjonsvalg, aktive plasser og faste plasseringer."
@@ -99,15 +150,13 @@ export default function HomePage() {
               />
 
               <WideCard
-                icon={<Activity />}
-                title="Systemstatus"
-                text={
-                  hasIssues
-                    ? `${issueCount} registrerte avvik krever oppfølging.`
-                    : "Ingen registrerte avvik akkurat nå."
-                }
-                action="Se systemstatus"
-              />
+  href="/activity"
+  icon={<Activity />}
+  title="Aktivitetslogg"
+  text="Siste endringer i lokasjoner, soner, varer og avvik."
+  action="Åpne aktivitetslogg"
+  warning={hasIssues}
+/>
             </div>
           </div>
         </section>
@@ -120,19 +169,11 @@ export default function HomePage() {
 
 function StatusStrip() {
   return (
-    <div className="rounded-[22px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-4">
+    <div className="rounded-[24px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-4">
       <div className="grid gap-2 md:grid-cols-3 md:gap-4">
         <StatusItem mark="V1" label="Versjon" value="1.0" />
-        <StatusItem
-          icon={<Cuboid className="h-4 w-4 md:h-5 md:w-5" />}
-          label="Moduler"
-          value="3 aktive"
-        />
-        <StatusItem
-          icon={<Clock className="h-4 w-4 md:h-5 md:w-5" />}
-          label="Neste modul"
-          value="Plukk"
-        />
+        <StatusItem icon={<Cuboid />} label="Moduler" value="3 aktive" />
+        <StatusItem icon={<Clock />} label="Neste modul" value="Plukk" />
       </div>
     </div>
   );
@@ -150,13 +191,13 @@ function StatusItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/8 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white md:h-11 md:w-11 md:text-lg">
-        {mark ?? icon}
+    <div className="flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white ring-1 ring-white/10 md:h-11 md:w-11 md:text-lg">
+        {mark ?? <span className="[&>svg]:h-5 [&>svg]:w-5">{icon}</span>}
       </div>
 
       <div>
-        <p className="text-xs text-white/58 md:text-sm">{label}</p>
+        <p className="text-xs text-white/55 md:text-sm">{label}</p>
         <p className="mt-0.5 text-base font-semibold text-white md:text-lg">
           {value}
         </p>
@@ -164,6 +205,8 @@ function StatusItem({
     </div>
   );
 }
+
+
 
 function ModuleCard({
   href,
@@ -173,8 +216,9 @@ function ModuleCard({
   text,
   body,
   action,
-  featured,
+ 
   muted,
+  issueState,
 }: {
   href?: string;
   icon: React.ReactNode;
@@ -183,67 +227,75 @@ function ModuleCard({
   text: string;
   body: string;
   action?: string;
-  featured?: boolean;
+  
   muted?: boolean;
+  issueState?: IssueCardState | null;
 }) {
+
   const card = (
     <div
-     className={`group flex min-h-[240px] flex-col rounded-[24px] border bg-white p-5 shadow-sm transition duration-200 sm:min-h-[315px] sm:p-6 ${
-        featured
-          ? "border-[#b58a14]/55 shadow-[0_0_0_1px_rgba(181,138,20,0.14),0_18px_42px_rgba(0,0,0,0.10)]"
-          : "border-neutral-200"
-      } ${
-        muted
-          ? "opacity-55 grayscale-[0.2]"
-          : "hover:-translate-y-1 hover:shadow-xl"
-      }`}
+      className={`group relative flex min-h-[250px] flex-col overflow-hidden rounded-[26px] border p-5 shadow-sm transition duration-200 sm:h-[390px] sm:p-6 ${
+  issueState
+    ? `${issueState.border} ${issueState.bg} ${issueState.hover}`
+    : muted
+      ? "border-[#d5dee2] bg-white opacity-55 grayscale-[0.2]"
+      : "border-[#d5dee2] bg-white hover:-translate-y-1 hover:border-[#055a7d]/25 hover:shadow-xl"
+}`}
     >
-      <div className="flex items-start justify-between gap-4">
+      {!muted && (
+        <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
+          <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[#055a7d]/10 blur-2xl" />
+        </div>
+      )}
+
+      <div className="relative flex items-start justify-between gap-4">
         <div
-          className={`flex h-16 w-16 items-center justify-center rounded-full border ${
-            featured
-              ? "border-[#b58a14]/30 bg-[#b58a14]/10 text-[#b58a14]"
-              : "border-[#055a7d]/15 bg-[#055a7d]/7 text-[#055a7d]"
-          }`}
-        >
+  className={`flex h-16 w-16 items-center justify-center rounded-full border ring-1 ${
+    issueState
+      ? issueState.icon
+      : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
+  }`}
+>
           <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
         </div>
 
         <span
-          className={`rounded-full px-3 py-1.5 text-xs font-bold uppercase ${
-            featured
-              ? "bg-[#b58a14]/10 text-[#a77e04]"
-              : muted
-                ? "bg-neutral-100 text-neutral-400"
-                : "bg-[#055a7d]/8 text-[#055a7d]"
-          }`}
-        >
-          {label}
-        </span>
+  className={`rounded-full px-3 py-1.5 text-xs font-bold uppercase ${
+    issueState
+      ? issueState.badge
+      : muted
+        ? "bg-neutral-100 text-neutral-400"
+        : "bg-[#055a7d]/8 text-[#055a7d]"
+  }`}
+>
+  {label}
+</span>
       </div>
 
-      <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">
+      <h2 className="relative mt-6 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">
         {title}
       </h2>
 
-      <p className="mt-3 text-base leading-6 text-neutral-700">{text}</p>
+      <p className="relative mt-3 text-base leading-6 text-neutral-700">
+        {text}
+      </p>
 
-      <div className="my-5 h-px bg-neutral-200" />
+      <div className="relative my-5 h-px bg-[#d5dee2]" />
 
-      <p className="text-sm leading-6 text-neutral-500">{body}</p>
+      <p className="relative text-sm leading-6 text-neutral-500">{body}</p>
 
-      <div className="mt-auto pt-6">
+      <div className="relative mt-auto pt-6">
         <span
-          className={`text-sm font-bold ${
-            featured
-              ? "text-[#b58a14]"
-              : muted
-                ? "text-neutral-400"
-                : "text-[#055a7d] group-hover:text-[#042834]"
-          }`}
+          className={`inline-flex items-center gap-1 text-sm font-bold ${
+  issueState
+    ? issueState.action
+    : muted
+      ? "text-neutral-400"
+      : "text-[#055a7d] group-hover:text-[#042834]"
+}`}
         >
           {action ?? "Kommer snart"}
-          {action ? " →" : ""}
+          {action && <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />}
         </span>
       </div>
     </div>
@@ -259,17 +311,31 @@ function WideCard({
   title,
   text,
   action,
+  warning,
 }: {
   href?: string;
   icon: React.ReactNode;
   title: string;
   text: string;
   action: string;
+  warning?: boolean;
 }) {
   const card = (
-    <div className="group rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-xl">
+    <div
+      className={`group rounded-[26px] border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-xl ${
+        warning
+          ? "border-[#b58a14]/35 hover:border-[#b58a14]/60"
+          : "border-[#d5dee2] hover:border-[#055a7d]/30"
+      }`}
+    >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#055a7d]/15 bg-[#055a7d]/7 text-[#055a7d] sm:h-16 sm:w-16">
+        <div
+          className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full border ring-1 ${
+            warning
+              ? "border-[#b58a14]/25 bg-[#b58a14]/12 text-[#a77e04] ring-[#b58a14]/10"
+              : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
+          }`}
+        >
           <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
         </div>
 
@@ -280,8 +346,13 @@ function WideCard({
           <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-600">
             {text}
           </p>
-          <p className="mt-3 text-sm font-bold text-[#055a7d] group-hover:text-[#042834]">
-            {action} →
+          <p
+            className={`mt-3 inline-flex items-center gap-1 text-sm font-bold ${
+              warning ? "text-[#9a7305]" : "text-[#055a7d]"
+            } group-hover:text-[#042834]`}
+          >
+            {action}
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </p>
         </div>
       </div>

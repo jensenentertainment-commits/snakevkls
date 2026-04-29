@@ -216,85 +216,120 @@ async function handleSaveEditLocation() {
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-10 py-10 text-white lg:grid-cols-[1fr_auto] lg:items-end"><div>
-                <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-                  SNAKE / Lokasjoner
-                </p>
-                <h1 className="mt-4 text-5xl font-semibold leading-[0.95] tracking-tight">
-                  Lokasjoner
-                </h1>
-                <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                  Opprett, filtrer og vedlikehold lagerplasser. Lokasjoner er
-                  grunnmuren før plukklister og Shopify-flyt kobles på.
-                </p>
-              </div>
+            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
+  <div>
+    <p className="text-xs uppercase tracking-[0.22em] text-white/65">
+      SNAKE / Lokasjoner
+    </p>
 
-              <div className="flex flex-wrap gap-3 lg:justify-end">
-  <button
-    onClick={() => setShowCreateModal(true)}
-    className="inline-flex w-fit items-center gap-2 rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
-  >
-    <Plus className="h-4 w-4" />
-    Ny lokasjon
-  </button>
+    <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
+      Lokasjoner
+    </h1>
 
-  <Link
-    href="/locations/labels"
-    className="inline-flex w-fit items-center rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-white/15"
-  >
-    Print labels
-  </Link>
+    <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
+      Opprett, filtrer og vedlikehold lagerplasser. Lokasjoner er grunnmuren
+      før plukklister og Shopify-flyt kobles på.
+    </p>
+  </div>
+
+  <div className="w-full">
+    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+      Søk
+    </label>
+
+    <div className="relative">
+      <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+
+      <input
+        id="location-search"
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Søk etter lokasjon, sone eller navn"
+        className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
+      />
+    </div>
+  </div>
 </div>
+
+<div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
+  <div className="grid gap-4 lg:grid-cols-[1fr_320px_auto] lg:items-center">
+    <div className="flex flex-wrap gap-2">
+      <button
+        onClick={() => setSelectedZone("all")}
+        className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+          selectedZone === "all"
+            ? "bg-[#b58a14] text-white"
+            : "bg-white/10 text-white"
+        }`}
+      >
+        Alle
+      </button>
+
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Totale <span className="ml-1 text-white/65">{locations.length}</span>
+      </div>
+
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Aktive <span className="ml-1 text-white/65">{activeCount}</span>
+      </div>
+
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Uten sone <span className="ml-1 text-white/65">{missingZoneCount}</span>
+      </div>
+
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Tomme <span className="ml-1 text-white/65">{emptyLocationCount}</span>
+      </div>
+    </div>
+
+    <select
+      id="zone-filter"
+      value={selectedZone}
+      onChange={(e) => setSelectedZone(e.target.value)}
+      className="w-full rounded-xl border border-white/20 bg-white px-3 py-2 text-sm text-neutral-950 outline-none"
+    >
+      <option value="all">Alle soner</option>
+      {zones.map((zone) => (
+        <option key={zone.id} value={zone.id}>
+          {zone.code} — {zone.name}
+        </option>
+      ))}
+    </select>
+
+    <div className="flex gap-2 lg:justify-end">
+      <button
+        onClick={() => setShowCreateModal(true)}
+        className="inline-flex items-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
+      >
+        <Plus className="h-4 w-4" />
+        Ny lokasjon
+      </button>
+
+      <Link
+        href="/locations/labels"
+        className="inline-flex items-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-950"
+      >
+        Print labels
+      </Link>
+    </div>
+  </div>
 </div>
 
-
-            <div className="grid gap-4 bg-[#f6f7f8] px-8 py-6 md:grid-cols-4">
-              <StatCard icon={<Layers />} label="Totale" value={locations.length} tone="blue" />
-              <StatCard icon={<CheckCircle2 />} label="Aktive" value={activeCount} tone="ok" />
-              <StatCard icon={<AlertTriangle />} label="Uten sone" value={missingZoneCount} tone="gold" />
-              <StatCard icon={<MapPin />} label="Tomme" value={emptyLocationCount} tone="neutral" />
-            </div>
-
-            <div className="border-t border-neutral-200 bg-white px-8 py-7">
-              <div className="mb-6 grid gap-4 lg:grid-cols-[1fr_280px_auto]">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    id="location-search"
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Søk etter lokasjon, sone eller navn"
-                    className="w-full rounded-2xl border border-neutral-300 bg-white py-3.5 pl-12 pr-4 text-sm text-neutral-900 shadow-sm outline-none transition focus:border-[#055a7d]"
-                  />
-                </div>
-
-                <select
-                  id="zone-filter"
-                  value={selectedZone}
-                  onChange={(e) => setSelectedZone(e.target.value)}
-                  className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3.5 text-sm text-neutral-900 shadow-sm outline-none transition focus:border-[#055a7d]"
-                >
-                  <option value="all">Alle soner</option>
-                  {zones.map((zone) => (
-                    <option key={zone.id} value={zone.id}>
-                      {zone.code} — {zone.name}
-                    </option>
-                  ))}
-                </select>
-
-                {(query || selectedZone !== "all") && (
-                  <button
-                    onClick={() => {
-                      setQuery("");
-                      setSelectedZone("all");
-                    }}
-                    className="rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:bg-neutral-50"
-                  >
-                    Nullstill
-                  </button>
-                )}
-              </div>
+<div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    {(query || selectedZone !== "all") && (
+      <button
+        onClick={() => {
+          setQuery("");
+          setSelectedZone("all");
+        }}
+        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+      >
+        Nullstill filter
+      </button>
+    )}
+  </div>
 
               <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-50 px-6 py-5">

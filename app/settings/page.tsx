@@ -28,6 +28,9 @@ export default function SettingsPage() {
   const [editName, setEditName] = useState("");
   const [editActive, setEditActive] = useState(true);
 
+  const [query, setQuery] = useState("");
+const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+
   useEffect(() => {
     loadZones();
   }, []);
@@ -118,7 +121,29 @@ export default function SettingsPage() {
 
     await loadZones();
   }
+const filteredZones = useMemo(() => {
+  let result = zones;
 
+  const q = query.trim().toLowerCase();
+
+  if (q) {
+    result = result.filter(
+      (zone) =>
+        zone.code.toLowerCase().includes(q) ||
+        zone.name.toLowerCase().includes(q)
+    );
+  }
+
+  if (statusFilter === "active") {
+    result = result.filter((zone) => zone.active);
+  }
+
+  if (statusFilter === "inactive") {
+    result = result.filter((zone) => !zone.active);
+  }
+
+  return result;
+}, [zones, query, statusFilter]);
   const activeCount = zones.filter((z) => z.active).length;
   const inactiveCount = zones.filter((z) => !z.active).length;
   const totalLocations = zones.reduce(
@@ -133,37 +158,80 @@ export default function SettingsPage() {
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-            <div className="grid gap-7 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-10 sm:py-10 lg:grid-cols-[1fr_auto] lg:items-end">
-              <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-                  SNAKE / Settings
-                </p>
+            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
+  <div>
+    <p className="text-xs uppercase tracking-[0.22em] text-white/65">
+      SNAKE / Settings
+    </p>
 
-                <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl">
-                  Innstillinger
-                </h1>
+    <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
+      Innstillinger
+    </h1>
 
-                <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                  Administrer grunnstrukturen i Snake. Start med soner, slik at
-                  lokasjoner kan organiseres uten SQL og manuell databasejobb.
-                </p>
-              </div>
+    <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
+      Administrer grunnstrukturen i Snake. Soner styrer hvor lokasjoner hører
+      hjemme og gjør lageret lettere å rydde senere.
+    </p>
+  </div>
 
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="inline-flex w-fit items-center gap-2 rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
-              >
-                <Plus className="h-4 w-4" />
-                Ny sone
-              </button>
-            </div>
+  <div className="w-full">
+    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+      Søk
+    </label>
 
-            <div className="grid gap-3 bg-[#f6f7f8] px-5 py-5 sm:grid-cols-2 sm:px-8 sm:py-6 lg:grid-cols-4">
-              <StatCard icon={<Settings />} label="Soner" value={zones.length} tone="blue" />
-              <StatCard icon={<CheckCircle2 />} label="Aktive" value={activeCount} tone="ok" />
-              <StatCard icon={<AlertTriangle />} label="Inaktive" value={inactiveCount} tone="neutral" />
-              <StatCard icon={<Layers />} label="Lokasjoner" value={totalLocations} tone="gold" />
-            </div>
+    <div className="relative">
+      <Settings className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Søk etter sonekode eller navn"
+        className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
+      />
+    </div>
+  </div>
+</div>
+
+<div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
+  <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+    <div className="flex flex-wrap gap-2">
+      {[
+        { key: "all", label: "Alle", value: zones.length },
+        { key: "active", label: "Aktive", value: activeCount },
+        { key: "inactive", label: "Inaktive", value: inactiveCount },
+      ].map((filter) => (
+        <button
+          key={filter.key}
+          onClick={() =>
+            setStatusFilter(filter.key as "all" | "active" | "inactive")
+          }
+          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+            statusFilter === filter.key
+              ? "bg-[#b58a14] text-white"
+              : "bg-white/10 text-white"
+          }`}
+        >
+          {filter.label}
+          <span className="ml-1 text-white/65">{loading ? "…" : filter.value}</span>
+        </button>
+      ))}
+
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Lokasjoner <span className="ml-1 text-white/65">{totalLocations}</span>
+      </div>
+    </div>
+
+    <button
+      onClick={() => setShowCreateModal(true)}
+      className="inline-flex w-fit items-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white lg:justify-self-end"
+    >
+      <Plus className="h-4 w-4" />
+      Ny sone
+    </button>
+  </div>
+</div>
+
+            
 
             <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
               <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
@@ -174,17 +242,17 @@ export default function SettingsPage() {
                   <p className="mt-1 text-sm text-neutral-500">
                     {loading
                       ? "Henter soner..."
-                      : `${zones.length} soner registrert`}
+                      : `${filteredZones.length} av ${zones.length} soner vises`}
                   </p>
                 </div>
 
                 <div className="divide-y divide-neutral-100 lg:hidden">
                   {loading ? (
                     <EmptyState text="Laster soner..." />
-                  ) : zones.length === 0 ? (
+                  ) : filteredZones.length === 0 ? (
                     <EmptyState text="Ingen soner opprettet." />
                   ) : (
-                    zones.map((zone) => (
+                    filteredZones.map((zone) => (
                       <ZoneMobileCard
                         key={zone.id}
                         zone={zone}
@@ -218,14 +286,14 @@ export default function SettingsPage() {
                             Laster soner...
                           </td>
                         </tr>
-                      ) : zones.length === 0 ? (
+                      ) : filteredZones.length === 0 ? (
                         <tr>
                           <td colSpan={5} className="px-5 py-12 text-sm text-neutral-500">
                             Ingen soner opprettet.
                           </td>
                         </tr>
                       ) : (
-                        zones.map((zone) => (
+                        filteredZones.map((zone) => (
                           <tr
                             key={zone.id}
                             className="border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"

@@ -5,6 +5,8 @@ import { Plus, Settings, Layers, CheckCircle2, AlertTriangle } from "lucide-reac
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import SnakeHero from "../components/SnakeHero";
+import SnakeToolbar from "../components/SnakeToolbar";
 
 type ZoneRow = {
   id: string;
@@ -158,43 +160,18 @@ const filteredZones = useMemo(() => {
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
-  <div>
-    <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-      SNAKE / Settings
-    </p>
+   <SnakeHero
+  eyebrow="SNAKE / Settings"
+  title="Innstillinger"
+  description="Administrer grunnstrukturen i Snake. Soner styrer hvor lokasjoner hører hjemme og gjør lageret lettere å rydde senere."
+  searchValue={query}
+  onSearchChange={setQuery}
+  searchPlaceholder="Søk etter sonekode eller navn"
+/>
 
-    <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-      Innstillinger
-    </h1>
-
-    <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-      Administrer grunnstrukturen i Snake. Soner styrer hvor lokasjoner hører
-      hjemme og gjør lageret lettere å rydde senere.
-    </p>
-  </div>
-
-  <div className="w-full">
-    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-      Søk
-    </label>
-
-    <div className="relative">
-      <Settings className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Søk etter sonekode eller navn"
-        className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
-      />
-    </div>
-  </div>
-</div>
-
-<div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
-  <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-    <div className="flex flex-wrap gap-2">
+<SnakeToolbar
+  left={
+    <>
       {[
         { key: "all", label: "Alle", value: zones.length },
         { key: "active", label: "Aktive", value: activeCount },
@@ -212,25 +189,26 @@ const filteredZones = useMemo(() => {
           }`}
         >
           {filter.label}
-          <span className="ml-1 text-white/65">{loading ? "…" : filter.value}</span>
+          <span className="ml-1 text-white/65">{filter.value}</span>
         </button>
       ))}
 
       <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
         Lokasjoner <span className="ml-1 text-white/65">{totalLocations}</span>
       </div>
-    </div>
-
+    </>
+  }
+  right={
     <button
       onClick={() => setShowCreateModal(true)}
-      className="inline-flex w-fit items-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white lg:justify-self-end"
+      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
     >
       <Plus className="h-4 w-4" />
       Ny sone
     </button>
-  </div>
-</div>
-
+  }
+/>
+  
             
 
             <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">

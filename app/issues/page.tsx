@@ -5,14 +5,14 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
-  Layers,
-  MapPinOff,
+ 
   Search,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import SnakeToolbar from "../components/SnakeToolbar";
+import SnakeHero from "../components/SnakeHero";
 
 type Severity = "critical" | "warning" | "info";
 type IssueFilter = "all" | Severity;
@@ -242,71 +242,62 @@ export default function IssuesPage() {
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-                SNAKE / Avvik
-              </p>
+          <SnakeHero
+  eyebrow="SNAKE / Avvik"
+  title="Avvik"
+  description="Lagerdata som kan skape feil i søk, lokasjon og plukk.
+                Kritiske avvik bør ryddes først"
+  searchValue={query}
+  onSearchChange={setQuery}
+  searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
+/>
 
-              <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-                Avvik
-              </h1>
+         <SnakeToolbar
+  left={
+    <>
+      {[
+        { key: "all", label: "Alle", value: totalIssues },
+        { key: "critical", label: "Kritisk", value: criticalCount },
+        { key: "warning", label: "Sjekk", value: warningCount },
+        { key: "info", label: "Info", value: infoCount },
+      ].map((filter) => (
+        <button
+          key={filter.key}
+          onClick={() => setSeverityFilter(filter.key as IssueFilter)}
+          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+            severityFilter === filter.key
+              ? "bg-[#b58a14] text-white"
+              : "bg-white/10 text-white"
+          }`}
+        >
+          {filter.label}
+          <span className="ml-1 opacity-70">
+            {loading ? "…" : filter.value}
+          </span>
+        </button>
+      ))}
+    </>
+  }
+  right={
+    <>
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Produkt{" "}
+        <span className="ml-1 text-white/65">
+          {issues.productsWithoutLocation.length +
+            issues.productsWithoutSku.length +
+            issues.productsWithMultipleLocations.length}
+        </span>
+      </div>
 
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-                Lagerdata som kan skape feil i søk, lokasjon og plukk.
-                Kritiske avvik bør ryddes først.
-              </p>
-            </div>
-
-            <div className="w-full">
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-                Søk
-              </label>
-
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Søk i avvik, SKU eller lokasjon"
-                  className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
-            <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-center">
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { key: "all", label: "Alle", value: totalIssues },
-                  { key: "critical", label: "Kritisk", value: criticalCount },
-                  { key: "warning", label: "Sjekk", value: warningCount },
-                  { key: "info", label: "Info", value: infoCount },
-                ].map((filter) => (
-                  <button
-                    key={filter.key}
-                    onClick={() => setSeverityFilter(filter.key as IssueFilter)}
-                    className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-                      severityFilter === filter.key
-                        ? "bg-[#b58a14] text-white"
-                        : "bg-white/10 text-white"
-                    }`}
-                  >
-                    {filter.label}{" "}
-                    <span className="ml-1 opacity-70">{loading ? "…" : filter.value}</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 text-white">
-                <MiniStat label="Produkt" value={issues.productsWithoutLocation.length + issues.productsWithoutSku.length + issues.productsWithMultipleLocations.length} />
-                <MiniStat label="Lokasjon" value={issues.locationsWithoutProducts.length + issues.locationsWithoutZone.length} />
-                <MiniStat label="Totalt" value={totalIssues} />
-              </div>
-            </div>
-          </div>
+      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+        Lokasjon{" "}
+        <span className="ml-1 text-white/65">
+          {issues.locationsWithoutProducts.length + issues.locationsWithoutZone.length}
+        </span>
+      </div>
+    </>
+  }
+/>
 
           <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">

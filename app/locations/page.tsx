@@ -7,6 +7,9 @@ import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import QRCode from "qrcode";
+import SnakeDropdown from "../components/SnakeDropdown";
+import SnakeToolbar from "../components/SnakeToolbar";
+import SnakeHero from "../components/SnakeHero";
 
 type Zone = {
   id: string;
@@ -216,45 +219,18 @@ async function handleSaveEditLocation() {
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-            <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
-  <div>
-    <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-      SNAKE / Lokasjoner
-    </p>
+        <SnakeHero
+  eyebrow="SNAKE / Lokasjoner"
+  title="Lokasjoner"
+  description="Opprett, filtrer og vedlikehold lagerplasser."
+  searchValue={query}
+  onSearchChange={setQuery}
+  searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
+/>
 
-    <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-      Lokasjoner
-    </h1>
-
-    <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-      Opprett, filtrer og vedlikehold lagerplasser. Lokasjoner er grunnmuren
-      før plukklister og Shopify-flyt kobles på.
-    </p>
-  </div>
-
-  <div className="w-full">
-    <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-      Søk
-    </label>
-
-    <div className="relative">
-      <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-
-      <input
-        id="location-search"
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Søk etter lokasjon, sone eller navn"
-        className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
-      />
-    </div>
-  </div>
-</div>
-
-<div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
-  <div className="grid gap-4 lg:grid-cols-[1fr_320px_auto] lg:items-center">
-    <div className="flex flex-wrap gap-2">
+<SnakeToolbar
+  left={
+    <>
       <button
         onClick={() => setSelectedZone("all")}
         className={`rounded-xl px-3 py-2 text-sm font-semibold ${
@@ -281,26 +257,26 @@ async function handleSaveEditLocation() {
       <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
         Tomme <span className="ml-1 text-white/65">{emptyLocationCount}</span>
       </div>
-    </div>
+    </>
+  }
+  right={
+    <>
+      <SnakeDropdown
+        value={selectedZone}
+        onChange={setSelectedZone}
+        width="w-full sm:w-[220px]"
+        options={[
+          { value: "all", label: "Alle soner" },
+          ...zones.map((zone) => ({
+            value: zone.id,
+            label: `${zone.code} — ${zone.name}`,
+          })),
+        ]}
+      />
 
-    <select
-      id="zone-filter"
-      value={selectedZone}
-      onChange={(e) => setSelectedZone(e.target.value)}
-      className="w-full rounded-xl border border-white/20 bg-white px-3 py-2 text-sm text-neutral-950 outline-none"
-    >
-      <option value="all">Alle soner</option>
-      {zones.map((zone) => (
-        <option key={zone.id} value={zone.id}>
-          {zone.code} — {zone.name}
-        </option>
-      ))}
-    </select>
-
-    <div className="flex gap-2 lg:justify-end">
       <button
         onClick={() => setShowCreateModal(true)}
-        className="inline-flex items-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
+        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
       >
         <Plus className="h-4 w-4" />
         Ny lokasjon
@@ -308,13 +284,13 @@ async function handleSaveEditLocation() {
 
       <Link
         href="/locations/labels"
-        className="inline-flex items-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-950"
+        className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-950"
       >
         Print labels
       </Link>
-    </div>
-  </div>
-</div>
+    </>
+  }
+/>
 
 <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
   <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -638,18 +614,7 @@ async function handleSaveEditLocation() {
           <label className="mb-2 block text-sm font-medium text-neutral-700">
             Sone
           </label>
-          <select
-            value={editZoneId}
-            onChange={(e) => setEditZoneId(e.target.value)}
-            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-          >
-            <option value="">Ingen sone</option>
-            {zones.map((zone) => (
-              <option key={zone.id} value={zone.id}>
-                {zone.code} — {zone.name}
-              </option>
-            ))}
-          </select>
+          
         </div>
 
         <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">

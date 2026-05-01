@@ -5,6 +5,9 @@ import { Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import SnakeDropdown from "../components/SnakeDropdown";
+import SnakeToolbar from "../components/SnakeToolbar";
+import SnakeHero from "../components/SnakeHero";
 
 type PlacementStatus = "location" | "zone" | "missing";
 
@@ -25,6 +28,11 @@ type ProductRow = {
   vendor: string | null;
   product_type: string | null;
   shopify_quantity: number;
+  product_collections: {
+  id: string;
+  title: string;
+  handle: string | null;
+}[];
   inventory: {
     id: string;
     quantity: number;
@@ -65,7 +73,7 @@ export default function ProductsPage() {
   const [zones, setZones] = useState<ZoneOption[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
-
+const [sortMode, setSortMode] = useState<"az" | "za">("az");
   const [editing, setEditing] = useState<ProductRow | null>(null);
   const [newZone, setNewZone] = useState("");
   const [newLocation, setNewLocation] = useState("");
@@ -80,7 +88,7 @@ export default function ProductsPage() {
   >("all");
 
   const [zoneFilter, setZoneFilter] = useState("all");
-
+const [collectionFilter, setCollectionFilter] = useState("all");
   useEffect(() => {
     loadData();
   }, []);
@@ -100,6 +108,11 @@ export default function ProductsPage() {
           vendor,
           product_type,
           shopify_quantity,
+          product_collections (
+  id,
+  title,
+  handle
+),
           inventory (
             id,
             quantity,
@@ -142,6 +155,7 @@ export default function ProductsPage() {
     if (zonesRes.error) console.error(zonesRes.error);
 
     setProducts((productsRes.data as unknown as ProductRow[]) ?? []);
+    console.log("products sample", productsRes.data?.[0]);
     setLocations((locationsRes.data as LocationOption[]) ?? []);
     setZones((zonesRes.data as ZoneOption[]) ?? []);
     setLoading(false);
@@ -234,6 +248,33 @@ export default function ProductsPage() {
 
     await loadData();
   }
+const ignoredCollections = useMemo(
+  () =>
+    new Set([
+      "AVADA Email Marketing - Newest Products",
+      "AVADA Email Marketing - Best Sellers",
+    ]),
+  []
+);
+
+const collections = useMemo(() => {
+  const map = new Map<string, { title: string; handle: string | null }>();
+
+  products.forEach((product) => {
+    product.product_collections?.forEach((collection) => {
+      if (ignoredCollections.has(collection.title)) return;
+
+      map.set(collection.title, {
+        title: collection.title,
+        handle: collection.handle,
+      });
+    });
+  });
+
+  return Array.from(map.values()).sort((a, b) =>
+    a.title.localeCompare(b.title, "nb")
+  );
+}, [products, ignoredCollections]);
 
   const filtered = useMemo(() => {
     let result = products;
@@ -243,6 +284,17 @@ export default function ProductsPage() {
       result = result.filter((product) => {
         const meta = getMeta(product);
 
+
+        result = [...result].sort((a, b) => {
+  const aName = a.product_name.toLowerCase();
+  const bName = b.product_name.toLowerCase();
+
+  if (sortMode === "az") {
+    return aName.localeCompare(bName, "nb");
+  }
+
+  return bName.localeCompare(aName, "nb");
+});
         return [
           product.sku ?? "",
           product.product_name,
@@ -251,6 +303,7 @@ export default function ProductsPage() {
           product.product_type ?? "",
           meta.locationCode ?? "",
           meta.zoneLabel ?? "",
+          product.product_collections?.map((c) => c.title).join(" ") ?? "",
         ]
           .join(" ")
           .toLowerCase()
@@ -271,7 +324,13 @@ export default function ProductsPage() {
         return true;
       });
     }
-
+if (collectionFilter !== "all") {
+  result = result.filter((product) =>
+    product.product_collections?.some(
+      (collection) => collection.title === collectionFilter
+    )
+  );
+}
     if (zoneFilter !== "all") {
       result = result.filter((product) => {
         const meta = getMeta(product);
@@ -279,8 +338,10 @@ export default function ProductsPage() {
       });
     }
 
+    
+
     return result;
-  }, [products, query, statusFilter, zoneFilter]);
+  }, [products, query, statusFilter, zoneFilter, collectionFilter, sortMode]);
 
   function openModal(product: ProductRow) {
     const inventory = product.inventory?.[0];
@@ -304,100 +365,73 @@ export default function ProductsPage() {
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
          
-  <div className="grid gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
-    <div>
-      <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-        SNAKE / Produkter
-      </p>
+  <SnakeHero
+  eyebrow="SNAKE / Produkter"
+  title="Varesøk"
+  description="Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket."
+  searchValue={query}
+  onSearchChange={setQuery}
+  searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
+/>
 
-      <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-        Varesøk
-      </h1>
+<SnakeToolbar
+  left={
+    <>
+      {[
+        { key: "all", label: "Alle" },
+        { key: "missing", label: "Mangler" },
+        { key: "zone", label: "Har sone" },
+        { key: "location", label: "Har lokasjon" },
+        { key: "diff", label: "Avvik" },
+      ].map((filter) => (
+        <button
+          key={filter.key}
+          onClick={() =>
+            setStatusFilter(
+              filter.key as "all" | "missing" | "zone" | "location" | "diff"
+            )
+          }
+          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
+            statusFilter === filter.key
+              ? "bg-[#b58a14] text-white"
+              : "bg-white/10 text-white"
+          }`}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </>
+  }
+  right={
+    <>
+      <SnakeDropdown
+        value={collectionFilter}
+        onChange={setCollectionFilter}
+        width="w-full sm:w-[240px]"
+        options={[
+          { value: "all", label: "Alle collections" },
+          ...collections.map((collection) => ({
+            value: collection.title,
+            label: collection.title,
+          })),
+        ]}
+      />
 
-      <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-        Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket.
-      </p>
-    </div>
-
-    <div className="w-full">
-      <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
-        Søk
-      </label>
-
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="SKU, produktnavn, sone eller lokasjon"
-          className="w-full rounded-2xl border border-white/20 bg-white px-12 py-4 text-base text-neutral-950 shadow-lg outline-none transition focus:border-[#b58a14] sm:py-3.5 sm:text-sm"
-        />
-      </div>
-    </div>
-  </div>
-
-  <div className="border-t border-white/10 bg-[#042834] px-5 py-5 sm:px-8 lg:px-10">
-    <div className="grid gap-4 lg:grid-cols-[1fr_320px_360px] lg:items-center">
-      <div className="flex flex-wrap gap-2">
-        {[
-          { key: "all", label: "Alle" },
-          { key: "missing", label: "Mangler" },
-          { key: "zone", label: "Har sone" },
-          { key: "location", label: "Har lokasjon" },
-          { key: "diff", label: "Avvik" },
-        ].map((filter) => (
-          <button
-            key={filter.key}
-            onClick={() =>
-              setStatusFilter(
-                filter.key as "all" | "missing" | "zone" | "location" | "diff"
-              )
-            }
-            className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-              statusFilter === filter.key
-                ? "bg-[#b58a14] text-white"
-                : "bg-white/10 text-white"
-            }`}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </div>
-<div className="min-h-[64px]">
-  {selected.length > 0 ? (
-    <div className="flex h-full items-center justify-between gap-4 rounded-2xl bg-[#b58a14] px-4 py-3 text-white">
-      <span className="text-sm font-semibold">
-        {selected.length} valgt
-      </span>
-
-      <button
-        onClick={() => setBatchOpen(true)}
-        className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
-      >
-        Sett sone
-      </button>
-    </div>
-  ) : (
-    <div className="h-full rounded-2xl px-4 py-3" />
-  )}
-</div>
-      <select
+      <SnakeDropdown
         value={zoneFilter}
-        onChange={(e) => setZoneFilter(e.target.value)}
-        className="w-full rounded-xl border border-white/20 bg-white px-3 py-2 text-sm text-neutral-950 outline-none"
-      >
-        <option value="all">Alle soner</option>
-        {zones.map((zone) => (
-          <option key={zone.id} value={zone.id}>
-            {zone.code} — {zone.name}
-          </option>
-        ))}
-      </select>
-
-      
-    </div>
-  </div>
+        onChange={setZoneFilter}
+        width="w-full sm:w-[200px]"
+        options={[
+          { value: "all", label: "Alle soner" },
+          ...zones.map((zone) => ({
+            value: zone.id,
+            label: `${zone.code} — ${zone.name}`,
+          })),
+        ]}
+      />
+    </>
+  }
+/>
 
   <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
@@ -448,40 +482,45 @@ export default function ProductsPage() {
                 )}
               </div>
 
-              <div className="hidden overflow-x-auto lg:block">
-                <table className="min-w-full border-collapse">
+              <div className="hidden min-h-[680px] overflow-x-auto lg:block">
+                <table className="min-w-full table-fixed border-collapse">
                   <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
                     <tr>
-                      <th className="px-5 py-4 font-semibold">
-                        <input
-                          type="checkbox"
-                          checked={
-                            selected.length === filtered.length &&
-                            filtered.length > 0
-                          }
-                          onChange={() =>
-                            setSelected(
-                              selected.length === filtered.length
-                                ? []
-                                : filtered.map((product) => product.id)
-                            )
-                          }
-                        />
-                      </th>
-                      <th className="px-5 py-4 font-semibold">SKU</th>
-                      <th className="px-5 py-4 font-semibold">Produkt</th>
-                      <th className="px-5 py-4 font-semibold">Plassering</th>
-                      <th className="px-5 py-4 font-semibold">Antall</th>
-                      <th className="px-5 py-4 font-semibold">Status</th>
-                      <th className="px-5 py-4 font-semibold">Handling</th>
-                    </tr>
+  <th className="w-[48px] px-5 py-4 font-semibold">
+    <input
+      type="checkbox"
+      checked={selected.length === filtered.length && filtered.length > 0}
+      onChange={() =>
+        setSelected(
+          selected.length === filtered.length
+            ? []
+            : filtered.map((product) => product.id)
+        )
+      }
+    />
+  </th>
+
+  <th className="px-5 py-4 font-semibold">
+    <button
+      onClick={() => setSortMode((current) => (current === "az" ? "za" : "az"))}
+      className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[#055a7d]"
+    >
+      Produkt {sortMode === "az" ? "A–Å" : "Å–A"}
+    </button>
+  </th>
+
+  <th className="w-[150px] px-5 py-4 font-semibold">SKU</th>
+  <th className="w-[155px] px-5 py-4 font-semibold">Antall</th>
+  <th className="w-[190px] px-5 py-4 font-semibold">Plassering</th>
+  <th className="w-[100px] px-5 py-4 font-semibold">Handling</th>
+</tr>
                   </thead>
 
                   <tbody>
                     {loading ? (
                       <tr>
                         <td
-                          colSpan={7}
+                          colSpan={6}
                           className="px-5 py-12 text-sm text-neutral-500"
                         >
                           Laster produkter...
@@ -490,7 +529,7 @@ export default function ProductsPage() {
                     ) : filtered.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={7}
+                        colSpan={6}
                           className="px-5 py-12 text-sm text-neutral-500"
                         >
                           Ingen treff.
@@ -503,9 +542,9 @@ export default function ProductsPage() {
                         return (
                           <tr
                             key={product.id}
-                            className="border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
+                            className="h-[104px] border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
                           >
-                            <td className="px-5 py-5 text-sm">
+                            <td className="px-5 py-5 align-middle text-sm">
                               <input
                                 type="checkbox"
                                 checked={selected.includes(product.id)}
@@ -518,39 +557,35 @@ export default function ProductsPage() {
                                 }
                               />
                             </td>
+<td className="px-5 py-5 align-middle text-sm text-neutral-900">
+  <ProductIdentity product={product} />
+</td>
 
-                            <td className="px-5 py-5 text-sm font-semibold text-neutral-950">
-                              {product.sku || (
-                                <span className="text-red-600">
-                                  Mangler SKU
-                                </span>
-                              )}
-                            </td>
+<td className="w-[150px] px-5 py-5 align-middle text-xs font-semibold text-neutral-600">
+  {product.sku ? (
+    <span className="block truncate">{product.sku}</span>
+  ) : (
+    <span className="block truncate text-red-600">Mangler SKU</span>
+  )}
+</td>
 
-                            <td className="max-w-[480px] px-5 py-5 text-sm text-neutral-900">
-                              <ProductIdentity product={product} />
-                            </td>
+<td className="w-[155px] px-5 py-5 align-middle text-sm font-medium text-neutral-800">
+  <QuantityDiff product={product} meta={meta} />
+</td>
 
-                            <td className="px-5 py-5 text-sm">
-                              <PlacementDisplay meta={meta} />
-                            </td>
+<td className="w-[190px] px-5 py-5 align-middle text-sm">
+  <PlacementDisplay meta={meta} />
+</td>
 
-                            <td className="px-5 py-5 text-sm font-medium text-neutral-800">
-                              <QuantityDiff product={product} meta={meta} />
-                            </td>
-
-                            <td className="px-5 py-5 text-sm">
-                              <Status status={meta.status} />
-                            </td>
-
-                            <td className="px-5 py-5 text-sm">
-                              <button
-                                onClick={() => openModal(product)}
-                                className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
-                              >
-                                Endre
-                              </button>
-                            </td>
+<td className="w-[100px] px-5 py-5 align-middle text-sm">
+  <button
+    onClick={() => openModal(product)}
+    className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+  >
+    Endre
+  </button>
+</td>
+                           
                           </tr>
                         );
                       })
@@ -564,6 +599,32 @@ export default function ProductsPage() {
 
         <SnakeFooter />
       </div>
+
+{selected.length > 0 && (
+  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl bg-[#b58a14] px-4 py-3 text-white shadow-2xl shadow-black/30">
+    <div className="flex items-center justify-between gap-4">
+      <span className="text-sm font-semibold">
+        {selected.length} valgt
+      </span>
+
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setSelected([])}
+          className="rounded-xl bg-white/15 px-4 py-2 text-sm font-semibold text-white"
+        >
+          Fjern valg
+        </button>
+
+        <button
+          onClick={() => setBatchOpen(true)}
+          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
+        >
+          Sett sone
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {editing && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
@@ -738,7 +799,7 @@ function QuantityDiff({
   const diff = shopifyQuantity - snakeQuantity;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex min-h-[58px] flex-col justify-center">
       <span className="font-semibold text-neutral-950">
         Snake: {snakeQuantity}
       </span>
@@ -748,15 +809,15 @@ function QuantityDiff({
       </span>
 
       {diff > 0 && (
-        <span className="mt-1 text-xs font-semibold text-[#a77e05]">
-          {diff} ikke plassert
-        </span>
+        <span className="mt-1 whitespace-nowrap text-xs font-semibold text-[#a77e05]">
+  {diff} ikke plassert
+</span>
       )}
 
       {diff < 0 && (
-        <span className="mt-1 text-xs font-semibold text-red-600">
-          {Math.abs(diff)} for mye i Snake
-        </span>
+        <span className="mt-1 whitespace-nowrap text-xs font-semibold text-red-600">
+  {Math.abs(diff)} for mye i Snake
+</span>
       )}
     </div>
   );
@@ -764,7 +825,7 @@ function QuantityDiff({
 
 function ProductIdentity({ product }: { product: ProductRow }) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex h-[64px] items-center gap-4 overflow-hidden">
       <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
         {product.image_url ? (
           <img
@@ -779,15 +840,15 @@ function ProductIdentity({ product }: { product: ProductRow }) {
         )}
       </div>
 
-      <div className="min-w-0">
-        <p className="font-semibold text-neutral-950">{product.product_name}</p>
+     <div className="min-w-0 overflow-hidden">
+        <p className="line-clamp-2 min-h-[40px] font-semibold leading-5 text-neutral-950">
+  {product.product_name}
+</p>
 
-        <p className="mt-1 text-xs text-neutral-500">
-          {product.vendor || product.product_type || "Uten kategori"}
-        </p>
-
+      
+       
         {product.variant_name && (
-          <p className="mt-1 text-xs text-neutral-400">
+          <p className="mt-1 truncate text-xs text-neutral-400">
             {product.variant_name}
           </p>
         )}
@@ -813,7 +874,11 @@ function PlacementDisplay({ meta }: { meta: ProductMeta }) {
     );
   }
 
-  return <span className="font-semibold text-red-600">Mangler plassering</span>;
+ return (
+  <span className="whitespace-nowrap font-semibold text-red-600">
+    Mangler plassering
+  </span>
+);
 }
 
 function MobileProductCard({
@@ -833,6 +898,7 @@ function MobileProductCard({
     <article className="px-5 py-5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
+          
           <ProductIdentity product={product} />
 
           <p className="mt-3 text-sm font-semibold text-neutral-950">

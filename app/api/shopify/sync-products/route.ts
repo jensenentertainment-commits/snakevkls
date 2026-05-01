@@ -25,6 +25,15 @@ const SHOPIFY_QUERY = `
             featuredImage {
               url
             }
+            collections(first: 20) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                }
+              }
+            }
           }
         }
       }
@@ -34,6 +43,12 @@ const SHOPIFY_QUERY = `
     }
   }
 `;
+
+type ShopifyCollectionNode = {
+  id: string;
+  title: string;
+  handle: string | null;
+};
 
 type ShopifyVariantNode = {
   id: string;
@@ -52,6 +67,11 @@ type ShopifyVariantNode = {
     featuredImage: {
       url: string;
     } | null;
+    collections: {
+      edges: {
+        node: ShopifyCollectionNode;
+      }[];
+    };
   };
 };
 
@@ -86,8 +106,10 @@ export async function POST() {
 
   let cursor: string | null = null;
   let hasNextPage = true;
+
   let imported = 0;
   let skippedNoSku = 0;
+  let collectionsLinked = 0;
 
   while (hasNextPage) {
     const response = await fetch(
@@ -125,9 +147,9 @@ export async function POST() {
     for (const edge of edges) {
       const variant = edge.node;
       const sku = variant.sku?.trim();
-if (variant.product.status !== "ACTIVE") {
-  continue;
-}
+
+      if (variant.product.status !== "ACTIVE") continue;
+
       if (!sku) {
         skippedNoSku++;
         continue;
@@ -137,12 +159,11 @@ if (variant.product.status !== "ACTIVE") {
         sku,
         product_name: variant.product.title,
         variant_name: variant.title === "Default Title" ? null : variant.title,
-        active: variant.product.status === "ACTIVE",
+        active: true,
         image_url: variant.product.featuredImage?.url ?? null,
         vendor: variant.product.vendor ?? null,
         product_type: variant.product.productType ?? null,
         shopify_quantity: variant.inventoryQuantity ?? 0,
-        
         shopify_product_id: variant.product.id,
         shopify_variant_id: variant.id,
         shopify_inventory_item_id: variant.inventoryItem?.id ?? null,
@@ -150,19 +171,59 @@ if (variant.product.status !== "ACTIVE") {
         synced_at: new Date().toISOString(),
       };
 
-      const { error } = await supabaseAdmin
+      const { data: productData, error: productError } = await supabaseAdmin
         .from("products")
-        .upsert(row, { onConflict: "sku" });
+        .upsert(row, { onConflict: "sku" })
+        .select("id")
+        .single();
 
-      if (error) {
+      if (productError || !productData?.id) {
         return NextResponse.json(
           {
-            error: "Supabase upsert feilet",
-            details: error,
+            error: "Supabase product upsert feilet",
+            details: productError,
             row,
           },
           { status: 500 }
         );
+      }
+
+      const localProductId = productData.id;
+
+      await supabaseAdmin
+        .from("product_collections")
+        .delete()
+        .eq("product_id", localProductId);
+
+      const collections =
+        variant.product.collections?.edges?.map((item) => item.node) ?? [];
+
+      if (collections.length > 0) {
+        const collectionRows = collections.map((collection) => ({
+          product_id: localProductId,
+          shopify_collection_id: collection.id,
+          title: collection.title,
+          handle: collection.handle,
+        }));
+
+        const { error: collectionsError } = await supabaseAdmin
+          .from("product_collections")
+          .upsert(collectionRows, {
+            onConflict: "product_id,shopify_collection_id",
+          });
+
+        if (collectionsError) {
+          return NextResponse.json(
+            {
+              error: "Supabase collection upsert feilet",
+              details: collectionsError,
+              collectionRows,
+            },
+            { status: 500 }
+          );
+        }
+
+        collectionsLinked += collectionRows.length;
       }
 
       imported++;
@@ -176,5 +237,6 @@ if (variant.product.status !== "ACTIVE") {
     ok: true,
     imported,
     skippedNoSku,
+    collectionsLinked,
   });
 }

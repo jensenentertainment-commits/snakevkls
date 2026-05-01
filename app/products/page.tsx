@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
+import SnakeToast from "../components/SnakeToast";
+
+const ZONE_STYLES: Record<string, string> = {
+  HL: "border-blue-200 bg-blue-50 text-blue-700",
+  SR: "border-purple-200 bg-purple-50 text-purple-700",
+  SM: "border-green-200 bg-green-50 text-green-700",
+  ME: "border-amber-200 bg-amber-50 text-amber-700",
+};
 
 type PlacementStatus = "location" | "zone" | "missing";
 
@@ -16,6 +23,7 @@ type ProductMeta = {
   locationCode: string | null;
   zoneLabel: string | null;
   zoneId: string | null;
+  zoneCode: string | null;
   status: PlacementStatus;
 };
 
@@ -82,6 +90,14 @@ const [sortMode, setSortMode] = useState<"az" | "za">("az");
   const [selected, setSelected] = useState<string[]>([]);
   const [batchOpen, setBatchOpen] = useState(false);
   const [batchZone, setBatchZone] = useState("");
+  const [batchSaving, setBatchSaving] = useState(false);
+const [toast, setToast] = useState<{
+  message: string;
+  tone: "success" | "error";
+} | null>(null);
+const [recentlyUpdated, setRecentlyUpdated] = useState(false);
+
+
 
   const [statusFilter, setStatusFilter] = useState<
     "all" | "missing" | "zone" | "location" | "diff"
@@ -93,6 +109,15 @@ const [collectionFilter, setCollectionFilter] = useState("all");
     loadData();
   }, []);
 
+  useEffect(() => {
+  if (batchOpen) {
+    setBatchZone("");
+  }
+}, [batchOpen]);
+function showToast(message: string, tone: "success" | "error" = "success") {
+  setToast({ message, tone });
+  setTimeout(() => setToast(null), 3200);
+}
   async function loadData() {
     setLoading(true);
 
@@ -161,43 +186,56 @@ const [collectionFilter, setCollectionFilter] = useState("all");
     setLoading(false);
   }
 
-  async function handleBatchSave() {
-    if (!batchZone || selected.length === 0) return;
+ async function handleBatchSave() {
+  if (!batchZone || selected.length === 0 || batchSaving) return;
 
-    const selectedProducts = products.filter((product) =>
-      selected.includes(product.id)
-    );
+  setBatchSaving(true);
 
-    for (const product of selectedProducts) {
-      const existing = product.inventory?.[0];
-      const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
+  const selectedProducts = products.filter((product) =>
+    selected.includes(product.id)
+  );
 
-      if (existing) {
-        await supabase
-          .from("inventory")
-          .update({
-            zone_id: batchZone,
-            location_id: null,
-            quantity,
-          })
-          .eq("id", existing.id);
-      } else {
-        await supabase.from("inventory").insert({
+  let updated = 0;
+
+  for (const product of selectedProducts) {
+    const existing = product.inventory?.[0];
+    const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
+
+    const payload = {
+  zone_id: batchZone,
+  quantity,
+};
+
+    const { error } = existing
+      ? await supabase.from("inventory").update(payload).eq("id", existing.id)
+      : await supabase.from("inventory").insert({
           product_id: product.id,
-          zone_id: batchZone,
-          location_id: null,
-          quantity,
+          ...payload,
           is_primary: true,
         });
-      }
+
+    if (error) {
+      setBatchSaving(false);
+      showToast(`Kunne ikke batch-lagre: ${error.message}`, "error");
+      return;
     }
 
-    setBatchOpen(false);
-    setSelected([]);
-    setBatchZone("");
-
-    await loadData();
+    updated++;
   }
+
+  setBatchOpen(false);
+  setSelected([]);
+  setBatchZone("");
+  setBatchSaving(false);
+
+const zoneName =
+  zones.find((zone) => zone.id === batchZone)?.code ?? "valgt sone";
+
+showToast(`${updated} produkter → ${zoneName}`);
+
+await loadData();
+window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
   async function handleSave() {
     if (!editing) return;
@@ -236,18 +274,20 @@ const [collectionFilter, setCollectionFilter] = useState("all");
           is_primary: true,
         });
 
-    if (error) {
-      alert(`Kunne ikke lagre: ${error.message}`);
-      return;
-    }
-
+  if (error) {
+  showToast(`Kunne ikke lagre: ${error.message}`, "error");
+  return;
+}
     setEditing(null);
     setNewZone("");
     setNewLocation("");
     setNewQuantity("0");
 
     await loadData();
+      
   }
+
+  
 const ignoredCollections = useMemo(
   () =>
     new Set([
@@ -391,11 +431,15 @@ if (collectionFilter !== "all") {
               filter.key as "all" | "missing" | "zone" | "location" | "diff"
             )
           }
-          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-            statusFilter === filter.key
-              ? "bg-[#b58a14] text-white"
-              : "bg-white/10 text-white"
-          }`}
+          className={`rounded-xl px-3 py-2 text-sm font-semibold transition duration-300 ${
+  statusFilter === filter.key
+    ? "bg-[#b58a14] text-white"
+    : "bg-white/10 text-white"
+} ${
+  recentlyUpdated && filter.key === "zone"
+    ? "scale-[1.04] ring-2 ring-[#b58a14]/40"
+    : ""
+}`}
         >
           {filter.label}
         </button>
@@ -432,9 +476,66 @@ if (collectionFilter !== "all") {
     </>
   }
 />
+{filtered.length > 0 && (
+  <div className="border-t border-neutral-200 bg-neutral-50 px-5 py-4 sm:px-8">
+    {(() => {
+      const missing = products.filter(
+        (p) => getMeta(p).status === "missing"
+      ).length;
 
+      const diff = products.filter((p) => {
+        const meta = getMeta(p);
+        return (p.shopify_quantity ?? 0) - meta.quantity !== 0;
+      }).length;
+
+      if (missing > 0) {
+        return (
+          <div className="flex items-center justify-between rounded-2xl bg-[#b58a14]/10 px-4 py-3">
+            <span className="text-sm font-semibold text-neutral-900">
+              {missing} produkter mangler plassering
+            </span>
+
+            <button
+              onClick={() => setStatusFilter("missing")}
+              className="text-sm font-semibold text-[#055a7d] underline"
+            >
+              Vis →
+            </button>
+          </div>
+        );
+      }
+
+      if (diff > 0) {
+        return (
+          <div className="flex items-center justify-between rounded-2xl bg-[#a77e05]/10 px-4 py-3">
+            <span className="text-sm font-semibold text-neutral-900">
+              {diff} produkter har avvik
+            </span>
+
+            <button
+              onClick={() => setStatusFilter("diff")}
+              className="text-sm font-semibold text-[#055a7d] underline"
+            >
+              Vis →
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="rounded-2xl bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+          Lageret ser ryddig ut ✔
+        </div>
+      );
+    })()}
+  </div>
+)}
   <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+            <div
+  className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition duration-500 ${
+    recentlyUpdated ? "ring-2 ring-[#b58a14]/35" : ""
+  }`}
+>
               <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                 <div>
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
@@ -541,9 +642,13 @@ if (collectionFilter !== "all") {
 
                         return (
                           <tr
-                            key={product.id}
-                            className="h-[104px] border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
-                          >
+  key={product.id}
+  className={`h-[104px] border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025] ${
+    selected.includes(product.id)
+      ? "bg-[#b58a14]/10 ring-1 ring-[#b58a14]/30"
+      : ""
+  }`}
+>
                             <td className="px-5 py-5 align-middle text-sm">
                               <input
                                 type="checkbox"
@@ -625,7 +730,7 @@ if (collectionFilter !== "all") {
     </div>
   </div>
 )}
-
+<SnakeToast message={toast?.message ?? null} tone={toast?.tone ?? "success"} />
       {editing && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
           <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
@@ -722,44 +827,62 @@ if (collectionFilter !== "all") {
         </div>
       )}
 
-      {batchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-[400px] rounded-2xl bg-white p-6 text-black shadow-2xl">
-            <h2 className="text-xl font-semibold">
-              Sett sone ({selected.length})
-            </h2>
+     {batchOpen && (
+  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
+    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+        Batch assign
+      </p>
 
-            <select
-              value={batchZone}
-              onChange={(e) => setBatchZone(e.target.value)}
-              className="mt-4 w-full rounded-xl border border-neutral-300 p-3 text-sm"
-            >
-              <option value="">Velg sone</option>
-              {zones.map((zone) => (
-                <option key={zone.id} value={zone.id}>
-                  {zone.code} — {zone.name}
-                </option>
-              ))}
-            </select>
+      <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+        Sett sone på {selected.length} produkter
+      </h2>
 
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setBatchOpen(false)}
-                className="rounded-xl border border-neutral-300 p-3 text-sm font-semibold"
-              >
-                Avbryt
-              </button>
+      <p className="mt-2 text-sm leading-6 text-neutral-500">
+        Produktene får sone nå. Eksakt lokasjon kan settes senere.
+      </p>
 
-              <button
-                onClick={handleBatchSave}
-                className="rounded-xl bg-[#b58a14] p-3 text-sm font-semibold text-white"
-              >
-                Lagre
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <label className="mt-6 block text-sm font-medium text-neutral-700">
+        Sone
+      </label>
+
+      <select
+        value={batchZone}
+        onChange={(e) => setBatchZone(e.target.value)}
+        className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+      >
+        <option value="">Velg sone</option>
+        {zones.map((zone) => (
+          <option key={zone.id} value={zone.id}>
+            {zone.code} — {zone.name}
+          </option>
+        ))}
+      </select>
+
+      <div className="mt-6 grid grid-cols-2 gap-2">
+        <button
+          onClick={() => {
+  if (batchSaving) return;
+  setBatchOpen(false);
+  setBatchZone("");
+  setSelected([]);
+}}
+          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
+        >
+          Avbryt
+        </button>
+
+        <button
+          onClick={handleBatchSave}
+          disabled={!batchZone || batchSaving}
+          className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          {batchSaving ? "Lagrer..." : `Sett sone`}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </main>
   );
 }
@@ -778,13 +901,14 @@ function getMeta(product: ProductRow): ProductMeta {
       ? "zone"
       : "missing";
 
-  return {
-    quantity: inventory?.quantity ?? 0,
-    locationCode,
-    zoneLabel: zone ? `${zone.code} — ${zone.name}` : null,
-    zoneId: zone?.id ?? null,
-    status,
-  };
+ return {
+  quantity: inventory?.quantity ?? 0,
+  locationCode,
+  zoneLabel: zone ? `${zone.code} — ${zone.name}` : null,
+  zoneId: zone?.id ?? null,
+  zoneCode: zone?.code ?? null,
+  status,
+};
 }
 
 function QuantityDiff({
@@ -867,12 +991,19 @@ function PlacementDisplay({ meta }: { meta: ProductMeta }) {
   }
 
   if (meta.zoneLabel) {
-    return (
-      <span className="rounded-lg border border-[#a77e05]/20 bg-[#a77e05]/10 px-2 py-1 text-xs font-semibold text-[#a77e05]">
-        {meta.zoneLabel}
-      </span>
-    );
-  }
+  const zoneStyle =
+    meta.zoneCode && ZONE_STYLES[meta.zoneCode]
+      ? ZONE_STYLES[meta.zoneCode]
+      : "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#a77e05]";
+
+  return (
+    <span
+      className={`rounded-lg border px-2 py-1 text-xs font-semibold ${zoneStyle}`}
+    >
+      {meta.zoneLabel}
+    </span>
+  );
+}
 
  return (
   <span className="whitespace-nowrap font-semibold text-red-600">

@@ -8,6 +8,8 @@ import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToast from "../components/SnakeToast";
+import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
 
 const ZONE_STYLES: Record<string, string> = {
   HL: "border-blue-200 bg-blue-50 text-blue-700",
@@ -96,6 +98,8 @@ const [toast, setToast] = useState<{
   tone: "success" | "error";
 } | null>(null);
 const [recentlyUpdated, setRecentlyUpdated] = useState(false);
+const searchParams = useSearchParams();
+const tableRef = useRef<HTMLDivElement | null>(null);
 
 
 
@@ -108,6 +112,24 @@ const [collectionFilter, setCollectionFilter] = useState("all");
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+  const status = searchParams.get("status");
+
+  if (
+    status === "missing" ||
+    status === "zone" ||
+    status === "location" ||
+    status === "diff"
+  ) {
+    setStatusFilter(status);
+
+    // scroll ned til tabell etter load
+    setTimeout(() => {
+      tableRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 120);
+  }
+}, [searchParams]);
 
   useEffect(() => {
   if (batchOpen) {
@@ -426,11 +448,16 @@ if (collectionFilter !== "all") {
       ].map((filter) => (
         <button
           key={filter.key}
-          onClick={() =>
-            setStatusFilter(
-              filter.key as "all" | "missing" | "zone" | "location" | "diff"
-            )
-          }
+          onClick={() => {
+  const key =
+    filter.key as "all" | "missing" | "zone" | "location" | "diff";
+
+  setStatusFilter(key);
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("status", key);
+  window.history.replaceState(null, "", url.toString());
+}}
           className={`rounded-xl px-3 py-2 text-sm font-semibold transition duration-300 ${
   statusFilter === filter.key
     ? "bg-[#b58a14] text-white"
@@ -487,21 +514,64 @@ if (collectionFilter !== "all") {
         const meta = getMeta(p);
         return (p.shopify_quantity ?? 0) - meta.quantity !== 0;
       }).length;
+const total = products.length;
+const placed = products.filter(
+  (p) => getMeta(p).status !== "missing"
+).length;
 
+const percent = Math.round((placed / total) * 100);
       if (missing > 0) {
         return (
-          <div className="flex items-center justify-between rounded-2xl bg-[#b58a14]/10 px-4 py-3">
-            <span className="text-sm font-semibold text-neutral-900">
-              {missing} produkter mangler plassering
-            </span>
+      <div className="border-t border-neutral-200 bg-white px-5 py-5 sm:px-8">
+  <div className="grid gap-4 rounded-[24px] border border-[#b58a14]/20 bg-[#fbf6e8] p-5 shadow-sm lg:grid-cols-[1fr_320px_auto] lg:items-center">
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a77e05]">
+        Neste steg
+      </p>
+      <p className="mt-1 text-base font-semibold text-neutral-950">
+        {missing} produkter mangler plassering
+      </p>
+    </div>
 
-            <button
-              onClick={() => setStatusFilter("missing")}
-              className="text-sm font-semibold text-[#055a7d] underline"
-            >
-              Vis →
-            </button>
-          </div>
+    <div>
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-white">
+        <div
+          className="h-full rounded-full bg-[#b58a14] transition-all duration-500"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+      <p className="mt-2 text-xs font-semibold text-neutral-600">
+        {percent}% ferdig · {placed} av {total} produkter plassert
+      </p>
+    </div>
+
+    <div className="flex flex-wrap gap-2 lg:justify-end">
+      <button
+        onClick={() => setStatusFilter("missing")}
+        className="rounded-xl border border-[#055a7d]/20 bg-white px-4 py-2 text-sm font-semibold text-[#055a7d]"
+      >
+        Vis mangler
+      </button>
+
+      <button
+        onClick={() => {
+          const missingIds = products
+            .filter((product) => getMeta(product).status === "missing")
+            .map((product) => product.id);
+
+          setSelected(missingIds);
+
+          if (missingIds.length >= 3) {
+            setTimeout(() => setBatchOpen(true), 150);
+          }
+        }}
+        className="rounded-xl bg-[#055a7d] px-4 py-2 text-sm font-semibold text-white shadow-sm"
+      >
+        Velg alle
+      </button>
+    </div>
+  </div>
+</div>
         );
       }
 
@@ -530,7 +600,10 @@ if (collectionFilter !== "all") {
     })()}
   </div>
 )}
-  <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+  <div
+  ref={tableRef}
+  className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7"
+>
             <div
   className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition duration-500 ${
     recentlyUpdated ? "ring-2 ring-[#b58a14]/35" : ""

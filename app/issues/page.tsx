@@ -144,7 +144,7 @@ export default function IssuesPage() {
         title: product.sku || "Produkt uten SKU",
         description: product.product_name,
         meta: product.variant_name || undefined,
-        href: "/products",
+       href: "/products?status=missing",
         action: "Sett lokasjon",
       })),
 

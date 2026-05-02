@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -10,6 +10,7 @@ import SnakeHero from "../components/SnakeHero";
 import SnakeToast from "../components/SnakeToast";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
+
 
 const ZONE_STYLES: Record<string, string> = {
   HL: "border-blue-200 bg-blue-50 text-blue-700",
@@ -77,7 +78,7 @@ type LocationOption = {
   zone_id: string | null;
 };
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [locations, setLocations] = useState<LocationOption[]>([]);
   const [zones, setZones] = useState<ZoneOption[]>([]);
@@ -1198,4 +1199,12 @@ function StatusPill({
 
 function Empty({ text }: { text: string }) {
   return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProductsPageContent />
+    </Suspense>
+  );
 }

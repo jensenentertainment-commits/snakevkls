@@ -9,6 +9,7 @@ import {
   Clock,
   Cuboid,
   ArrowRight,
+  Wrench,
 } from "lucide-react";
 
 import SnakeNav from "./components/SnakeNav";
@@ -73,6 +74,16 @@ const issueState: IssueCardState = hasIssues
       action: "Åpne avvik",
       
     },
+
+    {
+  href: "/fix-locations",
+  icon: <Wrench />,
+  title: "Ryddemodus",
+  label: "Anbefalt",
+  text: "Plasser produkter som mangler lokasjon.",
+  body: "Går gjennom én vare av gangen og lar deg sette lokasjon uten å måtte hoppe mellom produkter og avvik.",
+  action: "Start ryddemodus",
+},
     {
       icon: <PackageCheck />,
       title: "Plukk",
@@ -130,7 +141,7 @@ const issueState: IssueCardState = hasIssues
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
              {modules.map((module) => (
   <ModuleCard
     key={module.title}

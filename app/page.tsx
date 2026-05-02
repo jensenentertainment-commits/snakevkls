@@ -99,8 +99,8 @@ const issueState: IssueCardState = hasIssues
       <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
         <SnakeNav />
 
-        <section className="overflow-hidden rounded-[32px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#06617f] via-[#05495b] to-[#032c35] px-5 py-8 text-white sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#06617f] via-[#05495b] to-[#032c35] px-5 py-6 text-white sm:px-8 sm:py-7 lg:px-10 lg:py-8">
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
             <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
 
@@ -110,11 +110,11 @@ const issueState: IssueCardState = hasIssues
                   SNAKE VKLS
                 </p>
 
-                <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-5xl md:text-6xl">
+                <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-5xl md:text-5xl">
                   Varekompaniets interne lagersystem.
                 </h1>
 
-                <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
+                <p className="mt-3 max-w-2xl text-base leading-7 text-white/75">
                   Finn produkter, kontroller lokasjoner og bygg ryddigere
                   lagerdata før plukk og ordrebehandling.
                 </p>
@@ -180,12 +180,10 @@ const issueState: IssueCardState = hasIssues
 
 function StatusStrip() {
   return (
-    <div className="rounded-[24px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-4">
-      <div className="grid gap-2 md:grid-cols-3 md:gap-4">
-        <StatusItem mark="V1" label="Versjon" value="1.0" />
-        <StatusItem icon={<Cuboid />} label="Moduler" value="3 aktive" />
-        <StatusItem icon={<Clock />} label="Neste modul" value="Plukk" />
-      </div>
+    <div className="rounded-[20px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-3">
+      <div className="flex items-center">
+  <StatusItem mark="V1" label="Versjon" value="1.0" />
+</div>
     </div>
   );
 }
@@ -202,8 +200,8 @@ function StatusItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white ring-1 ring-white/10 md:h-11 md:w-11 md:text-lg">
+    <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white ring-1 ring-white/10 md:h-11 md:w-11 md:text-lg">
         {mark ?? <span className="[&>svg]:h-5 [&>svg]:w-5">{icon}</span>}
       </div>
 

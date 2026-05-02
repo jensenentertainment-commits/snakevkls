@@ -103,8 +103,12 @@ const issueState: IssueCardState = hasIssues
           <div className="relative overflow-hidden bg-gradient-to-br from-[#06617f] via-[#05495b] to-[#032c35] px-5 py-6 text-white sm:px-8 sm:py-7 lg:px-10 lg:py-8">
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
             <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
-
-            <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
+<div className="absolute right-4 top-4 sm:right-8 sm:top-6">
+  <div className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-white/50 backdrop-blur">
+    V1.0
+  </div>
+</div>
+            <div className="relative grid gap-8 lg:grid-cols-[1fr]">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
                   SNAKE VKLS
@@ -120,7 +124,7 @@ const issueState: IssueCardState = hasIssues
                 </p>
               </div>
 
-              <StatusStrip />
+           
             </div>
           </div>
 
@@ -177,45 +181,6 @@ const issueState: IssueCardState = hasIssues
     </main>
   );
 }
-
-function StatusStrip() {
-  return (
-    <div className="rounded-[20px] border border-white/15 bg-white/10 p-2 shadow-xl shadow-black/20 backdrop-blur md:p-3">
-      <div className="flex items-center">
-  <StatusItem mark="V1" label="Versjon" value="1.0" />
-</div>
-    </div>
-  );
-}
-
-function StatusItem({
-  icon,
-  mark,
-  label,
-  value,
-}: {
-  icon?: React.ReactNode;
-  mark?: string;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-3 py-3 md:rounded-none md:bg-transparent md:px-0 md:py-0 md:border-r md:border-white/15 md:last:border-r-0">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/12 text-base font-bold text-white ring-1 ring-white/10 md:h-11 md:w-11 md:text-lg">
-        {mark ?? <span className="[&>svg]:h-5 [&>svg]:w-5">{icon}</span>}
-      </div>
-
-      <div>
-        <p className="text-xs text-white/55 md:text-sm">{label}</p>
-        <p className="mt-0.5 text-base font-semibold text-white md:text-lg">
-          {value}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-
 
 function ModuleCard({
   href,

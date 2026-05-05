@@ -1,0 +1,1 @@
+export const SNAKE_VERSION = "1.6";

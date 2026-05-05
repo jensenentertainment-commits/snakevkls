@@ -4,10 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
- 
-  Search,
-} from "lucide-react";
+  ArrowRight,} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -23,13 +20,14 @@ type ProductRow = {
   product_name: string;
   variant_name: string | null;
   inventory: {
+  id: string;
+  quantity: number;
+  zone_id: string | null;
+  locations: {
     id: string;
-    quantity: number;
-    locations: {
-      id: string;
-      code: string;
-    } | null;
-  }[];
+    code: string;
+  } | null;
+}[];
 };
 
 type LocationRow = {
@@ -79,9 +77,10 @@ export default function IssuesPage() {
           product_name,
           variant_name,
           inventory (
-            id,
-            quantity,
-            locations (
+  id,
+  quantity,
+  zone_id,
+  locations (
               id,
               code
             )
@@ -118,10 +117,15 @@ export default function IssuesPage() {
   }
 
   const issues = useMemo(() => {
-    const productsWithoutLocation = products.filter(
-      (product) => !product.inventory || product.inventory.length === 0
-    );
+    const productsWithoutZone = products.filter((product) => {
+  const inventory = product.inventory?.[0];
+  return !inventory?.zone_id;
+});
 
+const productsWithoutLocation = products.filter((product) => {
+  const inventory = product.inventory?.[0];
+  return inventory?.zone_id && !inventory.locations;
+});
     const productsWithoutSku = products.filter((product) => !product.sku);
 
     const productsWithMultipleLocations = products.filter(
@@ -137,16 +141,27 @@ export default function IssuesPage() {
     );
 
     const list: IssueItem[] = [
-      ...productsWithoutLocation.map((product) => ({
-        id: `product-location-${product.id}`,
-        severity: "critical" as const,
-        type: "Produkt uten lokasjon",
-        title: product.sku || "Produkt uten SKU",
-        description: product.product_name,
-        meta: product.variant_name || undefined,
-       href: "/products?status=missing",
-        action: "Sett lokasjon",
-      })),
+      ...productsWithoutZone.map((product) => ({
+  id: `product-zone-${product.id}`,
+  severity: "critical" as const,
+  type: "Produkt uten sone",
+  title: product.sku || "Produkt uten SKU",
+  description: product.product_name,
+  meta: product.variant_name || undefined,
+  href: "/products?status=missing",
+  action: "Sett sone",
+})),
+
+...productsWithoutLocation.map((product) => ({
+  id: `product-location-${product.id}`,
+  severity: "warning" as const,
+  type: "Produkt uten lokasjon",
+  title: product.sku || "Produkt uten SKU",
+  description: product.product_name,
+  meta: product.variant_name || undefined,
+  href: "/fix-locations",
+  action: "Sett lokasjon",
+})),
 
       ...productsWithoutSku.map((product) => ({
         id: `product-sku-${product.id}`,
@@ -201,7 +216,8 @@ export default function IssuesPage() {
     ];
 
     return {
-      productsWithoutLocation,
+  productsWithoutZone,
+  productsWithoutLocation,
       productsWithoutSku,
       productsWithMultipleLocations,
       locationsWithoutProducts,
@@ -238,7 +254,7 @@ export default function IssuesPage() {
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
@@ -283,9 +299,10 @@ export default function IssuesPage() {
       <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
         Produkt{" "}
         <span className="ml-1 text-white/65">
-          {issues.productsWithoutLocation.length +
-            issues.productsWithoutSku.length +
-            issues.productsWithMultipleLocations.length}
+          {issues.productsWithoutZone.length +
+  issues.productsWithoutLocation.length +
+  issues.productsWithoutSku.length +
+  issues.productsWithMultipleLocations.length}
         </span>
       </div>
 
@@ -341,7 +358,8 @@ export default function IssuesPage() {
               <MiniSection
                 title="Produkter"
                 items={[
-                  ["Uten lokasjon", issues.productsWithoutLocation.length],
+                  ["Uten sone", issues.productsWithoutZone.length],
+["Uten lokasjon", issues.productsWithoutLocation.length],
                   ["Uten SKU", issues.productsWithoutSku.length],
                   ["Flere lokasjoner", issues.productsWithMultipleLocations.length],
                 ]}

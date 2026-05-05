@@ -39,10 +39,7 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+
 
 button,
 input,
@@ -53,4 +50,8 @@ select {
 
 ::selection {
   background: rgba(181, 138, 20, 0.35);
+}
+
+.flash-success {
+  background: #e6f7ec;
 }

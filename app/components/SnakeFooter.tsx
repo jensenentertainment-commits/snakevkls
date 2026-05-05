@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { SNAKE_VERSION } from "@/lib/version";
 
 const MESSAGES = [
   "Systemet fungerer som forventet.",
@@ -155,20 +157,22 @@ const updateMessage = () => {
   return () => clearInterval(interval);
 }, []);
 
-  return (
-    <footer className="mt-6 flex items-center justify-between rounded-2xl border border-white/[0.06] bg-black/[0.15] px-6 py-4 text-sm text-white/50 backdrop-blur">
-      
-      <div className="font-medium">
-        {time}
-      </div>
+return (
+  <footer className="mt-6 rounded-2xl border border-white/[0.06] bg-black/[0.15] px-6 py-4 text-sm text-white/50 backdrop-blur">
+    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="font-medium">{time}</div>
 
-      <div className="hidden md:block text-white/40">
+      <div className="hidden flex-1 text-center text-white/40 md:block">
         {message}
       </div>
 
       <div className="uppercase tracking-[0.2em] text-white/35">
         Snake VKLS BY JENSEN DIGITAL
       </div>
-    </footer>
-  );
+    </div>
+
+    
+   
+  </footer>
+);
 }

@@ -161,9 +161,9 @@ const filteredZones = useMemo(() => {
 
           <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
    <SnakeHero
-  eyebrow="SNAKE / Settings"
-  title="Innstillinger"
-  description="Administrer grunnstrukturen i Snake. Soner styrer hvor lokasjoner hører hjemme og gjør lageret lettere å rydde senere."
+  eyebrow="SNAKE / SONER"
+  title="Soner"
+  description="Soner styrer hvor lokasjoner hører hjemme og gjør lageret lettere å rydde senere."
   searchValue={query}
   onSearchChange={setQuery}
   searchPlaceholder="Søk etter sonekode eller navn"

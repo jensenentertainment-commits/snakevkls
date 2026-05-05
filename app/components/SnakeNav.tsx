@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import SnakeLogoutButton from "./SnakeLogoutButton";
 
 export default function SnakeNav() {
   return (
@@ -31,7 +32,8 @@ export default function SnakeNav() {
         <NavLink href="/products" label="Produkter" />
         <NavLink href="/locations" label="Lokasjoner" />
         <NavLink href="/issues" label="Avvik" />
-        <NavLink href="/settings" label="Innstillinger" />
+        <NavLink href="/activities" label="Aktivitet" />
+        <SnakeLogoutButton />
       </nav>
     </header>
   );

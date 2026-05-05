@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { MapPin, Search, Layers, CheckCircle2, AlertTriangle, Plus } from "lucide-react";
+import { MapPin, Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -135,12 +135,7 @@ async function handleSaveEditLocation() {
     return;
   }
 
-  console.log("Forsøker å lagre:", {
-    id: editingLocation.id,
-    code,
-    zone_id: editZoneId || null,
-    active: editActive,
-  });
+ 
 
   const { data, error } = await supabase
     .from("locations")
@@ -151,8 +146,6 @@ async function handleSaveEditLocation() {
     })
     .eq("id", editingLocation.id)
     .select("id, code, zone_id, active");
-
-  console.log("Supabase update response:", { data, error });
 
   if (error) {
     alert(`Kunne ikke lagre: ${error.message}`);
@@ -225,7 +218,7 @@ async function handleSaveEditLocation() {
   description="Opprett, filtrer og vedlikehold lagerplasser."
   searchValue={query}
   onSearchChange={setQuery}
-  searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
+  searchPlaceholder="Lokasjonskode, sone eller navn"
 />
 
 <SnakeToolbar
@@ -261,20 +254,28 @@ async function handleSaveEditLocation() {
   }
   right={
     <>
-      <SnakeDropdown
-        value={selectedZone}
-        onChange={setSelectedZone}
-        width="w-full sm:w-[220px]"
-        options={[
-          { value: "all", label: "Alle soner" },
-          ...zones.map((zone) => ({
-            value: zone.id,
-            label: `${zone.code} — ${zone.name}`,
-          })),
-        ]}
-      />
+     <SnakeDropdown
+  value={selectedZone}
+  onChange={(value) => {
+    if (value === "__manage_zones") {
+      window.location.href = "/zones";
+      return;
+    }
 
-      <button
+    setSelectedZone(value);
+  }}
+  width="w-full sm:w-[220px]"
+  options={[
+    { value: "all", label: "Alle soner" },
+    ...zones.map((zone) => ({
+      value: zone.id,
+      label: `${zone.code} — ${zone.name}`,
+    })),
+    { value: "__manage_zones", label: "Administrer soner →" },
+  ]}
+/>
+
+       <button
         onClick={() => setShowCreateModal(true)}
         className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
       >
@@ -611,11 +612,23 @@ async function handleSaveEditLocation() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-neutral-700">
-            Sone
-          </label>
-          
-        </div>
+  <label className="mb-2 block text-sm font-medium text-neutral-700">
+    Sone
+  </label>
+
+  <select
+    value={editZoneId}
+    onChange={(e) => setEditZoneId(e.target.value)}
+    className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+  >
+    <option value="">Ingen sone</option>
+    {zones.map((zone) => (
+      <option key={zone.id} value={zone.id}>
+        {zone.code} — {zone.name}
+      </option>
+    ))}
+  </select>
+</div>
 
         <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">
           <input

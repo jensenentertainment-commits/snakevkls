@@ -20,22 +20,28 @@ type ProductRow = {
   product_name: string;
   variant_name: string | null;
   inventory: {
-    id: string;
-    quantity: number;
-    location_id: string | null;
-  }[];
+  id: string;
+  quantity: number;
+  location_id: string | null;
+  zone_id: string | null;
+  zones: {
+    code: string;
+    name: string;
+  } | null;
+}[];
 };
 
 type LocationRow = {
   id: string;
   code: string;
   active: boolean;
+  zone_id: string | null;
 };
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-[#003b46] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
         <SnakeNav />
       </div>
 
@@ -48,6 +54,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
 export default function FixLocationsPage() {
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [locations, setLocations] = useState<LocationRow[]>([]);
+  const [zones, setZones] = useState<ZoneRow[]>([]);
   const [index, setIndex] = useState(0);
   const [selectedLocationId, setSelectedLocationId] = useState("");
   const [loading, setLoading] = useState(true);
@@ -55,17 +62,26 @@ export default function FixLocationsPage() {
 
   const current = products[index];
   const currentInventory = current?.inventory?.[0];
-
+const hasZone = currentInventory?.zone_id;
+const currentZone = zones.find((zone) => zone.id === currentInventory?.zone_id);
+const currentZoneLabel = currentZone
+  ? `${currentZone.code} — ${currentZone.name}`
+  : null;
   const totalCount = products.length;
-  const doneCount = current ? index : totalCount;
+  const doneCount = 0;
   const progress =
     totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 100;
 
   const activeLocations = useMemo(() => {
-    return locations
-      .filter((loc) => loc.active)
-      .sort((a, b) => a.code.localeCompare(b.code));
-  }, [locations]);
+  if (!current) return [];
+
+  const zoneId = currentInventory?.zone_id;
+
+  return locations
+    .filter((loc) => loc.active)
+    .filter((loc) => (zoneId ? loc.zone_id === zoneId : true))
+    .sort((a, b) => a.code.localeCompare(b.code));
+}, [locations, current]);
 
   async function loadData() {
     setLoading(true);
@@ -73,6 +89,7 @@ export default function FixLocationsPage() {
     const [
       { data: productData, error: productError },
       { data: locationData, error: locationError },
+      { data: zoneData, error: zoneError },
     ] = await Promise.all([
       supabase
         .from("products")
@@ -85,7 +102,8 @@ export default function FixLocationsPage() {
           inventory (
             id,
             quantity,
-            location_id
+            location_id,
+            zone_id
           )
         `
         )
@@ -93,24 +111,39 @@ export default function FixLocationsPage() {
 
       supabase
         .from("locations")
-        .select("id, code, active")
+        .select("id, code, active, zone_id")
         .eq("active", true)
         .order("code", { ascending: true }),
+
+        supabase
+  .from("zones")
+  .select("id, code, name")
+  .eq("active", true)
+  .order("code", { ascending: true }),
     ]);
+
+
 
     if (productError) console.error(productError);
     if (locationError) console.error(locationError);
+    if (zoneError) console.error(zoneError);
 
-    const missingLocationProducts =
-      productData?.filter((product) => {
-        const inventory = product.inventory?.[0];
-        return inventory && !inventory.location_id;
-      }) ?? [];
+    
+   const missingLocationProducts =
+  productData?.filter((product) => {
+    const inventory = product.inventory?.[0];
+
+    return inventory?.zone_id && !inventory.location_id;
+  }) ?? [];
 
     setProducts(missingLocationProducts as ProductRow[]);
     setLocations((locationData ?? []) as LocationRow[]);
+    setZones((zoneData ?? []) as ZoneRow[]);
     setIndex(0);
     setSelectedLocationId("");
+    setTimeout(() => {
+  document.getElementById("location-select")?.focus();
+}, 50);
     setLoading(false);
   }
 
@@ -118,15 +151,53 @@ export default function FixLocationsPage() {
     loadData();
   }, []);
 
+  
+
+  type ZoneRow = {
+  id: string;
+  code: string;
+  name: string;
+};
+
+useEffect(() => {
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key !== "Enter") return;
+
+    if (event.shiftKey) {
+      event.preventDefault();
+      skipCurrent();
+      return;
+    }
+
+    if (selectedLocationId && !saving) {
+      event.preventDefault();
+      handleAssign();
+    }
+  }
+
+  window.addEventListener("keydown", handleKeyDown);
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [selectedLocationId, saving, current?.id]);
+
   async function handleAssign() {
-    if (!currentInventory || !selectedLocationId) return;
+    if (!current || !selectedLocationId) return;
 
     setSaving(true);
 
-    const { error } = await supabase
+    const { error } = currentInventory
+  ? await supabase
       .from("inventory")
       .update({ location_id: selectedLocationId })
-      .eq("id", currentInventory.id);
+      .eq("id", currentInventory.id)
+  : await supabase.from("inventory").insert({
+      product_id: current.id,
+      location_id: selectedLocationId,
+      quantity: 0,
+      is_primary: true,
+    });
 
     if (error) {
       console.error(error);
@@ -140,24 +211,33 @@ export default function FixLocationsPage() {
       setProducts([]);
       setIndex(0);
     } else {
-      setIndex((prev) => prev + 1);
+     setProducts((prev) => {
+  const [first, ...rest] = prev;
+  return [...rest, first];
+  });
     }
 
     setSaving(false);
+    document.body.classList.add("flash-success");
+setTimeout(() => {
+  document.body.classList.remove("flash-success");
+}, 120);
   }
 
   function skipCurrent() {
-    setSelectedLocationId("");
+  setSelectedLocationId("");
 
-    if (index + 1 >= products.length) {
-      setProducts([]);
-      setIndex(0);
-    } else {
-      setIndex((prev) => prev + 1);
-    }
-  }
+  setProducts((prev) => {
+    if (prev.length <= 1) return prev;
 
-  if (loading) {
+    const [currentProduct, ...rest] = prev;
+    return [...rest, currentProduct];
+  });
+
+  setIndex(0);
+}
+
+if (loading) {
     return (
       <PageShell>
         <section className="mx-auto flex min-h-[70vh] max-w-5xl items-center justify-center px-5">
@@ -217,7 +297,7 @@ export default function FixLocationsPage() {
 
   return (
   <PageShell>
-    <section className="mx-auto max-w-[1200px] px-6 pb-16 pt-6">
+    <section className="mx-auto max-w-[1200px] px-6 pb-16 pt-3">
       <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#003b46] shadow-2xl">
         <div className="grid gap-8 bg-[#05586b] px-9 py-9 lg:grid-cols-[1fr_420px]">
           <div>
@@ -318,14 +398,24 @@ export default function FixLocationsPage() {
             </div>
 
             <div className="p-6">
-              <label className="mb-2 block text-sm font-bold text-black/70">
-                Velg lokasjon
-              </label>
+              <label>
+  {hasZone ? "Velg lokasjon" : "Velg sone først"}
+</label>
+{hasZone && (
+  <div className="mb-3 text-sm text-black/60">
+    Sone:{" "}
+<span className="font-semibold">
+  {currentZoneLabel ?? "Ukjent sone"}
+</span>
+  </div>
+)}
 
               <select
-                value={selectedLocationId}
+  id="location-select"
+  disabled={!hasZone}
+  value={selectedLocationId}
                 onChange={(event) => setSelectedLocationId(event.target.value)}
-                className="w-full rounded-2xl border border-black/10 bg-white px-4 py-4 text-black outline-none focus:border-[#d4a72c]"
+               className="w-full rounded-2xl border border-black/10 bg-white px-4 py-4 text-black outline-none focus:border-[#d4a72c] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400"
               >
                 <option value="">Velg lokasjon…</option>
 
@@ -335,6 +425,12 @@ export default function FixLocationsPage() {
                   </option>
                 ))}
               </select>
+
+{!hasZone && (
+  <p className="mt-2 text-sm font-semibold text-[#a77e05]">
+    Produktet må ha sone før nøyaktig lokasjon kan settes.
+  </p>
+)}
 
               <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
                 <button

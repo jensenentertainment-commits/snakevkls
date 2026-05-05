@@ -13,26 +13,27 @@ export default function SnakeHero({
   eyebrow: string;
   title: string;
   description: string;
-  searchValue: string;
-  onSearchChange: (value: string) => void;
-  searchPlaceholder: string;
+  searchValue?: string;
+onSearchChange?: (value: string) => void;
+searchPlaceholder?: string;
 }) {
-  return (
-    <div className="grid min-h-[220px] gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 sm:py-10 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-12">
-      <div>
-        <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-          {eyebrow}
-        </p>
+ return (
+  <div className="grid min-h-[170px] gap-8 bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-6 text-white sm:px-8 sm:py-7 lg:grid-cols-[1fr_480px] lg:items-start lg:px-10 lg:py-8">
+    <div>
+      <p className="text-xs uppercase tracking-[0.22em] text-white/65">
+        {eyebrow}
+      </p>
 
-        <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:mt-4 sm:text-5xl">
-          {title}
-        </h1>
+      <h1 className="mt-2 text-3xl font-semibold leading-[0.95] tracking-tight sm:text-4xl lg:text-[44px]">
+        {title}
+      </h1>
 
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:mt-5 sm:text-base sm:leading-7">
-          {description}
-        </p>
-      </div>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-white/75">
+        {description}
+      </p>
+    </div>
 
+    {typeof searchValue === "string" && onSearchChange && searchPlaceholder && (
       <div className="w-full">
         <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
           Søk
@@ -49,6 +50,7 @@ export default function SnakeHero({
           />
         </div>
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
 }

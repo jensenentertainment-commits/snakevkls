@@ -6,15 +6,14 @@ import {
   PackageCheck,
   Boxes,
   Activity,
-  Clock,
-  Cuboid,
   ArrowRight,
   Wrench,
 } from "lucide-react";
 
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
-
+import { SNAKE_VERSION } from "../lib/version";
+import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
   bg: string;
@@ -23,10 +22,20 @@ type IssueCardState = {
   action: string;
   hover: string;
 };
+export default async function HomePage() {
+  const {
+    missingLocationCount,
+    missingSkuCount,
+    emptyLocationCount,
+  } = await getDashboardStats();
+  const issueCount =
+  missingLocationCount + missingSkuCount + emptyLocationCount;
 
-export default function HomePage() {
-  const hasIssues = true;
-  const issueCount = 3;
+
+
+
+
+const hasIssues = issueCount > 0;
 const issueState: IssueCardState = hasIssues
   ? {
       border: "border-red-300",
@@ -44,6 +53,9 @@ const issueState: IssueCardState = hasIssues
       action: "text-green-700",
       hover: "hover:border-green-300 hover:shadow-[0_18px_45px_rgba(34,197,94,0.12)]",
     };
+
+    const shouldHighlightCleanup = hasIssues && issueCount > 0;
+
   const modules = [
     {
       href: "/products",
@@ -64,26 +76,35 @@ const issueState: IssueCardState = hasIssues
       body: "Opprett, rediger og kontroller lokasjoner. QR og labels gjør strukturen fysisk brukbar.",
       action: "Administrer lokasjoner",
     },
+
+        
+ {
+  href: "/fix-locations",
+  icon: <Wrench />,
+  title: "Ryddemodus",
+  label: shouldHighlightCleanup ? "Neste steg" : "Klar",
+  text: shouldHighlightCleanup
+    ? "Plasser produkter som mangler lokasjon."
+    : "Ingen akutt rydding nødvendig.",
+  body: shouldHighlightCleanup
+    ? "Går gjennom én vare av gangen og lar deg sette lokasjon uten å måtte hoppe mellom produkter og avvik."
+    : "Når nye produkter mangler lokasjon, blir ryddemodus anbefalt her.",
+  action: shouldHighlightCleanup ? "Start ryddemodus" : "Åpne ryddemodus",
+  highlight: shouldHighlightCleanup,
+},
+
     {
       href: "/issues",
       icon: <AlertTriangle />,
       title: "Avvik",
       label: hasIssues ? `${issueCount} avvik` : "OK",
-      text: "Finn det som må ryddes før plukk.",
+      text: "Rydd feil som stopper plukk.",
       body: "Produkter uten lokasjon, manglende SKU, tomme lokasjoner og strukturfeil samles her.",
       action: "Åpne avvik",
       
     },
 
-    {
-  href: "/fix-locations",
-  icon: <Wrench />,
-  title: "Ryddemodus",
-  label: "Anbefalt",
-  text: "Plasser produkter som mangler lokasjon.",
-  body: "Går gjennom én vare av gangen og lar deg sette lokasjon uten å måtte hoppe mellom produkter og avvik.",
-  action: "Start ryddemodus",
-},
+
     {
       icon: <PackageCheck />,
       title: "Plukk",
@@ -96,29 +117,50 @@ const issueState: IssueCardState = hasIssues
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
-        <SnakeNav />
+     <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+             <SnakeNav />
+     
+            
 
         <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="relative overflow-hidden bg-gradient-to-br from-[#06617f] via-[#05495b] to-[#032c35] px-5 py-6 text-white sm:px-8 sm:py-7 lg:px-10 lg:py-8">
+          <div className="relative overflow-hidden bg-[#05495b] px-5 py-4 text-white sm:px-8 sm:py-5 lg:px-10 lg:py-5">
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
             <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
-<div className="absolute right-4 top-4 sm:right-8 sm:top-6">
-  <div className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-white/50 backdrop-blur">
-    V1.0
+
+  <Link href="/changelog" className="absolute right-4 top-4 sm:right-8 sm:top-6">
+  <div className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-white/50 backdrop-blur hover:bg-white/15 hover:text-white/70">
+    SNAKE V{SNAKE_VERSION}
   </div>
-</div>
+</Link>
+
             <div className="relative grid gap-8 lg:grid-cols-[1fr]">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
                   SNAKE VKLS
                 </p>
 
-                <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-5xl md:text-5xl">
-                  Varekompaniets interne lagersystem.
+                <h1 className="mt-2 max-w-4xl text-3xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-4xl md:text-[44px]">
+                  Varekompaniets lagersystem.
                 </h1>
 
-                <p className="mt-3 max-w-2xl text-base leading-7 text-white/75">
+          {hasIssues && (
+  <p className="mt-1 text-xs text-white/70">
+    <span className="font-semibold text-white">
+      {missingLocationCount}
+    </span>{" "}
+    uten lokasjon ·{" "}
+    <span className="font-semibold text-white">
+      {missingSkuCount}
+    </span>{" "}
+    uten SKU ·{" "}
+    <span className="font-semibold text-white">
+      {emptyLocationCount}
+    </span>{" "}
+    tomme lokasjoner
+  </p>
+)}
+
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
                   Finn produkter, kontroller lokasjoner og bygg ryddigere
                   lagerdata før plukk og ordrebehandling.
                 </p>
@@ -128,8 +170,8 @@ const issueState: IssueCardState = hasIssues
             </div>
           </div>
 
-          <div className="px-5 py-6 sm:px-8 sm:py-8">
-            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="px-5 py-5 sm:px-8 sm:py-6">
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
                   Moduler
@@ -145,19 +187,20 @@ const issueState: IssueCardState = hasIssues
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-5">
              {modules.map((module) => (
   <ModuleCard
     key={module.title}
     {...module}
     issueState={module.title === "Avvik" ? issueState : undefined}
+    
   />
 ))}
             </div>
 
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
               <WideCard
-                href="/"
+                href="/locations"
                 icon={<Boxes />}
                 title="Lagerstruktur"
                 text="Gyldige lokasjonsvalg, aktive plasser og faste plasseringer."
@@ -165,7 +208,7 @@ const issueState: IssueCardState = hasIssues
               />
 
               <WideCard
-  href="/activity"
+  href="/activities"
   icon={<Activity />}
   title="Aktivitetslogg"
   text="Siste endringer i lokasjoner, soner, varer og avvik."
@@ -190,9 +233,9 @@ function ModuleCard({
   text,
   body,
   action,
- 
   muted,
   issueState,
+  highlight,
 }: {
   href?: string;
   icon: React.ReactNode;
@@ -202,18 +245,22 @@ function ModuleCard({
   body: string;
   action?: string;
   
-  muted?: boolean;
-  issueState?: IssueCardState | null;
+muted?: boolean;
+issueState?: IssueCardState | null;
+highlight?: boolean;
 }) {
 
   const card = (
     <div
-      className={`group relative flex min-h-[250px] flex-col overflow-hidden rounded-[26px] border p-5 shadow-sm transition duration-200 sm:h-[390px] sm:p-6 ${
+      className={`group relative flex h-full min-h-[310px] flex-col overflow-hidden rounded-[24px] border p-5 shadow-sm transition duration-200 sm:p-5
+       ${
   issueState
     ? `${issueState.border} ${issueState.bg} ${issueState.hover}`
     : muted
       ? "border-[#d5dee2] bg-white opacity-55 grayscale-[0.2]"
-      : "border-[#d5dee2] bg-white hover:-translate-y-1 hover:border-[#055a7d]/25 hover:shadow-xl"
+      : highlight
+        ? "border-[#055a7d]/30 bg-[#f0f7fa] hover:-translate-y-1 hover:border-[#055a7d]/45 hover:shadow-xl"
+        : "border-[#d5dee2] bg-white hover:-translate-y-1 hover:border-[#055a7d]/25 hover:shadow-xl"
 }`}
     >
       {!muted && (
@@ -224,13 +271,13 @@ function ModuleCard({
 
       <div className="relative flex items-start justify-between gap-4">
         <div
-  className={`flex h-16 w-16 items-center justify-center rounded-full border ring-1 ${
+  className={`flex h-14 w-14 items-center justify-center rounded-full border ring-1 ${
     issueState
       ? issueState.icon
       : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
   }`}
 >
-          <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
+          <span className="[&>svg]:h-7 [&>svg]:w-7">{icon}</span>
         </div>
 
         <span

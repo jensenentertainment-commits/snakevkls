@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
-const supabase = await createClient();
+const supabase = supabaseAdmin;
 
 export async function getDashboardStats() {
   // produkter uten lokasjon

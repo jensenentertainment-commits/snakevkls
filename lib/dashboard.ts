@@ -1,4 +1,6 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
+
+const supabase = await createClient();
 
 export async function getDashboardStats() {
   // produkter uten lokasjon

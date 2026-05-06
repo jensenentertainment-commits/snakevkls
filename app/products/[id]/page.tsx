@@ -101,11 +101,11 @@ export default function ProductPage() {
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <div className="bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-8 text-white sm:px-8 lg:px-10">
+          <div className="bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-5 text-white sm:px-8 sm:py-6 lg:px-10">
             <Link
               href="/products"
               className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white"
@@ -114,13 +114,13 @@ export default function ProductPage() {
               Til produkter
             </Link>
 
-            <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_220px] lg:items-end">
+            <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_160px] lg:items-end">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
                   Produkt
                 </p>
 
-                <h1 className="mt-3 max-w-4xl text-4xl font-semibold leading-tight tracking-tight">
+                <h1 className="mt-2 max-w-4xl text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
                   {product.product_name}
                 </h1>
 
@@ -132,7 +132,7 @@ export default function ProductPage() {
               </div>
 
               {product.image_url && (
-                <div className="h-40 w-40 overflow-hidden rounded-3xl border border-white/15 bg-white/10">
+                <div className="h-32 w-32 overflow-hidden rounded-3xl border border-white/15 bg-white/10 lg:justify-self-end">
                   <img
                     src={product.image_url}
                     alt={product.product_name}

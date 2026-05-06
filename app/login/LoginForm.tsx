@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginForm() {
-  const supabase = createClient();
+ 
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +18,9 @@ export default function LoginForm() {
     setError(null);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  email: email.trim(),
+  password,
+});
 
     if (error) {
       setError("Innlogging avvist.");
@@ -28,7 +28,7 @@ export default function LoginForm() {
       return;
     }
 
-    window.location.href = "/";
+    window.location.assign("/");
   }
 
   return (
@@ -97,7 +97,7 @@ export default function LoginForm() {
           disabled={busy}
           className="mt-6 w-full rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-[#062f3b] transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {busy ? "Kontrollerer tilgang" : "Logg inn"}
+          {busy ? "Kontrollerer tilgang..." : "Logg inn"}
         </button>
       </form>
     </main>

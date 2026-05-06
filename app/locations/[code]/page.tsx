@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
 
@@ -31,19 +31,25 @@ type LocationDetail = {
 };
 
 export default function LocationDetailPage() {
+  const supabase = useMemo(() => createClient(), []);
   const params = useParams<{ code: string }>();
   const code = decodeURIComponent(params.code ?? "");
 
   const [location, setLocation] = useState<LocationDetail | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [skuInput, setSkuInput] = useState("");
   const [quantityInput, setQuantityInput] = useState("1");
   const [saving, setSaving] = useState(false);
 
+  const inventoryItems = location?.inventory ?? [];
+
+  const totalQuantity = inventoryItems.reduce(
+    (sum, item) => sum + (item.quantity ?? 0),
+    0
+  );
+
   useEffect(() => {
     if (code) loadLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   async function loadLocation() {
@@ -78,88 +84,93 @@ export default function LocationDetailPage() {
     if (error) {
       console.error("Feil ved henting av lokasjon:", error);
       setLocation(null);
+    } else if (data) {
+      setLocation({
+        ...(data as unknown as LocationDetail),
+        inventory: ((data as any).inventory ?? []) as LocationDetail["inventory"],
+      });
     } else {
-      setLocation((data as unknown as LocationDetail) ?? null);
+      setLocation(null);
     }
 
     setLoading(false);
   }
 
- async function handleUpdateQuantity(inventoryId: string, quantity: number) {
-  if (quantity < 0) return;
+  async function handleUpdateQuantity(inventoryId: string, quantity: number) {
+    if (quantity < 0) return;
 
-  const item = location?.inventory.find((entry) => entry.id === inventoryId);
-  const oldQty = item?.quantity ?? 0;
+    const item = inventoryItems.find((entry) => entry.id === inventoryId);
+    const oldQty = item?.quantity ?? 0;
 
-  const { error } = await supabase
-    .from("inventory")
-    .update({ quantity })
-    .eq("id", inventoryId);
+    const { error } = await supabase
+      .from("inventory")
+      .update({ quantity })
+      .eq("id", inventoryId);
 
-  if (error) {
-    alert(`Kunne ikke oppdatere antall: ${error.message}`);
-    return;
+    if (error) {
+      alert(`Kunne ikke oppdatere antall: ${error.message}`);
+      return;
+    }
+
+    await supabase.from("activity_log").insert({
+      entity_type: "inventory",
+      entity_id: inventoryId,
+      action: "quantity_updated",
+      title: "Antall oppdatert",
+      description: `${item?.products?.product_name ?? "Ukjent produkt"} på ${
+        location?.code ?? "ukjent lokasjon"
+      }: ${oldQty} → ${quantity}`,
+      metadata: {
+        product_id: item?.products?.id ?? null,
+        inventory_id: inventoryId,
+        location_id: location?.id ?? null,
+        location_code: location?.code ?? null,
+        old_quantity: oldQty,
+        new_quantity: quantity,
+      },
+    });
+
+    await loadLocation();
   }
-
-  await supabase.from("activity_log").insert({
-    entity_type: "inventory",
-    entity_id: inventoryId,
-    action: "quantity_updated",
-    title: "Antall oppdatert",
-    description: `${item?.products?.product_name ?? "Ukjent produkt"} på ${
-      location?.code ?? "ukjent lokasjon"
-    }: ${oldQty} → ${quantity}`,
-    metadata: {
-      product_id: item?.products?.id ?? null,
-      inventory_id: inventoryId,
-      location_id: location?.id ?? null,
-      location_code: location?.code ?? null,
-      old_quantity: oldQty,
-      new_quantity: quantity,
-    },
-  });
-
-  await loadLocation();
-}
 
   async function handleRemoveInventory(inventoryId: string) {
-  const confirmed = window.confirm("Fjerne produktet fra denne lokasjonen?");
-  if (!confirmed) return;
+    const confirmed = window.confirm("Fjerne produktet fra denne lokasjonen?");
+    if (!confirmed) return;
 
-  const item = location?.inventory.find((entry) => entry.id === inventoryId);
+    const item = inventoryItems.find((entry) => entry.id === inventoryId);
 
-  const { error } = await supabase
-    .from("inventory")
-    .delete()
-    .eq("id", inventoryId);
+    const { error } = await supabase
+      .from("inventory")
+      .delete()
+      .eq("id", inventoryId);
 
-  if (error) {
-    alert(`Kunne ikke fjerne produkt: ${error.message}`);
-    return;
+    if (error) {
+      alert(`Kunne ikke fjerne produkt: ${error.message}`);
+      return;
+    }
+
+    await supabase.from("activity_log").insert({
+      entity_type: "inventory",
+      entity_id: inventoryId,
+      action: "removed_from_location",
+      title: "Produkt fjernet fra lokasjon",
+      description: `${item?.products?.product_name ?? "Ukjent produkt"} fjernet fra ${
+        location?.code ?? "ukjent lokasjon"
+      }`,
+      metadata: {
+        product_id: item?.products?.id ?? null,
+        inventory_id: inventoryId,
+        location_id: location?.id ?? null,
+        location_code: location?.code ?? null,
+        quantity: item?.quantity ?? null,
+      },
+    });
+
+    await loadLocation();
   }
 
-  await supabase.from("activity_log").insert({
-    entity_type: "inventory",
-    entity_id: inventoryId,
-    action: "removed_from_location",
-    title: "Produkt fjernet fra lokasjon",
-    description: `${item?.products?.product_name ?? "Ukjent produkt"} fjernet fra ${
-      location?.code ?? "ukjent lokasjon"
-    }`,
-    metadata: {
-      product_id: item?.products?.id ?? null,
-      inventory_id: inventoryId,
-      location_id: location?.id ?? null,
-      location_code: location?.code ?? null,
-      quantity: item?.quantity ?? null,
-    },
-  });
-
-  await loadLocation();
-}
-
   async function handleAddProductToLocation() {
-    if (!location) return;
+    if (!location || saving) return;
 
     const sku = skuInput.trim();
     const quantity = Number(quantityInput);
@@ -221,38 +232,36 @@ export default function LocationDetailPage() {
           is_primary: false,
         });
 
-    setSaving(false);
-
     if (error) {
+      setSaving(false);
       alert(`Kunne ikke legge til produkt: ${error.message}`);
       return;
     }
 
     await supabase.from("activity_log").insert({
-  entity_type: "location",
-  entity_id: location.id,
-  action: "product_added_to_location",
-  title: "Produkt lagt til lokasjon",
-  description: `${product.product_name} → ${location.code}`,
-  metadata: {
-    product_id: product.id,
-    location_id: location.id,
-    location_code: location.code,
-    quantity,
-  },
-});
+      entity_type: "location",
+      entity_id: location.id,
+      action: "product_added_to_location",
+      title: "Produkt lagt til lokasjon",
+      description: `${product.product_name} → ${location.code}`,
+      metadata: {
+        product_id: product.id,
+        location_id: location.id,
+        location_code: location.code,
+        quantity,
+      },
+    });
 
     setSkuInput("");
-setQuantityInput("1");
-await loadLocation();
+    setQuantityInput("1");
+    setSaving(false);
 
-setTimeout(() => {
-  document.getElementById("location-sku-input")?.focus();
-}, 50);
+    await loadLocation();
 
-  const totalQuantity =
-    location?.inventory?.reduce((sum, item) => sum + (item.quantity ?? 0), 0) ??
-    0;
+    setTimeout(() => {
+      document.getElementById("location-sku-input")?.focus();
+    }, 50);
+  }
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -314,7 +323,7 @@ setTimeout(() => {
                 />
                 <InfoCard
                   label="Produkter"
-                  value={String(location.inventory?.length ?? 0)}
+                  value={String(inventoryItems.length)}
                   icon={<Package />}
                   tone="neutral"
                 />
@@ -340,16 +349,16 @@ setTimeout(() => {
                       SKU
                     </label>
                     <input
-                    id="location-sku-input"
+                      id="location-sku-input"
                       autoFocus
                       value={skuInput}
                       onChange={(e) => setSkuInput(e.target.value)}
                       onKeyDown={(e) => {
-                       if (e.key === "Enter") {
-                       e.preventDefault();
-                        handleAddProductToLocation();
-                          }
-                        }}
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddProductToLocation();
+                        }
+                      }}
                       placeholder="f.eks. KEU-001"
                       className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
                     />
@@ -385,17 +394,17 @@ setTimeout(() => {
                     Produkter på lokasjon
                   </h2>
                   <p className="mt-1 text-sm text-neutral-500">
-                    {location.inventory?.length ?? 0} registrerte produkter
+                    {inventoryItems.length} registrerte produkter
                   </p>
                 </div>
 
-                {location.inventory.length === 0 ? (
+                {inventoryItems.length === 0 ? (
                   <div className="px-6 py-10 text-sm text-neutral-500">
                     Ingen produkter er registrert på denne lokasjonen.
                   </div>
                 ) : (
                   <div className="divide-y divide-neutral-100">
-                    {location.inventory.map((item) => (
+                    {inventoryItems.map((item) => (
                       <InventoryRow
                         key={item.id}
                         item={item}
@@ -436,16 +445,18 @@ function InventoryRow({
           <p className="font-semibold text-neutral-950">
             {item.products?.sku || "Mangler SKU"}
           </p>
+
           {item.products?.id ? (
-  <Link
-    href={`/products/${item.products.id}`}
-    className="mt-1 block text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
-  >
-    {item.products.product_name}
-  </Link>
-) : (
-  <p className="mt-1 text-sm text-neutral-700">Ukjent produkt</p>
-)}
+            <Link
+              href={`/products/${item.products.id}`}
+              className="mt-1 block text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+            >
+              {item.products.product_name}
+            </Link>
+          ) : (
+            <p className="mt-1 text-sm text-neutral-700">Ukjent produkt</p>
+          )}
+
           {item.products?.variant_name && (
             <p className="mt-1 text-sm text-neutral-500">
               {item.products.variant_name}
@@ -534,5 +545,4 @@ function InfoCard({
       </div>
     </div>
   );
-}
 }

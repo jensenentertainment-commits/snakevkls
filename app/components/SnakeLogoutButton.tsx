@@ -1,9 +1,9 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 export default function SnakeLogoutButton() {
-  const supabase = createClient();
+  
 
   async function handleLogout() {
     await supabase.auth.signOut();

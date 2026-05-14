@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -11,73 +11,22 @@ import SnakeToast from "../components/SnakeToast";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { RefreshCw } from "lucide-react";
-import { logActivity } from "@/lib/activity";
 import ProductIdentity from "../components/products/ProductIdentity";
 import QuantityDiff from "../components/products/QuantityDiff";
 import PlacementDisplay from "../components/products/PlacementDisplay";
 import { ZONE_STYLES } from "../components/products/constants";
-import Status from "../components/products/Status";
 import MobileProductCard from "../components/products/MobileProductCard";
-
-
-type PlacementStatus = "location" | "zone" | "missing";
-
-type ProductMeta = {
-  quantity: number;
-  locationCode: string | null;
-  zoneLabel: string | null;
-  zoneId: string | null;
-  zoneCode: string | null;
-  status: PlacementStatus;
-};
-
-type ProductRow = {
-  id: string;
-  sku: string | null;
-  product_name: string;
-  variant_name: string | null;
-  image_url: string | null;
-  vendor: string | null;
-  product_type: string | null;
-  shopify_quantity: number;
-  product_collections: {
-  id: string;
-  title: string;
-  handle: string | null;
-}[];
-  inventory: {
-    id: string;
-    quantity: number;
-    zone_id: string | null;
-    zones: {
-      id: string;
-      code: string;
-      name: string;
-    } | null;
-    locations: {
-      id: string;
-      code: string;
-      zone_id: string | null;
-      zones: {
-        id: string;
-        code: string;
-        name: string;
-      } | null;
-    } | null;
-  }[];
-};
-
-type ZoneOption = {
-  id: string;
-  code: string;
-  name: string;
-};
-
-type LocationOption = {
-  id: string;
-  code: string;
-  zone_id: string | null;
-};
+import type {
+  ProductRow,
+  ZoneOption,
+  LocationOption,
+} from "../components/products/types";
+import { getMeta } from "../components/products/utils";
+import { useProductsFiltering } from "../components/products/useProductsFiltering";
+import EditPlacementModal from "../components/products/EditPlacementModal";
+import BatchAssignModal from "../components/products/BatchAssignModal";
+import StockMovementModal from "../components/products/StockMovementModal";
+import { useProductsActions } from "../components/products/useProductsActions";
 
 function ProductsPageContent() {
   const [inlineZone, setInlineZone] = useState<Record<string, string>>({});
@@ -156,65 +105,7 @@ function showToast(message: string, tone: "success" | "error" = "success") {
 
 
 
-async function handleShopifySync() {
-  if (syncingShopify) return;
 
-  setSyncingShopify(true);
-
-  const startedAt = Date.now();
-
-  try {
-    const res = await fetch("/api/shopify/sync-products", {
-      method: "POST",
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result?.error || "Shopify sync feilet");
-    }
-
-    await logActivity({
-      entityType: "shopify_sync",
-      entityId: null,
-      action: "shopify_sync_completed",
-      title: "Shopify sync fullført",
-      description: "Produkter og Shopify-antall er hentet på nytt.",
-      metadata: {
-        duration_ms: Date.now() - startedAt,
-        result,
-      },
-    });
-
-    setLastShopifySync(new Date().toLocaleTimeString("nb-NO", {
-  hour: "2-digit",
-  minute: "2-digit",
-}));
-
-showToast("Shopify sync fullført");
-await loadData();
-
-
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Ukjent feil ved Shopify sync";
-
-    await logActivity({
-      entityType: "shopify_sync",
-      entityId: null,
-      action: "shopify_sync_failed",
-      title: "Shopify sync feilet",
-      description: message,
-      metadata: {
-        duration_ms: Date.now() - startedAt,
-      },
-    });
-
-    showToast(message, "error");
-  } finally {
-    setSyncingShopify(false);
-  }
-}
 
   async function loadData() {
     setLoading(true);
@@ -284,343 +175,84 @@ await loadData();
     setLoading(false);
   }
 
+function openModal(product: ProductRow) {
+  const inventory = product.inventory?.[0];
 
+  const zoneId =
+    inventory?.locations?.zone_id ||
+    inventory?.locations?.zones?.id ||
+    inventory?.zone_id ||
+    "";
 
-
-async function handleBatchSave() {
-  if (!batchZone || selected.length === 0 || batchSaving) return;
-
-  setBatchSaving(true);
-
-  try {
-    const res = await fetch("/api/inventory/batch-zone", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productIds: selected,
-        zoneId: batchZone,
-      }),
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result?.error || "Batch assign feilet");
-    }
-
-    const zoneName =
-      zones.find((zone) => zone.id === batchZone)?.code ??
-      "valgt sone";
-
-    setBatchOpen(false);
-    setSelected([]);
-    setBatchZone("");
-
-    showToast(
-      `${result.updated} produkter → ${zoneName}`
-    );
-
-    await loadData();
-
-    setRecentlyUpdated(true);
-
-    setTimeout(() => {
-      setRecentlyUpdated(false);
-    }, 1800);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Batch assign feilet";
-
-    showToast(message, "error");
-
-  } finally {
-    setBatchSaving(false);
-  }
+  setEditing(product);
+  setNewZone(zoneId);
+  setNewLocation(inventory?.locations?.id ?? "");
+  setNewQuantity(String(inventory?.quantity ?? 0));
 }
 
+const { collections, filtered } = useProductsFiltering({
+  products,
+  query,
+  statusFilter,
+  zoneFilter,
+  collectionFilter,
+  sortMode,
+});
 
 
-async function handleInlineSave(product: ProductRow) {
-  const zoneId = inlineZone[product.id];
+const {
+  handleShopifySync,
+  handleBatchSave,
+  handleInlineSave,
+  handleSave,
+  handleStockMovement,
+} = useProductsActions({
+  products,
+  zones,
 
-  if (!zoneId || inlineSaving) return;
+  inlineZone,
+  inlineSaving,
+  setInlineZone,
+  setInlineSaving,
 
-  setInlineSaving(product.id);
+  syncingShopify,
+  setSyncingShopify,
+  setLastShopifySync,
 
-  const existing = product.inventory?.[0];
-  const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
+  selected,
+  setSelected,
+  batchZone,
+  setBatchZone,
+  batchSaving,
+  setBatchSaving,
+  setBatchOpen,
 
-  try {
-    const res = await fetch("/api/inventory/set-location", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: product.id,
-        inventoryId: existing?.id ?? null,
-        zoneId,
-        locationId: null,
-        quantity,
-      }),
-    });
+  editing,
+  setEditing,
+  newZone,
+  setNewZone,
+  newLocation,
+  setNewLocation,
+  newQuantity,
+  setNewQuantity,
+  saveSaving,
+  setSaveSaving,
 
-    const result = await res.json();
+  movementProduct,
+  setMovementProduct,
+  movementQty,
+  setMovementQty,
+  movementReason,
+  setMovementReason,
+  movementNote,
+  setMovementNote,
+  movementSaving,
+  setMovementSaving,
 
-    if (!res.ok) {
-      throw new Error(result?.error || "Kunne ikke lagre sone");
-    }
-
-    setInlineZone((prev) => {
-      const next = { ...prev };
-      delete next[product.id];
-      return next;
-    });
-
-    showToast("Sone satt");
-
-    await loadData();
-
-    setRecentlyUpdated(true);
-    setTimeout(() => setRecentlyUpdated(false), 1800);
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Kunne ikke lagre sone";
-
-    showToast(message, "error");
-  } finally {
-    setInlineSaving(null);
-  }
-}
-
- async function handleSave() {
-  if (!editing || saveSaving) return;
-
-  const quantity = Number(newQuantity);
-
-  if (Number.isNaN(quantity) || quantity < 0) {
-    showToast("Antall må være 0 eller høyere", "error");
-    return;
-  }
-
-  setSaveSaving(true);
-const existing = editing.inventory?.[0];
-  try {
-
-    const res = await fetch("/api/inventory/set-location", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: editing.id,
-        inventoryId: existing?.id ?? null,
-        zoneId: newZone || null,
-        locationId: newLocation || null,
-        quantity,
-      }),
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result?.error || "Kunne ikke lagre plassering");
-    }
-
-    setEditing(null);
-    setNewZone("");
-    setNewLocation("");
-    setNewQuantity("0");
-
-    showToast("Plassering lagret");
-
-    await loadData();
-
-    setRecentlyUpdated(true);
-    setTimeout(() => setRecentlyUpdated(false), 1800);
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Kunne ikke lagre plassering";
-
-    showToast(message, "error");
-    
-   } finally {
-    setSaveSaving(false);
-  }
-}
-
-async function handleStockMovement() {
-  if (!movementProduct || movementSaving) return;
-
-  const quantity = Number(movementQty);
-
-  if (Number.isNaN(quantity) || quantity <= 0) {
-    showToast("Antall må være høyere enn 0", "error");
-    return;
-  }
-
-  setMovementSaving(true);
-
-  try {
-    const res = await fetch("/api/inventory/stock-movement", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: movementProduct.id,
-        quantity,
-        reason: movementReason,
-        note: movementNote.trim() || null,
-      }),
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result?.error || "Kunne ikke registrere lagerhendelse");
-    }
-
-    setMovementProduct(null);
-    setMovementQty("1");
-    setMovementReason("manual_sale");
-    setMovementNote("");
-
-    showToast("Lagerhendelse registrert");
-
-    await loadData();
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Kunne ikke registrere lagerhendelse";
-
-    showToast(message, "error");
-  } finally {
-    setMovementSaving(false);
-  }
-}
-
-
-
-const ignoredCollections = useMemo(
-  () =>
-    new Set([
-      "AVADA Email Marketing - Newest Products",
-      "AVADA Email Marketing - Best Sellers",
-    ]),
-  []
-);
-const collections = useMemo(() => {
-  const map = new Map<string, { title: string; handle: string | null }>();
-
-  products.forEach((product) => {
-    product.product_collections?.forEach((collection) => {
-      if (ignoredCollections.has(collection.title)) return;
-
-      map.set(collection.title, {
-        title: collection.title,
-        handle: collection.handle,
-      });
-    });
-  });
-
-  return Array.from(map.values()).sort((a, b) =>
-    a.title.localeCompare(b.title, "nb")
-  );
-}, [products, ignoredCollections]);
-
-  const filtered = useMemo(() => {
-  let result = products;
-  const q = query.trim().toLowerCase();
-
-  if (q) {
-    result = result.filter((product) => {
-      const meta = getMeta(product);
-
-      return [
-        product.sku ?? "",
-        product.product_name,
-        product.variant_name ?? "",
-        product.vendor ?? "",
-        product.product_type ?? "",
-        meta.locationCode ?? "",
-        meta.zoneLabel ?? "",
-        product.product_collections?.map((c) => c.title).join(" ") ?? "",
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(q);
-    });
-  }
-
-  if (statusFilter !== "all") {
-    result = result.filter((product) => {
-      const meta = getMeta(product);
-      const diff = (product.shopify_quantity ?? 0) - meta.quantity;
-
-      if (statusFilter === "missing") return meta.status === "missing";
-      if (statusFilter === "zone") return meta.status === "zone";
-      if (statusFilter === "location") return meta.status === "location";
-      if (statusFilter === "diff") return diff !== 0;
-
-      return true;
-    });
-  }
-
-  if (collectionFilter !== "all") {
-    result = result.filter((product) =>
-      product.product_collections?.some(
-        (collection) => collection.title === collectionFilter
-      )
-    );
-  }
-
-  if (zoneFilter !== "all") {
-    result = result.filter((product) => {
-      const meta = getMeta(product);
-      return meta.zoneId === zoneFilter;
-    });
-  }
-
-  result = [...result].sort((a, b) => {
-    const aName = a.product_name.toLowerCase();
-    const bName = b.product_name.toLowerCase();
-
-    if (sortMode === "az") {
-      return aName.localeCompare(bName, "nb");
-    }
-
-    return bName.localeCompare(aName, "nb");
-  });
-
-  return result;
-}, [products, query, statusFilter, zoneFilter, collectionFilter, sortMode]);
-
-  function openModal(product: ProductRow) {
-    const inventory = product.inventory?.[0];
-
-    const zoneId =
-      inventory?.locations?.zone_id ||
-      inventory?.locations?.zones?.id ||
-      inventory?.zone_id ||
-      "";
-
-    setEditing(product);
-    setNewZone(zoneId);
-    setNewLocation(inventory?.locations?.id ?? "");
-    setNewQuantity(String(inventory?.quantity ?? 0));
-  }
+  loadData,
+  showToast,
+  setRecentlyUpdated,
+});
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -1110,249 +742,66 @@ const percent = Math.round((placed / total) * 100);
 )}
 <SnakeToast message={toast?.message ?? null} tone={toast?.tone ?? "success"} />
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-          <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
-              Endre plassering
-            </p>
-
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-              {editing.sku || "Produkt uten SKU"}
-            </h2>
-
-            <p className="mt-2 text-sm leading-6 text-neutral-500">
-              {editing.product_name}
-            </p>
-
-            <label className="mt-6 block text-sm font-medium text-neutral-700">
-              Sone
-            </label>
-
-            <select
-            autoFocus
-              value={newZone}
-              onChange={(e) => {
-  setNewZone(e.target.value);
-  setNewLocation("");
-}}
-              className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-            >
-              <option value="">Velg sone</option>
-              {zones.map((zone) => (
-                <option key={zone.id} value={zone.id}>
-                  {zone.code} — {zone.name}
-                </option>
-              ))}
-            </select>
-
-            <label className="mt-4 block text-sm font-medium text-neutral-700">
-              Lokasjon
-            </label>
-
-            <select
-              value={newLocation}
-              onChange={(e) => {
-                const locationId = e.target.value;
-                const location = locations.find(
-                  (item) => item.id === locationId
-                );
-
-                setNewLocation(locationId);
-
-                if (location?.zone_id) {
-                  setNewZone(location.zone_id);
-                }
-              }}
-              className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-            >
-              <option value="">Ingen eksakt lokasjon ennå</option>
-              {locations
-  .filter((location) =>
-    newZone ? location.zone_id === newZone : true
-  )
-  .map((location) => (
-    <option key={location.id} value={location.id}>
-      {location.code}
-    </option>
-  ))}
-            </select>
-
-            <label className="mt-4 block text-sm font-medium text-neutral-700">
-              Antall
-            </label>
-
-            <input
-              type="number"
-              min="0"
-              value={newQuantity}
-              onChange={(e) => setNewQuantity(e.target.value)}
-              className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-            />
-
-            <div className="mt-6 grid grid-cols-2 gap-2">
-              <button
-                onClick={() => {
-                  setEditing(null);
-                  setNewZone("");
-                  setNewLocation("");
-                  setNewQuantity("0");
-                }}
-                className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
-              >
-                Avbryt
-              </button>
-
-              <button
-  onClick={handleSave}
-  disabled={saveSaving}
-  className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45"
->
-  {saveSaving ? "Lagrer..." : "Lagre"}
-</button>
-            </div>
-          </div>
-        </div>
-      )}
+  <EditPlacementModal
+    editing={editing}
+    locations={locations}
+    zones={zones}
+    newZone={newZone}
+    setNewZone={setNewZone}
+    newLocation={newLocation}
+    setNewLocation={setNewLocation}
+    newQuantity={newQuantity}
+    setNewQuantity={setNewQuantity}
+    saveSaving={saveSaving}
+    onClose={() => {
+      setEditing(null);
+      setNewZone("");
+      setNewLocation("");
+      setNewQuantity("0");
+    }}
+    onSave={handleSave}
+  />
+)}
 
      {batchOpen && (
-  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
-        Batch assign
-      </p>
-
-      <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-        Sett sone på {selected.length} produkter
-      </h2>
-
-      <p className="mt-2 text-sm leading-6 text-neutral-500">
-        Produktene får sone nå. Eksakt lokasjon kan settes senere.
-      </p>
-
-      <label className="mt-6 block text-sm font-medium text-neutral-700">
-        Sone
-      </label>
-
-      <select
-        value={batchZone}
-        onChange={(e) => setBatchZone(e.target.value)}
-        className="mt-2 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-      >
-        <option value="">Velg sone</option>
-        {zones.map((zone) => (
-          <option key={zone.id} value={zone.id}>
-            {zone.code} — {zone.name}
-          </option>
-        ))}
-      </select>
-
-      <div className="mt-6 grid grid-cols-2 gap-2">
-        <button
-          onClick={() => {
-  if (batchSaving) return;
-  setBatchOpen(false);
-  setBatchZone("");
-  setSelected([]);
-}}
-          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
-        >
-          Avbryt
-        </button>
-
-        <button
-          onClick={handleBatchSave}
-          disabled={!batchZone || batchSaving}
-          className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45"
-        >
-          {batchSaving ? "Lagrer..." : `Sett sone`}
-        </button>
-      </div>
-    </div>
-  </div>
-  
+  <BatchAssignModal
+    selectedCount={selected.length}
+    zones={zones}
+    batchZone={batchZone}
+    setBatchZone={setBatchZone}
+    batchSaving={batchSaving}
+    onClose={() => {
+      if (batchSaving) return;
+      setBatchOpen(false);
+      setBatchZone("");
+      setSelected([]);
+    }}
+    onSave={handleBatchSave}
+  />
 )}
+
 {movementProduct && (
-  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-      <h2 className="text-2xl font-semibold tracking-tight">Registrer uttak</h2>
-
-      <p className="mt-2 text-sm text-neutral-500">
-        {movementProduct.product_name}
-      </p>
-
-      <input
-        type="number"
-        min="1"
-        value={movementQty}
-        onChange={(e) => setMovementQty(e.target.value)}
-        className="mt-6 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
-      />
-
-      <select
-        value={movementReason}
-        onChange={(e) => setMovementReason(e.target.value)}
-        className="mt-4 w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
-      >
-        <option value="manual_sale">Solgt manuelt</option>
-        <option value="waste">Svinn</option>
-        <option value="internal_use">Intern bruk</option>
-        <option value="correction">Korrigering</option>
-        <option value="other">Annet</option>
-      </select>
-
-      <textarea
-        value={movementNote}
-        onChange={(e) => setMovementNote(e.target.value)}
-        className="mt-4 min-h-[90px] w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
-        placeholder="Kommentar, valgfritt"
-      />
-
-      <div className="mt-6 grid grid-cols-2 gap-2">
-        <button
-          onClick={() => setMovementProduct(null)}
-          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold"
-        >
-          Avbryt
-        </button>
-
-        <button
-          onClick={handleStockMovement}
-          disabled={movementSaving}
-          className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white disabled:opacity-45"
-        >
-          {movementSaving ? "Lagrer..." : "Registrer"}
-        </button>
-      </div>
-    </div>
-  </div>
+  <StockMovementModal
+    product={movementProduct}
+    movementQty={movementQty}
+    setMovementQty={setMovementQty}
+    movementReason={movementReason}
+    setMovementReason={setMovementReason}
+    movementNote={movementNote}
+    setMovementNote={setMovementNote}
+    movementSaving={movementSaving}
+    onClose={() => {
+      if (movementSaving) return;
+      setMovementProduct(null);
+    }}
+    onSave={handleStockMovement}
+  />
 )}
     </main>
   );
 }
+  
 
-function getMeta(product: ProductRow): ProductMeta {
-  const inventory = product.inventory?.[0];
-
-  const locationCode = inventory?.locations?.code ?? null;
-  const locationZone = inventory?.locations?.zones ?? null;
-  const directZone = inventory?.zones ?? null;
-  const zone = locationZone || directZone;
-
-  const status: PlacementStatus = locationCode
-    ? "location"
-    : zone
-      ? "zone"
-      : "missing";
-
- return {
-  quantity: inventory?.quantity ?? 0,
-  locationCode,
-  zoneLabel: zone ? `${zone.code} — ${zone.name}` : null,
-  zoneId: zone?.id ?? null,
-  zoneCode: zone?.code ?? null,
-  status,
-};
-}
 
 function Empty({ text }: { text: string }) {
   return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;

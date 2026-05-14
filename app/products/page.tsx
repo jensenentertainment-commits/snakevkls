@@ -12,13 +12,13 @@ import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { RefreshCw } from "lucide-react";
 import { logActivity } from "@/lib/activity";
+import ProductIdentity from "../components/products/ProductIdentity";
+import QuantityDiff from "../components/products/QuantityDiff";
+import PlacementDisplay from "../components/products/PlacementDisplay";
+import { ZONE_STYLES } from "../components/products/constants";
+import Status from "../components/products/Status";
+import MobileProductCard from "../components/products/MobileProductCard";
 
-const ZONE_STYLES: Record<string, string> = {
-  HL: "border-blue-200 bg-blue-50 text-blue-700",
-  SR: "border-purple-200 bg-purple-50 text-purple-700",
-  SM: "border-green-200 bg-green-50 text-green-700",
-  ME: "border-amber-200 bg-amber-50 text-amber-700",
-};
 
 type PlacementStatus = "location" | "zone" | "missing";
 
@@ -99,7 +99,7 @@ function ProductsPageContent() {
   const [newZone, setNewZone] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [newQuantity, setNewQuantity] = useState("0");
-
+  const [saveSaving, setSaveSaving] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [batchOpen, setBatchOpen] = useState(false);
   const [batchZone, setBatchZone] = useState("");
@@ -404,7 +404,7 @@ async function handleInlineSave(product: ProductRow) {
 }
 
  async function handleSave() {
-  if (!editing) return;
+  if (!editing || saveSaving) return;
 
   const quantity = Number(newQuantity);
 
@@ -413,9 +413,10 @@ async function handleInlineSave(product: ProductRow) {
     return;
   }
 
-  const existing = editing.inventory?.[0];
-
+  setSaveSaving(true);
+const existing = editing.inventory?.[0];
   try {
+
     const res = await fetch("/api/inventory/set-location", {
       method: "POST",
       headers: {
@@ -452,6 +453,9 @@ async function handleInlineSave(product: ProductRow) {
       error instanceof Error ? error.message : "Kunne ikke lagre plassering";
 
     showToast(message, "error");
+    
+   } finally {
+    setSaveSaving(false);
   }
 }
 
@@ -506,6 +510,7 @@ async function handleStockMovement() {
     setMovementSaving(false);
   }
 }
+
 
 
 const ignoredCollections = useMemo(
@@ -860,18 +865,19 @@ const percent = Math.round((placed / total) * 100);
                 ) : (
                   filtered.map((product) => (
                     <MobileProductCard
-                      key={product.id}
-                      product={product}
-                      selected={selected.includes(product.id)}
-                      onToggleSelected={() =>
-                        setSelected((prev) =>
-                          prev.includes(product.id)
-                            ? prev.filter((id) => id !== product.id)
-                            : [...prev, product.id]
-                        )
-                      }
-                      onEdit={() => openModal(product)}
-                    />
+  key={product.id}
+  product={product}
+  meta={getMeta(product)}
+  selected={selected.includes(product.id)}
+  onToggleSelected={() =>
+    setSelected((prev) =>
+      prev.includes(product.id)
+        ? prev.filter((id) => id !== product.id)
+        : [...prev, product.id]
+    )
+  }
+  onEdit={() => openModal(product)}
+/>
                   ))
                 )}
               </div>
@@ -1197,11 +1203,12 @@ const percent = Math.round((placed / total) * 100);
               </button>
 
               <button
-                onClick={handleSave}
-                className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white"
-              >
-                Lagre
-              </button>
+  onClick={handleSave}
+  disabled={saveSaving}
+  className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45"
+>
+  {saveSaving ? "Lagrer..." : "Lagre"}
+</button>
             </div>
           </div>
         </div>
@@ -1345,218 +1352,6 @@ function getMeta(product: ProductRow): ProductMeta {
   zoneCode: zone?.code ?? null,
   status,
 };
-}
-
-function QuantityDiff({
-  product,
-  meta,
-}: {
-  product: ProductRow;
-  meta: ProductMeta;
-}) {
-  const shopifyQuantity = product.shopify_quantity ?? 0;
-  const snakeQuantity = meta.quantity ?? 0;
-  const diff = shopifyQuantity - snakeQuantity;
-
-  return (
-    <div className="flex min-h-[58px] flex-col justify-center">
-      <span className="font-semibold text-neutral-950">
-        Lager: {snakeQuantity}
-      </span>
-
-      <span className="text-xs text-neutral-400">
-        Shopify: {shopifyQuantity}
-      </span>
-
-      {diff > 0 && (
-        <span className="mt-1 whitespace-nowrap text-xs font-semibold text-[#a77e05]">
-  {diff} ikke plassert
-</span>
-      )}
-
-      {diff < 0 && (
-        <span className="mt-1 whitespace-nowrap text-xs font-semibold text-red-600">
-  {Math.abs(diff)} for mye i Snake
-</span>
-      )}
-    </div>
-  );
-}
-
-function ProductIdentity({ product }: { product: ProductRow }) {
-  return (
-    <div className="flex h-[64px] items-center gap-4 overflow-hidden">
-      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
-        {product.image_url ? (
-          <img
-            src={product.image_url}
-            alt={product.product_name}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">
-            —
-          </div>
-        )}
-      </div>
-
-     <div className="min-w-0 overflow-hidden">
-        <p className="line-clamp-2 min-h-[40px] font-semibold leading-5 text-neutral-950">
-  {product.product_name}
-</p>
-
-      
-       
-        {product.variant_name && (
-          <p className="mt-1 truncate text-xs text-neutral-400">
-            {product.variant_name}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function PlacementDisplay({ meta }: { meta: ProductMeta }) {
-  if (meta.locationCode) {
-    return (
-      <span className="rounded-lg border border-[#055a7d]/20 bg-[#055a7d]/5 px-2 py-1 text-xs font-semibold text-[#055a7d]">
-        {meta.locationCode}
-      </span>
-    );
-  }
-
-  if (meta.zoneLabel) {
-  const zoneStyle =
-    meta.zoneCode && ZONE_STYLES[meta.zoneCode]
-      ? ZONE_STYLES[meta.zoneCode]
-      : "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#a77e05]";
-
-  return (
-    <span
-      className={`rounded-lg border px-2 py-1 text-xs font-semibold ${zoneStyle}`}
-    >
-      {meta.zoneLabel}
-    </span>
-  );
-}
-
- return (
-  <span className="whitespace-nowrap font-semibold text-red-600">
-    Mangler plassering
-  </span>
-);
-}
-
-function MobileProductCard({
-  product,
-  selected,
-  onToggleSelected,
-  onEdit,
-}: {
-  product: ProductRow;
-  selected: boolean;
-  onToggleSelected: () => void;
-  onEdit: () => void;
-}) {
-  const meta = getMeta(product);
-
-  return (
-    <article className="px-5 py-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          
-          <ProductIdentity product={product} />
-
-          <p className="mt-3 text-sm font-semibold text-neutral-950">
-            {product.sku || <span className="text-red-600">Mangler SKU</span>}
-          </p>
-        </div>
-
-        <Status status={meta.status} />
-      </div>
-
-      <div className="mt-4 grid gap-3 rounded-2xl bg-neutral-50 p-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-500">
-            Plassering
-          </p>
-
-          <div className="mt-2">
-            <PlacementDisplay meta={meta} />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between border-t border-neutral-200 pt-3">
-          <span className="text-sm text-neutral-500">Antall</span>
-
-          <div className="text-right">
-            <p className="text-base font-semibold text-neutral-950">
-              {meta.quantity}
-            </p>
-
-            <p className="text-xs text-neutral-400">
-              Shopify: {product.shopify_quantity ?? 0}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 grid grid-cols-[auto_1fr] gap-3">
-        <button
-          onClick={onToggleSelected}
-          className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
-            selected
-              ? "border-[#b58a14] bg-[#b58a14] text-white"
-              : "border-neutral-300 bg-white text-neutral-700"
-          }`}
-        >
-          {selected ? "Valgt" : "Velg"}
-        </button>
-
-        <button
-          onClick={onEdit}
-          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
-        >
-          Endre plassering
-        </button>
-      </div>
-    </article>
-  );
-}
-
-function Status({ status }: { status: PlacementStatus }) {
-  if (status === "missing") {
-    return <StatusPill text="Mangler" tone="danger" />;
-  }
-
-  if (status === "zone") {
-    return <StatusPill text="Har sone" tone="warning" />;
-  }
-
-  return <StatusPill text="OK" tone="ok" />;
-}
-
-function StatusPill({
-  text,
-  tone,
-}: {
-  text: string;
-  tone: "ok" | "warning" | "danger";
-}) {
-  const styles = {
-    ok: "border-green-200 bg-green-50 text-green-700",
-    warning: "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#a77e05]",
-    danger: "border-red-200 bg-red-50 text-red-700",
-  };
-
-  return (
-    <span
-      className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${styles[tone]}`}
-    >
-      {text}
-    </span>
-  );
 }
 
 function Empty({ text }: { text: string }) {

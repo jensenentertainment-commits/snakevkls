@@ -1,5 +1,7 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+
+import { NextResponse, type NextRequest } from "next/server";
+import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
+import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -75,7 +77,63 @@ type ShopifyVariantNode = {
   };
 };
 
-export async function POST() {
+async function logShopifySync(
+  supabaseAdmin: any,
+  {
+    action,
+    title,
+    description,
+    metadata,
+    actorEmail,
+  }: {
+    action: string;
+    title: string;
+    description?: string | null;
+    metadata?: Record<string, unknown> | null;
+    actorEmail?: string | null;
+  }
+) {
+  const { error } = await supabaseAdmin.from("activity_log").insert({
+    entity_type: "shopify_sync",
+    entity_id: null,
+    action,
+    title,
+    description: description ?? null,
+    actor_email: actorEmail ?? null,
+    metadata: metadata ?? null,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  // AUTH CHECK
+  const authClient = await createServerSupabaseClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await authClient.auth.getUser();
+
+  if (userError || !user) {
+    return NextResponse.json(
+      { error: "Ikke innlogget" },
+      { status: 401 }
+    );
+  }
+
+  // ROLE CHECK
+  const { data: profile, error: profileError } = await authClient
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || profile?.role !== "admin") {
+    return NextResponse.json(
+      { error: "Mangler admin-tilgang" },
+      { status: 403 }
+    );
+  }
+
   const shop = process.env.SHOPIFY_STORE_DOMAIN;
   const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-04";
 
@@ -83,10 +141,23 @@ export async function POST() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!shop || !supabaseUrl || !supabaseServiceKey) {
-    return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Mangler env vars" },
+      { status: 500 }
+    );
   }
 
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+  const supabaseAdmin = createSupabaseAdminClient(
+    supabaseUrl,
+    supabaseServiceKey
+  );
+
+  const startedAt = Date.now();
+
+  await logShopifySync(supabaseAdmin, {
+    action: "shopify_sync_started",
+    title: "Shopify-sync startet",
+  });
 
   const { data: connection, error: connectionError } = await supabaseAdmin
     .from("shopify_connections")
@@ -95,10 +166,18 @@ export async function POST() {
     .single();
 
   if (connectionError || !connection?.access_token) {
+    await logShopifySync(supabaseAdmin, {
+      action: "shopify_sync_failed",
+      title: "Shopify-sync feilet",
+      description: "Shopify er ikke koblet til",
+      metadata: {
+        duration_ms: Date.now() - startedAt,
+      },
+    });
+
     return NextResponse.json(
       {
         error: "Shopify er ikke koblet til",
-        details: connectionError,
       },
       { status: 401 }
     );
@@ -130,10 +209,19 @@ export async function POST() {
     const json = await response.json();
 
     if (!response.ok || json.errors) {
+      await logShopifySync(supabaseAdmin, {
+        action: "shopify_sync_failed",
+        title: "Shopify-sync feilet",
+        description: "Shopify API returnerte feil",
+        metadata: {
+          duration_ms: Date.now() - startedAt,
+          status: response.status,
+        },
+      });
+
       return NextResponse.json(
         {
           error: "Shopify sync feilet",
-          details: json.errors ?? json,
         },
         { status: 500 }
       );
@@ -158,7 +246,8 @@ export async function POST() {
       const row = {
         sku,
         product_name: variant.product.title,
-        variant_name: variant.title === "Default Title" ? null : variant.title,
+        variant_name:
+          variant.title === "Default Title" ? null : variant.title,
         active: true,
         image_url: variant.product.featuredImage?.url ?? null,
         vendor: variant.product.vendor ?? null,
@@ -178,11 +267,14 @@ export async function POST() {
         .single();
 
       if (productError || !productData?.id) {
+        console.error("Supabase product upsert feilet", {
+          productError,
+          row,
+        });
+
         return NextResponse.json(
           {
-            error: "Supabase product upsert feilet",
-            details: productError,
-            row,
+            error: "Kunne ikke synkronisere produkter",
           },
           { status: 500 }
         );
@@ -213,11 +305,11 @@ export async function POST() {
           });
 
         if (collectionsError) {
+          console.error("Collection upsert feilet", collectionsError);
+
           return NextResponse.json(
             {
-              error: "Supabase collection upsert feilet",
-              details: collectionsError,
-              collectionRows,
+              error: "Kunne ikke synkronisere collections",
             },
             { status: 500 }
           );
@@ -230,13 +322,30 @@ export async function POST() {
     }
 
     hasNextPage = json.data.productVariants.pageInfo.hasNextPage;
-    cursor = edges.length ? edges[edges.length - 1].cursor : null;
+
+    cursor = edges.length
+      ? edges[edges.length - 1].cursor
+      : null;
   }
+
+  await logShopifySync(supabaseAdmin, {
+    action: "shopify_sync_completed",
+    title: "Shopify-sync fullført",
+    description: `${imported} produkter synkronisert`,
+    metadata: {
+      duration_ms: Date.now() - startedAt,
+      imported,
+      skipped_no_sku: skippedNoSku,
+      collections_linked: collectionsLinked,
+    },
+  });
 
   return NextResponse.json({
     ok: true,
     imported,
     skippedNoSku,
     collectionsLinked,
+     durationMs: Date.now() - startedAt,
   });
 }
+

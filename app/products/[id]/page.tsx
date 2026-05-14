@@ -56,6 +56,7 @@ export default function ProductPage() {
         title,
         description,
         metadata,
+        actor_email,
         created_at
       `)
       .contains("metadata", { product_id: id })
@@ -210,8 +211,14 @@ export default function ProductPage() {
 
                       <p className="mt-2 text-xs text-neutral-400">
                         {new Date(item.created_at).toLocaleString("nb-NO")}
+                        {item.actor_email && (
+  <p className="mt-1 text-xs text-neutral-500">
+    Utført av {item.actor_email}
+  </p>
+)}
                       </p>
                     </div>
+                    
                   ))}
                 </div>
               )}

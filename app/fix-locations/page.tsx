@@ -13,6 +13,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import { logActivity } from "@/lib/activity";
 
 type ProductRow = {
   id: string;
@@ -199,6 +200,27 @@ useEffect(() => {
       is_primary: true,
     });
 
+const selectedLocation = locations.find(
+  (location) => location.id === selectedLocationId
+);
+
+await logActivity({
+  entityType: "inventory",
+  entityId: currentInventory?.id ?? null,
+  action: "location_set",
+  title: "Lokasjon satt",
+  description: `${current.product_name} → ${
+    selectedLocation?.code ?? "ukjent lokasjon"
+  }`,
+  metadata: {
+    product_id: current.id,
+    inventory_id: currentInventory?.id ?? null,
+    location_id: selectedLocationId,
+    location_code: selectedLocation?.code ?? null,
+    zone_id: currentInventory?.zone_id ?? null,
+  },
+});
+
     if (error) {
       console.error(error);
       setSaving(false);
@@ -223,6 +245,8 @@ setTimeout(() => {
   document.body.classList.remove("flash-success");
 }, 120);
   }
+
+  
 
   function skipCurrent() {
   setSelectedLocationId("");

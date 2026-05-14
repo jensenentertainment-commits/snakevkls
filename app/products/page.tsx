@@ -11,6 +11,7 @@ import SnakeToast from "../components/SnakeToast";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { RefreshCw } from "lucide-react";
+import { logActivity } from "@/lib/activity";
 
 const ZONE_STYLES: Record<string, string> = {
   HL: "border-blue-200 bg-blue-50 text-blue-700",
@@ -153,34 +154,7 @@ function showToast(message: string, tone: "success" | "error" = "success") {
   setTimeout(() => setToast(null), 3200);
 }
 
-async function logActivity({
-  entityType,
-  entityId,
-  action,
-  title,
-  description,
-  metadata,
-}: {
-  entityType: "product" | "inventory" | "location" | "zone" | "stock_movement" | "shopify_sync" | "system";
-  entityId?: string | null;
-  action: string;
-  title: string;
-  description?: string | null;
-  metadata?: Record<string, unknown>;
-}) {
-  const { error } = await supabase.from("activity_log").insert({
-    entity_type: entityType,
-    entity_id: entityId ?? null,
-    action,
-    title,
-    description: description ?? null,
-    metadata: metadata ?? null,
-  });
 
-  if (error) {
-    console.error("Kunne ikke logge aktivitet:", error);
-  }
-}
 
 async function handleShopifySync() {
   if (syncingShopify) return;
@@ -312,77 +286,73 @@ await loadData();
 
 
 
- async function handleBatchSave() {
+
+async function handleBatchSave() {
   if (!batchZone || selected.length === 0 || batchSaving) return;
 
   setBatchSaving(true);
 
-  const selectedProducts = products.filter((product) =>
-    selected.includes(product.id)
-  );
+  try {
+    const res = await fetch("/api/inventory/batch-zone", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productIds: selected,
+        zoneId: batchZone,
+      }),
+    });
 
-  let updated = 0;
+    const result = await res.json();
 
-  for (const product of selectedProducts) {
-    const existing = product.inventory?.[0];
-    const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
-
-    const payload = {
-  zone_id: batchZone,
-  quantity,
-};
-
-    const { error } = existing
-      ? await supabase.from("inventory").update(payload).eq("id", existing.id)
-      : await supabase.from("inventory").insert({
-          product_id: product.id,
-          ...payload,
-          is_primary: true,
-        });
-
-    if (error) {
-      setBatchSaving(false);
-      showToast(`Kunne ikke batch-lagre: ${error.message}`, "error");
-      return;
+    if (!res.ok) {
+      throw new Error(result?.error || "Batch assign feilet");
     }
 
-    updated++;
+    const zoneName =
+      zones.find((zone) => zone.id === batchZone)?.code ??
+      "valgt sone";
+
+    setBatchOpen(false);
+    setSelected([]);
+    setBatchZone("");
+
+    showToast(
+      `${result.updated} produkter → ${zoneName}`
+    );
+
+    await loadData();
+
+    setRecentlyUpdated(true);
+
+    setTimeout(() => {
+      setRecentlyUpdated(false);
+    }, 1800);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Batch assign feilet";
+
+    showToast(message, "error");
+
+  } finally {
+    setBatchSaving(false);
   }
-
-  setBatchOpen(false);
-  setSelected([]);
-  setBatchZone("");
-  setBatchSaving(false);
-
-const zoneName =
-  zones.find((zone) => zone.id === batchZone)?.code ?? "valgt sone";
-
-await logActivity({
-  entityType: "inventory",
-  entityId: null,
-  action: "batch_zone_set",
-  title: "Batch sone satt",
-  description: `${updated} produkter → ${zoneName}`,
-  metadata: {
-    zone_id: batchZone,
-    zone_code: zoneName,
-    product_ids: selected,
-    count: updated,
-  },
-});
-
-showToast(`${updated} produkter → ${zoneName}`);
-
-await loadData();
-
-setRecentlyUpdated(true);
-setTimeout(() => setRecentlyUpdated(false), 1800);
-
-window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+
 
 async function handleInlineSave(product: ProductRow) {
   const zoneId = inlineZone[product.id];
+
   if (!zoneId || inlineSaving) return;
 
   setInlineSaving(product.id);
@@ -390,132 +360,100 @@ async function handleInlineSave(product: ProductRow) {
   const existing = product.inventory?.[0];
   const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
 
-  const payload = {
-    zone_id: zoneId,
-    quantity,
-  };
+  try {
+    const res = await fetch("/api/inventory/set-location", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: product.id,
+        inventoryId: existing?.id ?? null,
+        zoneId,
+        locationId: null,
+        quantity,
+      }),
+    });
 
-  const { error } = existing
-    ? await supabase.from("inventory").update(payload).eq("id", existing.id)
-    : await supabase.from("inventory").insert({
-        product_id: product.id,
-        ...payload,
-        is_primary: true,
-      });
+    const result = await res.json();
 
-  setInlineSaving(null);
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke lagre sone");
+    }
 
-  if (error) {
-    showToast(`Kunne ikke lagre: ${error.message}`, "error");
+    setInlineZone((prev) => {
+      const next = { ...prev };
+      delete next[product.id];
+      return next;
+    });
+
+    showToast("Sone satt");
+
+    await loadData();
+
+    setRecentlyUpdated(true);
+    setTimeout(() => setRecentlyUpdated(false), 1800);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke lagre sone";
+
+    showToast(message, "error");
+  } finally {
+    setInlineSaving(null);
+  }
+}
+
+ async function handleSave() {
+  if (!editing) return;
+
+  const quantity = Number(newQuantity);
+
+  if (Number.isNaN(quantity) || quantity < 0) {
+    showToast("Antall må være 0 eller høyere", "error");
     return;
   }
 
-  setInlineZone((prev) => {
-    const next = { ...prev };
-    delete next[product.id];
-    return next;
-  });
+  const existing = editing.inventory?.[0];
 
-  const zoneCode =
-  zones.find((zone) => zone.id === zoneId)?.code ?? "ukjent sone";
+  try {
+    const res = await fetch("/api/inventory/set-location", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: editing.id,
+        inventoryId: existing?.id ?? null,
+        zoneId: newZone || null,
+        locationId: newLocation || null,
+        quantity,
+      }),
+    });
 
-await logActivity({
-  entityType: "inventory",
-  entityId: existing?.id ?? null,
-  action: "zone_set",
-  title: "Sone satt",
-  description: `${product.product_name} → ${zoneCode}`,
-  metadata: {
-    product_id: product.id,
-    zone_id: zoneId,
-    zone_code: zoneCode,
-  },
-});
+    const result = await res.json();
 
-showToast("Sone satt");
-await loadData();
-
-  setRecentlyUpdated(true);
-  setTimeout(() => setRecentlyUpdated(false), 1800);
-}
-
-  async function handleSave() {
-    if (!editing) return;
-
-    const quantity = Number(newQuantity);
-
-    if (Number.isNaN(quantity) || quantity < 0) {
-      alert("Antall må være 0 eller høyere");
-      return;
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke lagre plassering");
     }
 
-    
-
-    const selectedLocation = locations.find(
-      (location) => location.id === newLocation
-    );
-
-    const zoneId = selectedLocation?.zone_id || newZone || null;
-
-    if (!zoneId && !newLocation) {
-      alert("Velg minst sone eller lokasjon");
-      return;
-    }
-
-    const existing = editing.inventory?.[0];
-
-    const payload = {
-      location_id: newLocation || null,
-      zone_id: zoneId,
-      quantity,
-    };
-
-    const { error } = existing
-      ? await supabase.from("inventory").update(payload).eq("id", existing.id)
-      : await supabase.from("inventory").insert({
-          product_id: editing.id,
-          ...payload,
-          is_primary: true,
-        });
-
-
-
-  if (error) {
-  showToast(`Kunne ikke lagre: ${error.message}`, "error");
-  return;
-}
-
-if (newLocation) {
-  const selectedLocation = locations.find(
-    (location) => location.id === newLocation
-  );
-
-  await logActivity({
-    entityType: "inventory",
-    entityId: existing?.id ?? null,
-    action: "location_set",
-    title: "Lokasjon satt",
-    description: `${editing.product_name} → ${
-      selectedLocation?.code ?? "ukjent lokasjon"
-    }`,
-    metadata: {
-      product_id: editing.id,
-      inventory_id: existing?.id ?? null,
-      location_id: newLocation,
-      location_code: selectedLocation?.code ?? null,
-      zone_id: zoneId,
-    },
-  });
-}
     setEditing(null);
     setNewZone("");
     setNewLocation("");
     setNewQuantity("0");
 
+    showToast("Plassering lagret");
+
     await loadData();
-        setRecentlyUpdated(true);
-setTimeout(() => setRecentlyUpdated(false), 1800);
+
+    setRecentlyUpdated(true);
+    setTimeout(() => setRecentlyUpdated(false), 1800);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke lagre plassering";
+
+    showToast(message, "error");
   }
+}
 
 async function handleStockMovement() {
   if (!movementProduct || movementSaving) return;
@@ -529,84 +467,46 @@ async function handleStockMovement() {
 
   setMovementSaving(true);
 
-  const existing = movementProduct.inventory?.[0];
-  const currentQuantity = existing?.quantity ?? 0;
-  const quantityDelta = -quantity;
-  const nextQuantity = Math.max(0, currentQuantity + quantityDelta);
-
-  let inventoryId = existing?.id ?? null;
-
-  if (existing) {
-    const { error } = await supabase
-      .from("inventory")
-      .update({ quantity: nextQuantity })
-      .eq("id", existing.id);
-
-    if (error) {
-      setMovementSaving(false);
-      showToast(`Kunne ikke oppdatere lager: ${error.message}`, "error");
-      return;
-    }
-  } else {
-    const { data, error } = await supabase
-      .from("inventory")
-      .insert({
-        product_id: movementProduct.id,
-        quantity: 0,
-        is_primary: true,
-      })
-      .select("id")
-      .single();
-
-    if (error) {
-      setMovementSaving(false);
-      showToast(`Kunne ikke opprette lagerlinje: ${error.message}`, "error");
-      return;
-    }
-
-    inventoryId = data.id;
-  }
-
-  const { error: movementError } = await supabase
-    .from("stock_movements")
-    .insert({
-      product_id: movementProduct.id,
-      inventory_id: inventoryId,
-      quantity_delta: quantityDelta,
-      reason: movementReason,
-      note: movementNote.trim() || null,
+  try {
+    const res = await fetch("/api/inventory/stock-movement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: movementProduct.id,
+        quantity,
+        reason: movementReason,
+        note: movementNote.trim() || null,
+      }),
     });
 
-  if (movementError) {
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke registrere lagerhendelse");
+    }
+
+    setMovementProduct(null);
+    setMovementQty("1");
+    setMovementReason("manual_sale");
+    setMovementNote("");
+
+    showToast("Lagerhendelse registrert");
+
+    await loadData();
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Kunne ikke registrere lagerhendelse";
+
+    showToast(message, "error");
+  } finally {
     setMovementSaving(false);
-    showToast(`Kunne ikke logge hendelse: ${movementError.message}`, "error");
-    return;
   }
-
-  setMovementProduct(null);
-  setMovementQty("1");
-  setMovementReason("manual_sale");
-  setMovementNote("");
-  setMovementSaving(false);
-
-  await logActivity({
-  entityType: "stock_movement",
-  entityId: inventoryId,
-  action: "manual_stock_movement",
-  title: "Lagerhendelse registrert",
-  description: `${movementProduct.product_name} (${quantityDelta})`,
-  metadata: {
-    product_id: movementProduct.id,
-    inventory_id: inventoryId,
-    quantity_delta: quantityDelta,
-    reason: movementReason,
-    note: movementNote.trim() || null,
-  },
-});
-
-showToast("Lagerhendelse registrert");
-await loadData();
 }
+
 
 const ignoredCollections = useMemo(
   () =>
@@ -616,7 +516,6 @@ const ignoredCollections = useMemo(
     ]),
   []
 );
-
 const collections = useMemo(() => {
   const map = new Map<string, { title: string; handle: string | null }>();
 

@@ -10,6 +10,7 @@ import QRCode from "qrcode";
 import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
+import { logActivity } from "@/lib/activity";
 
 type Zone = {
   id: string;
@@ -100,11 +101,26 @@ const [editActive, setEditActive] = useState(true);
       active: newActive,
     });
 
+    
+
     if (error) {
       console.error("Feil ved oppretting av lokasjon:", error);
       return;
     }
 
+await logActivity({
+  entityType: "location",
+  entityId: null,
+  action: "location_created",
+  title: "Lokasjon opprettet",
+  description: code,
+  metadata: {
+    location_code: code,
+    zone_id: newZoneId || null,
+    active: newActive,
+  },
+});
+    
     setNewCode("");
     setNewZoneId("");
     setNewActive(true);
@@ -159,6 +175,23 @@ async function handleSaveEditLocation() {
     return;
   }
 
+  await logActivity({
+  entityType: "location",
+  entityId: editingLocation.id,
+  action: "location_updated",
+  title: "Lokasjon endret",
+  description: `${editingLocation.code} → ${code}`,
+  metadata: {
+    location_id: editingLocation.id,
+    old_code: editingLocation.code,
+    new_code: code,
+    old_zone_id: editingLocation.zone_id,
+    new_zone_id: editZoneId || null,
+    old_active: editingLocation.active,
+    new_active: editActive,
+  },
+});
+
   setEditingLocation(null);
   setEditCode("");
   setEditZoneId("");
@@ -173,9 +206,23 @@ async function handleSaveEditLocation() {
       .eq("id", location.id);
 
     if (error) {
-      console.error("Feil ved oppdatering av lokasjon:", error);
-      return;
-    }
+  console.error("Feil ved oppdatering av lokasjon:", error);
+  return;
+}
+
+await logActivity({
+  entityType: "location",
+  entityId: location.id,
+  action: location.active ? "location_deactivated" : "location_activated",
+  title: location.active ? "Lokasjon deaktivert" : "Lokasjon aktivert",
+  description: location.code,
+  metadata: {
+    location_id: location.id,
+    location_code: location.code,
+    old_active: location.active,
+    new_active: !location.active,
+  },
+});
 
     setLocations((current) =>
       current.map((item) =>

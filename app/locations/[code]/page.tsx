@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
+import { logActivity } from "@/lib/activity";
 
 type LocationDetail = {
   id: string;
@@ -112,23 +113,23 @@ export default function LocationDetailPage() {
       return;
     }
 
-    await supabase.from("activity_log").insert({
-      entity_type: "inventory",
-      entity_id: inventoryId,
-      action: "quantity_updated",
-      title: "Antall oppdatert",
-      description: `${item?.products?.product_name ?? "Ukjent produkt"} på ${
-        location?.code ?? "ukjent lokasjon"
-      }: ${oldQty} → ${quantity}`,
-      metadata: {
-        product_id: item?.products?.id ?? null,
-        inventory_id: inventoryId,
-        location_id: location?.id ?? null,
-        location_code: location?.code ?? null,
-        old_quantity: oldQty,
-        new_quantity: quantity,
-      },
-    });
+    await logActivity({
+  entityType: "inventory",
+  entityId: inventoryId,
+  action: "quantity_updated",
+  title: "Antall oppdatert",
+  description: `${item?.products?.product_name ?? "Ukjent produkt"} på ${
+    location?.code ?? "ukjent lokasjon"
+  }: ${oldQty} → ${quantity}`,
+  metadata: {
+    product_id: item?.products?.id ?? null,
+    inventory_id: inventoryId,
+    location_id: location?.id ?? null,
+    location_code: location?.code ?? null,
+    old_quantity: oldQty,
+    new_quantity: quantity,
+  },
+});
 
     await loadLocation();
   }
@@ -149,22 +150,22 @@ export default function LocationDetailPage() {
       return;
     }
 
-    await supabase.from("activity_log").insert({
-      entity_type: "inventory",
-      entity_id: inventoryId,
-      action: "removed_from_location",
-      title: "Produkt fjernet fra lokasjon",
-      description: `${item?.products?.product_name ?? "Ukjent produkt"} fjernet fra ${
-        location?.code ?? "ukjent lokasjon"
-      }`,
-      metadata: {
-        product_id: item?.products?.id ?? null,
-        inventory_id: inventoryId,
-        location_id: location?.id ?? null,
-        location_code: location?.code ?? null,
-        quantity: item?.quantity ?? null,
-      },
-    });
+    await logActivity({
+  entityType: "inventory",
+  entityId: inventoryId,
+  action: "removed_from_location",
+  title: "Produkt fjernet fra lokasjon",
+  description: `${item?.products?.product_name ?? "Ukjent produkt"} fjernet fra ${
+    location?.code ?? "ukjent lokasjon"
+  }`,
+  metadata: {
+    product_id: item?.products?.id ?? null,
+    inventory_id: inventoryId,
+    location_id: location?.id ?? null,
+    location_code: location?.code ?? null,
+    quantity: item?.quantity ?? null,
+  },
+});
 
     await loadLocation();
   }
@@ -238,19 +239,19 @@ export default function LocationDetailPage() {
       return;
     }
 
-    await supabase.from("activity_log").insert({
-      entity_type: "location",
-      entity_id: location.id,
-      action: "product_added_to_location",
-      title: "Produkt lagt til lokasjon",
-      description: `${product.product_name} → ${location.code}`,
-      metadata: {
-        product_id: product.id,
-        location_id: location.id,
-        location_code: location.code,
-        quantity,
-      },
-    });
+    await logActivity({
+  entityType: "location",
+  entityId: location.id,
+  action: "product_added_to_location",
+  title: "Produkt lagt til lokasjon",
+  description: `${product.product_name} → ${location.code}`,
+  metadata: {
+    product_id: product.id,
+    location_id: location.id,
+    location_code: location.code,
+    quantity,
+  },
+});
 
     setSkuInput("");
     setQuantityInput("1");

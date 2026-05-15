@@ -1,12 +1,25 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Settings, Layers, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
+
+type Profile = {
+  role: "admin" | "lager" | "viewer";
+};
+
+type UserProfile = {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  role: "admin" | "lager" | "viewer";
+  active: boolean;
+  created_at: string;
+};
 
 type ZoneRow = {
   id: string;
@@ -19,12 +32,14 @@ type ZoneRow = {
 export default function SettingsPage() {
   const [zones, setZones] = useState<ZoneRow[]>([]);
   const [loading, setLoading] = useState(true);
-
+const [users, setUsers] = useState<UserProfile[]>([]);
+const [usersLoading, setUsersLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newCode, setNewCode] = useState("");
   const [newName, setNewName] = useState("");
   const [newActive, setNewActive] = useState(true);
-
+const [profile, setProfile] = useState<Profile | null>(null);
+const [accessLoading, setAccessLoading] = useState(true);
   const [editingZone, setEditingZone] = useState<ZoneRow | null>(null);
   const [editCode, setEditCode] = useState("");
   const [editName, setEditName] = useState("");
@@ -34,11 +49,55 @@ export default function SettingsPage() {
 const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
 
   useEffect(() => {
+    checkAccess();
     loadZones();
+    loadUsers();
   }, []);
+
+async function loadUsers() {
+  setUsersLoading(true);
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, email, display_name, role, active, created_at")
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Feil ved henting av brukere:", error);
+    setUsers([]);
+  } else {
+    setUsers((data as UserProfile[]) ?? []);
+  }
+
+  setUsersLoading(false);
+}
+
+  async function checkAccess() {
+  setAccessLoading(true);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    setProfile(null);
+    setAccessLoading(false);
+    return;
+  }
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  setProfile(data as Profile | null);
+  setAccessLoading(false);
+}
 
   async function loadZones() {
     setLoading(true);
+
 
     const { data, error } = await supabase
       .from("zones")
@@ -152,6 +211,34 @@ const filteredZones = useMemo(() => {
     (sum, zone) => sum + (zone.locations?.length ?? 0),
     0
   );
+
+  if (accessLoading) {
+  return (
+    <main className="min-h-screen bg-[#062f3b] text-white">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+        <SnakeNav />
+        <section className="rounded-[26px] bg-white p-8 text-neutral-950">
+          Sjekker tilgang...
+        </section>
+        <SnakeFooter />
+      </div>
+    </main>
+  );
+}
+
+if (profile?.role !== "admin") {
+  return (
+    <main className="min-h-screen bg-[#062f3b] text-white">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+        <SnakeNav />
+        <section className="rounded-[26px] bg-white p-8 text-neutral-950">
+          Du har ikke tilgang til innstillinger.
+        </section>
+        <SnakeFooter />
+      </div>
+    </main>
+  );
+}
 
   return (
     <>
@@ -313,6 +400,60 @@ const filteredZones = useMemo(() => {
                 </div>
               </div>
             </div>
+            <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+  <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+    <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+      <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+        Brukere og roller
+      </h2>
+      <p className="mt-1 text-sm text-neutral-500">
+        Administrer hvem som har tilgang til Snake.
+      </p>
+    </div>
+
+    {usersLoading ? (
+      <EmptyState text="Henter brukere..." />
+    ) : users.length === 0 ? (
+      <EmptyState text="Ingen brukere funnet." />
+    ) : (
+      <div className="divide-y divide-neutral-100">
+        {users.map((user) => (
+          <div
+            key={user.id}
+            className="grid gap-4 px-6 py-5 lg:grid-cols-[1fr_180px_140px]"
+          >
+            <div>
+              <p className="font-semibold text-neutral-950">
+                {user.display_name || user.email || "Ukjent bruker"}
+              </p>
+              <p className="mt-1 text-sm text-neutral-500">
+                {user.email}
+              </p>
+            </div>
+
+            <select
+              value={user.role}
+              onChange={(e) => {
+                // vi kobler denne til API etterpå
+                console.log(user.id, e.target.value);
+              }}
+              className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
+            >
+              <option value="admin">Admin</option>
+              <option value="lager">Lager</option>
+              <option value="viewer">Viewer</option>
+            </select>
+
+            <StatusPill
+              text={user.active ? "Aktiv" : "Inaktiv"}
+              tone={user.active ? "ok" : "neutral"}
+            />
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
           </section>
 
           <SnakeFooter />
@@ -448,7 +589,10 @@ function ZoneModal({
           </button>
         </div>
       </div>
+      
     </div>
+
+    
   );
 }
 
@@ -497,45 +641,9 @@ function EmptyState({ text }: { text: string }) {
   return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;
 }
 
-function StatCard({
-  icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  tone: "blue" | "gold" | "ok" | "neutral";
-}) {
-  const styles = {
-    blue: "border-t-[#055a7d] text-[#055a7d]",
-    gold: "border-t-[#a77e05] text-[#a77e05]",
-    ok: "border-t-emerald-500 text-emerald-600",
-    neutral: "border-t-neutral-300 text-neutral-500",
-  };
 
-  return (
-    <div
-      className={`rounded-2xl border border-neutral-200 border-t-4 bg-white p-4 shadow-sm sm:p-5 ${styles[tone]}`}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
-            {label}
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950 sm:mt-3 sm:text-3xl">
-            {value}
-          </p>
-        </div>
 
-        <div className="[&>svg]:h-5 [&>svg]:w-5 sm:[&>svg]:h-6 sm:[&>svg]:w-6">
-          {icon}
-        </div>
-      </div>
-    </div>
-  );
-}
+
 
 function StatusPill({
   text,

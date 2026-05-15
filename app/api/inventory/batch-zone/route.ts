@@ -33,12 +33,14 @@ export async function POST(request: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  if (profileError || profile?.role !== "admin") {
-    return NextResponse.json(
-      { error: "Mangler admin-tilgang" },
-      { status: 403 }
-    );
-  }
+  const allowedRoles = ["admin", "lager"];
+
+if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
+  return NextResponse.json(
+    { error: "Mangler tilgang" },
+    { status: 403 }
+  );
+}
 
   // BODY
   const body = (await request.json()) as Body;

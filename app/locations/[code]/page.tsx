@@ -7,7 +7,7 @@ import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
-import { logActivity } from "@/lib/activity";
+import ActivityItemCard from "../../components/activity/ActivityItemCard";
 
 type LocationDetail = {
   id: string;
@@ -41,13 +41,17 @@ export default function LocationDetailPage() {
   const [skuInput, setSkuInput] = useState("");
   const [quantityInput, setQuantityInput] = useState("1");
   const [saving, setSaving] = useState(false);
-
+const [activity, setActivity] = useState<any[]>([]);
   const inventoryItems = location?.inventory ?? [];
 
   const totalQuantity = inventoryItems.reduce(
     (sum, item) => sum + (item.quantity ?? 0),
     0
   );
+const isEmpty = inventoryItems.length === 0;
+const isHighLoad = inventoryItems.length >= 8 || totalQuantity >= 50;
+const missingZone = location ? !location.zone_id : false;
+const recentlyChanged = activity.length > 0;
 
   useEffect(() => {
     if (code) loadLocation();
@@ -55,6 +59,8 @@ export default function LocationDetailPage() {
 
   async function loadLocation() {
     setLoading(true);
+
+    
 
     const { data, error } = await supabase
       .from("locations")
@@ -83,186 +89,157 @@ export default function LocationDetailPage() {
       .maybeSingle();
 
     if (error) {
-      console.error("Feil ved henting av lokasjon:", error);
-      setLocation(null);
-    } else if (data) {
-      setLocation({
-        ...(data as unknown as LocationDetail),
-        inventory: ((data as any).inventory ?? []) as LocationDetail["inventory"],
-      });
-    } else {
-      setLocation(null);
-    }
+  console.error("Feil ved henting av lokasjon:", error);
+  setLocation(null);
+  setActivity([]);
+} else if (data) {
+  setLocation({
+    ...(data as unknown as LocationDetail),
+    inventory: ((data as any).inventory ?? []) as LocationDetail["inventory"],
+  });
 
-    setLoading(false);
-  }
+  const { data: activityData } = await supabase
+    .from("activity_log")
+    .select(`
+      id,
+      entity_type,
+      entity_id,
+      action,
+      title,
+      description,
+      metadata,
+      actor_email,
+      created_at
+    `)
+    .eq("metadata->>location_id", data.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  setActivity(activityData ?? []);
+} else {
+  setLocation(null);
+  setActivity([]);
+}
 
   async function handleUpdateQuantity(inventoryId: string, quantity: number) {
-    if (quantity < 0) return;
+  if (quantity < 0) return;
 
-    const item = inventoryItems.find((entry) => entry.id === inventoryId);
-    const oldQty = item?.quantity ?? 0;
+  try {
+    const res = await fetch("/api/locations/update-quantity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inventoryId,
+        quantity,
+      }),
+    });
 
-    const { error } = await supabase
-      .from("inventory")
-      .update({ quantity })
-      .eq("id", inventoryId);
+    const result = await res.json();
 
-    if (error) {
-      alert(`Kunne ikke oppdatere antall: ${error.message}`);
-      return;
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke oppdatere antall");
     }
 
-    await logActivity({
-  entityType: "inventory",
-  entityId: inventoryId,
-  action: "quantity_updated",
-  title: "Antall oppdatert",
-  description: `${item?.products?.product_name ?? "Ukjent produkt"} på ${
-    location?.code ?? "ukjent lokasjon"
-  }: ${oldQty} → ${quantity}`,
-  metadata: {
-    product_id: item?.products?.id ?? null,
-    inventory_id: inventoryId,
-    location_id: location?.id ?? null,
-    location_code: location?.code ?? null,
-    old_quantity: oldQty,
-    new_quantity: quantity,
-  },
-});
-
     await loadLocation();
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke oppdatere antall";
+
+    alert(message);
   }
+}
 
   async function handleRemoveInventory(inventoryId: string) {
-    const confirmed = window.confirm("Fjerne produktet fra denne lokasjonen?");
-    if (!confirmed) return;
+  const confirmed = window.confirm("Fjerne produktet fra denne lokasjonen?");
+  if (!confirmed) return;
 
-    const item = inventoryItems.find((entry) => entry.id === inventoryId);
+  try {
+    const res = await fetch("/api/locations/remove-product", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inventoryId,
+      }),
+    });
 
-    const { error } = await supabase
-      .from("inventory")
-      .delete()
-      .eq("id", inventoryId);
+    const result = await res.json();
 
-    if (error) {
-      alert(`Kunne ikke fjerne produkt: ${error.message}`);
-      return;
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke fjerne produkt");
     }
-
-    await logActivity({
-  entityType: "inventory",
-  entityId: inventoryId,
-  action: "removed_from_location",
-  title: "Produkt fjernet fra lokasjon",
-  description: `${item?.products?.product_name ?? "Ukjent produkt"} fjernet fra ${
-    location?.code ?? "ukjent lokasjon"
-  }`,
-  metadata: {
-    product_id: item?.products?.id ?? null,
-    inventory_id: inventoryId,
-    location_id: location?.id ?? null,
-    location_code: location?.code ?? null,
-    quantity: item?.quantity ?? null,
-  },
-});
 
     await loadLocation();
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke fjerne produkt";
+
+    alert(message);
   }
+}
 
   async function handleAddProductToLocation() {
-    if (!location || saving) return;
+  if (!location || saving) return;
 
-    const sku = skuInput.trim();
-    const quantity = Number(quantityInput);
+  const sku = skuInput.trim();
+  const quantity = Number(quantityInput);
 
-    if (!sku) {
-      alert("Skriv inn SKU");
-      return;
+  if (!sku) {
+    alert("Skriv inn SKU");
+    return;
+  }
+
+  if (Number.isNaN(quantity) || quantity < 0) {
+    alert("Antall må være 0 eller høyere");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const res = await fetch("/api/locations/add-product", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        locationId: location.id,
+        locationCode: location.code,
+        sku,
+        quantity,
+      }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke legge til produkt");
     }
-
-    if (Number.isNaN(quantity) || quantity < 0) {
-      alert("Antall må være 0 eller høyere");
-      return;
-    }
-
-    setSaving(true);
-
-    const { data: product, error: productError } = await supabase
-      .from("products")
-      .select("id, sku, product_name")
-      .ilike("sku", sku)
-      .maybeSingle();
-
-    if (productError) {
-      setSaving(false);
-      alert(`Kunne ikke finne produkt: ${productError.message}`);
-      return;
-    }
-
-    if (!product) {
-      setSaving(false);
-      alert(`Fant ingen produkt med SKU: ${sku}`);
-      return;
-    }
-
-    const { data: existingInventory, error: existingError } = await supabase
-      .from("inventory")
-      .select("id, quantity")
-      .eq("product_id", product.id)
-      .eq("location_id", location.id)
-      .maybeSingle();
-
-    if (existingError) {
-      setSaving(false);
-      alert(`Kunne ikke sjekke eksisterende lagerlinje: ${existingError.message}`);
-      return;
-    }
-
-    const { error } = existingInventory
-      ? await supabase
-          .from("inventory")
-          .update({
-            quantity: (existingInventory.quantity ?? 0) + quantity,
-          })
-          .eq("id", existingInventory.id)
-      : await supabase.from("inventory").insert({
-          product_id: product.id,
-          location_id: location.id,
-          quantity,
-          is_primary: false,
-        });
-
-    if (error) {
-      setSaving(false);
-      alert(`Kunne ikke legge til produkt: ${error.message}`);
-      return;
-    }
-
-    await logActivity({
-  entityType: "location",
-  entityId: location.id,
-  action: "product_added_to_location",
-  title: "Produkt lagt til lokasjon",
-  description: `${product.product_name} → ${location.code}`,
-  metadata: {
-    product_id: product.id,
-    location_id: location.id,
-    location_code: location.code,
-    quantity,
-  },
-});
 
     setSkuInput("");
     setQuantityInput("1");
-    setSaving(false);
 
     await loadLocation();
 
     setTimeout(() => {
       document.getElementById("location-sku-input")?.focus();
     }, 50);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke legge til produkt";
+
+    alert(message);
+  } finally {
+    setSaving(false);
   }
+}
+
+ 
+
+ 
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -294,7 +271,15 @@ export default function LocationDetailPage() {
                   varer på lokasjonen.
                 </p>
               </div>
-
+{location && (
+  <div className="mt-5 flex flex-wrap gap-2">
+    {isEmpty && <LocationBadge tone="neutral" text="Tom" />}
+    {!isEmpty && <LocationBadge tone="ok" text="Aktiv" />}
+    {missingZone && <LocationBadge tone="warn" text="Mangler sone" />}
+    {isHighLoad && <LocationBadge tone="warn" text="Høy belastning" />}
+    {recentlyChanged && <LocationBadge tone="blue" text="Nylig endret" />}
+  </div>
+)}
               {location && (
                 <div className="grid gap-3 sm:grid-cols-2">
                   <HeroStat label="Status" value={location.active ? "Aktiv" : "Inaktiv"} />
@@ -365,6 +350,33 @@ export default function LocationDetailPage() {
                     />
                   </div>
 
+                  {location && (
+  <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+    <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+      <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+        <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+          Lokasjonshistorikk
+        </h2>
+        <p className="mt-1 text-sm text-neutral-500">
+          Siste hendelser registrert på denne lokasjonen.
+        </p>
+      </div>
+
+      {activity.length === 0 ? (
+        <div className="px-6 py-10 text-sm text-neutral-500">
+          Ingen historikk registrert på denne lokasjonen.
+        </div>
+      ) : (
+        <div className="divide-y divide-neutral-100">
+          {activity.map((item) => (
+            <ActivityItemCard key={item.id} item={item} />
+          ))}
+        </div>
+      )}
+    </section>
+  </div>
+)}
+
                   <div>
                     <label className="mb-2 block text-sm font-medium text-neutral-700">
                       Antall
@@ -428,6 +440,28 @@ export default function LocationDetailPage() {
   );
 }
 
+function LocationBadge({
+  text,
+  tone,
+}: {
+  text: string;
+  tone: "ok" | "warn" | "blue" | "neutral";
+}) {
+  const styles = {
+    ok: "border-emerald-300/30 bg-emerald-300/15 text-emerald-50",
+    warn: "border-[#b58a14]/40 bg-[#b58a14]/20 text-[#ffe1a1]",
+    blue: "border-white/20 bg-white/10 text-white",
+    neutral: "border-white/15 bg-white/8 text-white/75",
+  };
+
+  return (
+    <span
+      className={`rounded-full border px-3 py-1 text-xs font-semibold ${styles[tone]}`}
+    >
+      {text}
+    </span>
+  );
+}
 function InventoryRow({
   item,
   onUpdateQuantity,
@@ -546,4 +580,5 @@ function InfoCard({
       </div>
     </div>
   );
+}
 }

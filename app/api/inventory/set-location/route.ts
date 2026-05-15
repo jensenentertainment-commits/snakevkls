@@ -12,6 +12,20 @@ type Body = {
   quantity: number;
 };
 
+type RelationCode = {
+  code: string | null;
+};
+
+function getRelationCode(value: RelationCode | RelationCode[] | null | undefined) {
+  if (!value) return null;
+
+  if (Array.isArray(value)) {
+    return value[0]?.code ?? null;
+  }
+
+  return value.code ?? null;
+}
+
 export async function POST(request: NextRequest) {
   const authClient = await createServerSupabaseClient();
 
@@ -64,8 +78,37 @@ export async function POST(request: NextRequest) {
     supabaseServiceKey
   );
 
+  let previousZoneCode: string | null = null;
+let previousLocationCode: string | null = null;
+let previousQuantity = 0;
+
+if (inventoryId) {
+  const { data: existingInventory } = await supabaseAdmin
+    .from("inventory")
+    .select(`
+      id,
+      quantity,
+      zones (
+        code
+      ),
+      locations (
+        code
+      )
+    `)
+    .eq("id", inventoryId)
+    .single();
+
+ previousZoneCode = getRelationCode(
+  existingInventory?.zones as RelationCode | RelationCode[] | null | undefined
+);
+
+previousLocationCode = getRelationCode(
+  existingInventory?.locations as RelationCode | RelationCode[] | null | undefined
+);
+}
   let zoneId = body.zoneId || null;
   let locationCode: string | null = null;
+  let zoneCode: string | null = null;
 
   if (locationId) {
     const { data: location, error: locationError } = await supabaseAdmin
@@ -84,6 +127,16 @@ export async function POST(request: NextRequest) {
     zoneId = location.zone_id ?? zoneId;
     locationCode = location.code;
   }
+
+  if (zoneId) {
+  const { data: zone } = await supabaseAdmin
+    .from("zones")
+    .select("code")
+    .eq("id", zoneId)
+    .single();
+
+  zoneCode = zone?.code ?? null;
+}
 
   if (!zoneId && !locationId) {
     return NextResponse.json(
@@ -153,15 +206,28 @@ export async function POST(request: NextRequest) {
           locationCode ?? "ukjent lokasjon"
         }`
       : `${product?.product_name ?? "Produkt"} → sone`,
+      actor_email: user.email ?? null,
     metadata: {
-      product_id: productId,
-      inventory_id: savedInventoryId,
-      location_id: locationId,
-      location_code: locationCode,
-      zone_id: zoneId,
-      quantity,
-      user_id: user.id,
-    },
+  product_id: productId,
+  inventory_id: savedInventoryId,
+
+  from_zone: previousZoneCode,
+  to_zone: zoneCode,
+
+  from_location: previousLocationCode,
+  to_location: locationCode,
+
+  previous_quantity: previousQuantity,
+  new_quantity: quantity,
+
+  location_id: locationId,
+  location_code: locationCode,
+  zone_id: zoneId,
+  zone_code: zoneCode,
+
+  source: "manual",
+  user_id: user.id,
+},
   });
 
   return NextResponse.json({

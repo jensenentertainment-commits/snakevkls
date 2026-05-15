@@ -7,16 +7,20 @@ import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
+import ActivityItemCard from "../../components/activity/ActivityItemCard";
 
 export default function ProductPage() {
-  const { id } = useParams();
+ 
   const [product, setProduct] = useState<any>(null);
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const params = useParams();
+const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  useEffect(() => {
-    load();
-  }, []);
+ useEffect(() => {
+  if (!id) return;
+  load();
+}, [id]);
 
   async function load() {
     setLoading(true);
@@ -48,20 +52,22 @@ export default function ProductPage() {
 
     setProduct(data);
 
-    const { data: activityData } = await supabase
-      .from("activity_log")
-      .select(`
-        id,
-        action,
-        title,
-        description,
-        metadata,
-        actor_email,
-        created_at
-      `)
-      .contains("metadata", { product_id: id })
-      .order("created_at", { ascending: false })
-      .limit(20);
+   const productId = Array.isArray(id) ? id[0] : id;
+
+const { data: activityData } = await supabase
+  .from("activity_log")
+  .select(`
+    id,
+    action,
+    title,
+    description,
+    metadata,
+    actor_email,
+    created_at
+  `)
+  .eq("metadata->>product_id", productId)
+  .order("created_at", { ascending: false })
+  .limit(30);
 
     setActivity(activityData ?? []);
     setLoading(false);
@@ -197,29 +203,12 @@ export default function ProductPage() {
               ) : (
                 <div className="mt-4 space-y-3">
                   {activity.map((item) => (
-                    <div
-                      key={item.id}
-                      className="rounded-2xl border border-neutral-200 p-4"
-                    >
-                      <p className="font-semibold">{item.title}</p>
-
-                      {item.description && (
-                        <p className="mt-1 text-sm text-neutral-600">
-                          {item.description}
-                        </p>
-                      )}
-
-                      <p className="mt-2 text-xs text-neutral-400">
-                        {new Date(item.created_at).toLocaleString("nb-NO")}
-                        {item.actor_email && (
-  <p className="mt-1 text-xs text-neutral-500">
-    Utført av {item.actor_email}
-  </p>
-)}
-                      </p>
-                    </div>
-                    
-                  ))}
+  <ActivityItemCard
+    key={item.id}
+    item={item}
+    showProductLink={false}
+  />
+))}
                 </div>
               )}
             </section>

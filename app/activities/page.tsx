@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { Activity, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
+import ActivityItemCard from "../components/activity/ActivityItemCard";
+import { formatAction } from "../components/activity/utils";
 
 type ActivityItem = {
   id: string;
@@ -36,16 +36,16 @@ export default function ActivitiesPage() {
     const { data, error } = await supabase
       .from("activity_log")
       .select(`
-  id,
-  entity_type,
-  entity_id,
-  action,
-  title,
-  description,
-  metadata,
-  actor_email,
-  created_at
-`)
+        id,
+        entity_type,
+        entity_id,
+        action,
+        title,
+        description,
+        metadata,
+        actor_email,
+        created_at
+      `)
       .order("created_at", { ascending: false })
       .limit(100);
 
@@ -65,16 +65,16 @@ export default function ActivitiesPage() {
   }, [activities]);
 
   const groupedActivities = useMemo(() => {
-  const groups = new Map<string, ActivityItem[]>();
+    const groups = new Map<string, ActivityItem[]>();
 
-  filteredActivities.forEach((item) => {
-    const key = getDateGroup(item.created_at);
-    const existing = groups.get(key) ?? [];
-    groups.set(key, [...existing, item]);
-  });
+    filteredActivities.forEach((item) => {
+      const key = getDateGroup(item.created_at);
+      const existing = groups.get(key) ?? [];
+      groups.set(key, [...existing, item]);
+    });
 
-  return Array.from(groups.entries());
-}, [filteredActivities]);
+    return Array.from(groups.entries());
+  }, [filteredActivities]);
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -99,7 +99,10 @@ export default function ActivitiesPage() {
                       : "bg-white/10 text-white"
                   }`}
                 >
-                  Alle <span className="ml-1 opacity-70">{activities.length}</span>
+                  Alle{" "}
+                  <span className="ml-1 opacity-70">
+                    {activities.length}
+                  </span>
                 </button>
 
                 {actions.map((action) => (
@@ -114,7 +117,6 @@ export default function ActivitiesPage() {
                   >
                     {formatAction(action)}
                   </button>
-
                 ))}
               </>
             }
@@ -135,6 +137,7 @@ export default function ActivitiesPage() {
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
                     Aktivitetslogg
                   </h2>
+
                   <p className="mt-1 text-sm text-neutral-500">
                     {loading
                       ? "Henter aktivitet..."
@@ -149,20 +152,20 @@ export default function ActivitiesPage() {
                 <EmptyState text="Ingen hendelser registrert." />
               ) : (
                 <div className="divide-y divide-neutral-100">
-  {groupedActivities.map(([dateLabel, items]) => (
-    <div key={dateLabel}>
-      <div className="bg-neutral-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:px-6">
-        {dateLabel}
-      </div>
+                  {groupedActivities.map(([dateLabel, items]) => (
+                    <div key={dateLabel}>
+                      <div className="bg-neutral-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:px-6">
+                        {dateLabel}
+                      </div>
 
-      <div className="divide-y divide-neutral-100">
-        {items.map((item) => (
-          <ActivityRow key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
-  ))}
-</div>
+                      <div className="divide-y divide-neutral-100">
+                        {items.map((item) => (
+                          <ActivityItemCard key={item.id} item={item} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -171,65 +174,6 @@ export default function ActivitiesPage() {
         <SnakeFooter />
       </div>
     </main>
-  );
-}
-
-function ActivityRow({ item }: { item: ActivityItem }) {
-  const productId =
-    typeof item.metadata?.product_id === "string"
-      ? item.metadata.product_id
-      : null;
-
-      const tone = getActivityTone(item.action);
-
-  return (
-    <div className="px-5 py-5 transition hover:bg-[#055a7d]/[0.025] sm:px-6">
-      <div className="flex gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#055a7d]/15 bg-[#055a7d]/8 text-[#055a7d] sm:h-12 sm:w-12">
-          <Activity className="h-5 w-5" />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}>
-  {formatAction(item.action)}
-</span>
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
-              {item.entity_type}
-            </span>
-          </div>
-
-          <h3 className="mt-2 text-base font-semibold leading-6 text-neutral-950">
-            {item.title}
-          </h3>
-
-          {item.description && (
-            <p className="mt-1 text-sm leading-6 text-neutral-600">
-              {item.description}
-            </p>
-          )}
-
-  <p className="mt-2 text-xs text-neutral-400">
-  {item.action} · {new Date(item.created_at).toLocaleString()}
-</p>
-
-{item.actor_email && (
-  <p className="mt-1 text-xs text-neutral-500">
-    Utført av {item.actor_email}
-  </p>
-)}
-          {productId && (
-            <Link
-              href={`/products/${productId}`}
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
-            >
-              Åpne produkt
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          )}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -255,50 +199,6 @@ function getDateGroup(dateString: string) {
   });
 }
 
-function formatAction(action: string) {
-  const labels: Record<string, string> = {
-    zone_set: "Sone satt",
-    batch_zone_set: "Batch sone",
-    location_set: "Lokasjon satt",
-    manual_stock_movement: "Uttak / korrigering",
-    product_added_to_location: "Produkt lagt til",
-    quantity_updated: "Antall endret",
-    removed_from_location: "Fjernet fra lokasjon",
-    shopify_sync_started: "Shopify sync startet",
-    shopify_sync_completed: "Shopify sync fullført",
-    shopify_sync_failed: "Shopify sync feilet",
-    location_created: "Lokasjon opprettet",
-    location_updated: "Lokasjon endret",
-    location_activated: "Lokasjon aktivert",
-    location_deactivated: "Lokasjon deaktivert",
-  };
-
-  return labels[action] ?? action;
-}
-
-function getActivityTone(action: string) {
-  const tones: Record<string, string> = {
-    manual_stock_movement: "border-red-200 bg-red-50 text-red-700",
-    removed_from_location: "border-red-200 bg-red-50 text-red-700",
-
-    zone_set: "border-amber-200 bg-amber-50 text-amber-700",
-    batch_zone_set: "border-purple-200 bg-purple-50 text-purple-700",
-
-    location_set: "border-blue-200 bg-blue-50 text-blue-700",
-    product_added_to_location: "border-green-200 bg-green-50 text-green-700",
-    quantity_updated: "border-neutral-300 bg-neutral-100 text-neutral-700",
-shopify_sync_started: "border-blue-200 bg-blue-50 text-blue-700",
-    shopify_sync_completed: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    shopify_sync_failed: "border-red-200 bg-red-50 text-red-700",
-
-    location_created: "border-green-200 bg-green-50 text-green-700",
-    location_updated: "border-blue-200 bg-blue-50 text-blue-700",
-    location_activated: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    location_deactivated: "border-neutral-300 bg-neutral-100 text-neutral-700",
-  };
-
-  return tones[action] ?? "border-neutral-200 bg-neutral-100 text-neutral-600";
-}
 function EmptyState({ text }: { text: string }) {
   return <div className="px-6 py-10 text-sm text-neutral-500">{text}</div>;
 }

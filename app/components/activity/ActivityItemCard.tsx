@@ -15,6 +15,7 @@ export type ActivityItem = {
   description: string | null;
   metadata: Record<string, unknown> | null;
   actor_email: string | null;
+  actor_name: string | null;
   created_at: string;
 };
 
@@ -120,9 +121,9 @@ const metadataLines = getMetadataLines(item.metadata);
             {new Date(item.created_at).toLocaleString("nb-NO")}
           </p>
 
-          {item.actor_email && (
+          {(item.actor_name || item.actor_email) && (
             <p className="mt-1 text-xs text-neutral-500">
-              Utført av {item.actor_email}
+              Utført av {item.actor_name || item.actor_email}
             </p>
           )}
 

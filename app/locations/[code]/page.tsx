@@ -109,6 +109,7 @@ const recentlyChanged = activity.length > 0;
       description,
       metadata,
       actor_email,
+      actor_name,
       created_at
     `)
     .eq("metadata->>location_id", data.id)
@@ -274,15 +275,7 @@ setLoading(false);
                   varer på lokasjonen.
                 </p>
               </div>
-{location && (
-  <div className="mt-5 flex flex-wrap gap-2">
-    {isEmpty && <LocationBadge tone="neutral" text="Tom" />}
-    {!isEmpty && <LocationBadge tone="ok" text="Aktiv" />}
-    {missingZone && <LocationBadge tone="warn" text="Mangler sone" />}
-    {isHighLoad && <LocationBadge tone="warn" text="Høy belastning" />}
-    {recentlyChanged && <LocationBadge tone="blue" text="Nylig endret" />}
-  </div>
-)}
+
               {location && (
                 <div className="grid gap-3 sm:grid-cols-2">
                   <HeroStat label="Status" value={location.active ? "Aktiv" : "Inaktiv"} />
@@ -414,6 +407,33 @@ setLoading(false);
     {recentlyChanged && <LocationBadge tone="blue" text="Nylig endret" />}
   </div>
 )}
+
+{location && (
+            <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+              <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+                    Lokasjonshistorikk
+                  </h2>
+                  <p className="mt-1 text-sm text-neutral-500">
+                    Siste hendelser registrert på denne lokasjonen.
+                  </p>
+                </div>
+
+                {activity.length === 0 ? (
+                  <div className="px-6 py-10 text-sm text-neutral-500">
+                    Ingen historikk registrert på denne lokasjonen.
+                  </div>
+                ) : (
+                  <div className="divide-y divide-neutral-100">
+                    {activity.map((item) => (
+                      <ActivityItemCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
               </section>
             </div>
           )}

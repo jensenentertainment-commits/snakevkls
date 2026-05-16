@@ -18,6 +18,7 @@ type ActivityItem = {
   description: string | null;
   metadata: Record<string, unknown> | null;
   actor_email: string | null;
+  actor_name: string | null;
   created_at: string;
 };
 
@@ -44,6 +45,7 @@ export default function ActivitiesPage() {
         description,
         metadata,
         actor_email,
+         actor_name,
         created_at
       `)
       .order("created_at", { ascending: false })

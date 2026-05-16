@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
   const { data: profile, error: profileError } = await authClient
     .from("profiles")
-    .select("role")
+    .select("role, display_name")
     .eq("id", user.id)
     .single();
 
@@ -121,7 +121,8 @@ if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
     description: `${product?.product_name ?? "Ukjent produkt"} på ${
       location?.code ?? "ukjent lokasjon"
     }: ${previousQuantity} → ${quantity}`,
-    actor_email: user.email ?? null,
+    actor_name: profile.display_name ?? user.email ?? null,
+actor_email: user.email ?? null,
     metadata: {
       product_id: inventory.product_id,
       inventory_id: inventoryId,

@@ -63,6 +63,7 @@ const { data: activityData } = await supabase
     description,
     metadata,
     actor_email,
+    actor_name,
     created_at
   `)
   .eq("metadata->>product_id", productId)

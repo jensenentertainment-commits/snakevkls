@@ -44,6 +44,13 @@ const [accessLoading, setAccessLoading] = useState(true);
   const [editCode, setEditCode] = useState("");
   const [editName, setEditName] = useState("");
   const [editActive, setEditActive] = useState(true);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+const [newUserEmail, setNewUserEmail] = useState("");
+const [newUserPassword, setNewUserPassword] = useState("");
+const [newUserDisplayName, setNewUserDisplayName] = useState("");
+const [newUserRole, setNewUserRole] = useState<"admin" | "lager" | "viewer">("lager");
+const [newUserActive, setNewUserActive] = useState(true);
+const [creatingUser, setCreatingUser] = useState(false);
 
   const [query, setQuery] = useState("");
 const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
@@ -149,6 +156,85 @@ async function loadUsers() {
 
     await loadZones();
   }
+
+  async function handleCreateUser() {
+  if (creatingUser) return;
+
+  setCreatingUser(true);
+
+  try {
+    const res = await fetch("/api/admin/users/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: newUserEmail,
+        password: newUserPassword,
+        displayName: newUserDisplayName,
+        role: newUserRole,
+        active: newUserActive,
+      }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke opprette bruker");
+    }
+
+    setShowCreateUserModal(false);
+    setNewUserEmail("");
+    setNewUserPassword("");
+    setNewUserDisplayName("");
+    setNewUserRole("lager");
+    setNewUserActive(true);
+
+    await loadUsers();
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke opprette bruker";
+
+    alert(message);
+  } finally {
+    setCreatingUser(false);
+  }
+}
+
+  async function handleUpdateUser(
+  userId: string,
+  updates: {
+    displayName?: string | null;
+    role?: "admin" | "lager" | "viewer";
+    active?: boolean;
+  }
+) {
+  try {
+    const res = await fetch("/api/admin/users/update-profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        ...updates,
+      }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result?.error || "Kunne ikke oppdatere bruker");
+    }
+
+    await loadUsers();
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Kunne ikke oppdatere bruker";
+
+    alert(message);
+  }
+}
 
   async function handleSaveZone() {
     if (!editingZone) return;
@@ -403,6 +489,8 @@ if (profile?.role !== "admin") {
             <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
   <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
     <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+  <div className="flex items-center justify-between gap-4">
+    <div>
       <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
         Brukere og roller
       </h2>
@@ -410,6 +498,15 @@ if (profile?.role !== "admin") {
         Administrer hvem som har tilgang til Snake.
       </p>
     </div>
+
+    <button
+      onClick={() => setShowCreateUserModal(true)}
+      className="rounded-xl bg-[#055a7d] px-4 py-2 text-sm font-semibold text-white"
+    >
+      Ny bruker
+    </button>
+  </div>
+</div>
 
     {usersLoading ? (
       <EmptyState text="Henter brukere..." />
@@ -422,21 +519,19 @@ if (profile?.role !== "admin") {
             key={user.id}
             className="grid gap-4 px-6 py-5 lg:grid-cols-[1fr_180px_140px]"
           >
-            <div>
-              <p className="font-semibold text-neutral-950">
-                {user.display_name || user.email || "Ukjent bruker"}
-              </p>
-              <p className="mt-1 text-sm text-neutral-500">
-                {user.email}
-              </p>
-            </div>
+            <UserNameEditor
+  userId={user.id}
+  initialValue={user.display_name || ""}
+  email={user.email}
+/>
 
             <select
               value={user.role}
-              onChange={(e) => {
-                // vi kobler denne til API etterpå
-                console.log(user.id, e.target.value);
-              }}
+              onChange={(e) =>
+  handleUpdateUser(user.id, {
+    role: e.target.value as "admin" | "lager" | "viewer",
+  })
+}
               className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
             >
               <option value="admin">Admin</option>
@@ -449,6 +544,7 @@ if (profile?.role !== "admin") {
               tone={user.active ? "ok" : "neutral"}
             />
           </div>
+          
         ))}
       </div>
     )}
@@ -459,7 +555,30 @@ if (profile?.role !== "admin") {
           <SnakeFooter />
         </div>
       </main>
-
+{showCreateUserModal && (
+  <CreateUserModal
+    email={newUserEmail}
+    setEmail={setNewUserEmail}
+    password={newUserPassword}
+    setPassword={setNewUserPassword}
+    displayName={newUserDisplayName}
+    setDisplayName={setNewUserDisplayName}
+    role={newUserRole}
+    setRole={setNewUserRole}
+    active={newUserActive}
+    setActive={setNewUserActive}
+    saving={creatingUser}
+    onCancel={() => {
+      setShowCreateUserModal(false);
+      setNewUserEmail("");
+      setNewUserPassword("");
+      setNewUserDisplayName("");
+      setNewUserRole("lager");
+      setNewUserActive(true);
+    }}
+    onSave={handleCreateUser}
+  />
+)}
       {showCreateModal && (
         <ZoneModal
           title="Ny sone"
@@ -500,6 +619,116 @@ if (profile?.role !== "admin") {
         />
       )}
     </>
+  );
+}
+
+function CreateUserModal({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  displayName,
+  setDisplayName,
+  role,
+  setRole,
+  active,
+  setActive,
+  saving,
+  onCancel,
+  onSave,
+}: {
+  email: string;
+  setEmail: (value: string) => void;
+  password: string;
+  setPassword: (value: string) => void;
+  displayName: string;
+  setDisplayName: (value: string) => void;
+  role: "admin" | "lager" | "viewer";
+  setRole: (value: "admin" | "lager" | "viewer") => void;
+  active: boolean;
+  setActive: (value: boolean) => void;
+  saving: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
+      <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+          Bruker
+        </p>
+
+        <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+          Ny bruker
+        </h2>
+
+        <div className="mt-6 space-y-4">
+          <input
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder="Visningsnavn"
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          />
+
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="E-post"
+            type="email"
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          />
+
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Midlertidig passord"
+            type="password"
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          />
+
+          <select
+            value={role}
+            onChange={(e) =>
+              setRole(e.target.value as "admin" | "lager" | "viewer")
+            }
+            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          >
+            <option value="admin">Admin</option>
+            <option value="lager">Lager</option>
+            <option value="viewer">Viewer</option>
+          </select>
+
+          <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={(e) => setActive(e.target.checked)}
+              className="h-4 w-4 accent-[#055a7d]"
+            />
+            Aktiv bruker
+          </label>
+        </div>
+
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            onClick={onCancel}
+            disabled={saving}
+            className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700 disabled:opacity-50"
+          >
+            Avbryt
+          </button>
+
+          <button
+            onClick={onSave}
+            disabled={saving}
+            className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+          >
+            {saving ? "Oppretter..." : "Opprett"}
+          </button>
+          
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -593,6 +822,76 @@ function ZoneModal({
     </div>
 
     
+  );
+}
+
+function UserNameEditor({
+  userId,
+  initialValue,
+  email,
+}: {
+  userId: string;
+  initialValue: string;
+  email: string | null;
+}) {
+  const [value, setValue] = useState(initialValue);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (saving) return;
+
+    setSaving(true);
+
+    try {
+      const res = await fetch("/api/admin/users/update-profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          displayName: value,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result?.error || "Kunne ikke lagre navn");
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Kunne ikke lagre navn";
+
+      alert(message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Visningsnavn"
+          className="w-full rounded-xl border border-neutral-300 px-3 py-2 text-sm font-semibold text-neutral-950 outline-none focus:border-[#055a7d]"
+        />
+
+        <button
+          onClick={save}
+          disabled={saving}
+          className="shrink-0 rounded-xl bg-[#055a7d] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        >
+          {saving ? "..." : "Lagre"}
+        </button>
+      </div>
+
+      <p className="text-sm text-neutral-500">
+        {email}
+      </p>
+    </div>
   );
 }
 

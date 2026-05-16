@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
   const { data: profile, error: profileError } = await authClient
     .from("profiles")
-    .select("role")
+    .select("role, display_name")
     .eq("id", user.id)
     .single();
 
@@ -203,12 +203,16 @@ previousLocationCode = getRelationCode(
     entity_id: savedInventoryId,
     action: locationId ? "location_set" : "zone_set",
     title: locationId ? "Lokasjon satt" : "Sone satt",
+
+    actor_name: profile.display_name ?? user.email ?? null,
+actor_email: user.email ?? null,
+
     description: locationId
       ? `${product?.product_name ?? "Produkt"} → ${
           locationCode ?? "ukjent lokasjon"
         }`
       : `${product?.product_name ?? "Produkt"} → sone`,
-      actor_email: user.email ?? null,
+   
     metadata: {
   product_id: productId,
   inventory_id: savedInventoryId,

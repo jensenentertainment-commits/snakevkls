@@ -255,7 +255,7 @@ await logActivity({
   return (
     <>
       <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-6 py-8">
+        <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
           <SnakeNav />
 
           <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">

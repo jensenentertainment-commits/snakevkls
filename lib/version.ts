@@ -1,1 +1,1 @@
-export const SNAKE_VERSION = "1.8";
+export const SNAKE_VERSION = "1.8.2";

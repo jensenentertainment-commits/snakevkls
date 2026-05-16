@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
   const { data: profile, error: profileError } = await authClient
     .from("profiles")
-    .select("role")
+    .select("role, display_name")
     .eq("id", user.id)
     .single();
 

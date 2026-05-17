@@ -31,6 +31,8 @@ export default async function HomePage() {
   placedProductCount,
   activeProductCount,
   locationsNoZoneCount,
+  latestActivity,
+  latestShopifySync,
 } = await getDashboardStats();
   const issueCount =
   missingLocationCount + missingSkuCount + emptyLocationCount;
@@ -127,30 +129,58 @@ const issueState: IssueCardState = hasIssues
       <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
         <div className="relative overflow-hidden bg-[#05495b] text-white">
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-          <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
+          
 
           <div className="relative flex flex-col gap-8 px-8 py-10 sm:px-10 lg:flex-row lg:items-center lg:justify-between xl:px-12">
-            <div className="max-w-[560px] shrink-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-                SNAKE VKLS
-              </p>
+            <div className="max-w-[520px] shrink-0">
+  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
+    Systempuls
+  </p>
 
-              <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-                Varekompaniets lagersystem.
-              </h1>
+  <div className="mt-6 space-y-3 text-sm text-white/70">
+    <PulseLine tone="ok" text="Shopify-sync aktiv" />
 
-              <p className="mt-2 text-sm font-semibold text-white/75">
-                {missingLocationCount} uten lokasjon · {missingSkuCount} uten SKU ·{" "}
-                {emptyLocationCount} tomme lokasjoner
-              </p>
+    <PulseLine
+      tone="neutral"
+      text={`${activeProductCount} aktive produkter`}
+    />
 
-              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                Finn produkter, kontroller lokasjoner og bygg ryddigere lagerdata før
-                plukk og ordrebehandling.
-              </p>
-            </div>
+    <PulseLine
+      tone={emptyLocationCount > 0 ? "warn" : "ok"}
+      text={`${emptyLocationCount} tomme lokasjoner`}
+    />
+  </div>
 
-           <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
+  <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.045] p-5">
+    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+      Siste aktivitet
+    </p>
+
+    {latestActivity ? (
+      <>
+        <p className="mt-3 text-base font-semibold text-white">
+          {latestActivity.title}
+        </p>
+
+        <p className="mt-1 text-sm text-white/55">
+          {latestActivity.actor_name ?? latestActivity.actor_email ?? "System"}
+        </p>
+      </>
+    ) : (
+      <p className="mt-3 text-sm text-white/55">
+        Ingen aktivitet registrert ennå.
+      </p>
+    )}
+
+    {latestShopifySync && (
+      <p className="mt-4 border-t border-white/10 pt-4 text-xs text-white/45">
+        Siste Shopify-sync:{" "}
+        {new Date(latestShopifySync.created_at).toLocaleString("nb-NO")}
+      </p>
+    )}
+  </div>
+</div>
+           <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
               <HeroStatusCard
                 tone="warn"
                 value={missingLocationCount}
@@ -186,7 +216,7 @@ const issueState: IssueCardState = hasIssues
           </div>
         </div>
 
-        <div className="px-5 py-5 sm:px-8 sm:py-6">
+        <div className="px-5 py-7 sm:px-8 sm:py-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
@@ -239,6 +269,27 @@ const issueState: IssueCardState = hasIssues
   </main>
 );
 
+function PulseLine({
+  text,
+  tone,
+}: {
+  text: string;
+  tone: "ok" | "warn" | "neutral";
+}) {
+  const styles = {
+    ok: "bg-emerald-400",
+    warn: "bg-[#b58a14]",
+    neutral: "bg-white/35",
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className={`h-2 w-2 rounded-full ${styles[tone]}`} />
+      <span>{text}</span>
+    </div>
+  );
+}
+
 function HeroStatusCard({
   value,
   label,
@@ -251,19 +302,19 @@ function HeroStatusCard({
   tone: "warn" | "ok";
 }) {
   const styles = {
-    warn: {
-      card: "border-amber-300 bg-amber-50 text-neutral-950",
-      value: "text-amber-700",
-      icon: "border-amber-300 bg-amber-100 text-amber-700",
-      symbol: "!",
-    },
-    ok: {
-      card: "border-emerald-300 bg-emerald-50 text-neutral-950",
-      value: "text-emerald-600",
-      icon: "border-emerald-300 bg-emerald-100 text-emerald-600",
-      symbol: "✓",
-    },
-  }[tone];
+  warn: {
+    card: "border-amber-300 bg-amber-50 text-neutral-950",
+    value: "text-amber-700",
+    icon: "border-amber-300 bg-amber-100 text-amber-700",
+    symbol: "!",
+  },
+  ok: {
+    card: "border-emerald-300 bg-emerald-50 text-neutral-950",
+    value: "text-emerald-600",
+    icon: "border-emerald-300 bg-emerald-100 text-emerald-600",
+    symbol: "✓",
+  },
+}[tone];
 
   return (
     <div className={`flex min-h-[124px] rounded-3xl border p-5 shadow-xl shadow-black/10 ${styles.card}`}>

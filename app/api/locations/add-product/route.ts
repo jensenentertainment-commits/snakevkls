@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
-import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
+
+import { requireRole } from "@/lib/auth/require-role";
 
 export const dynamic = "force-dynamic";
 
@@ -12,31 +13,12 @@ type Body = {
 };
 
 export async function POST(request: NextRequest) {
-  const authClient = await createServerSupabaseClient();
+  const auth = await requireRole(["admin", "lager"]);
 
-  const {
-    data: { user },
-    error: userError,
-  } = await authClient.auth.getUser();
+if (!auth.ok) return auth.response;
 
-  if (userError || !user) {
-    return NextResponse.json({ error: "Ikke innlogget" }, { status: 401 });
-  }
+const { user, profile } = auth;
 
-  const { data: profile, error: profileError } = await authClient
-    .from("profiles")
-    .select("role, display_name")
-    .eq("id", user.id)
-    .single();
-
-  const allowedRoles = ["admin", "lager"];
-
-if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
-  return NextResponse.json(
-    { error: "Mangler tilgang" },
-    { status: 403 }
-  );
-}
 
   const body = (await request.json()) as Body;
 

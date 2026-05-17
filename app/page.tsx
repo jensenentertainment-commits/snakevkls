@@ -24,10 +24,14 @@ type IssueCardState = {
 };
 export default async function HomePage() {
   const {
-    missingLocationCount,
-    missingSkuCount,
-    emptyLocationCount,
-  } = await getDashboardStats();
+  missingLocationCount,
+  missingSkuCount,
+  emptyLocationCount,
+  quantityDiffCount,
+  placedProductCount,
+  activeProductCount,
+  locationsNoZoneCount,
+} = await getDashboardStats();
   const issueCount =
   missingLocationCount + missingSkuCount + emptyLocationCount;
 
@@ -116,112 +120,175 @@ const issueState: IssueCardState = hasIssues
   ];
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-     <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-             <SnakeNav />
-     
-            
+  <main className="min-h-screen bg-[#062f3b] text-white">
+    <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+      <SnakeNav />
 
-        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="relative overflow-hidden bg-[#05495b] px-5 py-4 text-white sm:px-8 sm:py-5 lg:px-10 lg:py-5">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-            <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
+      <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
+        <div className="relative overflow-hidden bg-[#05495b] text-white">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <div className="pointer-events-none absolute left-10 top-10 h-32 w-32 rounded-full border border-white/10" />
 
-  <Link href="/changelog" className="absolute right-4 top-4 sm:right-8 sm:top-6">
-  <div className="rounded-full border border-white/15 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-white/50 backdrop-blur hover:bg-white/15 hover:text-white/70">
-    SNAKE V{SNAKE_VERSION}
-  </div>
-</Link>
+          <div className="relative flex flex-col gap-8 px-8 py-10 sm:px-10 lg:flex-row lg:items-center lg:justify-between xl:px-12">
+            <div className="max-w-[560px] shrink-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
+                SNAKE VKLS
+              </p>
 
-            <div className="relative grid gap-8 lg:grid-cols-[1fr]">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-                  SNAKE VKLS
-                </p>
+              <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+                Varekompaniets lagersystem.
+              </h1>
 
-                <h1 className="mt-2 max-w-4xl text-3xl font-semibold leading-[0.95] tracking-[-0.05em] sm:text-4xl md:text-[44px]">
-                  Varekompaniets lagersystem.
-                </h1>
+              <p className="mt-2 text-sm font-semibold text-white/75">
+                {missingLocationCount} uten lokasjon · {missingSkuCount} uten SKU ·{" "}
+                {emptyLocationCount} tomme lokasjoner
+              </p>
 
-          {hasIssues && (
-  <p className="mt-1 text-xs text-white/70">
-    <span className="font-semibold text-white">
-      {missingLocationCount}
-    </span>{" "}
-    uten lokasjon ·{" "}
-    <span className="font-semibold text-white">
-      {missingSkuCount}
-    </span>{" "}
-    uten SKU ·{" "}
-    <span className="font-semibold text-white">
-      {emptyLocationCount}
-    </span>{" "}
-    tomme lokasjoner
-  </p>
-)}
-
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">
-                  Finn produkter, kontroller lokasjoner og bygg ryddigere
-                  lagerdata før plukk og ordrebehandling.
-                </p>
-              </div>
-
-           
-            </div>
-          </div>
-
-          <div className="px-5 py-5 sm:px-8 sm:py-6">
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
-                  Moduler
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-950">
-                  Arbeidsflate
-                </h2>
-              </div>
-
-              <p className="max-w-xl text-sm leading-6 text-neutral-600">
-                Start med varesøk og avvik. Lokasjoner brukes når lageret skal
-                ryddes fysisk.
+              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
+                Finn produkter, kontroller lokasjoner og bygg ryddigere lagerdata før
+                plukk og ordrebehandling.
               </p>
             </div>
 
-            <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-5">
-             {modules.map((module) => (
-  <ModuleCard
-    key={module.title}
-    {...module}
-    issueState={module.title === "Avvik" ? issueState : undefined}
-    
-  />
-))}
-            </div>
-
-            <div className="mt-5 grid gap-5 lg:grid-cols-2">
-              <WideCard
-                href="/locations"
-                icon={<Boxes />}
-                title="Lagerstruktur"
-                text="Gyldige lokasjonsvalg, aktive plasser og faste plasseringer."
-                action="Gå til lagerstruktur"
+           <div className="grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
+              <HeroStatusCard
+                tone="warn"
+                value={missingLocationCount}
+                label="uten lokasjon"
+                description="Produkter uten fast plassering"
               />
 
-              <WideCard
-  href="/activities"
-  icon={<Activity />}
-  title="Aktivitetslogg"
-  text="Siste endringer i lokasjoner, soner, varer og avvik."
-  action="Åpne aktivitetslogg"
-  warning={hasIssues}
-/>
+              <HeroStatusCard
+                tone="warn"
+                value={quantityDiffCount}
+                label="quantity diff"
+                description="Snake og Shopify matcher ikke"
+              />
+
+              <HeroStatusCard
+                tone="ok"
+                value={locationsNoZoneCount}
+                label="lokasjoner uten sone"
+                description={
+                  locationsNoZoneCount > 0
+                    ? "Mangler struktur"
+                    : "Alle lokasjoner har sone"
+                }
+              />
+
+              <HeroStatusCard
+                tone="ok"
+                value={placedProductCount}
+                label="plassert"
+                description={`${activeProductCount} aktive produkter totalt`}
+              />
             </div>
           </div>
-        </section>
+        </div>
 
-        <SnakeFooter />
+        <div className="px-5 py-5 sm:px-8 sm:py-6">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
+                Moduler
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-950">
+                Arbeidsflate
+              </h2>
+            </div>
+
+            <p className="max-w-xl text-sm leading-6 text-neutral-600">
+              Start med varesøk og avvik. Lokasjoner brukes når lageret skal
+              ryddes fysisk.
+            </p>
+          </div>
+
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            {modules.map((module) => (
+              <ModuleCard
+                key={module.title}
+                {...module}
+                issueState={module.title === "Avvik" ? issueState : undefined}
+              />
+            ))}
+          </div>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <WideCard
+              href="/locations"
+              icon={<Boxes />}
+              title="Lagerstruktur"
+              text="Gyldige lokasjonsvalg, aktive plasser og faste plasseringer."
+              action="Gå til lagerstruktur"
+            />
+
+            <WideCard
+              href="/activities"
+              icon={<Activity />}
+              title="Aktivitetslogg"
+              text="Siste endringer i lokasjoner, soner, varer og avvik."
+              action="Åpne aktivitetslogg"
+              warning={hasIssues}
+            />
+          </div>
+        </div>
+      </section>
+
+      <SnakeFooter />
+    </div>
+  </main>
+);
+
+function HeroStatusCard({
+  value,
+  label,
+  description,
+  tone,
+}: {
+  value: number;
+  label: string;
+  description: string;
+  tone: "warn" | "ok";
+}) {
+  const styles = {
+    warn: {
+      card: "border-amber-300 bg-amber-50 text-neutral-950",
+      value: "text-amber-700",
+      icon: "border-amber-300 bg-amber-100 text-amber-700",
+      symbol: "!",
+    },
+    ok: {
+      card: "border-emerald-300 bg-emerald-50 text-neutral-950",
+      value: "text-emerald-600",
+      icon: "border-emerald-300 bg-emerald-100 text-emerald-600",
+      symbol: "✓",
+    },
+  }[tone];
+
+  return (
+    <div className={`flex min-h-[124px] rounded-3xl border p-5 shadow-xl shadow-black/10 ${styles.card}`}>
+      <div className="flex w-full items-center gap-4">
+        <div
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-xl font-bold ${styles.icon}`}
+        >
+          {styles.symbol}
+        </div>
+
+        <div>
+          <div className="flex items-end gap-2">
+            <p className={`text-4xl font-semibold tracking-tight ${styles.value}`}>
+              {value}
+            </p>
+
+            <p className="mb-1 text-base font-semibold text-neutral-950">
+              {label}
+            </p>
+          </div>
+
+          <p className="mt-1 text-sm text-neutral-600">{description}</p>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -249,6 +316,8 @@ muted?: boolean;
 issueState?: IssueCardState | null;
 highlight?: boolean;
 }) {
+
+  
 
   const card = (
     <div
@@ -382,4 +451,5 @@ function WideCard({
 
   if (!href) return card;
   return <Link href={href}>{card}</Link>;
+}
 }

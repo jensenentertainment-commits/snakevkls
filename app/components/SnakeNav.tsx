@@ -7,6 +7,7 @@ import { Settings } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeLogoutButton from "./SnakeLogoutButton";
 import { usePathname } from "next/navigation";
+import { SNAKE_VERSION } from "@/lib/version";
 
 
 type Profile = {
@@ -117,6 +118,13 @@ const pathname = usePathname();
     <Settings className="h-[18px] w-[18px]" />
   </Link>
 )}
+
+<Link
+  href="/changelog"
+  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45 transition hover:bg-white/10 hover:text-white/70"
+>
+  SNAKE v{SNAKE_VERSION}
+</Link>
 
       <div ref={userMenuRef} className="relative pl-3">
   <button

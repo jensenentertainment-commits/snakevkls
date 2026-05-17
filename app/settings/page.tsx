@@ -7,10 +7,9 @@ import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
+import RoleGate from "../components/auth/RoleGate";
 
-type Profile = {
-  role: "admin" | "lager" | "viewer";
-};
+
 
 type UserProfile = {
   id: string;
@@ -30,36 +29,54 @@ type ZoneRow = {
 };
 
 export default function SettingsPage() {
+  return (
+    <RoleGate allowedRoles={["admin"]}>
+      <SettingsContent />
+    </RoleGate>
+  );
+}
+
+function SettingsContent() {
   const [zones, setZones] = useState<ZoneRow[]>([]);
   const [loading, setLoading] = useState(true);
-const [users, setUsers] = useState<UserProfile[]>([]);
-const [usersLoading, setUsersLoading] = useState(true);
+
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [usersLoading, setUsersLoading] = useState(true);
+
   const [showCreateModal, setShowCreateModal] = useState(false);
+
   const [newCode, setNewCode] = useState("");
   const [newName, setNewName] = useState("");
   const [newActive, setNewActive] = useState(true);
-const [profile, setProfile] = useState<Profile | null>(null);
-const [accessLoading, setAccessLoading] = useState(true);
+
   const [editingZone, setEditingZone] = useState<ZoneRow | null>(null);
+
   const [editCode, setEditCode] = useState("");
   const [editName, setEditName] = useState("");
   const [editActive, setEditActive] = useState(true);
+
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
-const [newUserEmail, setNewUserEmail] = useState("");
-const [newUserPassword, setNewUserPassword] = useState("");
-const [newUserDisplayName, setNewUserDisplayName] = useState("");
-const [newUserRole, setNewUserRole] = useState<"admin" | "lager" | "viewer">("lager");
-const [newUserActive, setNewUserActive] = useState(true);
-const [creatingUser, setCreatingUser] = useState(false);
+
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [newUserPassword, setNewUserPassword] = useState("");
+  const [newUserDisplayName, setNewUserDisplayName] = useState("");
+
+  const [newUserRole, setNewUserRole] =
+    useState<"admin" | "lager" | "viewer">("lager");
+
+  const [newUserActive, setNewUserActive] = useState(true);
+
+  const [creatingUser, setCreatingUser] = useState(false);
 
   const [query, setQuery] = useState("");
-const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
 
-  useEffect(() => {
-    checkAccess();
-    loadZones();
-    loadUsers();
-  }, []);
+  const [statusFilter, setStatusFilter] =
+    useState<"all" | "active" | "inactive">("all");;
+
+useEffect(() => {
+  loadZones();
+  loadUsers();
+}, []);
 
 async function loadUsers() {
   setUsersLoading(true);
@@ -79,28 +96,7 @@ async function loadUsers() {
   setUsersLoading(false);
 }
 
-  async function checkAccess() {
-  setAccessLoading(true);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    setProfile(null);
-    setAccessLoading(false);
-    return;
-  }
-
-  const { data } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  setProfile(data as Profile | null);
-  setAccessLoading(false);
-}
 
   async function loadZones() {
     setLoading(true);
@@ -298,33 +294,7 @@ const filteredZones = useMemo(() => {
     0
   );
 
-  if (accessLoading) {
-  return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-        <section className="rounded-[26px] bg-white p-8 text-neutral-950">
-          Sjekker tilgang...
-        </section>
-        <SnakeFooter />
-      </div>
-    </main>
-  );
-}
-
-if (profile?.role !== "admin") {
-  return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-        <section className="rounded-[26px] bg-white p-8 text-neutral-950">
-          Du har ikke tilgang til innstillinger.
-        </section>
-        <SnakeFooter />
-      </div>
-    </main>
-  );
-}
+  
 
   return (
     <>

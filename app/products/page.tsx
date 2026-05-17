@@ -27,6 +27,7 @@ import EditPlacementModal from "../components/products/EditPlacementModal";
 import BatchAssignModal from "../components/products/BatchAssignModal";
 import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
+import RoleGate from "../components/auth/RoleGate";
 
 function ProductsPageContent() {
   const [inlineZone, setInlineZone] = useState<Record<string, string>>({});
@@ -809,8 +810,10 @@ function Empty({ text }: { text: string }) {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={null}>
-      <ProductsPageContent />
-    </Suspense>
+    <RoleGate allowedRoles={["admin", "lager", "viewer"]}>
+      <Suspense fallback={null}>
+        <ProductsPageContent />
+      </Suspense>
+    </RoleGate>
   );
 }

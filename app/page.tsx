@@ -12,7 +12,7 @@ import {
 
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
-import { SNAKE_VERSION } from "../lib/version";
+
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
@@ -182,6 +182,7 @@ const issueState: IssueCardState = hasIssues
 </div>
            <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
               <HeroStatusCard
+              href="/products?status=missing"
                 tone="warn"
                 value={missingLocationCount}
                 label="uten lokasjon"
@@ -189,6 +190,7 @@ const issueState: IssueCardState = hasIssues
               />
 
               <HeroStatusCard
+              href="/products?status=diff"
                 tone="warn"
                 value={quantityDiffCount}
                 label="quantity diff"
@@ -196,6 +198,7 @@ const issueState: IssueCardState = hasIssues
               />
 
               <HeroStatusCard
+              href="/locations?filter=no-zone"
                 tone="ok"
                 value={locationsNoZoneCount}
                 label="lokasjoner uten sone"
@@ -207,6 +210,7 @@ const issueState: IssueCardState = hasIssues
               />
 
               <HeroStatusCard
+              href="/products?status=location"
                 tone="ok"
                 value={placedProductCount}
                 label="plassert"
@@ -295,11 +299,13 @@ function HeroStatusCard({
   label,
   description,
   tone,
+  href,
 }: {
   value: number;
   label: string;
   description: string;
   tone: "warn" | "ok";
+  href: string;
 }) {
   const styles = {
   warn: {
@@ -317,7 +323,10 @@ function HeroStatusCard({
 }[tone];
 
   return (
-    <div className={`flex min-h-[124px] rounded-3xl border p-5 shadow-xl shadow-black/10 ${styles.card}`}>
+  <Link
+    href={href}
+    className={`flex min-h-[124px] rounded-3xl border p-5 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:shadow-2xl ${styles.card}`}
+  >
       <div className="flex w-full items-center gap-4">
         <div
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-xl font-bold ${styles.icon}`}
@@ -339,7 +348,7 @@ function HeroStatusCard({
           <p className="mt-1 text-sm text-neutral-600">{description}</p>
         </div>
       </div>
-    </div>
+      </Link>
   );
 }
 

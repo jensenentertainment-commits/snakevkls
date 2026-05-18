@@ -30,6 +30,7 @@ type LocationDetail = {
     } | null;
   }[];
 };
+type Role = "admin" | "lager" | "viewer";
 
 export default function LocationDetailPage() {
   const supabase = useMemo(() => createClient(), []);
@@ -41,6 +42,10 @@ export default function LocationDetailPage() {
   const [skuInput, setSkuInput] = useState("");
   const [quantityInput, setQuantityInput] = useState("1");
   const [saving, setSaving] = useState(false);
+  
+
+const [role, setRole] = useState<Role | null>(null);
+const canWrite = role === "admin" || role === "lager";
 const [activity, setActivity] = useState<any[]>([]);
   const inventoryItems = location?.inventory ?? [];
 
@@ -60,7 +65,25 @@ const recentlyChanged = activity.length > 0;
   async function loadLocation() {
     setLoading(true);
 
-    
+    useEffect(() => {
+  loadRole();
+}, []);
+
+async function loadRole() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  setRole((data?.role as Role) ?? null);
+}
 
     const { data, error } = await supabase
       .from("locations")
@@ -315,6 +338,7 @@ setLoading(false);
 
           {location && (
             <div className="grid gap-6 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7 lg:grid-cols-[0.95fr_1.05fr]">
+                 {canWrite && (
               <section className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
@@ -369,6 +393,7 @@ setLoading(false);
                   </button>
                 </div>
               </section>
+              )}
 
               <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
@@ -390,6 +415,7 @@ setLoading(false);
                       <InventoryRow
                         key={item.id}
                         item={item}
+                        canWrite={canWrite}
                         onUpdateQuantity={(quantity) =>
                           handleUpdateQuantity(item.id, quantity)
                         }
@@ -469,10 +495,12 @@ function LocationBadge({
 }
 function InventoryRow({
   item,
+  canWrite,
   onUpdateQuantity,
   onRemove,
 }: {
   item: LocationDetail["inventory"][number];
+  canWrite: boolean;
   onUpdateQuantity: (quantity: number) => void;
   onRemove: () => void;
 }) {
@@ -504,6 +532,7 @@ function InventoryRow({
           )}
         </div>
 
+          {canWrite && (
         <button
           onClick={onRemove}
           className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
@@ -511,8 +540,10 @@ function InventoryRow({
           <Trash2 className="h-4 w-4" />
           Fjern
         </button>
+        )}
       </div>
-
+      
+        {canWrite && (
       <div className="mt-4 grid grid-cols-[1fr_auto] gap-2">
         <input
           type="number"
@@ -533,6 +564,7 @@ function InventoryRow({
           Lagre
         </button>
       </div>
+      )}
     </div>
   );
 }

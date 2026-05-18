@@ -62,6 +62,32 @@ function ProductsPageContent() {
   const searchParams = useSearchParams();
   const tableRef = useRef<HTMLDivElement | null>(null);
 
+  type Role = "admin" | "lager" | "viewer";
+
+const [role, setRole] = useState<Role | null>(null);
+
+useEffect(() => {
+  loadRole();
+}, []);
+
+async function loadRole() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  setRole((data?.role as Role) ?? null);
+}
+
+const canWrite = role === "admin" || role === "lager";
+
 
 
   const [statusFilter, setStatusFilter] = useState<
@@ -312,6 +338,7 @@ const {
   }
   right={
     <>
+    {role === "admin" && (
     <button
     
   onClick={handleShopifySync}
@@ -326,12 +353,14 @@ const {
 
   {syncingShopify ? "Synker..." : "Sync Shopify"}
 </button>
+)}
 
 {lastShopifySync && (
   <span className="text-xs font-semibold text-white/60">
     Sist synket {lastShopifySync}
   </span>
 )}
+
 
       <SnakeDropdown
         value={collectionFilter}
@@ -410,7 +439,7 @@ const percent = Math.round((placed / total) * 100);
       >
         Vis mangler
       </button>
-
+{canWrite && (
       <button
         onClick={() => {
           const missingIds = products
@@ -427,6 +456,7 @@ const percent = Math.round((placed / total) * 100);
       >
         Velg alle
       </button>
+      )}
     </div>
   </div>
 </div>
@@ -498,18 +528,26 @@ const percent = Math.round((placed / total) * 100);
                 ) : (
                   filtered.map((product) => (
                     <MobileProductCard
+                    
   key={product.id}
   product={product}
   meta={getMeta(product)}
   selected={selected.includes(product.id)}
-  onToggleSelected={() =>
-    setSelected((prev) =>
-      prev.includes(product.id)
-        ? prev.filter((id) => id !== product.id)
-        : [...prev, product.id]
-    )
-  }
-  onEdit={() => openModal(product)}
+  canWrite={canWrite}
+  onToggleSelected={() => {
+  if (!canWrite) return;
+
+  setSelected((prev) =>
+    prev.includes(product.id)
+      ? prev.filter((id) => id !== product.id)
+      : [...prev, product.id]
+  );
+}}
+  onEdit={() => {
+  if (!canWrite) return;
+  openModal(product);
+}}
+  
 />
                   ))
                 )}
@@ -520,6 +558,7 @@ const percent = Math.round((placed / total) * 100);
                   <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
                     <tr>
   <th className="w-[48px] px-5 py-4 font-semibold">
+    {canWrite && (
     <input
       type="checkbox"
       checked={selected.length === filtered.length && filtered.length > 0}
@@ -531,7 +570,9 @@ const percent = Math.round((placed / total) * 100);
         )
       }
     />
+    )}
   </th>
+  
 
   <th className="px-5 py-4 font-semibold">
     <button
@@ -587,6 +628,7 @@ const percent = Math.round((placed / total) * 100);
 }`}
 >
                             <td className="px-5 py-5 align-middle text-sm">
+                              {canWrite && (
                               <input
                                 type="checkbox"
                                 checked={selected.includes(product.id)}
@@ -598,6 +640,7 @@ const percent = Math.round((placed / total) * 100);
                                   )
                                 }
                               />
+                              )}
                             </td>
 <td className="px-5 py-5 align-middle text-sm text-neutral-900">
   <ProductIdentity product={product} />
@@ -615,6 +658,7 @@ const percent = Math.round((placed / total) * 100);
   <div className="flex flex-col gap-2">
     <QuantityDiff product={product} meta={meta} />
 
+{canWrite && (
     <button
       onClick={(e) => {
         e.stopPropagation();
@@ -624,12 +668,15 @@ const percent = Math.round((placed / total) * 100);
     >
       Registrer uttak
     </button>
+    )}
   </div>
 </td>
 
 <td className="w-[190px] px-5 py-5 align-middle text-sm">
-  {meta.status === "missing" ? (
+  {meta.status === "missing" && canWrite ? (
+    
     <div className="flex flex-col gap-1.5">
+      
   <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#a77e05]">
     Velg sone
   </span>
@@ -688,8 +735,8 @@ const percent = Math.round((placed / total) * 100);
 <td className="w-[140px] px-5 py-5 align-middle text-sm">
   {meta.locationCode ? (
     <PlacementDisplay meta={meta} />
-  ) : meta.zoneId ? (
-    <button
+  ) : meta.zoneId && canWrite ? (
+  <button
       onClick={(e) => {
         e.stopPropagation();
         openModal(product);
@@ -716,7 +763,7 @@ const percent = Math.round((placed / total) * 100);
         <SnakeFooter />
       </div>
 
-{selected.length > 0 && (
+{canWrite && selected.length > 0 && (
   <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl bg-[#b58a14] px-4 py-3 text-white shadow-2xl shadow-black/30">
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm font-semibold">
@@ -742,7 +789,7 @@ const percent = Math.round((placed / total) * 100);
   </div>
 )}
 <SnakeToast message={toast?.message ?? null} tone={toast?.tone ?? "success"} />
-      {editing && (
+      {canWrite && editing && (
   <EditPlacementModal
     editing={editing}
     locations={locations}
@@ -764,7 +811,7 @@ const percent = Math.round((placed / total) * 100);
   />
 )}
 
-     {batchOpen && (
+     {canWrite && batchOpen && (
   <BatchAssignModal
     selectedCount={selected.length}
     zones={zones}
@@ -781,7 +828,7 @@ const percent = Math.round((placed / total) * 100);
   />
 )}
 
-{movementProduct && (
+{canWrite && movementProduct && (
   <StockMovementModal
     product={movementProduct}
     movementQty={movementQty}

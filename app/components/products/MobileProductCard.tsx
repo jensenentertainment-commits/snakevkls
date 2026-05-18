@@ -26,12 +26,14 @@ export default function MobileProductCard({
   product,
   meta,
   selected,
+  canWrite,
   onToggleSelected,
   onEdit,
 }: {
   product: Product;
   meta: ProductMeta;
   selected: boolean;
+  canWrite: boolean;
   onToggleSelected: () => void;
   onEdit: () => void;
 }) {
@@ -75,25 +77,27 @@ export default function MobileProductCard({
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-[auto_1fr] gap-3">
-        <button
-          onClick={onToggleSelected}
-          className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
-            selected
-              ? "border-[#b58a14] bg-[#b58a14] text-white"
-              : "border-neutral-300 bg-white text-neutral-700"
-          }`}
-        >
-          {selected ? "Valgt" : "Velg"}
-        </button>
+      {canWrite && (
+  <div className="mt-4 grid grid-cols-[auto_1fr] gap-3">
+    <button
+      onClick={onToggleSelected}
+      className={`rounded-2xl border px-4 py-3 text-sm font-semibold ${
+        selected
+          ? "border-[#b58a14] bg-[#b58a14] text-white"
+          : "border-neutral-300 bg-white text-neutral-700"
+      }`}
+    >
+      {selected ? "Valgt" : "Velg"}
+    </button>
 
-        <button
-          onClick={onEdit}
-          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
-        >
-          Endre plassering
-        </button>
-      </div>
+    <button
+      onClick={onEdit}
+      className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
+    >
+      Endre plassering
+    </button>
+    </div>
+      )}
     </article>
   );
 }

@@ -12,7 +12,7 @@ import {
 
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
-
+import SnakeBoardPreview from "./components/SnakeBoardPreview";
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
@@ -181,43 +181,8 @@ const issueState: IssueCardState = hasIssues
   </div>
 </div>
 
-<div className="rounded-3xl border border-white/10 bg-white/[0.045] p-5">
-  <div className="flex items-center justify-between gap-3">
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-        SnakeBoard
-      </p>
+<SnakeBoardPreview />
 
-      <h2 className="mt-2 text-lg font-semibold text-white">
-        Siste beskjeder
-      </h2>
-    </div>
-
-    <Link
-      href="/snakeboard"
-      className="text-sm font-medium text-white/55 transition hover:text-white"
-    >
-      Se alle
-    </Link>
-  </div>
-
-  <div className="mt-5 space-y-3">
-    <SnakeBoardPreviewItem
-      type="important"
-      title="Ikke bruk sone K før rydding"
-    />
-
-    <SnakeBoardPreviewItem
-      type="info"
-      title="Returer står ved port 2"
-    />
-
-    <SnakeBoardPreviewItem
-      type="issue"
-      title="Mangler 2 stk av SKU 12345"
-    />
-  </div>
-</div>
            <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
               <HeroStatusCard
               href="/products?status=missing"

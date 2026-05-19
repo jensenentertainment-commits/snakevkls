@@ -131,7 +131,7 @@ const issueState: IssueCardState = hasIssues
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
           
 
-          <div className="relative flex flex-col gap-8 px-8 py-10 sm:px-10 lg:flex-row lg:items-center lg:justify-between xl:px-12">
+          <div className="relative grid gap-8 px-8 py-10 sm:px-10 xl:px-12 lg:grid-cols-[280px_1fr_520px] lg:items-start">
             <div className="max-w-[520px] shrink-0">
   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
     Systempuls
@@ -178,6 +178,44 @@ const issueState: IssueCardState = hasIssues
         {new Date(latestShopifySync.created_at).toLocaleString("nb-NO")}
       </p>
     )}
+  </div>
+</div>
+
+<div className="rounded-3xl border border-white/10 bg-white/[0.045] p-5">
+  <div className="flex items-center justify-between gap-3">
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+        SnakeBoard
+      </p>
+
+      <h2 className="mt-2 text-lg font-semibold text-white">
+        Siste beskjeder
+      </h2>
+    </div>
+
+    <Link
+      href="/snakeboard"
+      className="text-sm font-medium text-white/55 transition hover:text-white"
+    >
+      Se alle
+    </Link>
+  </div>
+
+  <div className="mt-5 space-y-3">
+    <SnakeBoardPreviewItem
+      type="important"
+      title="Ikke bruk sone K før rydding"
+    />
+
+    <SnakeBoardPreviewItem
+      type="info"
+      title="Returer står ved port 2"
+    />
+
+    <SnakeBoardPreviewItem
+      type="issue"
+      title="Mangler 2 stk av SKU 12345"
+    />
   </div>
 </div>
            <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
@@ -290,6 +328,29 @@ function PulseLine({
     <div className="flex items-center gap-3">
       <span className={`h-2 w-2 rounded-full ${styles[tone]}`} />
       <span>{text}</span>
+    </div>
+  );
+}
+
+function SnakeBoardPreviewItem({
+  type,
+  title,
+}: {
+  type: "info" | "important" | "issue";
+  title: string;
+}) {
+  const tone =
+    type === "issue"
+      ? "text-red-200"
+      : type === "important"
+        ? "text-amber-200"
+        : "text-cyan-100";
+
+  return (
+    <div className="rounded-2xl border border-white/8 bg-black/10 px-4 py-3">
+      <p className={`text-sm font-medium ${tone}`}>
+        {title}
+      </p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/auth/require-role";
 
 export const dynamic = "force-dynamic";
@@ -28,10 +28,7 @@ const { user, profile } = auth;
     return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
   }
 
-  const supabaseAdmin = createSupabaseAdminClient(
-    supabaseUrl,
-    supabaseServiceKey
-  );
+ 
 
   const { data: inventory, error: inventoryError } = await supabaseAdmin
     .from("inventory")

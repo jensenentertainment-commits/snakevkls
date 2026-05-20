@@ -65,10 +65,12 @@ export default function SnakeBoardPreview() {
 
       <div className="mt-5 space-y-3">
         {loading ? (
-          <p className="text-sm text-white/40">
-            Henter SnakeBoard...
-          </p>
-        ) : messages.length === 0 ? (
+  <div className="space-y-3">
+    <SnakeBoardPreviewSkeleton />
+    <SnakeBoardPreviewSkeleton />
+    <SnakeBoardPreviewSkeleton />
+  </div>
+) : messages.length === 0 ? (
           <p className="text-sm text-white/40">
             Ingen beskjeder enda.
           </p>
@@ -83,6 +85,21 @@ export default function SnakeBoardPreview() {
             />
           ))
         )}
+      </div>
+    </div>
+  );
+}
+
+function SnakeBoardPreviewSkeleton() {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-white/8 bg-black/10 px-4 py-3">
+      <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-white/10" />
+
+      <div className="h-8 w-8 shrink-0 rounded-full border border-white/10 bg-white/5" />
+
+      <div className="min-w-0 flex-1">
+        <div className="h-3 w-3/4 rounded-full bg-white/10" />
+        <div className="mt-2 h-2.5 w-20 rounded-full bg-white/10" />
       </div>
     </div>
   );

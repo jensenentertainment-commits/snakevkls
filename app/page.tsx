@@ -9,7 +9,7 @@ import {
   ArrowRight,
   Wrench,
 } from "lucide-react";
-
+import SnakeIntelligencePanel from "./components/SnakeIntelligencePanel";
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
 import SnakeBoardPreview from "./components/SnakeBoardPreview";
@@ -183,43 +183,12 @@ const issueState: IssueCardState = hasIssues
 
 <SnakeBoardPreview />
 
-           <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:max-w-[620px] lg:shrink-0">
-              <HeroStatusCard
-              href="/products?status=missing"
-                tone="warn"
-                value={missingLocationCount}
-                label="uten lokasjon"
-                description="Produkter uten fast plassering"
-              />
-
-              <HeroStatusCard
-              href="/products?status=diff"
-                tone="warn"
-                value={quantityDiffCount}
-                label="quantity diff"
-                description="Snake og Shopify matcher ikke"
-              />
-
-              <HeroStatusCard
-              href="/locations?filter=no-zone"
-                tone="ok"
-                value={locationsNoZoneCount}
-                label="lokasjoner uten sone"
-                description={
-                  locationsNoZoneCount > 0
-                    ? "Mangler struktur"
-                    : "Alle lokasjoner har sone"
-                }
-              />
-
-              <HeroStatusCard
-              href="/products?status=location"
-                tone="ok"
-                value={placedProductCount}
-                label="plassert"
-                description={`${activeProductCount} aktive produkter totalt`}
-              />
-            </div>
+        <SnakeIntelligencePanel
+  missingLocationCount={missingLocationCount}
+  quantityDiffCount={quantityDiffCount}
+  locationsWithoutZoneCount={locationsNoZoneCount}
+  placedCount={placedProductCount}
+/>
           </div>
         </div>
 
@@ -297,86 +266,7 @@ function PulseLine({
   );
 }
 
-function SnakeBoardPreviewItem({
-  type,
-  title,
-}: {
-  type: "info" | "important" | "issue";
-  title: string;
-}) {
-  const tone =
-    type === "issue"
-      ? "text-red-200"
-      : type === "important"
-        ? "text-amber-200"
-        : "text-cyan-100";
 
-  return (
-    <div className="rounded-2xl border border-white/8 bg-black/10 px-4 py-3">
-      <p className={`text-sm font-medium ${tone}`}>
-        {title}
-      </p>
-    </div>
-  );
-}
-
-function HeroStatusCard({
-  value,
-  label,
-  description,
-  tone,
-  href,
-}: {
-  value: number;
-  label: string;
-  description: string;
-  tone: "warn" | "ok";
-  href: string;
-}) {
-  const styles = {
-  warn: {
-    card: "border-amber-300 bg-amber-50 text-neutral-950",
-    value: "text-amber-700",
-    icon: "border-amber-300 bg-amber-100 text-amber-700",
-    symbol: "!",
-  },
-  ok: {
-    card: "border-emerald-300 bg-emerald-50 text-neutral-950",
-    value: "text-emerald-600",
-    icon: "border-emerald-300 bg-emerald-100 text-emerald-600",
-    symbol: "✓",
-  },
-}[tone];
-
-  return (
-  <Link
-    href={href}
-    className={`flex min-h-[124px] rounded-3xl border p-5 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:shadow-2xl ${styles.card}`}
-  >
-      <div className="flex w-full items-center gap-4">
-        <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-xl font-bold ${styles.icon}`}
-        >
-          {styles.symbol}
-        </div>
-
-        <div>
-          <div className="flex items-end gap-2">
-            <p className={`text-4xl font-semibold tracking-tight ${styles.value}`}>
-              {value}
-            </p>
-
-            <p className="mb-1 text-base font-semibold text-neutral-950">
-              {label}
-            </p>
-          </div>
-
-          <p className="mt-1 text-sm text-neutral-600">{description}</p>
-        </div>
-      </div>
-      </Link>
-  );
-}
 
 function ModuleCard({
   href,

@@ -4,94 +4,97 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  Check,
-  ChevronRight,
+  ArrowRight,
+  CheckCircle2,
+  Layers,
   Loader2,
   MapPin,
   RotateCcw,
+  Search,
+  SkipForward,
 } from "lucide-react";
+
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
-import { logActivity } from "@/lib/activity";
 
-type ProductRow = {
-  id: string;
-  sku: string | null;
-  product_name: string;
-  variant_name: string | null;
-  inventory: {
-  id: string;
-  quantity: number;
-  location_id: string | null;
-  zone_id: string | null;
-  zones: {
-    code: string;
-    name: string;
-  } | null;
-}[];
-};
+const ASSIGN_ENDPOINT = "/api/inventory/set-location";
 
 type LocationRow = {
   id: string;
   code: string;
   active: boolean;
   zone_id: string | null;
+  zones: {
+    id: string;
+    code: string;
+    name: string;
+  } | null;
 };
 
-function PageShell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="min-h-screen bg-[#003b46] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-      </div>
+type ProductQueueItem = {
+  productId: string;
+  inventoryId: string;
+  sku: string | null;
+  productName: string;
+  variantName: string | null;
+  quantity: number;
+  zoneId: string | null;
+  zoneCode: string | null;
+  zoneName: string | null;
+};
 
-      {children}
-
-      <SnakeFooter />
-    </main>
-  );
-}
 export default function FixLocationsPage() {
-  const [products, setProducts] = useState<ProductRow[]>([]);
+  const [products, setProducts] = useState<ProductQueueItem[]>([]);
   const [locations, setLocations] = useState<LocationRow[]>([]);
-  const [zones, setZones] = useState<ZoneRow[]>([]);
-  const [index, setIndex] = useState(0);
   const [selectedLocationId, setSelectedLocationId] = useState("");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const current = products[index];
-  const currentInventory = current?.inventory?.[0];
-const hasZone = currentInventory?.zone_id;
-const currentZone = zones.find((zone) => zone.id === currentInventory?.zone_id);
-const currentZoneLabel = currentZone
-  ? `${currentZone.code} — ${currentZone.name}`
-  : null;
-  const totalCount = products.length;
-  const doneCount = 0;
+  const [initialCount, setInitialCount] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [skippedCount, setSkippedCount] = useState(0);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const current = products[0] ?? null;
+
+  const filteredLocations = useMemo(() => {
+    const term = search.trim().toLowerCase();
+
+    return locations.filter((location) => {
+      const matchesZone =
+        !current?.zoneId || location.zone_id === current.zoneId;
+
+      const matchesSearch =
+        !term ||
+        location.code.toLowerCase().includes(term) ||
+        location.zones?.code.toLowerCase().includes(term) ||
+        location.zones?.name.toLowerCase().includes(term);
+
+      return location.active && matchesZone && matchesSearch;
+    });
+  }, [locations, search, current]);
+
   const progress =
-    totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 100;
+    initialCount > 0
+      ? Math.round(((completedCount + skippedCount) / initialCount) * 100)
+      : 0;
 
-  const activeLocations = useMemo(() => {
-  if (!current) return [];
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const zoneId = currentInventory?.zone_id;
-
-  return locations
-    .filter((loc) => loc.active)
-    .filter((loc) => (zoneId ? loc.zone_id === zoneId : true))
-    .sort((a, b) => a.code.localeCompare(b.code));
-}, [locations, current]);
+  useEffect(() => {
+    setSelectedLocationId("");
+    setSearch("");
+  }, [current?.inventoryId]);
 
   async function loadData() {
     setLoading(true);
+    setMessage(null);
 
-    const [
-      { data: productData, error: productError },
-      { data: locationData, error: locationError },
-      { data: zoneData, error: zoneError },
-    ] = await Promise.all([
+    const [productsResult, locationsResult] = await Promise.all([
       supabase
         .from("products")
         .select(
@@ -103,8 +106,13 @@ const currentZoneLabel = currentZone
           inventory (
             id,
             quantity,
+            zone_id,
             location_id,
-            zone_id
+            zones (
+              id,
+              code,
+              name
+            )
           )
         `
         )
@@ -112,382 +120,417 @@ const currentZoneLabel = currentZone
 
       supabase
         .from("locations")
-        .select("id, code, active, zone_id")
+        .select(
+          `
+          id,
+          code,
+          active,
+          zone_id,
+          zones (
+            id,
+            code,
+            name
+          )
+        `
+        )
         .eq("active", true)
         .order("code", { ascending: true }),
-
-        supabase
-  .from("zones")
-  .select("id, code, name")
-  .eq("active", true)
-  .order("code", { ascending: true }),
     ]);
 
+    if (productsResult.error) {
+      console.error(productsResult.error);
+      setMessage("Kunne ikke hente produkter.");
+    }
 
+    if (locationsResult.error) {
+      console.error(locationsResult.error);
+      setMessage("Kunne ikke hente lokasjoner.");
+    }
 
-    if (productError) console.error(productError);
-    if (locationError) console.error(locationError);
-    if (zoneError) console.error(zoneError);
-
-    
-   const missingLocationProducts =
-  productData?.filter((product) => {
-    const inventory = product.inventory?.[0];
-
-    return inventory?.zone_id && !inventory.location_id;
-  }) ?? [];
-
-    setProducts(missingLocationProducts as ProductRow[]);
-    setLocations((locationData ?? []) as LocationRow[]);
-    setZones((zoneData ?? []) as ZoneRow[]);
-    setIndex(0);
-    setSelectedLocationId("");
-    setTimeout(() => {
-  document.getElementById("location-select")?.focus();
-}, 50);
+    const queue =
+      productsResult.data
+        ?.flatMap((product) =>
+          (product.inventory ?? []).map((inventory) => ({
+            productId: product.id,
+            inventoryId: inventory.id,
+            sku: product.sku,
+            productName: product.product_name,
+            variantName: product.variant_name,
+            quantity: inventory.quantity ?? 0,
+            zoneId: inventory.zone_id,
+            zoneCode: (inventory.zones as any)?.code ?? null,
+zoneName: (inventory.zones as any)?.name ?? null,
+            locationId: inventory.location_id,
+          }))
+        )
+        .filter((item) => item.zoneId && !item.locationId)
+        .map(({ locationId, ...item }) => item) ?? [];
+const locationRows =
+    (locationsResult.data ?? []) as unknown as LocationRow[];
+    setProducts(queue);
+    setInitialCount(queue.length);
+    setCompletedCount(0);
+    setSkippedCount(0);
+    setLocations(locationRows);
     setLoading(false);
   }
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  
-
-  type ZoneRow = {
-  id: string;
-  code: string;
-  name: string;
-};
-
-useEffect(() => {
-  function handleKeyDown(event: KeyboardEvent) {
-    if (event.key !== "Enter") return;
-
-    if (event.shiftKey) {
-      event.preventDefault();
-      skipCurrent();
-      return;
-    }
-
-    if (selectedLocationId && !saving) {
-      event.preventDefault();
-      handleAssign();
-    }
-  }
-
-  window.addEventListener("keydown", handleKeyDown);
-
-  return () => {
-    window.removeEventListener("keydown", handleKeyDown);
-  };
-}, [selectedLocationId, saving, current?.id]);
 
   async function handleAssign() {
     if (!current || !selectedLocationId) return;
 
     setSaving(true);
+    setMessage(null);
 
-    const { error } = currentInventory
-  ? await supabase
-      .from("inventory")
-      .update({ location_id: selectedLocationId })
-      .eq("id", currentInventory.id)
-  : await supabase.from("inventory").insert({
-      product_id: current.id,
-      location_id: selectedLocationId,
-      quantity: 0,
-      is_primary: true,
+    try {
+      const res = await fetch(ASSIGN_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inventoryId: current.inventoryId,
+          locationId: selectedLocationId,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.error ?? "Kunne ikke sette lokasjon");
+      }
+
+      setProducts((prev) => prev.slice(1));
+      setCompletedCount((prev) => prev + 1);
+      setMessage("Lokasjon satt. Neste produkt klart.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Ukjent feil");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function handleSkip() {
+    setProducts((prev) => {
+      if (prev.length <= 1) return prev;
+      const [first, ...rest] = prev;
+      return [...rest, first];
     });
 
-const selectedLocation = locations.find(
-  (location) => location.id === selectedLocationId
-);
-
-await logActivity({
-  entityType: "inventory",
-  entityId: currentInventory?.id ?? null,
-  action: "location_set",
-  title: "Lokasjon satt",
-  description: `${current.product_name} → ${
-    selectedLocation?.code ?? "ukjent lokasjon"
-  }`,
-  metadata: {
-    product_id: current.id,
-    inventory_id: currentInventory?.id ?? null,
-    location_id: selectedLocationId,
-    location_code: selectedLocation?.code ?? null,
-    zone_id: currentInventory?.zone_id ?? null,
-  },
-});
-
-    if (error) {
-      console.error(error);
-      setSaving(false);
-      return;
-    }
-
-    setSelectedLocationId("");
-
-    if (index + 1 >= products.length) {
-      setProducts([]);
-      setIndex(0);
-    } else {
-     setProducts((prev) => {
-  const [first, ...rest] = prev;
-  return [...rest, first];
-  });
-    }
-
-    setSaving(false);
-    document.body.classList.add("flash-success");
-setTimeout(() => {
-  document.body.classList.remove("flash-success");
-}, 120);
-  }
-
-  
-
-  function skipCurrent() {
-  setSelectedLocationId("");
-
-  setProducts((prev) => {
-    if (prev.length <= 1) return prev;
-
-    const [currentProduct, ...rest] = prev;
-    return [...rest, currentProduct];
-  });
-
-  setIndex(0);
-}
-
-if (loading) {
-    return (
-      <PageShell>
-        <section className="mx-auto flex min-h-[70vh] max-w-5xl items-center justify-center px-5">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.035] px-6 py-5 shadow-2xl">
-            <div className="flex items-center gap-3 text-sm text-white/60">
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-300" />
-              Henter produkter uten lokasjon…
-            </div>
-          </div>
-        </section>
-      </PageShell>
-    );
-  }
-
-  if (!current) {
-    return (
-      <PageShell>
-        <section className="mx-auto flex min-h-[70vh] max-w-5xl items-center justify-center px-5">
-          <div className="w-full max-w-xl rounded-[2rem] border border-emerald-400/15 bg-emerald-400/[0.04] p-8 text-center shadow-2xl">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-400/15 text-emerald-300">
-              <Check className="h-7 w-7" />
-            </div>
-
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300/70">
-              Ryddemodus fullført
-            </p>
-
-            <h1 className="text-2xl font-semibold">
-              Alle produkter har lokasjon
-            </h1>
-
-            <p className="mt-3 text-sm leading-6 text-white/55">
-              Køen er tom. Lageret er ryddigere enn det later som. Foreløpig.
-            </p>
-
-            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link
-                href="/products"
-                className="rounded-full border border-white/10 px-5 py-2.5 text-sm text-white/70 hover:bg-white/10"
-              >
-                Til produkter
-              </Link>
-
-              <button
-                onClick={loadData}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-400 px-5 py-2.5 text-sm font-semibold text-black hover:bg-emerald-300"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Sjekk igjen
-              </button>
-            </div>
-          </div>
-        </section>
-      </PageShell>
-    );
+    setSkippedCount((prev) => prev + 1);
+    setMessage("Hoppet over. Produktet ligger bakerst i køen.");
   }
 
   return (
-  <PageShell>
-    <section className="mx-auto max-w-[1200px] px-6 pb-16 pt-3">
-      <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#003b46] shadow-2xl">
-        <div className="grid gap-8 bg-[#05586b] px-9 py-9 lg:grid-cols-[1fr_420px]">
-          <div>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
-              Snake / Ryddemodus
-            </p>
-<h1 className="text-4xl font-black tracking-tight text-white">
-              Rydd lokasjoner
-            </h1>
+    <main className="min-h-screen bg-[#062f3b] text-white">
+      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+        <SnakeNav />
 
-            <p className="mt-5 max-w-2xl text-base text-white/80">
-              Ett produkt av gangen. Sett lokasjon, så går Snake automatisk videre
-              til neste vare i køen.
-            </p>
-          </div>
+        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
+          <div className="relative overflow-hidden bg-[#05495b] text-white">
+            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
-          <div>
-            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
-              Fremdrift
-            </div>
-
-            <div className="rounded-2xl bg-white/10 p-5">
-              <div className="mb-3 flex justify-between text-sm text-white/75">
-                <span>Produkt {index + 1} av {totalCount}</span>
-                <span>{progress}% ferdig</span>
-              </div>
-
-              <div className="h-3 overflow-hidden rounded-full bg-black/25">
-                <div
-                  className="h-full rounded-full bg-[#d4a72c] transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-white/10 bg-[#00313a] px-10 py-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <Link
-              href="/issues"
-              className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Til avvik
-            </Link>
-
-            <div className="rounded-xl bg-[#d4a72c] px-4 py-2 text-sm font-bold text-black">
-              Ryddemodus
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white px-6 py-6 text-[#111]">
-          <section className="rounded-2xl border border-black/10 bg-white shadow-sm">
-            <div className="border-b border-black/10 p-6">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 ring-1 ring-red-100">
-                <MapPin className="h-3.5 w-3.5" />
-                Mangler lokasjon
-              </div>
-
-              <h2 className="text-2xl font-black leading-tight">
-                {current.product_name}
-              </h2>
-
-              {current.variant_name && (
-                <p className="mt-2 text-sm text-black/60">
-                  {current.variant_name}
-                </p>
-              )}
-            </div>
-
-            <div className="grid gap-4 border-b border-black/10 p-6 sm:grid-cols-3">
-              <div className="rounded-2xl bg-[#f6f6f6] p-4">
-                <div className="text-xs font-bold uppercase tracking-wide text-black/45">
-                  SKU
-                </div>
-                <div className="mt-1 font-black">
-                  {current.sku || "Mangler SKU"}
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-[#f6f6f6] p-4">
-                <div className="text-xs font-bold uppercase tracking-wide text-black/45">
-                  Antall
-                </div>
-                <div className="mt-1 font-black">
-                  {currentInventory?.quantity ?? 0}
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-red-50 p-4">
-                <div className="text-xs font-bold uppercase tracking-wide text-red-400">
-                  Status
-                </div>
-                <div className="mt-1 font-black text-red-600">Uplassert</div>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <label>
-  {hasZone ? "Velg lokasjon" : "Velg sone først"}
-</label>
-{hasZone && (
-  <div className="mb-3 text-sm text-black/60">
-    Sone:{" "}
-<span className="font-semibold">
-  {currentZoneLabel ?? "Ukjent sone"}
-</span>
-  </div>
-)}
-
-              <select
-  id="location-select"
-  disabled={!hasZone}
-  value={selectedLocationId}
-                onChange={(event) => setSelectedLocationId(event.target.value)}
-               className="w-full rounded-2xl border border-black/10 bg-white px-4 py-4 text-black outline-none focus:border-[#d4a72c] disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-400"
+            <div className="relative px-8 py-10 sm:px-10 xl:px-12">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 text-sm font-medium text-white/60 transition hover:text-white"
               >
-                <option value="">Velg lokasjon…</option>
+                <ArrowLeft className="h-4 w-4" />
+                Tilbake til dashboard
+              </Link>
 
-                {activeLocations.map((location) => (
-                  <option key={location.id} value={location.id}>
-                    {location.code}
-                  </option>
-                ))}
-              </select>
+              <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
+                    Snake / Ryddemodus
+                  </p>
 
-{!hasZone && (
-  <p className="mt-2 text-sm font-semibold text-[#a77e05]">
-    Produktet må ha sone før nøyaktig lokasjon kan settes.
-  </p>
-)}
+                  <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+                    Sett eksakte lokasjoner
+                  </h1>
 
-              <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
-                <button
-                  onClick={skipCurrent}
-                  disabled={saving}
-                  className="rounded-2xl border border-black/10 px-5 py-3 text-sm font-bold text-black/60 hover:bg-black/[0.04] disabled:opacity-40"
-                >
-                  Hopp over
-                </button>
+                  <p className="mt-4 max-w-2xl text-sm leading-6 text-white/65">
+                    Én vare om gangen. Velg riktig lokasjon, lagre, og gå videre.
+                    Dette er Snake sin fokuserte arbeidsflyt for produkter som
+                    har sone, men mangler fast plassering.
+                  </p>
 
-                <button
-                  onClick={handleAssign}
-                  disabled={!selectedLocationId || saving}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#d4a72c] px-6 py-3 text-sm font-black text-black hover:bg-[#c99b22] disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {saving ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Lagrer
-                    </>
-                  ) : (
-                    <>
-                      Sett lokasjon og neste
-                      <ChevronRight className="h-4 w-4" />
-                    </>
-                  )}
-                </button>
+                  <div className="mt-6 max-w-xl">
+                    <div className="mb-2 flex items-center justify-between text-xs text-white/50">
+                      <span>Fremdrift</span>
+                      <span>
+                        {completedCount + skippedCount} / {initialCount}
+                      </span>
+                    </div>
+
+                    <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full bg-emerald-400 transition-all duration-300"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+                  <MiniStat label="i kø" value={products.length} />
+                  <MiniStat label="fikset" value={completedCount} />
+                  <MiniStat label="hoppet" value={skippedCount} />
+                </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+
+          <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[1fr_420px]">
+            <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+              {loading ? (
+                <EmptyState
+                  icon={<Loader2 className="h-8 w-8 animate-spin" />}
+                  title="Henter kø"
+                  text="Snake finner produkter som mangler eksakt lokasjon."
+                />
+              ) : !current ? (
+                <EmptyState
+                  icon={<CheckCircle2 className="h-8 w-8 text-emerald-600" />}
+                  title="Alt ser ryddig ut"
+                  text="Ingen produkter med sone mangler eksakt lokasjon akkurat nå."
+                />
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
+                        Problem {completedCount + skippedCount + 1} av{" "}
+                        {initialCount}
+                      </p>
+
+                      <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-950">
+                        {current.productName}
+                      </h2>
+
+                      {current.variantName && (
+                        <p className="mt-1 text-sm text-neutral-500">
+                          {current.variantName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+                      Mangler eksakt lokasjon
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                    <InfoBox label="SKU" value={current.sku ?? "Ingen SKU"} />
+                    <InfoBox
+                      label="Sone"
+                      value={
+                        current.zoneCode
+                          ? `${current.zoneCode} — ${current.zoneName ?? ""}`
+                          : "Ukjent"
+                      }
+                    />
+                    <InfoBox label="Antall" value={String(current.quantity)} />
+                  </div>
+
+                  <div className="mt-7 rounded-3xl border border-black/10 bg-neutral-50 p-5">
+                    <label className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
+                      Finn lokasjon
+                    </label>
+
+                    <div className="relative mt-2">
+                      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                      <input
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder="Søk etter lokasjonskode..."
+                        className="w-full rounded-2xl border border-black/10 bg-white py-3 pl-11 pr-4 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+                      />
+                    </div>
+
+                    <div className="mt-4 max-h-[320px] space-y-2 overflow-y-auto pr-1">
+                      {filteredLocations.length === 0 ? (
+                        <p className="rounded-2xl border border-dashed border-black/15 bg-white p-4 text-sm text-neutral-500">
+                          Ingen lokasjoner matcher.
+                        </p>
+                      ) : (
+                        filteredLocations.map((location) => (
+                          <button
+                            key={location.id}
+                            type="button"
+                            onClick={() => setSelectedLocationId(location.id)}
+                            className={[
+                              "flex w-full items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition",
+                              selectedLocationId === location.id
+                                ? "border-[#055a7d] bg-[#055a7d]/10"
+                                : "border-black/10 bg-white hover:border-[#055a7d]/40",
+                            ].join(" ")}
+                          >
+                            <span>
+                              <span className="block text-sm font-semibold text-neutral-950">
+                                {location.code}
+                              </span>
+                              <span className="mt-0.5 block text-xs text-neutral-500">
+                                {location.zones?.code ?? "Uten sone"}{" "}
+                                {location.zones?.name
+                                  ? `— ${location.zones.name}`
+                                  : ""}
+                              </span>
+                            </span>
+
+                            <MapPin className="h-4 w-4 text-neutral-400" />
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                  {message && (
+                    <div className="mt-4 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+                      {message}
+                    </div>
+                  )}
+
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <button
+                      type="button"
+                      onClick={handleAssign}
+                      disabled={!selectedLocationId || saving}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {saving ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4" />
+                      )}
+                      Sett lokasjon
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleSkip}
+                      disabled={saving || products.length <= 1}
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <SkipForward className="h-4 w-4" />
+                      Hopp over
+                    </button>
+                  </div>
+                </>
+              )}
+            </section>
+
+            <aside className="space-y-5">
+              <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#055a7d]/15 bg-[#055a7d]/10 text-[#055a7d]">
+                    <Layers className="h-5 w-5" />
+                  </div>
+
+                  <div>
+                    <h2 className="text-lg font-semibold text-neutral-950">
+                      Ryddemodus v2
+                    </h2>
+                    <p className="text-sm text-neutral-500">
+                      Fokusert kø. Mindre støy.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 space-y-3 text-sm leading-6 text-neutral-600">
+                  <p>
+                    Denne siden viser produkter som allerede har sone, men
+                    mangler eksakt lokasjon.
+                  </p>
+                  <p>
+                    Hopp over legger produktet bakerst i køen, slik at du kan
+                    fortsette uten å stoppe flyten.
+                  </p>
+                </div>
+              </section>
+
+              <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+                <h2 className="text-lg font-semibold text-neutral-950">
+                  Hurtigvalg
+                </h2>
+
+                <div className="mt-4 grid gap-2">
+                  <SideLink href="/products" label="Alle produkter" />
+                  <SideLink href="/products?status=missing" label="Mangler plassering" />
+                  <SideLink href="/products?status=diff" label="Quantity diff" />
+                  <SideLink href="/locations" label="Lokasjoner" />
+                </div>
+              </section>
+
+              <button
+                type="button"
+                onClick={loadData}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Last kø på nytt
+              </button>
+            </aside>
+          </div>
+        </section>
+
+        <SnakeFooter />
       </div>
-    </section>
-  </PageShell>
-);
+    </main>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="border-r border-white/10 px-4 py-4 last:border-r-0">
+      <p className="text-3xl font-semibold tracking-tight text-white">
+        {value}
+      </p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/45">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function InfoBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+        {label}
+      </p>
+      <p className="mt-1 truncate text-sm font-semibold text-neutral-950">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function SideLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center justify-between rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40 hover:bg-[#055a7d]/5"
+    >
+      {label}
+      <ArrowRight className="h-4 w-4 text-neutral-400" />
+    </Link>
+  );
+}
+
+function EmptyState({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="flex min-h-[520px] flex-col items-center justify-center rounded-3xl border border-dashed border-black/15 bg-neutral-50 p-8 text-center">
+      <div className="text-neutral-400">{icon}</div>
+      <h2 className="mt-4 text-xl font-semibold text-neutral-950">{title}</h2>
+      <p className="mt-2 max-w-md text-sm leading-6 text-neutral-500">
+        {text}
+      </p>
+    </div>
+  );
 }

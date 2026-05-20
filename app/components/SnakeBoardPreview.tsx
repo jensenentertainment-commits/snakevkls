@@ -16,30 +16,31 @@ type SnakeboardMessage = {
 export default function SnakeBoardPreview() {
   const [messages, setMessages] = useState<SnakeboardMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
-    async function loadMessages() {
-      try {
-        const res = await fetch("/api/snakeboard", {
-          cache: "no-store",
-        });
+  async function loadMessages() {
+    try {
+      const res = await fetch("/api/snakeboard?limit=3", {
+        cache: "no-store",
+      });
 
-        const json = await res.json();
+      const json = await res.json();
 
-        if (!res.ok) {
-          throw new Error(json.error ?? "Kunne ikke hente SnakeBoard");
-        }
-
-        setMessages((json.messages ?? []).slice(0, 5));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+      if (!res.ok) {
+        throw new Error(json.error ?? "Kunne ikke hente SnakeBoard");
       }
-    }
 
-    loadMessages();
-  }, []);
+      setMessages(json.messages ?? []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadMessages();
+}, []);
 
   return (
     <div className="rounded-3xl border border-white/10 bg-white/[0.045] p-5">

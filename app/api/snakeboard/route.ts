@@ -25,9 +25,13 @@ function getSupabaseAdmin() {
   return createSupabaseAdminClient(supabaseUrl, supabaseServiceKey);
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const auth = await requireRole(["admin", "lager", "viewer"]);
+const { searchParams } = new URL(request.url);
 
+const limit = Number(searchParams.get("limit") ?? 50);
+
+const safeLimit = Math.min(Math.max(limit, 1), 50);
   if (!auth.ok) return auth.response;
 
   const supabaseAdmin = getSupabaseAdmin();
@@ -36,12 +40,13 @@ export async function GET() {
     return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
   }
 
-  const { data, error } = await supabaseAdmin
-    .from("snakeboard_messages")
-    .select("*")
-    .eq("status", "active")
-    .order("created_at", { ascending: false });
-
+ const { data, error } = await supabaseAdmin
+  .from("snakeboard_messages")
+  .select("*")
+  .eq("status", "active")
+  .order("created_at", { ascending: false })
+  .limit(safeLimit);
+  
   if (error) {
     console.error("SnakeBoard fetch feilet", error);
 

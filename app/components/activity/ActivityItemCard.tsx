@@ -142,10 +142,10 @@ export default function ActivityItemCard({
   const actor = item.actor_name || item.actor_email || "System";
 
   return (
-    <article className="px-5 py-5 transition hover:bg-[#055a7d]/[0.025] sm:px-6">
+    <article className="px-5 py-4 transition hover:bg-[#055a7d]/[0.025] sm:px-6">
       <div className="flex gap-4">
         <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${shell}`}
+         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border ${shell}`}
         >
           <Icon className="h-5 w-5" />
         </div>
@@ -153,7 +153,7 @@ export default function ActivityItemCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${tone}`}
+              className={`rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] ${tone}`}
             >
               {formatAction(item.action)}
             </span>
@@ -184,9 +184,9 @@ export default function ActivityItemCard({
               <p className="text-xs font-semibold text-neutral-500">
                 {actor}
               </p>
-              <p className="mt-0.5 text-xs text-neutral-400">
-                {new Date(item.created_at).toLocaleString("nb-NO")}
-              </p>
+       <p className="mt-0.5 text-xs text-neutral-400">
+  {new Date(item.created_at).toLocaleString("nb-NO")}
+</p>
             </div>
           </div>
 

@@ -8,13 +8,12 @@ import {
   Gauge,
   Info,
 } from "lucide-react";
+import {
+  getRecommendedAction,
+  getWarehouseHealth,
+} from "@/lib/snake-intelligence";
 
-type IntelligenceAction = {
-  title: string;
-  description: string;
-  href: string;
-  priorityLabel: string;
-};
+
 
 type Props = {
   missingLocationCount: number;
@@ -29,12 +28,15 @@ export default function SnakeIntelligencePanel({
   locationsWithoutZoneCount,
   placedCount,
 }: Props) {
-  const action = getRecommendedAction({
+  const metrics = {
     missingLocationCount,
     quantityDiffCount,
     locationsWithoutZoneCount,
     placedCount,
-  });
+  };
+
+  const action = getRecommendedAction(metrics);
+  const health = getWarehouseHealth(metrics);
 
   return (
     <section className="rounded-[28px] border border-emerald-400/35 bg-black/10 p-5 shadow-lg shadow-emerald-950/20 transition hover:border-emerald-300/50 hover:bg-black/15">
@@ -45,9 +47,29 @@ export default function SnakeIntelligencePanel({
         <Info className="h-4 w-4 text-emerald-300/70" />
       </div>
 
-      <h2 className="mt-3 text-xl font-semibold text-white">
-        Neste anbefalte handling
-      </h2>
+      <div className="mt-3 flex items-start justify-between gap-4">
+  <div>
+    <h2 className="text-xl font-semibold text-white">
+      Neste anbefalte handling
+    </h2>
+
+    <p className="mt-1 text-sm text-white/50">
+      Snake Health {health.score}/100
+    </p>
+  </div>
+
+  <span
+    className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] ${
+      health.level === "stable"
+        ? "bg-emerald-400/10 text-emerald-300"
+        : health.level === "medium"
+          ? "bg-amber-400/10 text-amber-300"
+          : "bg-red-400/10 text-red-300"
+    }`}
+  >
+    {health.level}
+  </span>
+</div>
 
      <Link
   href={action.href}
@@ -103,45 +125,6 @@ export default function SnakeIntelligencePanel({
   );
 }
 
-function getRecommendedAction({
-  missingLocationCount,
-  quantityDiffCount,
-  locationsWithoutZoneCount,
-}: Props): IntelligenceAction {
-  if (quantityDiffCount > 0) {
-    return {
-      title: "Rydd lageravvik først",
-      description: `${quantityDiffCount} produkter har avvik mellom Shopify og Snake. Dette bør ryddes før videre arbeid.`,
-      href: "/products?status=diff",
-      priorityLabel: "Høy prioritet",
-    };
-  }
-
-  if (missingLocationCount > 0) {
-    return {
-      title: "Sett eksakte lokasjoner",
-      description: `${missingLocationCount} produkter mangler fast plassering. Start med å plassere disse.`,
-      href: "/products?status=missing",
-      priorityLabel: "Neste steg",
-    };
-  }
-
-  if (locationsWithoutZoneCount > 0) {
-    return {
-      title: "Rydd lokasjoner uten sone",
-      description: `${locationsWithoutZoneCount} lokasjoner mangler sone. Dette bør ryddes for bedre struktur.`,
-      href: "/locations",
-      priorityLabel: "Struktur",
-    };
-  }
-
-  return {
-    title: "Lageret ser stabilt ut",
-    description: "Snake finner ingen kritiske ryddeoppgaver akkurat nå.",
-    href: "/products",
-    priorityLabel: "Stabilt",
-  };
-}
 
 function Metric({
   icon,

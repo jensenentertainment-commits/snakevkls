@@ -12,9 +12,18 @@
   --vk-gold: #a77e04;
   --vk-gold-bright: #b58a14;
 
- --vk-surface: #06363a;     /* litt lysere base */
---vk-surface-2: #0b4448;   /* kort */
---vk-surface-3: #14565b;   /* hover / ikonbakgrunn */
+  --vk-surface: #06363a;
+  --vk-surface-2: #0b4448;
+  --vk-surface-3: #14565b;
+
+  --snake-bg: #062f3b;
+  --snake-panel: #e8eef0;
+  --snake-hero: #05495b;
+  --snake-border: rgba(255, 255, 255, 0.1);
+
+  --snake-card-radius: 26px;
+  --snake-panel-radius: 28px;
+  --snake-control-radius: 18px;
 }
 @theme inline {
   --color-background: var(--background);

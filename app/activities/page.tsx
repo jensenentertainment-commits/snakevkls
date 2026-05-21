@@ -86,8 +86,8 @@ export default function ActivitiesPage() {
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
           <SnakeHero
             eyebrow="SNAKE / Aktivitet"
-            title="Aktivitet"
-            description="Siste endringer i Snake. Sone, lokasjon, uttak og andre lagerhendelser logges her."
+            title="Aktivitetslogg"
+            description="Siste lagerhendelser i Snake. Lokasjoner, tellinger, uttak og andre operasjonelle endringer logges fortløpende."
           />
 
           <SnakeToolbar
@@ -125,7 +125,7 @@ export default function ActivitiesPage() {
             right={
               <button
                 onClick={load}
-                className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-950"
+                className="rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/15"
               >
                 Oppdater
               </button>
@@ -133,7 +133,7 @@ export default function ActivitiesPage() {
           />
 
           <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
               <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:px-6">
                 <div>
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
@@ -156,7 +156,7 @@ export default function ActivitiesPage() {
                 <div className="divide-y divide-neutral-100">
                   {groupedActivities.map(([dateLabel, items]) => (
                     <div key={dateLabel}>
-                      <div className="bg-neutral-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:px-6">
+                      <div className="bg-neutral-50/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-neutral-400 sm:px-6">
                         {dateLabel}
                       </div>
 
@@ -202,5 +202,9 @@ function getDateGroup(dateString: string) {
 }
 
 function EmptyState({ text }: { text: string }) {
-  return <div className="px-6 py-10 text-sm text-neutral-500">{text}</div>;
+ return (
+  <div className="px-6 py-14 text-center text-sm text-neutral-500">
+    {text}
+  </div>
+);
 }

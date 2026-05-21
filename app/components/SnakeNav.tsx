@@ -104,6 +104,7 @@ const pathname = usePathname();
         <NavLink href="/locations" label="Lokasjoner" pathname={pathname} />
         <NavLink href="/issues" label="Avvik" pathname={pathname}/>
         <NavLink href="/fix-locations" label="Ryddemodus" pathname={pathname}/>
+        <NavLink href="/location-count" label="Lokasjonstelling" pathname={pathname}/>
         <NavLink href="/activities" label="Aktivitet" pathname={pathname} />
 
         {isAdmin && (

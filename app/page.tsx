@@ -5,6 +5,8 @@ import {
   AlertTriangle,
   PackageCheck,
   Boxes,
+  MessageCircleCheckIcon,
+  ScanLine,
   Activity,
   ArrowRight,
   Wrench,
@@ -229,6 +231,24 @@ const issueState: IssueCardState = hasIssues
             />
 
             <WideCard
+              href="/location-count"
+              icon={<ScanLine />}
+              title="Lokasjonstelling"
+              text="Tell innhold på en lokasjon og registrer avvik uten å endre lager automatisk."
+              action="Start Telling"
+            />
+
+             <WideCard
+               variant="live"
+              href="/snakeboard"
+              icon={<MessageCircleCheckIcon />}
+              title="Snakeboard"
+              text="Beskjeder til lageret."
+              action="Åpne Snakeboard"
+            />
+
+
+            <WideCard
               href="/activities"
               icon={<Activity />}
               title="Aktivitetslogg"
@@ -319,7 +339,8 @@ highlight?: boolean;
   className={`flex h-14 w-14 items-center justify-center rounded-full border ring-1 ${
     issueState
       ? issueState.icon
-      : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
+  
+  : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
   }`}
 >
           <span className="[&>svg]:h-7 [&>svg]:w-7">{icon}</span>
@@ -378,6 +399,7 @@ function WideCard({
   text,
   action,
   warning,
+   variant = "default",
 }: {
   href?: string;
   icon: React.ReactNode;
@@ -385,13 +407,17 @@ function WideCard({
   text: string;
   action: string;
   warning?: boolean;
+  variant?: "default" | "live";
+  
 }) {
   const card = (
     <div
       className={`group rounded-[26px] border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-xl ${
         warning
           ? "border-[#b58a14]/35 hover:border-[#b58a14]/60"
-          : "border-[#d5dee2] hover:border-[#055a7d]/30"
+          : variant === "live"
+  ? "border-[#7dd3fc]/25 hover:border-[#22d3ee]/45"
+  : "border-[#d5dee2] hover:border-[#055a7d]/30"
       }`}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
@@ -414,7 +440,11 @@ function WideCard({
           </p>
           <p
             className={`mt-3 inline-flex items-center gap-1 text-sm font-bold ${
-              warning ? "text-[#9a7305]" : "text-[#055a7d]"
+              warning
+  ? "text-[#9a7305]"
+  : variant === "live"
+    ? "text-[#0891b2]"
+    : "text-[#055a7d]"
             } group-hover:text-[#042834]`}
           >
             {action}

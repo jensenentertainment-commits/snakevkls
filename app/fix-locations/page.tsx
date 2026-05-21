@@ -18,7 +18,7 @@ import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 
-const ASSIGN_ENDPOINT = "/api/inventory/set-location";
+ const ASSIGN_ENDPOINT = "/api/inventory/set-location";
 
 type LocationRow = {
   id: string;
@@ -63,17 +63,22 @@ export default function FixLocationsPage() {
     const term = search.trim().toLowerCase();
 
     return locations.filter((location) => {
-      const matchesZone =
-        !current?.zoneId || location.zone_id === current.zoneId;
+  const hasZoneLinkedLocations = locations.some(
+    (l) => l.zone_id === current?.zoneId
+  );
 
-      const matchesSearch =
-        !term ||
-        location.code.toLowerCase().includes(term) ||
-        location.zones?.code.toLowerCase().includes(term) ||
-        location.zones?.name.toLowerCase().includes(term);
+  const matchesZone = hasZoneLinkedLocations
+    ? location.zone_id === current?.zoneId
+    : true;
 
-      return location.active && matchesZone && matchesSearch;
-    });
+  const matchesSearch =
+    !term ||
+    location.code.toLowerCase().includes(term) ||
+    location.zones?.code.toLowerCase().includes(term) ||
+    location.zones?.name.toLowerCase().includes(term);
+
+  return matchesZone && matchesSearch;
+});
   }, [locations, search, current]);
 
   const progress =
@@ -186,16 +191,26 @@ const locationRows =
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          productId: current.productId,
           inventoryId: current.inventoryId,
           locationId: selectedLocationId,
+          quantity: current.quantity,
         }),
       });
 
-      const json = await res.json();
+      const text = await res.text();
 
-      if (!res.ok) {
-        throw new Error(json.error ?? "Kunne ikke sette lokasjon");
-      }
+let json: { error?: string } = {};
+
+try {
+  json = text ? JSON.parse(text) : {};
+} catch {
+  throw new Error(`API svarte ikke med JSON. Status: ${res.status}`);
+}
+
+if (!res.ok) {
+  throw new Error(json.error ?? "Kunne ikke sette lokasjon");
+}
 
       setProducts((prev) => prev.slice(1));
       setCompletedCount((prev) => prev + 1);
@@ -301,9 +316,9 @@ const locationRows =
                         {initialCount}
                       </p>
 
-                      <h2 className="mt-2 text-3xl font-semibold tracking-tight text-neutral-950">
-                        {current.productName}
-                      </h2>
+                     <h2 className="mt-2 line-clamp-2 min-h-[72px] text-3xl font-semibold tracking-tight text-neutral-950">
+  {current.productName}
+</h2>
 
                       {current.variantName && (
                         <p className="mt-1 text-sm text-neutral-500">

@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
+import SnakeHero from "../../components/SnakeHero";
 
 type LocationDetail = {
   id: string;
@@ -274,39 +275,38 @@ setLoading(false);
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <div className="bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-7 text-white sm:px-10 sm:py-10">
-            <Link
-              href="/locations"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-white/75 hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Tilbake til lokasjoner
-            </Link>
+          <SnakeHero
+  eyebrow="Snake / Lokasjon"
+  title={loading ? "Laster..." : location?.code ?? "Ikke funnet"}
+  description="Bruk denne siden etter QR-scan for å se, justere og registrere varer på lokasjonen."
+  backHref="/locations"
+  backLabel="Tilbake til lokasjoner"
+  right={
+    location ? (
+      <div className="grid grid-cols-2 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+        <div className="border-r border-white/10 px-5 py-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+            Status
+          </p>
 
-            <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-white/65">
-                  SNAKE / Lokasjon
-                </p>
+          <p className="mt-1 text-lg font-semibold text-white">
+            {location.active ? "Aktiv" : "Inaktiv"}
+          </p>
+        </div>
 
-                <h1 className="mt-3 text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl">
-                  {loading ? "Laster..." : location?.code ?? "Ikke funnet"}
-                </h1>
+        <div className="px-5 py-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+            Antall totalt
+          </p>
 
-                <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
-                  Bruk denne siden etter QR-scan for å se, justere og registrere
-                  varer på lokasjonen.
-                </p>
-              </div>
-
-              {location && (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <HeroStat label="Status" value={location.active ? "Aktiv" : "Inaktiv"} />
-                  <HeroStat label="Antall totalt" value={String(totalQuantity)} />
-                </div>
-              )}
-            </div>
-          </div>
+          <p className="mt-1 text-lg font-semibold text-white">
+            {totalQuantity}
+          </p>
+        </div>
+      </div>
+    ) : undefined
+  }
+/>
 
           <div className="bg-[#f6f7f8] px-5 py-5 sm:px-8 sm:py-6">
             {loading ? (
@@ -335,6 +335,16 @@ setLoading(false);
               </div>
             )}
           </div>
+
+            {location && (
+  <div className="mt-5 flex flex-wrap gap-2">
+    {isEmpty && <LocationBadge tone="neutral" text="Tom" />}
+    {!isEmpty && <LocationBadge tone="ok" text="Aktiv" />}
+    {missingZone && <LocationBadge tone="warn" text="Mangler sone" />}
+    {isHighLoad && <LocationBadge tone="warn" text="Høy belastning" />}
+    {recentlyChanged && <LocationBadge tone="blue" text="Nylig endret" />}
+  </div>
+)}
 
           {location && (
             <div className="grid gap-6 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7 lg:grid-cols-[0.95fr_1.05fr]">
@@ -424,15 +434,7 @@ setLoading(false);
                     ))}
                   </div>
                 )}
-                {location && (
-  <div className="mt-5 flex flex-wrap gap-2">
-    {isEmpty && <LocationBadge tone="neutral" text="Tom" />}
-    {!isEmpty && <LocationBadge tone="ok" text="Aktiv" />}
-    {missingZone && <LocationBadge tone="warn" text="Mangler sone" />}
-    {isHighLoad && <LocationBadge tone="warn" text="Høy belastning" />}
-    {recentlyChanged && <LocationBadge tone="blue" text="Nylig endret" />}
-  </div>
-)}
+                
 
 {location && (
             <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">

@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
+import SnakeHero from "../../components/SnakeHero";
+import EditPlacementModal from "../../components/products/EditPlacementModal";
+import StockMovementModal from "../../components/products/StockMovementModal";
+import type {
+  LocationOption,
+  ProductRow,
+  ZoneOption,
+} from "../../components/products/types";
 
 export default function ProductPage() {
  
@@ -16,11 +22,115 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const params = useParams();
 const id = Array.isArray(params.id) ? params.id[0] : params.id;
+const [showPlacementModal, setShowPlacementModal] = useState(false);
+const [showMovementModal, setShowMovementModal] = useState(false);
+
+const [zones, setZones] = useState<ZoneOption[]>([]);
+const [locations, setLocations] = useState<LocationOption[]>([]);
+
+const [newZone, setNewZone] = useState("");
+const [newLocation, setNewLocation] = useState("");
+const [newQuantity, setNewQuantity] = useState("0");
+
+const [movementQty, setMovementQty] = useState("");
+const [movementReason, setMovementReason] = useState("manual_sale");
+const [movementNote, setMovementNote] = useState("");
+
+const [saveSaving, setSaveSaving] = useState(false);
+const [movementSaving, setMovementSaving] = useState(false);
+
+
 
  useEffect(() => {
   if (!id) return;
   load();
 }, [id]);
+
+useEffect(() => {
+  async function loadOptions() {
+    const [{ data: zoneData }, { data: locationData }] = await Promise.all([
+      supabase.from("zones").select("id, code, name").order("code"),
+      supabase
+        .from("locations")
+        .select("id, code, zone_id")
+        .eq("active", true)
+        .order("code"),
+    ]);
+
+    setZones(zoneData ?? []);
+    setLocations(locationData ?? []);
+  }
+
+  loadOptions();
+}, []);
+
+
+
+async function handleSavePlacement() {
+  if (!inv?.id) return;
+
+  setSaveSaving(true);
+
+  const { error } = await supabase
+    .from("inventory")
+    .update({
+      zone_id: newZone || null,
+      location_id: newLocation || null,
+      quantity: Number(newQuantity),
+    })
+    .eq("id", inv.id);
+
+  setSaveSaving(false);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  setShowPlacementModal(false);
+  window.location.reload();
+}
+
+async function handleSaveMovement() {
+  if (!inv?.id) return;
+
+  const qty = Number(movementQty);
+
+  if (!qty || qty <= 0) return;
+
+  setMovementSaving(true);
+
+  const nextQuantity = Math.max(0, lagerQty - qty);
+
+  const { error: inventoryError } = await supabase
+    .from("inventory")
+    .update({
+      quantity: nextQuantity,
+    })
+    .eq("id", inv.id);
+
+  if (inventoryError) {
+    console.error(inventoryError);
+    setMovementSaving(false);
+    return;
+  }
+
+  await supabase.from("stock_movements").insert({
+    inventory_id: inv.id,
+    product_id: product.id,
+    quantity: -qty,
+    reason: movementReason,
+    note: movementNote || null,
+  });
+
+  setMovementSaving(false);
+  setShowMovementModal(false);
+  setMovementQty("");
+  setMovementReason("manual_sale");
+  setMovementNote("");
+
+  window.location.reload();
+}
 
   async function load() {
     setLoading(true);
@@ -43,14 +153,29 @@ const id = Array.isArray(params.id) ? params.id[0] : params.id;
             name
           ),
           locations (
-            code
-          )
+  id,
+  code,
+  zone_id
+)
         )
       `)
       .eq("id", id)
       .single();
 
     setProduct(data);
+   const loadedInv = data?.inventory?.[0] as
+  | {
+      zone_id: string | null;
+      quantity: number;
+      locations: {
+        id: string;
+      } | null;
+    }
+  | undefined;
+
+setNewZone(loadedInv?.zone_id ?? "");
+setNewLocation(loadedInv?.locations?.id ?? "");
+setNewQuantity(String(loadedInv?.quantity ?? 0));
 
    const productId = Array.isArray(id) ? id[0] : id;
 
@@ -106,6 +231,11 @@ const { data: activityData } = await supabase
   const lagerQty = inv?.quantity ?? 0;
   const shopifyQty = product.shopify_quantity ?? 0;
   const diff = shopifyQty - lagerQty;
+ 
+
+
+
+
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -113,43 +243,32 @@ const { data: activityData } = await supabase
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <div className="bg-gradient-to-br from-[#055a7d] to-[#042834] px-5 py-5 text-white sm:px-8 sm:py-6 lg:px-10">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Til produkter
-            </Link>
-
-            <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_160px] lg:items-end">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
-                  Produkt
-                </p>
-
-                <h1 className="mt-2 max-w-4xl text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-                  {product.product_name}
-                </h1>
-
-                {product.variant_name && (
-                  <p className="mt-2 text-sm text-white/65">
-                    {product.variant_name}
-                  </p>
-                )}
-              </div>
-
-              {product.image_url && (
-                <div className="h-32 w-32 overflow-hidden rounded-3xl border border-white/15 bg-white/10 lg:justify-self-end">
-                  <img
-                    src={product.image_url}
-                    alt={product.product_name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          <SnakeHero
+  eyebrow="Snake / Produkt"
+  title={product.product_name}
+  description={
+    product.variant_name
+      ? `${product.variant_name}${product.sku ? ` · SKU ${product.sku}` : ""}`
+      : product.sku
+        ? `SKU ${product.sku}`
+        : "Produkt uten SKU"
+  }
+  backHref="/products"
+  backLabel="Tilbake til produkter"
+  right={
+    product.image_url ? (
+      <div className="flex justify-end">
+        <div className="h-32 w-32 overflow-hidden rounded-3xl border border-white/15 bg-white/10 shadow-2xl">
+          <img
+            src={product.image_url}
+            alt={product.product_name}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    ) : undefined
+  }
+/>
 
           <div className="grid gap-5 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 lg:grid-cols-5">
             <InfoCard label="SKU" value={product.sku || "Mangler SKU"} />
@@ -166,9 +285,37 @@ const { data: activityData } = await supabase
               tone={inv?.locations?.code ? "ok" : "warn"}
             />
           </div>
+<div className="border-t border-neutral-200 bg-white px-5 py-5 sm:px-8">
+  <div className="flex flex-col gap-4 rounded-[24px] border border-neutral-200 bg-neutral-50/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-w-0">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
+        Handlinger
+      </p>
 
+      <p className="mt-1 text-sm text-neutral-600">
+        Oppdater plassering eller registrer lagerbevegelse.
+      </p>
+    </div>
+
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <button
+        onClick={() => setShowPlacementModal(true)}
+        className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044c6a]"
+      >
+        Endre plassering
+      </button>
+
+      <button
+        onClick={() => setShowMovementModal(true)}
+        className="rounded-2xl border border-[#b58a14]/25 bg-[#b58a14]/10 px-5 py-3 text-sm font-semibold text-[#8a6704] transition hover:bg-[#b58a14]/15"
+      >
+        Registrer uttak
+      </button>
+    </div>
+  </div>
+</div>
           <div className="grid gap-5 border-t border-neutral-200 bg-neutral-50 px-5 py-6 sm:px-8 lg:grid-cols-2">
-            <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+            <section className="rounded-[24px] border border-neutral-200 bg-white p-6">
               <h2 className="text-lg font-semibold tracking-tight">
                 Plassering
               </h2>
@@ -192,7 +339,9 @@ const { data: activityData } = await supabase
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+            
+
+            <section className="rounded-[24px] border border-neutral-200 bg-white p-6">
               <h2 className="text-lg font-semibold tracking-tight">
                 Siste aktivitet
               </h2>
@@ -215,7 +364,37 @@ const { data: activityData } = await supabase
             </section>
           </div>
         </section>
+{showPlacementModal && (
+  <EditPlacementModal
+    editing={product}
+    locations={locations}
+    zones={zones}
+    newZone={newZone}
+    setNewZone={setNewZone}
+    newLocation={newLocation}
+    setNewLocation={setNewLocation}
+    newQuantity={newQuantity}
+    setNewQuantity={setNewQuantity}
+    saveSaving={saveSaving}
+    onClose={() => setShowPlacementModal(false)}
+    onSave={handleSavePlacement}
+  />
+)}
 
+{showMovementModal && (
+  <StockMovementModal
+    product={product}
+    movementQty={movementQty}
+    setMovementQty={setMovementQty}
+    movementReason={movementReason}
+    setMovementReason={setMovementReason}
+    movementNote={movementNote}
+    setMovementNote={setMovementNote}
+    movementSaving={movementSaving}
+    onClose={() => setShowMovementModal(false)}
+    onSave={handleSaveMovement}
+  />
+)}
         <SnakeFooter />
       </div>
     </main>
@@ -232,17 +411,18 @@ function InfoCard({
   tone?: "neutral" | "ok" | "warn";
 }) {
   const toneClass = {
-    neutral: "bg-white text-neutral-950",
-    ok: "bg-green-50 text-green-700",
-    warn: "bg-[#fbf6e8] text-[#a77e05]",
+    neutral: "border-neutral-200 bg-white text-neutral-950",
+    ok: "border-[#14565b]/25 bg-[#14565b]/8 text-[#14565b]",
+    warn: "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#8a6704]",
   }[tone];
 
   return (
-    <div className={`rounded-2xl border border-neutral-200 p-4 ${toneClass}`}>
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] opacity-60">
+    <div className={`rounded-2xl border p-4 ${toneClass}`}>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] opacity-60">
         {label}
       </p>
-      <p className="mt-2 text-lg font-semibold">{value}</p>
+
+      <p className="mt-2 truncate text-lg font-semibold">{value}</p>
     </div>
   );
 }

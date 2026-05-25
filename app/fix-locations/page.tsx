@@ -13,7 +13,7 @@ import {
   Search,
   SkipForward,
 } from "lucide-react";
-
+import SnakeHero from "../components/SnakeHero";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -239,59 +239,37 @@ if (!res.ok) {
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="relative overflow-hidden bg-[#05495b] text-white">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+          <SnakeHero
+  eyebrow="Snake / Ryddemodus"
+  title="Sett eksakte lokasjoner"
+  description="Én vare om gangen. Velg riktig lokasjon, lagre, og gå videre. Dette er Snake sin fokuserte arbeidsflyt for produkter som har sone, men mangler fast plassering."
+  backHref="/"
+  backLabel="Tilbake til dashboard"
+  right={
+    <div className="grid grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+      <MiniStat label="i kø" value={products.length} />
+      <MiniStat label="fikset" value={completedCount} />
+      <MiniStat label="hoppet" value={skippedCount} />
+    </div>
+  }
+>
+  <div className="max-w-xl">
+    <div className="mb-2 flex items-center justify-between text-xs text-white/50">
+      <span>Fremdrift</span>
 
-            <div className="relative px-8 py-10 sm:px-10 xl:px-12">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 text-sm font-medium text-white/60 transition hover:text-white"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Tilbake til dashboard
-              </Link>
+      <span>
+        {completedCount + skippedCount} / {initialCount}
+      </span>
+    </div>
 
-              <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
-                    Snake / Ryddemodus
-                  </p>
-
-                  <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-                    Sett eksakte lokasjoner
-                  </h1>
-
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-white/65">
-                    Én vare om gangen. Velg riktig lokasjon, lagre, og gå videre.
-                    Dette er Snake sin fokuserte arbeidsflyt for produkter som
-                    har sone, men mangler fast plassering.
-                  </p>
-
-                  <div className="mt-6 max-w-xl">
-                    <div className="mb-2 flex items-center justify-between text-xs text-white/50">
-                      <span>Fremdrift</span>
-                      <span>
-                        {completedCount + skippedCount} / {initialCount}
-                      </span>
-                    </div>
-
-                    <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                      <div
-                        className="h-full rounded-full bg-emerald-400 transition-all duration-300"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
-                  <MiniStat label="i kø" value={products.length} />
-                  <MiniStat label="fikset" value={completedCount} />
-                  <MiniStat label="hoppet" value={skippedCount} />
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="h-2 overflow-hidden rounded-full bg-white/10">
+      <div
+        className="h-full rounded-full bg-[#b58a14] transition-all duration-300"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  </div>
+</SnakeHero>
 
           <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[1fr_420px]">
             <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">

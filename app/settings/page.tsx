@@ -304,8 +304,8 @@ const filteredZones = useMemo(() => {
 
           <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
    <SnakeHero
-  eyebrow="SNAKE / Settings"
-  title="Innstillinger"
+  eyebrow="SNAKE / SYSTEM"
+  title="System"
   description="Administrer grunnstrukturen i Snake. Soner styrer hvor lokasjoner hører hjemme og gjør lageret lettere å rydde senere."
   searchValue={query}
   onSearchChange={setQuery}
@@ -325,18 +325,18 @@ const filteredZones = useMemo(() => {
           onClick={() =>
             setStatusFilter(filter.key as "all" | "active" | "inactive")
           }
-          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-            statusFilter === filter.key
-              ? "bg-[#b58a14] text-white"
-              : "bg-white/10 text-white"
-          }`}
+          className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  statusFilter === filter.key
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
         >
           {filter.label}
           <span className="ml-1 text-white/65">{filter.value}</span>
         </button>
       ))}
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+      <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80">
         Lokasjoner <span className="ml-1 text-white/65">{totalLocations}</span>
       </div>
     </>
@@ -344,7 +344,7 @@ const filteredZones = useMemo(() => {
   right={
     <button
       onClick={() => setShowCreateModal(true)}
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#b58a14]/30 bg-[#b58a14]/90 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#a77e05]"
     >
       <Plus className="h-4 w-4" />
       Ny sone
@@ -390,7 +390,7 @@ const filteredZones = useMemo(() => {
 
                 <div className="hidden overflow-x-auto lg:block">
                   <table className="min-w-full border-collapse">
-                    <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
+                    <thead className="border-b border-neutral-200 bg-neutral-50 text-left text-[11px] uppercase tracking-[0.14em] text-neutral-500">
                       <tr>
                         <th className="px-5 py-4 font-semibold">Kode</th>
                         <th className="px-5 py-4 font-semibold">Navn</th>
@@ -457,7 +457,7 @@ const filteredZones = useMemo(() => {
               </div>
             </div>
             <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-  <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+ <div className="overflow-hidden rounded-[24px] border border-neutral-200 bg-white">
     <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
   <div className="flex items-center justify-between gap-4">
     <div>

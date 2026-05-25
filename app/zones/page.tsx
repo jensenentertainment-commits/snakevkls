@@ -7,6 +7,7 @@ import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
+import ZoneModal from "../components/zones/ZoneModal";
 
 type ZoneRow = {
   id: string;
@@ -16,7 +17,7 @@ type ZoneRow = {
   locations: { id: string }[];
 };
 
-export default function SettingsPage() {
+export default function ZonesPage() {
   const [zones, setZones] = useState<ZoneRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -159,7 +160,7 @@ const filteredZones = useMemo(() => {
         <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
           <SnakeNav />
 
-          <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
+          <div className="overflow-hidden rounded-[26px] shadow-2xl shadow-black/30 sm:rounded-[32px]">
    <SnakeHero
   eyebrow="SNAKE / SONER"
   title="Soner"
@@ -182,18 +183,18 @@ const filteredZones = useMemo(() => {
           onClick={() =>
             setStatusFilter(filter.key as "all" | "active" | "inactive")
           }
-          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-            statusFilter === filter.key
-              ? "bg-[#b58a14] text-white"
-              : "bg-white/10 text-white"
-          }`}
+          className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  statusFilter === filter.key
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
         >
           {filter.label}
           <span className="ml-1 text-white/65">{filter.value}</span>
         </button>
       ))}
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+      <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80">
         Lokasjoner <span className="ml-1 text-white/65">{totalLocations}</span>
       </div>
     </>
@@ -201,7 +202,7 @@ const filteredZones = useMemo(() => {
   right={
     <button
       onClick={() => setShowCreateModal(true)}
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
+      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#b58a14]/30 bg-[#b58a14]/90 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#a77e05]"
     >
       <Plus className="h-4 w-4" />
       Ny sone
@@ -211,7 +212,7 @@ const filteredZones = useMemo(() => {
   
             
 
-            <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+            <section className="bg-white px-5 py-6 text-neutral-950 sm:px-8 sm:py-7">
               <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
                   <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
@@ -247,7 +248,7 @@ const filteredZones = useMemo(() => {
 
                 <div className="hidden overflow-x-auto lg:block">
                   <table className="min-w-full border-collapse">
-                    <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
+                    <thead className="border-b border-neutral-200 bg-neutral-50 text-left text-[11px] uppercase tracking-[0.14em] text-neutral-500">
                       <tr>
                         <th className="px-5 py-4 font-semibold">Kode</th>
                         <th className="px-5 py-4 font-semibold">Navn</th>
@@ -312,143 +313,51 @@ const filteredZones = useMemo(() => {
                   </table>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+         </div>
 
           <SnakeFooter />
         </div>
       </main>
 
-      {showCreateModal && (
-        <ZoneModal
-          title="Ny sone"
-          code={newCode}
-          name={newName}
-          active={newActive}
-          setCode={setNewCode}
-          setName={setNewName}
-          setActive={setNewActive}
-          onCancel={() => {
-            setShowCreateModal(false);
-            setNewCode("");
-            setNewName("");
-            setNewActive(true);
-          }}
-          onSave={handleCreateZone}
-          saveLabel="Opprett"
-        />
-      )}
+     <ZoneModal
+  open={showCreateModal}
+  title="Ny sone"
+  code={newCode}
+  name={newName}
+  active={newActive}
+  setCode={setNewCode}
+  setName={setNewName}
+  setActive={setNewActive}
+  onClose={() => {
+    setShowCreateModal(false);
+    setNewCode("");
+    setNewName("");
+    setNewActive(true);
+  }}
+  onSave={handleCreateZone}
+  saveLabel="Opprett"
+/>
 
-      {editingZone && (
-        <ZoneModal
-          title={`Rediger ${editingZone.code}`}
-          code={editCode}
-          name={editName}
-          active={editActive}
-          setCode={setEditCode}
-          setName={setEditName}
-          setActive={setEditActive}
-          onCancel={() => {
-            setEditingZone(null);
-            setEditCode("");
-            setEditName("");
-            setEditActive(true);
-          }}
-          onSave={handleSaveZone}
-          saveLabel="Lagre"
-        />
-      )}
-    </>
-  );
-}
-
-function ZoneModal({
-  title,
-  code,
-  name,
-  active,
-  setCode,
-  setName,
-  setActive,
-  onCancel,
-  onSave,
-  saveLabel,
-}: {
-  title: string;
-  code: string;
-  name: string;
-  active: boolean;
-  setCode: (value: string) => void;
-  setName: (value: string) => void;
-  setActive: (value: boolean) => void;
-  onCancel: () => void;
-  onSave: () => void;
-  saveLabel: string;
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-      <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
-          Sone
-        </p>
-
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-          {title}
-        </h2>
-
-        <div className="mt-6 space-y-4">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-neutral-700">
-              Sonekode
-            </label>
-            <input
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="f.eks. HL"
-              className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-neutral-700">
-              Navn
-            </label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="f.eks. Hovedlager"
-              className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
-            />
-          </div>
-
-          <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">
-            <input
-              type="checkbox"
-              checked={active}
-              onChange={(e) => setActive(e.target.checked)}
-              className="h-4 w-4 accent-[#055a7d]"
-            />
-            Aktiv sone
-          </label>
-        </div>
-
-        <div className="mt-6 flex justify-end gap-2">
-          <button
-            onClick={onCancel}
-            className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
-          >
-            Avbryt
-          </button>
-
-          <button
-            onClick={onSave}
-            className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white"
-          >
-            {saveLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+<ZoneModal
+  open={Boolean(editingZone)}
+  title={`Rediger ${editingZone?.code ?? "sone"}`}
+  code={editCode}
+  name={editName}
+  active={editActive}
+  setCode={setEditCode}
+  setName={setEditName}
+  setActive={setEditActive}
+  onClose={() => {
+    setEditingZone(null);
+    setEditCode("");
+    setEditName("");
+    setEditActive(true);
+  }}
+  onSave={handleSaveZone}
+  saveLabel="Lagre"
+/>
+  </>
   );
 }
 
@@ -497,45 +406,7 @@ function EmptyState({ text }: { text: string }) {
   return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;
 }
 
-function StatCard({
-  icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  tone: "blue" | "gold" | "ok" | "neutral";
-}) {
-  const styles = {
-    blue: "border-t-[#055a7d] text-[#055a7d]",
-    gold: "border-t-[#a77e05] text-[#a77e05]",
-    ok: "border-t-emerald-500 text-emerald-600",
-    neutral: "border-t-neutral-300 text-neutral-500",
-  };
 
-  return (
-    <div
-      className={`rounded-2xl border border-neutral-200 border-t-4 bg-white p-4 shadow-sm sm:p-5 ${styles[tone]}`}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
-            {label}
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950 sm:mt-3 sm:text-3xl">
-            {value}
-          </p>
-        </div>
-
-        <div className="[&>svg]:h-5 [&>svg]:w-5 sm:[&>svg]:h-6 sm:[&>svg]:w-6">
-          {icon}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function StatusPill({
   text,
@@ -545,13 +416,13 @@ function StatusPill({
   tone: "ok" | "neutral";
 }) {
   const styles = {
-    ok: "border-green-200 bg-green-50 text-green-700",
+    ok: "border-[#14565b]/30 bg-[#14565b]/10 text-[#14565b]",
     neutral: "border-neutral-200 bg-neutral-100 text-neutral-600",
   };
 
   return (
     <span
-      className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${styles[tone]}`}
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${styles[tone]}`}
     >
       {text}
     </span>

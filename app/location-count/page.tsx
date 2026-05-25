@@ -10,7 +10,7 @@ import {
   MapPin,
   Search,
 } from "lucide-react";
-
+import SnakeHero from "../components/SnakeHero";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -163,34 +163,13 @@ export default function LocationCountPage() {
         <SnakeNav />
 
         <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <div className="relative overflow-hidden bg-[#05495b] text-white">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-
-            <div className="relative px-8 py-10 sm:px-10 xl:px-12">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 text-sm font-medium text-white/60 transition hover:text-white"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Tilbake til dashboard
-              </Link>
-
-              <div className="mt-8 max-w-3xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
-                  Snake / Lokasjonstelling
-                </p>
-
-                <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-                  Tell lokasjon
-                </h1>
-
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-white/65">
-                  Velg en lokasjon, tell fysisk antall, og lagre avviket som
-                  kontrollhistorikk. V1 endrer ikke lagerantall automatisk.
-                </p>
-              </div>
-            </div>
-          </div>
+          <SnakeHero
+  eyebrow="Snake / Lokasjonstelling"
+  title="Tell lokasjon"
+  description="Velg en lokasjon, tell fysisk antall, og lagre avviket som kontrollhistorikk. V1 endrer ikke lagerantall automatisk."
+  backHref="/"
+  backLabel="Tilbake til dashboard"
+/>
 
           <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[380px_1fr]">
             <aside className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">

@@ -298,7 +298,7 @@ const {
   searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
 />
 
-  <div className={syncingShopify ? "animate-pulse" : ""}></div>
+  
 <SnakeToolbar
   left={
     <>
@@ -321,13 +321,13 @@ const {
   url.searchParams.set("status", key);
   window.history.replaceState(null, "", url.toString());
 }}
-          className={`rounded-xl px-3 py-2 text-sm font-semibold transition duration-300 ${
+         className={`rounded-xl border px-3 py-2 text-sm font-semibold transition duration-300 ${
   statusFilter === filter.key
-    ? "bg-[#b58a14] text-white"
-    : "bg-white/10 text-white"
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
 } ${
   recentlyUpdated && filter.key === "zone"
-    ? "scale-[1.04] ring-2 ring-[#b58a14]/40"
+    ? "scale-[1.04] ring-2 ring-[#b58a14]/35"
     : ""
 }`}
         >
@@ -343,7 +343,7 @@ const {
     
   onClick={handleShopifySync}
   disabled={syncingShopify}
-  className="inline-flex items-center gap-2 rounded-xl bg-[#055a7d] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#04495f] disabled:opacity-50"
+  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.1] hover:text-white disabled:opacity-50"
 >
   <RefreshCw
     className={`h-4 w-4 ${
@@ -356,13 +356,14 @@ const {
 )}
 
 {lastShopifySync && (
-  <span className="text-xs font-semibold text-white/60">
-    Sist synket {lastShopifySync}
-  </span>
+  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">
+  Synket {lastShopifySync}
+</span>
 )}
 
 
       <SnakeDropdown
+      variant="dark"
         value={collectionFilter}
         onChange={setCollectionFilter}
         width="w-full sm:w-[240px]"
@@ -376,6 +377,7 @@ const {
       />
 
       <SnakeDropdown
+      variant="dark"
         value={zoneFilter}
         onChange={setZoneFilter}
         width="w-full sm:w-[200px]"
@@ -409,25 +411,24 @@ const placed = products.filter(
 const percent = Math.round((placed / total) * 100);
       if (missing > 0) {
         return (
-      <div className="border-t border-neutral-200 bg-white px-5 py-5 sm:px-8">
-  <div className="grid gap-4 rounded-[24px] border border-[#b58a14]/20 bg-[#fbf6e8] p-5 shadow-sm lg:grid-cols-[1fr_320px_auto] lg:items-center">
+  <div className="grid gap-4 rounded-[22px] border border-[#b58a14]/20 bg-[#fbf6e8] p-4 shadow-sm lg:grid-cols-[1fr_280px_auto] lg:items-center">
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#a77e05]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a77e05]">
         Neste steg
       </p>
-      <p className="mt-1 text-base font-semibold text-neutral-950">
+      <p className="mt-1 text-sm font-semibold text-neutral-950">
         {missing} produkter mangler plassering
       </p>
     </div>
 
     <div>
-      <div className="h-2.5 w-full overflow-hidden rounded-full bg-white">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-white">
         <div
           className="h-full rounded-full bg-[#b58a14] transition-all duration-500"
           style={{ width: `${percent}%` }}
         />
       </div>
-      <p className="mt-2 text-xs font-semibold text-neutral-600">
+      <p className="mt-2 text-xs font-medium text-neutral-600">
         {percent}% ferdig · {placed} av {total} produkter plassert
       </p>
     </div>
@@ -435,32 +436,32 @@ const percent = Math.round((placed / total) * 100);
     <div className="flex flex-wrap gap-2 lg:justify-end">
       <button
         onClick={() => setStatusFilter("missing")}
-        className="rounded-xl border border-[#055a7d]/20 bg-white px-4 py-2 text-sm font-semibold text-[#055a7d]"
+        className="rounded-xl border border-[#055a7d]/15 bg-white px-3 py-2 text-sm font-semibold text-[#055a7d]"
       >
         Vis mangler
       </button>
-{canWrite && (
-      <button
-        onClick={() => {
-          const missingIds = products
-            .filter((product) => getMeta(product).status === "missing")
-            .map((product) => product.id);
 
-          setSelected(missingIds);
+      {canWrite && (
+        <button
+          onClick={() => {
+            const missingIds = products
+              .filter((product) => getMeta(product).status === "missing")
+              .map((product) => product.id);
 
-          if (missingIds.length >= 3) {
-            setTimeout(() => setBatchOpen(true), 150);
-          }
-        }}
-        className="rounded-xl bg-[#055a7d] px-4 py-2 text-sm font-semibold text-white shadow-sm"
-      >
-        Velg alle
-      </button>
+            setSelected(missingIds);
+
+            if (missingIds.length >= 3) {
+              setTimeout(() => setBatchOpen(true), 150);
+            }
+          }}
+          className="rounded-xl bg-[#055a7d] px-3 py-2 text-sm font-semibold text-white shadow-sm"
+        >
+          Velg alle
+        </button>
       )}
     </div>
   </div>
-</div>
-        );
+);
       }
 
       if (diff > 0) {
@@ -619,13 +620,13 @@ const percent = Math.round((placed / total) * 100);
   onDoubleClick={() => {
   window.location.href = `/products/${product.id}`;
 }}
-  className={`h-[104px] cursor-pointer border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025] ${
+  className={`h-[104px] cursor-pointer border-t transition ${
   selected.includes(product.id)
-    ? "bg-[#b58a14]/10 ring-1 ring-[#b58a14]/30"
+    ? "border-l-4 border-l-[#b58a14] border-t-neutral-100 bg-white shadow-[inset_0_0_0_1px_rgba(181,138,20,0.16)]"
     : meta.status === "missing"
-      ? "bg-[#fbf6e8]/45"
-      : ""
-}`}
+      ? "border-l-4 border-l-[#b58a14]/45 border-t-neutral-100 bg-[#fbf6e8]/38"
+      : "border-l-4 border-l-transparent border-t-neutral-100 bg-white"
+} hover:bg-[#055a7d]/[0.025]`}
 >
                             <td className="px-5 py-5 align-middle text-sm">
                               {canWrite && (
@@ -681,39 +682,41 @@ const percent = Math.round((placed / total) * 100);
     Velg sone
   </span>
 
-  <div className="flex items-center gap-2">
-    <select
-      value={inlineZone[product.id] ?? ""}
-      onClick={(e) => e.stopPropagation()}
-      onDoubleClick={(e) => e.stopPropagation()}
-      onChange={(e) =>
-        setInlineZone((prev) => ({
-          ...prev,
-          [product.id]: e.target.value,
-        }))
-      }
-      className="rounded-lg border border-[#b58a14]/30 bg-white px-2 py-1 text-xs font-semibold text-neutral-800"
-    >
-      <option value="">Sone</option>
-      {zones.map((zone) => (
-        <option key={zone.id} value={zone.id}>
-          {zone.code}
-        </option>
-      ))}
-    </select>
+  <div className="flex w-[132px] items-center justify-end gap-1.5">
+  <select
+    value={inlineZone[product.id] ?? ""}
+    onClick={(e) => e.stopPropagation()}
+    onDoubleClick={(e) => e.stopPropagation()}
+    onChange={(e) =>
+      setInlineZone((prev) => ({
+        ...prev,
+        [product.id]: e.target.value,
+      }))
+    }
+    disabled={inlineSaving === product.id}
+    className="h-8 w-[76px] rounded-lg border border-neutral-200 bg-white px-2 text-[11px] font-semibold text-neutral-800 shadow-sm outline-none transition hover:border-[#055a7d]/30 focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10 disabled:opacity-50"
+  >
+    <option value="">Sone</option>
 
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        handleInlineSave(product);
-      }}
-      onDoubleClick={(e) => e.stopPropagation()}
-      disabled={!inlineZone[product.id] || inlineSaving === product.id}
-      className="text-xs font-semibold text-[#055a7d] disabled:opacity-40"
-    >
-      {inlineSaving === product.id ? "..." : "Lagre"}
-    </button>
-  </div>
+    {zones.map((zone) => (
+      <option key={zone.id} value={zone.id}>
+        {zone.code}
+      </option>
+    ))}
+  </select>
+
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      handleInlineSave(product);
+    }}
+    onDoubleClick={(e) => e.stopPropagation()}
+    disabled={!inlineZone[product.id] || inlineSaving === product.id}
+    className="h-8 w-[48px] rounded-lg bg-[#055a7d] text-[11px] font-bold text-white shadow-sm transition hover:bg-[#044c6a] disabled:bg-neutral-200 disabled:text-neutral-500"
+  >
+    {inlineSaving === product.id ? "..." : "Sett"}
+  </button>
+</div>
 </div>
   ) : meta.zoneLabel ? (
   <span
@@ -764,7 +767,7 @@ const percent = Math.round((placed / total) * 100);
       </div>
 
 {canWrite && selected.length > 0 && (
-  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl bg-[#b58a14] px-4 py-3 text-white shadow-2xl shadow-black/30">
+  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl border border-[#b58a14]/25 bg-[#083844]/95 px-4 py-3 text-white backdrop-blur-xl shadow-2xl shadow-black/30">
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm font-semibold">
         {selected.length} valgt

@@ -45,7 +45,7 @@ export default function ActivitiesPage() {
         description,
         metadata,
         actor_email,
-         actor_name,
+        actor_name,
         created_at
       `)
       .order("created_at", { ascending: false })
@@ -95,11 +95,11 @@ export default function ActivitiesPage() {
               <>
                 <button
                   onClick={() => setActionFilter("all")}
-                  className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-                    actionFilter === "all"
-                      ? "bg-[#b58a14] text-white"
-                      : "bg-white/10 text-white"
-                  }`}
+                 className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  actionFilter === "all"
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
                 >
                   Alle{" "}
                   <span className="ml-1 opacity-70">
@@ -111,11 +111,11 @@ export default function ActivitiesPage() {
                   <button
                     key={action}
                     onClick={() => setActionFilter(action)}
-                    className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-                      actionFilter === action
-                        ? "bg-[#b58a14] text-white"
-                        : "bg-white/10 text-white"
-                    }`}
+                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  actionFilter === action
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
                   >
                     {formatAction(action)}
                   </button>
@@ -125,7 +125,7 @@ export default function ActivitiesPage() {
             right={
               <button
                 onClick={load}
-                className="rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/15"
+                className="rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white/75 transition hover:bg-white/[0.09] hover:text-white"
               >
                 Oppdater
               </button>

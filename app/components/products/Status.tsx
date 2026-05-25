@@ -8,14 +8,14 @@ function StatusPill({
   tone: "ok" | "warning" | "danger";
 }) {
   const styles = {
-    ok: "border-green-200 bg-green-50 text-green-700",
-    warning: "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#a77e05]",
-    danger: "border-red-200 bg-red-50 text-red-700",
+    ok: "border-[#14565b]/30 bg-[#14565b]/10 text-[#14565b]",
+    warning: "border-[#a77e05]/25 bg-[#a77e05]/10 text-[#8a6704]",
+    danger: "border-[#b45454]/20 bg-[#b45454]/10 text-[#9f3f3f]",
   };
 
   return (
     <span
-      className={`inline-flex shrink-0 rounded-full border px-2.5 py-1 text-xs font-semibold ${styles[tone]}`}
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${styles[tone]}`}
     >
       {text}
     </span>
@@ -32,8 +32,8 @@ export default function Status({
   }
 
   if (status === "zone") {
-    return <StatusPill text="Har sone" tone="warning" />;
+    return <StatusPill text="Kun sone" tone="warning" />;
   }
 
-  return <StatusPill text="OK" tone="ok" />;
+  return <StatusPill text="Plassert" tone="ok" />;
 }

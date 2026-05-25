@@ -11,7 +11,7 @@ import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
 import { logActivity } from "@/lib/activity";
-
+import CreateLocationModal from "../components/locations/CreateLocationModal";
 type Zone = {
   id: string;
   code: string;
@@ -255,17 +255,17 @@ await logActivity({
   return (
     <>
       <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-          <SnakeNav />
+  <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
+    <SnakeNav />
 
-          <section className="overflow-hidden rounded-[32px] bg-white text-neutral-950 shadow-2xl shadow-black/30">
-        <SnakeHero
-  eyebrow="SNAKE / Lokasjoner"
+    <div className="overflow-hidden rounded-[32px] shadow-2xl shadow-black/30">
+      <SnakeHero
+  eyebrow="Snake / Lokasjoner"
   title="Lokasjoner"
-  description="Opprett, filtrer og vedlikehold lagerplasser."
-  searchValue={query}
+  description="Administrer soner og lokasjoner i lageret. Opprett nye plasseringer, filtrer strukturen og se hvilke lokasjoner som er i bruk."
+    searchValue={query}
   onSearchChange={setQuery}
-  searchPlaceholder="Lokasjonskode, sone eller navn"
+  searchPlaceholder="Søk etter kode eller sone..."
 />
 
 <SnakeToolbar
@@ -273,11 +273,11 @@ await logActivity({
     <>
       <button
         onClick={() => setSelectedZone("all")}
-        className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-          selectedZone === "all"
-            ? "bg-[#b58a14] text-white"
-            : "bg-white/10 text-white"
-        }`}
+        className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  selectedZone === "all"
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
       >
         Alle
       </button>
@@ -302,6 +302,7 @@ await logActivity({
   right={
     <>
      <SnakeDropdown
+     variant="dark"
   value={selectedZone}
   onChange={(value) => {
     if (value === "__manage_zones") {
@@ -324,7 +325,7 @@ await logActivity({
 
        <button
         onClick={() => setShowCreateModal(true)}
-        className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#b58a14] px-4 py-2 text-sm font-semibold text-white"
+        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#b58a14]/30 bg-[#b58a14]/90 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#a77e05]"
       >
         <Plus className="h-4 w-4" />
         Ny lokasjon
@@ -332,7 +333,7 @@ await logActivity({
 
       <Link
         href="/locations/labels"
-        className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-neutral-950"
+        className="inline-flex h-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] px-4 text-sm font-semibold text-white/80 transition hover:bg-white/[0.09] hover:text-white"
       >
         Print labels
       </Link>
@@ -340,7 +341,9 @@ await logActivity({
   }
 />
 
-<div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
+
+
+<section className="bg-white px-5 py-6 text-neutral-950 sm:px-8 sm:py-7">
   <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     {(query || selectedZone !== "all") && (
       <button
@@ -494,98 +497,32 @@ await logActivity({
                   </table>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+</div>
 
           <SnakeFooter />
+        <CreateLocationModal
+  open={showCreateModal}
+  zones={zones}
+  newCode={newCode}
+  setNewCode={setNewCode}
+  newZoneId={newZoneId}
+  setNewZoneId={setNewZoneId}
+  newActive={newActive}
+  setNewActive={setNewActive}
+  createSaving={false}
+  onClose={() => {
+    setShowCreateModal(false);
+    setNewCode("");
+    setNewZoneId("");
+    setNewActive(true);
+  }}
+  onSave={handleCreateLocation}
+/>
         </div>
       </main>
 
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-  <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
-              Ny lokasjon
-            </p>
-
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-              Opprett lagerplass
-            </h2>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <label
-                  htmlFor="new-location-code"
-                  className="mb-2 block text-sm font-medium text-neutral-700"
-                >
-                  Lokasjonskode
-                </label>
-                <input
-                  id="new-location-code"
-                  type="text"
-                  value={newCode}
-                  onChange={(e) => setNewCode(e.target.value)}
-                  placeholder="f.eks. KP12-04-01-A1"
-                  className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none transition focus:border-[#055a7d]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="new-zone"
-                  className="mb-2 block text-sm font-medium text-neutral-700"
-                >
-                  Sone
-                </label>
-                <select
-                  id="new-zone"
-                  value={newZoneId}
-                  onChange={(e) => setNewZoneId(e.target.value)}
-                  className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none transition focus:border-[#055a7d]"
-                >
-                  <option value="">Velg sone</option>
-                  {zones.map((zone) => (
-                    <option key={zone.id} value={zone.id}>
-                      {zone.code} — {zone.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-700">
-                <input
-                  type="checkbox"
-                  checked={newActive}
-                  onChange={(e) => setNewActive(e.target.checked)}
-                  className="h-4 w-4 accent-[#055a7d]"
-                />
-                Aktiv lokasjon
-              </label>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setShowCreateModal(false);
-                  setNewCode("");
-                  setNewZoneId("");
-                  setNewActive(true);
-                }}
-                className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
-              >
-                Avbryt
-              </button>
-
-              <button
-                onClick={handleCreateLocation}
-                className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white transition hover:brightness-105"
-              >
-                Lagre
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+     
       {qrLocation && (
   <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
     <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-sm sm:rounded-3xl">

@@ -2,9 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  AlertTriangle,
-  ArrowRight,} from "lucide-react";
+import { AlertTriangle, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
@@ -280,11 +278,11 @@ const productsWithoutLocation = products.filter((product) => {
         <button
           key={filter.key}
           onClick={() => setSeverityFilter(filter.key as IssueFilter)}
-          className={`rounded-xl px-3 py-2 text-sm font-semibold ${
-            severityFilter === filter.key
-              ? "bg-[#b58a14] text-white"
-              : "bg-white/10 text-white"
-          }`}
+          className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+  severityFilter === filter.key
+    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
+    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+}`}
         >
           {filter.label}
           <span className="ml-1 opacity-70">
@@ -296,7 +294,7 @@ const productsWithoutLocation = products.filter((product) => {
   }
   right={
     <>
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+      <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80">
         Produkt{" "}
         <span className="ml-1 text-white/65">
           {issues.productsWithoutZone.length +
@@ -450,16 +448,7 @@ function IssueRow({ issue }: { issue: IssueItem }) {
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-2xl bg-white/10 px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/50">
-        {label}
-      </p>
-      <p className="mt-1 text-xl font-semibold text-white">{value}</p>
-    </div>
-  );
-}
+
 
 function MiniSection({
   title,

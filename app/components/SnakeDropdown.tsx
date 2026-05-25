@@ -7,21 +7,26 @@ type Option = {
   label: string;
 };
 
+type Variant = "light" | "dark";
+
 export default function SnakeDropdown({
   value,
   options,
   onChange,
   width = "w-[240px]",
+  variant = "light",
 }: {
   value: string;
   options: Option[];
   onChange: (value: string) => void;
   width?: string;
+  variant?: Variant;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const selected = options.find((option) => option.value === value);
+  const isDark = variant === "dark";
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
@@ -39,10 +44,18 @@ export default function SnakeDropdown({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="flex w-full items-center justify-between rounded-xl border border-white/20 bg-white px-3 py-2 text-left text-sm text-neutral-950 outline-none"
+        className={`flex h-10 w-full items-center justify-between rounded-xl border px-3 text-left text-sm font-semibold outline-none transition ${
+          isDark
+            ? "border-white/10 bg-white/[0.06] text-white hover:bg-white/[0.09]"
+            : "border-neutral-200 bg-white text-neutral-950 shadow-sm hover:border-neutral-300"
+        }`}
       >
         <span className="truncate">{selected?.label ?? "Velg"}</span>
-        <span className="ml-3 text-xs text-neutral-500">▾</span>
+        <span
+          className={`ml-3 text-xs transition ${isDark ? "text-white/45" : "text-neutral-500"}`}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (
@@ -55,7 +68,7 @@ export default function SnakeDropdown({
                 onChange(option.value);
                 setOpen(false);
               }}
-              className={`block w-full px-3 py-2 text-left text-sm hover:bg-neutral-100 ${
+              className={`block w-full px-3 py-2 text-left text-sm transition hover:bg-neutral-100 ${
                 option.value === value ? "bg-[#055a7d]/10 font-semibold" : ""
               }`}
             >

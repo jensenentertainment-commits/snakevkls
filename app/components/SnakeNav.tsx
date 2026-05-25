@@ -75,7 +75,7 @@ if (nextProfile) {
   const isAdmin = profile?.role === "admin";
 const pathname = usePathname();
   return (
-    <header className="mb-8 flex items-center justify-between gap-6">
+    <header className="relative z-[9999] mb-8 flex items-center justify-between gap-6">
       <Link href="/" className="flex items-center gap-4">
         <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04] shadow-lg shadow-black/20">
           <Image

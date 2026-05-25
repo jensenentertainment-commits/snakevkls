@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
-import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
+import { requireRole } from "@/lib/auth/require-role";
+import { logActivity } from "@/lib/log-activity";
 
 export const dynamic = "force-dynamic";
 
@@ -27,31 +28,11 @@ function getRelationCode(value: RelationCode | RelationCode[] | null | undefined
 }
 
 export async function POST(request: NextRequest) {
-  const authClient = await createServerSupabaseClient();
+  const auth = await requireRole(["admin", "lager"]);
 
-  const {
-    data: { user },
-    error: userError,
-  } = await authClient.auth.getUser();
+if (!auth.ok) return auth.response;
 
-  if (userError || !user) {
-    return NextResponse.json({ error: "Ikke innlogget" }, { status: 401 });
-  }
-
-  const { data: profile, error: profileError } = await authClient
-    .from("profiles")
-    .select("role, display_name")
-    .eq("id", user.id)
-    .single();
-
-  const allowedRoles = ["admin", "lager"];
-
-if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
-  return NextResponse.json(
-    { error: "Mangler tilgang" },
-    { status: 403 }
-  );
-}
+const { user, profile } = auth;
 
   const body = (await request.json()) as Body;
 
@@ -198,43 +179,47 @@ previousLocationCode = getRelationCode(
     .eq("id", productId)
     .single();
 
-  await supabaseAdmin.from("activity_log").insert({
-    entity_type: "inventory",
-    entity_id: savedInventoryId,
-    action: locationId ? "location_set" : "zone_set",
-    title: locationId ? "Lokasjon satt" : "Sone satt",
+ await logActivity(supabaseAdmin, {
+  entityType: "inventory",
+  entityId: savedInventoryId,
+  action: locationId ? "location_set" : "zone_set",
 
-    actor_name: profile.display_name ?? user.email ?? null,
-actor_email: user.email ?? null,
+  title: locationId
+    ? "Lokasjon satt"
+    : "Sone satt",
 
-    description: locationId
-      ? `${product?.product_name ?? "Produkt"} → ${
-          locationCode ?? "ukjent lokasjon"
-        }`
-      : `${product?.product_name ?? "Produkt"} → sone`,
-   
-    metadata: {
-  product_id: productId,
-  inventory_id: savedInventoryId,
+  description: locationId
+    ? `${product?.product_name ?? "Produkt"} → ${
+        locationCode ?? "ukjent lokasjon"
+      }`
+    : `${product?.product_name ?? "Produkt"} → sone`,
 
-  from_zone: previousZoneCode,
-  to_zone: zoneCode,
+  metadata: {
+    productId,
+    inventoryId: savedInventoryId,
 
-  from_location: previousLocationCode,
-  to_location: locationCode,
+    fromZone: previousZoneCode,
+    toZone: zoneCode,
 
-  previous_quantity: previousQuantity,
-  new_quantity: quantity,
+    fromLocation: previousLocationCode,
+    toLocation: locationCode,
 
-  location_id: locationId,
-  location_code: locationCode,
-  zone_id: zoneId,
-  zone_code: zoneCode,
+    previousQuantity,
+    newQuantity: quantity,
 
-  source: "manual",
-  user_id: user.id,
-},
-  });
+    locationId,
+    locationCode,
+
+    zoneId,
+    zoneCode,
+
+    source: "manual",
+  },
+
+  actorId: user.id,
+  actorEmail: user.email ?? null,
+  actorName: profile.display_name ?? user.email ?? null,
+});
 
   return NextResponse.json({
     ok: true,

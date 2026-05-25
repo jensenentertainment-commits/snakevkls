@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
 import { requireRole } from "@/lib/auth/require-role";
+import { logActivity } from "@/lib/log-activity";
 
 export const dynamic = "force-dynamic";
 
@@ -81,6 +82,27 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("Location count insert feilet", error);
+
+
+    await logActivity(supabaseAdmin, {
+  entityType: "location",
+  entityId: locationId,
+  action: "location_count",
+  title: "Lokasjon telt",
+  description: `Forventet ${expectedQuantity}, telte ${countedQuantity}.`,
+  metadata: {
+    locationId,
+    inventoryId,
+    expectedQuantity,
+    countedQuantity,
+    difference: countedQuantity - expectedQuantity,
+    note: note || null,
+    countId: (data as { id?: string } | null)?.id ?? null,
+  },
+  actorId: user.id,
+  actorEmail: user.email ?? null,
+  actorName: profile.display_name ?? user.email ?? null,
+});
 
     return NextResponse.json(
       { error: "Kunne ikke lagre telling" },

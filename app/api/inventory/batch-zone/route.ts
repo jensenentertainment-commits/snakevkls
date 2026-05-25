@@ -1,7 +1,8 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
-import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
+import { requireRole } from "@/lib/auth/require-role";
+import { logActivity } from "@/lib/log-activity";
 
 export const dynamic = "force-dynamic";
 
@@ -12,35 +13,13 @@ type Body = {
 
 export async function POST(request: NextRequest) {
   // AUTH
-  const authClient = await createServerSupabaseClient();
+const auth = await requireRole(["admin", "lager"]);
 
-  const {
-    data: { user },
-    error: userError,
-  } = await authClient.auth.getUser();
+if (!auth.ok) return auth.response;
 
-  if (userError || !user) {
-    return NextResponse.json(
-      { error: "Ikke innlogget" },
-      { status: 401 }
-    );
-  }
+const { user, profile } = auth;
 
-  // ADMIN CHECK
-  const { data: profile, error: profileError } = await authClient
-    .from("profiles")
-    .select("role, display_name")
-    .eq("id", user.id)
-    .single();
 
-  const allowedRoles = ["admin", "lager"];
-
-if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
-  return NextResponse.json(
-    { error: "Mangler tilgang" },
-    { status: 403 }
-  );
-}
 
   // BODY
   const body = (await request.json()) as Body;
@@ -141,22 +120,21 @@ if (profileError || !profile?.role || !allowedRoles.includes(profile.role)) {
   }
 
   // LOG
-  await supabaseAdmin
-    .from("activity_log")
-    .insert({
-      entity_type: "inventory",
-      entity_id: null,
-      action: "batch_zone_set",
-      title: "Batch sone satt",
-      description: `${updated} produkter oppdatert`,
-      actor_email: user.email ?? null,
-      metadata: {
-        zone_id: zoneId,
-        product_ids: productIds,
-        updated,
-        user_id: user.id,
-      },
-    });
+ await logActivity(supabaseAdmin, {
+  entityType: "inventory",
+  entityId: null,
+  action: "batch_zone_set",
+  title: "Batch sone satt",
+  description: `${updated} produkter oppdatert`,
+  metadata: {
+    zoneId,
+    productIds,
+    updated,
+  },
+  actorId: user.id,
+  actorEmail: user.email ?? null,
+  actorName: profile.display_name ?? user.email ?? null,
+});
 
   return NextResponse.json({
     ok: true,

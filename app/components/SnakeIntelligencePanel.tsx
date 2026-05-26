@@ -142,27 +142,40 @@ useEffect(() => {
 
 
       <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-black/20 sm:grid-cols-5">
-      <Metric
+     <Metric
   icon={signalCount > 0 ? "warn" : "ok"}
   value={signalCount}
   label="bør sjekkes"
+  href="/activities"
 />
-        <Metric
-          icon="warn"
-          value={missingLocationCount}
-          label="uten lokasjon"
-        />
-        <Metric
-          icon={locationsWithoutZoneCount > 0 ? "warn" : "ok"}
-          value={locationsWithoutZoneCount}
-          label="uten sone"
-        />
-        <Metric
-          icon="warn"
-          value={quantityDiffCount}
-          label="quantity diff"
-        />
-        <Metric icon="ok" value={placedCount} label="plassert" />
+
+<Metric
+  icon="warn"
+  value={missingLocationCount}
+  label="uten lokasjon"
+  href="/fix-locations"
+/>
+
+<Metric
+  icon={locationsWithoutZoneCount > 0 ? "warn" : "ok"}
+  value={locationsWithoutZoneCount}
+  label="uten sone"
+  href="/locations"
+/>
+
+<Metric
+  icon="warn"
+  value={quantityDiffCount}
+  label="quantity diff"
+  href="/products?status=diff"
+/>
+
+<Metric
+  icon="ok"
+  value={placedCount}
+  label="plassert"
+  href="/products"
+/>
       </div>
     </section>
   );
@@ -173,14 +186,16 @@ function Metric({
   icon,
   value,
   label,
+  href,
 }: {
   icon: "ok" | "warn";
   value: number;
   label: string;
+  href?: string;
 }) {
 
   
-  return (
+  const content = (
     <div className="flex items-center gap-3 border-white/10 px-4 py-3 sm:border-r last:border-r-0">
       {icon === "ok" ? (
         <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-300" />
@@ -193,5 +208,16 @@ function Metric({
         <p className="text-xs text-white/50">{label}</p>
       </div>
     </div>
+  );
+
+  if (!href) return content;
+
+  return (
+    <Link
+      href={href}
+      className="block transition hover:bg-white/[0.04]"
+    >
+      {content}
+    </Link>
   );
 }

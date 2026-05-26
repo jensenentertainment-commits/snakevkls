@@ -48,8 +48,12 @@ export default function LocationCountPage() {
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-
+const [completing, setCompleting] = useState(false);
   const selectedLocation = locations.find((l) => l.id === selectedLocationId) ?? null;
+  const [completedLocationIds, setCompletedLocationIds] = useState<string[]>([]);
+  const selectedLocationCompleted = selectedLocation
+  ? completedLocationIds.includes(selectedLocation.id)
+  : false;
 
   const filteredLocations = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -157,6 +161,115 @@ export default function LocationCountPage() {
     }
   }
 
+  async function completeLocationCount() {
+  if (!selectedLocation) return;
+
+  const progress = getLocationProgress();
+
+  if (!progress || !progress.complete) {
+    setMessage("Alle linjer må telles før lokasjonen kan fullføres.");
+    return;
+  }
+
+  setCompleting(true);
+  setMessage(null);
+
+  try {
+    const res = await fetch("/api/location-count/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        locationId: selectedLocation.id,
+        locationCode: selectedLocation.code,
+        totalLines: progress.total,
+        matchedLines: progress.matches,
+        diffLines: progress.diffs,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw new Error(json.error ?? "Kunne ikke fullføre telling");
+    }
+
+    setMessage("Lokasjonstelling fullført og logget.");
+    setCompletedLocationIds((prev) =>
+  prev.includes(selectedLocation.id) ? prev : [...prev, selectedLocation.id]
+);
+  } catch (error) {
+    setMessage(
+      error instanceof Error ? error.message : "Kunne ikke fullføre telling"
+    );
+  } finally {
+    setCompleting(false);
+  }
+}
+
+function getLineStatus(line: InventoryLine) {
+  const raw = counts[line.id];
+
+  if (raw === undefined || raw === "") {
+    return null;
+  }
+
+  const counted = Number(raw);
+
+  if (Number.isNaN(counted)) {
+    return null;
+  }
+
+  const expected = line.quantity ?? 0;
+  const diff = counted - expected;
+
+  return {
+    counted,
+    expected,
+    diff,
+  };
+}
+
+function getLocationProgress() {
+  if (!selectedLocation) return null;
+
+  const total = selectedLocation.inventory.length;
+
+  const counted = selectedLocation.inventory.filter((line) => {
+    const raw = counts[line.id];
+
+    return raw !== undefined && raw !== "";
+  }).length;
+
+  const diffs = selectedLocation.inventory.reduce(
+    (acc, line) => {
+      const status = getLineStatus(line);
+
+      if (!status) return acc;
+
+      if (status.diff === 0) {
+        acc.match++;
+      } else {
+        acc.diff++;
+      }
+
+      return acc;
+    },
+    {
+      match: 0,
+      diff: 0,
+    }
+  );
+
+  return {
+    total,
+    counted,
+    complete: counted === total,
+    hasDiffs: diffs.diff > 0,
+    matches: diffs.match,
+    diffs: diffs.diff,
+  };
+}
+
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
       <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
@@ -239,120 +352,201 @@ export default function LocationCountPage() {
             </aside>
 
             <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
-              {!selectedLocation ? (
-                <EmptyState
-                  title="Velg en lokasjon"
-                  text="Snake viser forventet innhold når en lokasjon er valgt."
-                />
-              ) : selectedLocation.inventory.length === 0 ? (
-                <EmptyState
-                  title="Tom lokasjon"
-                  text="Denne lokasjonen har ingen lagerlinjer registrert."
-                />
-              ) : (
+  {!selectedLocation ? (
+    <EmptyState
+      title="Velg en lokasjon"
+      text="Snake viser forventet innhold når en lokasjon er valgt."
+    />
+  ) : selectedLocation.inventory.length === 0 ? (
+    <EmptyState
+      title="Tom lokasjon"
+      text="Denne lokasjonen har ingen lagerlinjer registrert."
+    />
+  ) : (
                 <>
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
-                        Aktiv telling
-                      </p>
-                      <h2 className="mt-1 text-3xl font-semibold tracking-tight text-neutral-950">
-                        {selectedLocation.code}
-                      </h2>
-                      <p className="mt-1 text-sm text-neutral-500">
-                        {selectedLocation.inventory.length} lagerlinjer forventet
-                      </p>
-                    </div>
+  {(() => {
+    const progress = getLocationProgress();
 
-                    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
-                      Teller kun — endrer ikke lager
-                    </div>
-                  </div>
+    if (!progress) return null;
+
+    return (
+      <div
+        className={`rounded-3xl border px-5 py-4 ${
+          progress.complete
+            ? progress.hasDiffs
+              ? "border-amber-200 bg-amber-50"
+              : "border-emerald-200 bg-emerald-50"
+            : "border-black/10 bg-neutral-50"
+        }`}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-neutral-950">
+              {progress.counted} / {progress.total} linjer telt
+            </p>
+
+            <p className="mt-1 text-sm text-neutral-600">
+              {progress.complete
+                ? progress.hasDiffs
+                  ? `${progress.diffs} avvik registrert`
+                  : "Lokasjon ferdig telt uten avvik"
+                : "Registrer telling for alle linjer"}
+            </p>
+          </div>
+
+          <div
+            className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] ${
+              progress.complete
+                ? progress.hasDiffs
+                  ? "bg-amber-100 text-amber-700"
+                  : "bg-emerald-100 text-emerald-700"
+                : "bg-neutral-200 text-neutral-600"
+            }`}
+          >
+            {selectedLocationCompleted
+  ? "Fullført"
+  : progress.complete
+    ? progress.hasDiffs
+      ? "Avvik funnet"
+      : "Klar"
+    : "Pågår"}
+
+              {progress.complete && (
+  <button
+    type="button"
+    onClick={completeLocationCount}
+   disabled={completing || selectedLocationCompleted}
+    className="rounded-full bg-[#055a7d] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    {selectedLocationCompleted
+  ? "Fullført"
+  : completing
+    ? "Fullfører..."
+    : "Fullfør telling"}
+  </button>
+)}
+          </div>
+        </div>
+      </div>
+    );
+  })()}
+
 
                   <div className="mt-6 space-y-3">
-                    {selectedLocation.inventory.map((line) => (
-                      <article
-                        key={line.id}
-                        className="rounded-3xl border border-black/10 bg-neutral-50 p-4"
-                      >
-                        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
-                              {line.products?.sku ?? "Ingen SKU"}
-                            </p>
+  {selectedLocation.inventory.map((line) => {
+    const status = getLineStatus(line);
 
-                            <h3 className="mt-1 text-lg font-semibold text-neutral-950">
-                              {line.products?.product_name ?? "Ukjent produkt"}
-                            </h3>
+    return (
+      <article
+        key={line.id}
+        className={`rounded-3xl border p-4 transition ${
+          !status
+            ? "border-black/10 bg-neutral-50"
+            : status.diff === 0
+              ? "border-emerald-200 bg-emerald-50"
+              : Math.abs(status.diff) >= 5
+                ? "border-red-200 bg-red-50"
+                : "border-amber-200 bg-amber-50"
+        }`}
+      >
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+              {line.products?.sku ?? "Ingen SKU"}
+            </p>
 
-                            {line.products?.variant_name && (
-                              <p className="mt-1 text-sm text-neutral-500">
-                                {line.products.variant_name}
-                              </p>
-                            )}
+            <h3 className="mt-1 text-lg font-semibold text-neutral-950">
+              {line.products?.product_name ?? "Ukjent produkt"}
+            </h3>
 
-                            <p className="mt-3 text-sm text-neutral-600">
-                              Forventet:{" "}
-                              <span className="font-semibold text-neutral-950">
-                                {line.quantity}
-                              </span>
-                            </p>
-                          </div>
+            {line.products?.variant_name && (
+              <p className="mt-1 text-sm text-neutral-500">
+                {line.products.variant_name}
+              </p>
+            )}
 
-                          <div className="grid gap-2 sm:grid-cols-[120px_1fr_auto] lg:min-w-[520px]">
-                            <input
-                              type="number"
-                              min="0"
-                              value={counts[line.id] ?? ""}
-                              onChange={(event) =>
-                                setCounts((prev) => ({
-                                  ...prev,
-                                  [line.id]: event.target.value,
-                                }))
-                              }
-                              placeholder="Telt"
-                              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
-                            />
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-neutral-600">
+              <span>
+                Forventet:{" "}
+                <span className="font-semibold text-neutral-950">
+                  {line.quantity}
+                </span>
+              </span>
 
-                            <input
-                              value={notes[line.id] ?? ""}
-                              onChange={(event) =>
-                                setNotes((prev) => ({
-                                  ...prev,
-                                  [line.id]: event.target.value,
-                                }))
-                              }
-                              placeholder="Notat, valgfritt"
-                              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
-                            />
-
-                            <button
-                              type="button"
-                              onClick={() => saveCount(line)}
-                              disabled={savingId === line.id}
-                              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              {savingId === line.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <CheckCircle2 className="h-4 w-4" />
-                              )}
-                              Lagre
-                            </button>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </>
+              {status && (
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    status.diff === 0
+                      ? "bg-emerald-100 text-emerald-700"
+                      : Math.abs(status.diff) >= 5
+                        ? "bg-red-100 text-red-700"
+                        : "bg-amber-100 text-amber-700"
+                  }`}
+                >
+                  {status.diff === 0
+                    ? "Stemmer"
+                    : status.diff > 0
+                      ? `+${status.diff}`
+                      : status.diff}
+                </span>
               )}
+            </div>
+          </div>
 
-              {message && (
-                <div className="mt-4 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
-                  {message}
-                </div>
+          <div className="grid gap-2 sm:grid-cols-[120px_1fr_auto] lg:min-w-[520px]">
+            <input
+              type="number"
+              min="0"
+              value={counts[line.id] ?? ""}
+              onChange={(event) =>
+                setCounts((prev) => ({
+                  ...prev,
+                  [line.id]: event.target.value,
+                }))
+              }
+              placeholder="Telt"
+              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+            />
+
+            <input
+              value={notes[line.id] ?? ""}
+              onChange={(event) =>
+                setNotes((prev) => ({
+                  ...prev,
+                  [line.id]: event.target.value,
+                }))
+              }
+              placeholder="Notat, valgfritt"
+              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+            />
+
+            <button
+              type="button"
+              onClick={() => saveCount(line)}
+              disabled={savingId === line.id}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {savingId === line.id ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4" />
               )}
-            </section>
+              Lagre
+            </button>
+          </div>
+        </div>
+      </article>
+    );
+  })}
+</div>
+  </>
+  )}
+               {message && (
+    <div className="mt-4 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+      {message}
+    </div>
+  )}
+</section>
           </div>
         </section>
 

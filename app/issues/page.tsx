@@ -58,6 +58,7 @@ export default function IssuesPage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState<IssueFilter>("all");
+  
 
   useEffect(() => {
     loadData();

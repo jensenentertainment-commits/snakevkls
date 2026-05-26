@@ -57,6 +57,13 @@ export default function FixLocationsPage() {
   const [skippedCount, setSkippedCount] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [skipReason, setSkipReason] = useState<
+  "not_found" | "wrong_zone" | "needs_check" | "no_location" | "other"
+>("needs_check");
+
+const [skipNote, setSkipNote] = useState("");
+const [skipOpen, setSkipOpen] = useState(false);
+
   const current = products[0] ?? null;
 
   const filteredLocations = useMemo(() => {
@@ -222,16 +229,55 @@ if (!res.ok) {
     }
   }
 
-  function handleSkip() {
+ async function handleSkip() {
+  if (!current) return;
+
+  setSaving(true);
+  setMessage(null);
+
+  try {
+    const res = await fetch("/api/fix-locations/skip", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: current.productId,
+        inventoryId: current.inventoryId,
+        reason: skipReason,
+        note: skipNote.trim() || null,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw new Error(json.error ?? "Kunne ikke hoppe over");
+    }
+
     setProducts((prev) => {
       if (prev.length <= 1) return prev;
+
       const [first, ...rest] = prev;
+
       return [...rest, first];
     });
 
     setSkippedCount((prev) => prev + 1);
-    setMessage("Hoppet over. Produktet ligger bakerst i køen.");
+
+    setSkipOpen(false);
+    setSkipNote("");
+    setSkipReason("needs_check");
+
+    setMessage("Produkt hoppet over og logget.");
+  } catch (error) {
+    setMessage(
+      error instanceof Error ? error.message : "Kunne ikke hoppe over"
+    );
+  } finally {
+    setSaving(false);
   }
+}
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -398,7 +444,7 @@ if (!res.ok) {
 
                     <button
                       type="button"
-                      onClick={handleSkip}
+                      onClick={() => setSkipOpen(true)}
                       disabled={saving || products.length <= 1}
                       className="inline-flex items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40 disabled:cursor-not-allowed disabled:opacity-50"
                     >
@@ -463,7 +509,70 @@ if (!res.ok) {
             </aside>
           </div>
         </section>
+{skipOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4">
+    <div className="w-full max-w-md rounded-[28px] bg-white p-6 text-neutral-950 shadow-2xl">
+      <h2 className="text-2xl font-semibold tracking-tight">
+        Hopp over produkt
+      </h2>
 
+      <p className="mt-2 text-sm text-neutral-500">
+        Hvorfor hoppes dette produktet over?
+      </p>
+
+      <div className="mt-5 space-y-2">
+        {[
+          ["needs_check", "Må sjekkes"],
+          ["not_found", "Ikke funnet fysisk"],
+          ["wrong_zone", "Feil sone"],
+          ["no_location", "Ingen egnet lokasjon"],
+          ["other", "Annet"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() =>
+              setSkipReason(value as typeof skipReason)
+            }
+            className={`w-full rounded-2xl border px-4 py-3 text-left text-sm font-medium transition ${
+              skipReason === value
+                ? "border-[#055a7d] bg-[#055a7d]/10 text-[#055a7d]"
+                : "border-black/10 hover:border-[#055a7d]/30"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <textarea
+        value={skipNote}
+        onChange={(event) => setSkipNote(event.target.value)}
+        placeholder="Notat, valgfritt"
+        className="mt-4 min-h-[100px] w-full rounded-2xl border border-black/10 px-4 py-3 text-sm outline-none transition focus:border-[#055a7d]"
+      />
+
+      <div className="mt-6 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setSkipOpen(false)}
+          className="rounded-2xl border border-black/10 px-4 py-3 text-sm font-semibold"
+        >
+          Avbryt
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSkip}
+          disabled={saving}
+          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+        >
+          {saving ? "Lagrer..." : "Hopp over"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         <SnakeFooter />
       </div>
     </main>

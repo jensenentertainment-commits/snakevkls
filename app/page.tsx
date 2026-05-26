@@ -133,64 +133,18 @@ const issueState: IssueCardState = hasIssues
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
           
 
-          <div className="relative grid gap-8 px-8 py-10 sm:px-10 xl:px-12 lg:grid-cols-[280px_1fr_520px] lg:items-start">
-            <div className="max-w-[520px] shrink-0">
-  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
-    Systempuls
-  </p>
-
-  <div className="mt-6 space-y-3 text-sm text-white/70">
-    <PulseLine tone="ok" text="Shopify-sync aktiv" />
-
-    <PulseLine
-      tone="neutral"
-      text={`${activeProductCount} aktive produkter`}
-    />
-
-    <PulseLine
-      tone={emptyLocationCount > 0 ? "warn" : "ok"}
-      text={`${emptyLocationCount} tomme lokasjoner`}
-    />
-  </div>
-
-  <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.045] p-5">
-    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-      Siste aktivitet
-    </p>
-
-    {latestActivity ? (
-      <>
-        <p className="mt-3 text-base font-semibold text-white">
-          {latestActivity.title}
-        </p>
-
-        <p className="mt-1 text-sm text-white/55">
-          {latestActivity.actor_name ?? latestActivity.actor_email ?? "System"}
-        </p>
-      </>
-    ) : (
-      <p className="mt-3 text-sm text-white/55">
-        Ingen aktivitet registrert ennå.
-      </p>
-    )}
-
-    {latestShopifySync && (
-      <p className="mt-4 border-t border-white/10 pt-4 text-xs text-white/45">
-        Siste Shopify-sync:{" "}
-        {new Date(latestShopifySync.created_at).toLocaleString("nb-NO")}
-      </p>
-    )}
-  </div>
-</div>
-
-<SnakeBoardPreview />
-
-        <SnakeIntelligencePanel
+          <div className="relative grid gap-8 px-8 py-10 sm:px-10 xl:px-12 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
+          
+  <SnakeIntelligencePanel
   missingLocationCount={missingLocationCount}
   quantityDiffCount={quantityDiffCount}
   locationsWithoutZoneCount={locationsNoZoneCount}
   placedCount={placedProductCount}
 />
+
+        <SnakeBoardPreview />
+
+      
           </div>
         </div>
 
@@ -262,8 +216,10 @@ const issueState: IssueCardState = hasIssues
 
       <SnakeFooter />
     </div>
+   
   </main>
 );
+
 
 function PulseLine({
   text,

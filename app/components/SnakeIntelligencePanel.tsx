@@ -12,8 +12,16 @@ import {
   getRecommendedAction,
   getWarehouseHealth,
 } from "@/lib/snake-intelligence";
+import { useEffect, useState } from "react";
 
-
+type OperationalSignal = {
+  type: "needs-check" | "location-diff";
+  level: "medium" | "high" | "critical";
+  title: string;
+  description: string;
+  href: string;
+  count: number;
+};
 
 type Props = {
   missingLocationCount: number;
@@ -37,6 +45,27 @@ export default function SnakeIntelligencePanel({
 
   const action = getRecommendedAction(metrics);
   const health = getWarehouseHealth(metrics);
+const [signals, setSignals] = useState<OperationalSignal[]>([]);
+
+useEffect(() => {
+  async function loadSignals() {
+    try {
+      const res = await fetch("/api/snake-intelligence/signals", {
+        cache: "no-store",
+      });
+
+      const json = await res.json();
+
+      if (res.ok) {
+        setSignals(json.signals ?? []);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  loadSignals();
+}, []);
 
   return (
     <section className="rounded-[28px] border border-emerald-400/35 bg-black/10 p-5 shadow-lg shadow-emerald-950/20 transition hover:border-emerald-300/50 hover:bg-black/15">
@@ -103,6 +132,39 @@ export default function SnakeIntelligencePanel({
         </div>
       </Link>
 
+      {signals.length > 0 && (
+  <div className="mt-3 rounded-3xl border border-white/10 bg-black/20 p-4">
+    <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">
+      Bør sjekkes
+    </p>
+
+    <div className="mt-3 space-y-2">
+      {signals.map((signal) => (
+        <Link
+          key={signal.type}
+          href={signal.href}
+          className="block rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 transition hover:border-white/20 hover:bg-white/[0.07]"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-white">
+                {signal.title}
+              </p>
+              <p className="mt-1 text-sm text-white/50">
+                {signal.description}
+              </p>
+            </div>
+
+            <span className="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
+              {signal.count}
+            </span>
+          </div>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
+
       <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-black/20 sm:grid-cols-4">
         <Metric
           icon="warn"
@@ -135,6 +197,8 @@ function Metric({
   value: number;
   label: string;
 }) {
+
+  
   return (
     <div className="flex items-center gap-3 border-white/10 px-4 py-3 sm:border-r last:border-r-0">
       {icon === "ok" ? (

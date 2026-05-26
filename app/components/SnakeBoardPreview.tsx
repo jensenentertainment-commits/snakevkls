@@ -21,7 +21,7 @@ export default function SnakeBoardPreview() {
   useEffect(() => {
   async function loadMessages() {
     try {
-      const res = await fetch("/api/snakeboard?limit=3", {
+      const res = await fetch("/api/snakeboard?limit=2", {
         cache: "no-store",
       });
 

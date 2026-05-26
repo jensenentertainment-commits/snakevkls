@@ -45,8 +45,12 @@ export default function SnakeIntelligencePanel({
 
   const action = getRecommendedAction(metrics);
   const health = getWarehouseHealth(metrics);
+  
 const [signals, setSignals] = useState<OperationalSignal[]>([]);
-
+const signalCount = signals.reduce(
+  (sum, signal) => sum + signal.count,
+  0
+);
 useEffect(() => {
   async function loadSignals() {
     try {
@@ -132,40 +136,17 @@ useEffect(() => {
         </div>
       </Link>
 
-      {signals.length > 0 && (
-  <div className="mt-3 rounded-3xl border border-white/10 bg-black/20 p-4">
-    <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">
-      Bør sjekkes
-    </p>
+     
 
-    <div className="mt-3 space-y-2">
-      {signals.map((signal) => (
-        <Link
-          key={signal.type}
-          href={signal.href}
-          className="block rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 transition hover:border-white/20 hover:bg-white/[0.07]"
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-white">
-                {signal.title}
-              </p>
-              <p className="mt-1 text-sm text-white/50">
-                {signal.description}
-              </p>
-            </div>
 
-            <span className="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
-              {signal.count}
-            </span>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
 
-      <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-black/20 sm:grid-cols-4">
+
+      <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-black/20 sm:grid-cols-5">
+      <Metric
+  icon={signalCount > 0 ? "warn" : "ok"}
+  value={signalCount}
+  label="bør sjekkes"
+/>
         <Metric
           icon="warn"
           value={missingLocationCount}

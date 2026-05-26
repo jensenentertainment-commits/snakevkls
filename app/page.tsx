@@ -12,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import SnakeIntelligencePanel from "./components/SnakeIntelligencePanel";
+import SystemPulseBar from "./components/dashboard/SystemPulseBar";
 import SnakeNav from "./components/SnakeNav";
 import SnakeFooter from "./components/SnakeFooter";
 import SnakeBoardPreview from "./components/SnakeBoardPreview";
@@ -127,7 +128,12 @@ const issueState: IssueCardState = hasIssues
   <main className="min-h-screen bg-[#062f3b] text-white">
     <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
       <SnakeNav />
-
+<SystemPulseBar
+  activeProducts={activeProductCount}
+  emptyLocations={0}
+  snakeHealth={39}
+  lastSyncOk
+/>
       <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
         <div className="relative overflow-hidden bg-[#05495b] text-white">
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />

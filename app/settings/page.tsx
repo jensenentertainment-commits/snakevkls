@@ -39,7 +39,7 @@ export default function SettingsPage() {
 function SettingsContent() {
   const [zones, setZones] = useState<ZoneRow[]>([]);
   const [loading, setLoading] = useState(true);
-
+const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
 
@@ -76,6 +76,7 @@ function SettingsContent() {
 useEffect(() => {
   loadZones();
   loadUsers();
+  loadCurrentUser();
 }, []);
 
 async function loadUsers() {
@@ -96,7 +97,13 @@ async function loadUsers() {
   setUsersLoading(false);
 }
 
+async function loadCurrentUser() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
+  setCurrentUserId(user?.id ?? null);
+}
 
   async function loadZones() {
     setLoading(true);
@@ -478,49 +485,74 @@ const filteredZones = useMemo(() => {
   </div>
 </div>
 
-    {usersLoading ? (
-      <EmptyState text="Henter brukere..." />
-    ) : users.length === 0 ? (
-      <EmptyState text="Ingen brukere funnet." />
-    ) : (
-      <div className="divide-y divide-neutral-100">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            className="grid gap-4 px-6 py-5 lg:grid-cols-[1fr_180px_140px]"
-          >
-            <UserNameEditor
-  userId={user.id}
-  initialValue={user.display_name || ""}
-  email={user.email}
-/>
+ {usersLoading ? (
+  <EmptyState text="Henter brukere..." />
+) : users.length === 0 ? (
+  <EmptyState text="Ingen brukere funnet." />
+) : (
+  <div className="divide-y divide-neutral-100">
+    {users.map((user) => (
+      <div
+        key={user.id}
+        className="grid gap-4 px-6 py-5 lg:grid-cols-[1fr_180px_120px_140px]"
+      >
+        <UserNameEditor
+          userId={user.id}
+          initialValue={user.display_name || ""}
+          email={user.email}
+        />
 
-            <select
-              value={user.role}
-              onChange={(e) =>
-  handleUpdateUser(user.id, {
-    role: e.target.value as "admin" | "lager" | "viewer",
-  })
-}
-              className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
-            >
-              <option value="admin">Admin</option>
-              <option value="lager">Lager</option>
-              <option value="viewer">Viewer</option>
-            </select>
+        <select
+          value={user.role}
+          onChange={(e) =>
+            handleUpdateUser(user.id, {
+              role: e.target.value as "admin" | "lager" | "viewer",
+            })
+          }
+          className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
+        >
+          <option value="admin">Admin</option>
+          <option value="lager">Lager</option>
+          <option value="viewer">Viewer</option>
+        </select>
 
-            <StatusPill
-              text={user.active ? "Aktiv" : "Inaktiv"}
-              tone={user.active ? "ok" : "neutral"}
-            />
-          </div>
-          
-        ))}
+        <div
+          className={`inline-flex h-10 items-center justify-center rounded-full px-3 text-xs font-bold uppercase tracking-[0.12em] ${
+            user.active
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-neutral-200 text-neutral-500"
+          }`}
+        >
+          {user.active ? "Aktiv" : "Deaktivert"}
+        </div>
+
+        <button
+          type="button"
+          disabled={user.id === currentUserId}
+          onClick={() =>
+            handleUpdateUser(user.id, {
+              active: !user.active,
+            })
+          }
+          className={`rounded-2xl px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+            user.active
+              ? "border border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+              : "border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+          }`}
+        >
+          {user.id === currentUserId
+            ? "Din bruker"
+            : user.active
+              ? "Deaktiver"
+              : "Aktiver"}
+        </button>
       </div>
-      
-    )}
+    ))}
   </div>
+)}
 </div>
+</div>
+
 <ChangePasswordCard />
           </section>
 

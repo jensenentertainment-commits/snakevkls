@@ -8,7 +8,7 @@ import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
 import RoleGate from "../components/auth/RoleGate";
-
+import ChangePasswordCard from "@/app/components/settings/ChangePasswordCard";
 
 
 type UserProfile = {
@@ -517,9 +517,11 @@ const filteredZones = useMemo(() => {
           
         ))}
       </div>
+      
     )}
   </div>
 </div>
+<ChangePasswordCard />
           </section>
 
           <SnakeFooter />

@@ -176,7 +176,12 @@ const pathname = usePathname();
         </p>
       </div>
     </div>
-
+<Link
+  href="/account"
+  className="block rounded-xl px-3 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+>
+  Brukerprofil
+</Link>
     <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] p-2">
       <SnakeLogoutButton />
     </div>

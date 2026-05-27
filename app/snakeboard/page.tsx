@@ -9,6 +9,7 @@ import {
   Info,
   Megaphone,
   Send,
+  Trash2,
 } from "lucide-react";
 
 import SnakeNav from "../components/SnakeNav";
@@ -23,6 +24,7 @@ type SnakeboardMessage = {
   type: MessageType;
   status: "active" | "archived";
   created_by_name: string | null;
+  created_by_role?: "admin" | "lager" | "viewer" | null;
   created_at: string;
 };
 
@@ -41,11 +43,13 @@ export default function SnakeBoardPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | MessageType>("all");
-
+const [isAdmin, setIsAdmin] = useState(false);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [type, setType] = useState<MessageType>("info");
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<SnakeboardMessage | null>(null);
+const [deleting, setDeleting] = useState(false);
 
   async function loadMessages() {
     setLoading(true);
@@ -67,10 +71,23 @@ export default function SnakeBoardPage() {
     }
   }
 
-  useEffect(() => {
-    loadMessages();
-  }, []);
+ useEffect(() => {
+  async function loadMe() {
+    try {
+      const res = await fetch("/api/account/me", { cache: "no-store" });
+      const json = await res.json();
 
+      if (res.ok) {
+        setIsAdmin(json.profile?.role === "admin");
+      }
+    } catch {
+      setIsAdmin(false);
+    }
+  }
+
+  loadMe();
+  loadMessages();
+}, []);
   async function submitMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -113,6 +130,32 @@ export default function SnakeBoardPage() {
       setSaving(false);
     }
   }
+
+ async function deleteMessage(message: SnakeboardMessage) {
+  setDeleting(true);
+  setError(null);
+
+  try {
+    const res = await fetch("/api/snakeboard/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: message.id }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw new Error(json.error ?? "Kunne ikke slette melding");
+    }
+
+    setMessages((prev) => prev.filter((item) => item.id !== message.id));
+    setDeleteTarget(null);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Ukjent feil");
+  } finally {
+    setDeleting(false);
+  }
+}
 
   const filteredMessages = useMemo(() => {
     if (filter === "all") return messages;
@@ -294,14 +337,58 @@ export default function SnakeBoardPage() {
                   <EmptyState text="Ingen beskjeder her akkurat nå." />
                 ) : (
                   filteredMessages.map((message) => (
-                    <MessageCard key={message.id} message={message} />
+                  <MessageCard
+  key={message.id}
+  message={message}
+  canDelete={isAdmin}
+  onDelete={setDeleteTarget}
+/>
                   ))
                 )}
               </div>
             </section>
           </div>
         </section>
+{deleteTarget && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4">
+    <div className="w-full max-w-md rounded-[28px] bg-white p-6 text-neutral-950 shadow-2xl">
+      <h2 className="text-2xl font-semibold tracking-tight">
+        Slett melding?
+      </h2>
 
+      <p className="mt-2 text-sm leading-6 text-neutral-500">
+        Dette sletter meldingen fra SnakeBoard. Handlingen kan ikke angres.
+      </p>
+
+      <div className="mt-5 rounded-2xl border border-black/10 bg-neutral-50 p-4">
+        <p className="font-semibold text-neutral-950">{deleteTarget.title}</p>
+        {deleteTarget.body && (
+          <p className="mt-1 text-sm text-neutral-600">{deleteTarget.body}</p>
+        )}
+      </div>
+
+      <div className="mt-6 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => setDeleteTarget(null)}
+          disabled={deleting}
+          className="rounded-2xl border border-black/10 px-4 py-3 text-sm font-semibold"
+        >
+          Avbryt
+        </button>
+
+        <button
+          type="button"
+          onClick={() => deleteMessage(deleteTarget)}
+          disabled={deleting}
+          className="rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+        >
+          {deleting ? "Sletter..." : "Slett"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         <SnakeFooter />
       </div>
     </main>
@@ -334,13 +421,23 @@ function StatCard({
   );
 }
 
-function MessageCard({ message }: { message: SnakeboardMessage }) {
+function MessageCard({
+  message,
+  canDelete,
+  onDelete,
+}: {
+  message: SnakeboardMessage;
+  canDelete: boolean;
+  onDelete: (message: SnakeboardMessage) => void;
+}) {
+  
   const tone =
     message.type === "issue"
       ? "border-red-200 bg-red-50"
       : message.type === "important"
         ? "border-amber-200 bg-amber-50"
         : "border-black/10 bg-neutral-50";
+        
 
   return (
     <article className={`rounded-3xl border p-5 ${tone}`}>
@@ -353,9 +450,22 @@ function MessageCard({ message }: { message: SnakeboardMessage }) {
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="font-semibold text-neutral-950">{message.title}</h3>
 
-            <p className="text-xs text-neutral-500">
-              {new Date(message.created_at).toLocaleString("nb-NO")}
-            </p>
+            <div className="flex items-center gap-2">
+  <p className="text-xs text-neutral-500">
+    {new Date(message.created_at).toLocaleString("nb-NO")}
+  </p>
+
+  {canDelete && (
+    <button
+      type="button"
+      onClick={() => onDelete(message)}
+      className="rounded-full p-1.5 text-neutral-400 transition hover:bg-red-100 hover:text-red-700"
+      title="Slett melding"
+    >
+      <Trash2 className="h-4 w-4" />
+    </button>
+  )}
+</div>
           </div>
 
           {message.body && (

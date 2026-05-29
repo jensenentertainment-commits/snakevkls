@@ -59,16 +59,13 @@ const isHighLoad = inventoryItems.length >= 8 || totalQuantity >= 50;
 const missingZone = location ? !location.zone_id : false;
 const recentlyChanged = activity.length > 0;
 
-  useEffect(() => {
-    if (code) loadLocation();
-  }, [code]);
-
-  async function loadLocation() {
-    setLoading(true);
-
-    useEffect(() => {
+ useEffect(() => {
   loadRole();
 }, []);
+
+useEffect(() => {
+  if (code) loadLocation();
+}, [code]);
 
 async function loadRole() {
   const {
@@ -85,6 +82,9 @@ async function loadRole() {
 
   setRole((data?.role as Role) ?? null);
 }
+
+async function loadLocation() {
+  setLoading(true);
 
     const { data, error } = await supabase
       .from("locations")

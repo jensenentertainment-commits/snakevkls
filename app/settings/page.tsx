@@ -8,7 +8,7 @@ import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
 import RoleGate from "../components/auth/RoleGate";
-import ChangePasswordCard from "@/app/components/settings/ChangePasswordCard";
+
 
 
 type UserProfile = {
@@ -82,19 +82,24 @@ useEffect(() => {
 async function loadUsers() {
   setUsersLoading(true);
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id, email, display_name, role, active, created_at")
-    .order("created_at", { ascending: true });
+  try {
+    const res = await fetch("/api/admin/users", {
+      cache: "no-store",
+    });
 
-  if (error) {
-    console.error("Feil ved henting av brukere:", error);
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw new Error(json.error ?? "Kunne ikke hente brukere");
+    }
+
+    setUsers(json.users ?? []);
+  } catch (error) {
+    console.error(error);
     setUsers([]);
-  } else {
-    setUsers((data as UserProfile[]) ?? []);
+  } finally {
+    setUsersLoading(false);
   }
-
-  setUsersLoading(false);
 }
 
 async function loadCurrentUser() {
@@ -469,7 +474,7 @@ const filteredZones = useMemo(() => {
   <div className="flex items-center justify-between gap-4">
     <div>
       <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
-        Brukere og roller
+        Brukere i Snake
       </h2>
       <p className="mt-1 text-sm text-neutral-500">
         Administrer hvem som har tilgang til Snake.
@@ -485,16 +490,30 @@ const filteredZones = useMemo(() => {
   </div>
 </div>
 
+<div className="mb-6 flex flex-wrap items-center gap-3">
+  <div className="rounded-2xl bg-[#055a7d]/10 px-4 py-2 text-sm font-semibold text-[#055a7d]">
+    {users.length} brukere
+  </div>
+
+  <div className="rounded-2xl bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
+    {users.filter((u) => u.active).length} aktive
+  </div>
+
+  <div className="rounded-2xl bg-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-600">
+    {users.filter((u) => !u.active).length} deaktivert
+  </div>
+</div>
+
  {usersLoading ? (
   <EmptyState text="Henter brukere..." />
 ) : users.length === 0 ? (
   <EmptyState text="Ingen brukere funnet." />
 ) : (
-  <div className="divide-y divide-neutral-100">
+ <div className="space-y-3 px-6 pb-6">
     {users.map((user) => (
       <div
         key={user.id}
-        className="grid gap-4 px-6 py-5 lg:grid-cols-[1fr_180px_120px_140px]"
+        className="grid items-center gap-4 rounded-3xl border border-black/10 bg-neutral-50 p-4 lg:grid-cols-[1fr_180px_120px_140px]"
       >
         <UserNameEditor
           userId={user.id}
@@ -553,7 +572,7 @@ const filteredZones = useMemo(() => {
 </div>
 </div>
 
-<ChangePasswordCard />
+
           </section>
 
           <SnakeFooter />
@@ -854,7 +873,7 @@ function UserNameEditor({
         },
         body: JSON.stringify({
           userId,
-          displayName: value,
+          displayName: value.trim(),
         }),
       });
 

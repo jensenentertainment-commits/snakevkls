@@ -21,49 +21,49 @@ export default function SnakeFooter({
   const [time, setTime] = useState("");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
+useEffect(() => {
+  const updateTime = () => {
+    const now = new Date();
 
-      setTime(
-        now.toLocaleString("no-NO", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      );
-    };
+    setTime(
+      now.toLocaleString("no-NO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
+  };
 
-    const updateMessage = () => {
-      setMessage(
-        getSnakePulse({
-          missingLocations,
-          quantityDiffs,
-          unresolvedIssues,
-          warehouseHealth,
-          pickEnabled,
-        })
-      );
-    };
+  const updateMessage = () => {
+    setMessage(
+      getSnakePulse({
+        missingLocations,
+        quantityDiffs,
+        unresolvedIssues,
+        warehouseHealth,
+        pickEnabled,
+      })
+    );
+  };
 
+  updateTime();
+  updateMessage();
+
+  const interval = window.setInterval(() => {
     updateTime();
     updateMessage();
+  }, 60000);
 
-    const interval = window.setInterval(() => {
-      updateTime();
-      updateMessage();
-    }, 60000);
-
-    return () => window.clearInterval(interval);
-  }, [
-    missingLocations,
-    quantityDiffs,
-    unresolvedIssues,
-    warehouseHealth,
-    pickEnabled,
-  ]);
+  return () => window.clearInterval(interval);
+}, [
+  missingLocations,
+  quantityDiffs,
+  unresolvedIssues,
+  warehouseHealth,
+  pickEnabled,
+]);
 
   return (
     <footer className="mt-6 rounded-2xl border border-white/[0.06] bg-black/[0.15] px-6 py-4 text-sm text-white/60 backdrop-blur">

@@ -28,6 +28,9 @@ import BatchAssignModal from "../components/products/BatchAssignModal";
 import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
 import RoleGate from "../components/auth/RoleGate";
+import BorrePanel from "@/app/components/BorrePanel";
+
+
 
 function ProductsPageContent() {
   const [inlineZone, setInlineZone] = useState<Record<string, string>>({});
@@ -226,6 +229,20 @@ const { collections, filtered } = useProductsFiltering({
   sortMode,
 });
 
+const total = products.length;
+
+const missingCount = products.filter(
+  (product) => getMeta(product).status === "missing"
+).length;
+
+const diffCount = products.filter((product) => {
+  const meta = getMeta(product);
+  return (product.shopify_quantity ?? 0) - meta.quantity !== 0;
+}).length;
+
+const placedCount = total - missingCount;
+const placedPercent = total > 0 ? Math.round((placedCount / total) * 100) : 0;
+
 
 const {
   handleShopifySync,
@@ -287,18 +304,18 @@ const {
       
         <SnakeNav />
 
-        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-         
+  <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
   <SnakeHero
-  eyebrow="SNAKE / Produkter"
-  title="Varesøk"
-  description="Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket."
-  searchValue={query}
-  onSearchChange={setQuery}
-  searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
-/>
+    eyebrow="SNAKE / Produkter"
+    title="Varesøk"
+    description="Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket."
+    searchValue={query}
+    onSearchChange={setQuery}
+    searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
+  />
 
-  
+
+
 <SnakeToolbar
   left={
     <>
@@ -498,28 +515,42 @@ const percent = Math.round((placed / total) * 100);
     recentlyUpdated ? "ring-2 ring-[#b58a14]/35" : ""
   }`}
 >
-              <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <div>
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
-                    Produktliste
-                  </h2>
+           <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+  <div>
+    <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+      Produktliste
+    </h2>
 
-                  <p className="mt-1 text-sm text-neutral-500">
-                    {loading
-                      ? "Henter produkter..."
-                      : `${filtered.length} av ${products.length} produkter vises`}
-                  </p>
-                </div>
+    <p className="mt-1 text-sm text-neutral-600">
+      {loading
+        ? "Børre venter på produktdata."
+        : diffCount > 0 && missingCount > 0
+          ? `Børre ser ${diffCount} avvik og ${missingCount} produkter uten plassering. Dette er ikke dekor.`
+          : diffCount > 0
+            ? `Børre ser ${diffCount} avvik. Tallene bør få litt oppmerksomhet.`
+            : missingCount > 0
+              ? `Børre ser ${missingCount} produkter uten plassering. De trenger et hjem.`
+              : "Børre finner ingen store produktproblemer akkurat nå."}
+    </p>
+  </div>
 
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
-                  >
-                    Nullstill søk
-                  </button>
-                )}
-              </div>
+  <div className="flex flex-col gap-2 sm:items-end">
+    <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:pt-1 sm:text-right">
+      {loading
+        ? "Henter produkter"
+        : `Viser ${filtered.length} av ${products.length}`}
+    </p>
+
+    {query && (
+      <button
+        onClick={() => setQuery("")}
+        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+      >
+        Nullstill søk
+      </button>
+    )}
+  </div>
+</div>
 
               <div className="divide-y divide-neutral-100 lg:hidden">
                 {loading ? (

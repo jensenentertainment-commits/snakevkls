@@ -347,7 +347,7 @@ const labelDimensions = {
       </p>
 
       <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
-        SNAKE VKLS
+        SNAKE OS
       </p>
     </div>
 
@@ -371,7 +371,7 @@ const labelDimensions = {
   />
 
   <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
-    SNAKE VKLS
+    SNAKE OS
   </p>
 </div>
                   )}

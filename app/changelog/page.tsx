@@ -7,51 +7,68 @@ import { SNAKE_VERSION } from "@/lib/version";
 
 const versions = [
   {
+    version: "v2.0",
+    title: "Brukere og identitet",
+    status: "Aktiv",
+    tone: "active",
+    items: [
+      "Innlogging med roller.",
+      "Konto-side for brukere.",
+      "Passordbytte.",
+      "Brukeradministrasjon.",
+      "Aktivering og deaktivering av brukere.",
+    ],
+  },
+
+  {
+    version: "v1.9",
+    title: "Snake Intelligence",
+    status: "Aktiv",
+    tone: "active",
+    items: [
+      "Neste anbefalte handling.",
+      "Snake Health.",
+      "Operative signaler og varsler.",
+      "Prioritering av lagerarbeid.",
+    ],
+  },
+
+  {
+    version: "v1.8",
+    title: "Kontroll og telling",
+    status: "Aktiv",
+    tone: "active",
+    items: [
+      "Lokasjonstelling.",
+      "Forbedret lagerkontroll.",
+      "Historikk på endringer.",
+      "Aktivitetslogg.",
+    ],
+  },
+
+  {
+    version: "v1.7",
+    title: "SnakeBoard",
+    status: "Aktiv",
+    tone: "active",
+    items: [
+      "Interne lagerbeskjeder.",
+      "Oppretting og sletting av meldinger.",
+      "Systemkommunikasjon i Snake.",
+    ],
+  },
+
+  {
     version: "v1.0",
     title: "System etablert",
     status: "Aktiv",
     tone: "active",
     items: [
-      "Første operative versjon av Snake VKLS.",
-      "Varesøk tilgjengelig for oppslag av produkter og lagerdata.",
-      "Lokasjonsstruktur etablert med soner og lagerplasser.",
-      "Avvik identifiseres og prioriteres.",
-      "Ryddemodus introdusert for håndtering av manglende lokasjoner.",
-    ],
-  },
-  {
-    version: "v1.1",
-    title: "Redusert friksjon",
-    status: "Planlagt",
-    tone: "planned",
-    items: [
-      "Ryddemodus forbedres med raskere flyt mellom produkter.",
-      "Tydeligere status på produkter uten lokasjon.",
-      "Forbedret navigasjon mellom avvik og produkter.",
-      "Mindre behov for manuelt oppslag under rydding.",
-    ],
-  },
-  {
-    version: "v1.2",
-    title: "Struktur og kontroll",
-    status: "Planlagt",
-    tone: "planned",
-    items: [
-      "Bedre sortering av lokasjoner.",
-      "Mer konsistent visning av SKU og variantdata.",
-      "Forbedret lesbarhet i arbeidsflater.",
-      "Små justeringer for å redusere feilregistrering.",
-    ],
-  },
-  {
-    version: "v2.0",
-    title: "Plukkmodul",
-    status: "Kommer",
-    tone: "future",
-    items: [
-      "Plukkmodul aktiveres.",
-      "Lagerflyt går fra kontroll til operasjon.",
-      "Systemet brukes direkte i ordrebehandling.",
+      "Varesøk.",
+      "Lokasjoner.",
+      "Sonestruktur.",
+      "Avvik.",
+      "Ryddemodus.",
     ],
   },
 ];
@@ -75,7 +92,7 @@ export default function ChangelogPage() {
             </Link>
 
             <p className="relative text-xs font-semibold uppercase tracking-[0.22em] text-white/65">
-              Snake VKLS
+              Snake OS
             </p>
 
             <h1 className="relative mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
@@ -101,7 +118,7 @@ export default function ChangelogPage() {
                       Versjonshistorikk
                     </h2>
                     <p className="mt-1 text-sm text-neutral-500">
-                      Operative endringer i Snake VKLS.
+                      Operative endringer i Snake OS.
                     </p>
                   </div>
                 </div>

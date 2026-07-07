@@ -1,0 +1,4732 @@
+[
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/assorterte-smakaker.html",
+    "category": "bakverk",
+    "title": "Assorterte småkaker",
+    "sku": "6869-99",
+    "price": "119.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f2e9a6f805eb6fe88c4ef1e27c84d49b-image.jpg",
+    "description": "Assorterte småkaker Størrelse : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/baguette.html",
+    "category": "bakverk",
+    "title": "Baguette",
+    "sku": "1057-50",
+    "price": "229.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a9f12b78a57ef21103fe480a44c9a21c-image.jpg",
+    "description": "Baguette Lengde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/frukt-med-sukker.html",
+    "category": "bakverk",
+    "title": "Frukt med sukker",
+    "sku": "1485-99",
+    "price": "199.00",
+    "inventory": "54",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/46c7b5b14635ef20d390958afd54effc-image.jpg",
+    "description": "Frukt med sukker - 8stk Høyde :2-8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/kake-med-hjertepynt-23cm.html",
+    "category": "bakverk",
+    "title": "Kake med hjertepynt 23cm",
+    "sku": "6308-20",
+    "price": "649.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/aac07d13e2c6ad8f216e6ca860858d52-image.jpg",
+    "description": "Kake med hjertepynt. Høyde : 10cm Diameter : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/kaker-2-stk.html",
+    "category": "bakverk",
+    "title": "Kaker 2 stk",
+    "sku": "1483-99",
+    "price": "429.00",
+    "inventory": "35",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a7877dd5a465d8af29d40d1ce28f6068-image.jpg",
+    "description": "2 stk kaker Høyde : 7,5cm Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/kjeks-6stk.html",
+    "category": "bakverk",
+    "title": "Kjeks 6stk",
+    "sku": "6302-99",
+    "price": "149.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/96e404461eb1642cb9d594fc903330ac-image.jpg",
+    "description": "Kjeks 6stk Diameter : 5,5-6,5cm Lengde : 5,5-6,5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/makroner-5-stk.html",
+    "category": "bakverk",
+    "title": "Makroner 5 stk",
+    "sku": "1481-99",
+    "price": "149.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cf3d3c57970ff463823c5965c43c3538-image.jpg",
+    "description": "5 stk Makroner Diameter : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/mandelkake.html",
+    "category": "bakverk",
+    "title": "Mandelkake",
+    "sku": "1731-50",
+    "price": "169.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e3743e1cf5b9c7cb92c598c348db6218-image.jpg",
+    "description": "Mandelkake Høyde : 7,5cm Lengde : 17cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/mandelpai.html",
+    "category": "bakverk",
+    "title": "Mandelpai",
+    "sku": "1487-70",
+    "price": "499.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1ce107620c410624334e6cd3e3182b82-image.jpg",
+    "description": "Mandelpai Diameter : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/minimuffins-6-stk-med-topping.html",
+    "category": "bakverk",
+    "title": "Minimuffins 6 stk med topping",
+    "sku": "3481-99",
+    "price": "179.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/44b3074df22262b0156db97e3fbc3100-image.jpg",
+    "description": "Minimuffins 6 stk med topping Høyde : 4cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/nottekake.html",
+    "category": "bakverk",
+    "title": "Nøttekake",
+    "sku": "6145-50",
+    "price": "289.00",
+    "inventory": "22",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/878fcf5044e3079ab8c25763617642c0-image.jpg",
+    "description": "Nøttekake Høyde : 9cm Bredde : 7x15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/skjokoladekake.html",
+    "category": "bakverk",
+    "title": "Sjokoladekake",
+    "sku": "2876-70",
+    "price": "599.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8806689bbb3a2e33bd2905e63405d8d6-image.jpg",
+    "description": "Sjokoladekake Diameter : 24cm Høyde : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/blaveis.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Blåveis",
+    "sku": "6818-60",
+    "price": "29.00",
+    "inventory": "16",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/223ce7159be6665673a4c29b825806f1-image.jpg",
+    "description": "Blåveis 18cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm-6204-10.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm",
+    "sku": "6204-10",
+    "price": "119.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f5c51aaa6d0ffe740865e26cfd3bd11f-image.jpg",
+    "description": "Blomsterbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm-6206.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm",
+    "sku": "9264-51",
+    "price": "69.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a49ddbd21796ed3d8a595471f6ae0ede-image.jpg",
+    "description": "Bukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm-6208.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm",
+    "sku": "9266-99",
+    "price": "79.00",
+    "inventory": "45",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ae9a80ec472100c8454ab374651dce82-image.jpg",
+    "description": "Bukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm-6210.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm",
+    "sku": "9273-10",
+    "price": "59.00",
+    "inventory": "18",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0eafe47e2833e51b3a0f72d6acb3a3c4-image.jpg",
+    "description": "Bukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm-hvit.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm Hvit",
+    "sku": "6201-10",
+    "price": "99.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7dbcbbf58421e0e0768f7b57ccf2088a-image.jpg",
+    "description": "Blomsterbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-20cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 20cm",
+    "sku": "6201-20",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/34d34fd63c2b83f825bb89495d149b09-image.jpg",
+    "description": "Bukett med blomster Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-21cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 21cm",
+    "sku": "1615-20",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/be5379aebc5b8e73b988d08b6c83c8c9-image.jpg",
+    "description": "Bukett med blomster Høyde : 21cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-45cm-9289-99.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 45cm",
+    "sku": "9289-99",
+    "price": "449.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b3ae6536826333ee5d60c7aea81d607e-image.jpg",
+    "description": "Blomsterbukett Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-45cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 45cm",
+    "sku": "9286-10",
+    "price": "549.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b2664075fbdc775948dea1b46c39ad78-image.jpg",
+    "description": "Nydelig stor bukett. Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-65cm-9324-10.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 65cm",
+    "sku": "9324-10",
+    "price": "299.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c958ce99ef116bc0c420aebdd39f55b9-image.jpg",
+    "description": "Bukett med blomster Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/bukett-65cm-9324-20.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Bukett 65cm",
+    "sku": "9324-20",
+    "price": "299.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1cc2b08468cee8a38a248ee7699826a4-image.jpg",
+    "description": "Bukett med blomster Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/coreopsis-mix.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Coreopsis Mix",
+    "sku": "2463-99-1",
+    "price": "149.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/872e258e38f4386600a96b45e1eaa9d7-image.jpg",
+    "description": "3 stk Coreopsis - Ass. farger Høyde : 14cm Potte Ø : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/eucalyptus-26-cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Eucalyptus 26 cm Høstfarger",
+    "sku": "8866-96",
+    "price": "149.00",
+    "inventory": "56",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1ccccee3fa7f0039eb7b45337327fed0-image.jpg",
+    "description": "Eucalyptus borddekorasjon Høyde : 12cm Ø : 26cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/eucalyptus-30-cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Eucalyptus 30 cm",
+    "sku": "9913-90",
+    "price": "229.00",
+    "inventory": "24",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7d4da4e978dfc639fe76152e1649503f-image.jpg",
+    "description": "Eucalyptus borddekorasjon Høyde : 13 cm Ø : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/jadesten.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Jadesten",
+    "sku": "1041-40",
+    "price": "59.00",
+    "inventory": "23",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b6c8cd4111158756d8c095fc3fd6a760-image.jpg",
+    "description": "Jadesten til f.eks bordpynt eller dekorasjon. Ca 500gram"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/lavendelbukett-28cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Lavendelbukett 28cm",
+    "sku": "2137-40",
+    "price": "89.00",
+    "inventory": "21",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6bd65a38155678cb8d3a4be73fc2cc19-image.jpg",
+    "description": "Lavendelbukett Lengde : 28cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/lavendelring-15cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Lavendelring 15cm",
+    "sku": "6263-40",
+    "price": "69.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d26e806fa8374c79611a730113bcf1ba-image.jpg",
+    "description": "Lavendelring Ø : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/lavendelring-9cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Lavendelring 9cm",
+    "sku": "6261-40",
+    "price": "29.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b9c34500d58166eb5ad503e2f5dce456-image.jpg",
+    "description": "Lavendelring Ø : 9cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/levkoybukett-28cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Levkøybukett 28cm",
+    "sku": "1467-40",
+    "price": "129.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/710ae6a7a95f6cfea45d5bf3f41d7922-image.jpg",
+    "description": "Levkøybukett LEngde : 28cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/pinseliljebunt-20cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Pinseliljebunt 20cm",
+    "sku": "9696-10",
+    "price": "39.00",
+    "inventory": "18",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f2566c228ce2b361e7f644409ee7e3dc-image.jpg",
+    "description": "Bunt av pinseliljer Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/pinseliljer-40cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Pinseliljer 40cm",
+    "sku": "8085-10",
+    "price": "69.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c97144ec09de68756a123e5dcb561149-image.jpg",
+    "description": "Pinseliljer Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/rosebukett-25cm-7062-1.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Rosebukett 25cm",
+    "sku": "7062-1",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/007d2bd62562e222f6718682bec17089-image.jpg",
+    "description": "Rosebukett 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/rosebukett-25cm-7062.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Rosebukett 25cm",
+    "sku": "7062",
+    "price": "249.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9db9b365f509ec735cbc81b9fcb48ad4-image.jpg",
+    "description": "Rosebukett Lengde : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/rosebukett-25cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Rosebukett 25cm",
+    "sku": "7091",
+    "price": "249.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c829e284342d9fa4d9f1f9b80391c698-image.jpg",
+    "description": "Rosebukett 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/rosebukett-27cm-1451-10.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Rosebukett med is 27cm",
+    "sku": "1451-10",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fcd27aadcb682d0cbcdb7bc700649ffb-image.jpg",
+    "description": "Litten søt Rosebukett med is Lengde : 27cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/rosebukett-37cm.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Rosebukett 37cm",
+    "sku": "6250-21",
+    "price": "169.00",
+    "inventory": "23",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/bf47f9ca9f12555707d4bb842661c578-image.jpg",
+    "description": "Rosebukett Høyde : 37cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-20cm-hvit.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 20cm hvit",
+    "sku": "7188",
+    "price": "129.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/788dc32729de5bec700c9b0a3fa7a8e2-image.jpg",
+    "description": "Tulipanbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-20cm-lilla.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 20cm lilla",
+    "sku": "7189",
+    "price": "129.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d8899c0f06be7651a26c969bc8ccf007-image.jpg",
+    "description": "Tulipanbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-20cm-rod.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 20cm rød",
+    "sku": "7191",
+    "price": "129.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/29fd136ec7f1c60fa55bfc4cfdc7cca4-image.jpg",
+    "description": "Tulipanbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-20cm-rosa.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 20cm rosa",
+    "sku": "7190",
+    "price": "129.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fdd4c277c6b454300e858a9cd694cdd5-image.jpg",
+    "description": "Tulipanbukett Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-30cm-gul.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 30cm gul",
+    "sku": "6288-50",
+    "price": "99.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5e5e8959d4d3d09f1c65b992ac0b421a-image.jpg",
+    "description": "Tulipanbukett Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-30cm-hvit-rosa.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 30cm rosa",
+    "sku": "6288-20",
+    "price": "99.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b9de16efec768e36749de7bde37b5968-image.jpg",
+    "description": "Tulipanbukett Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-30cm-oransje.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 30cm Oransje",
+    "sku": "6288-35",
+    "price": "99.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d48dd6d54e34e5732adcedda50bd142d-image.jpg",
+    "description": "Tulipanbukett Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/buketter-borddekorasjoner/tulipanbukett-30cm-rosa.html",
+    "category": "buketter-borddekorasjoner",
+    "title": "Tulipanbukett 30cm rosa",
+    "sku": "6288-22",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/be5534141f535537eabe0f5aef031f55-image.jpg",
+    "description": "Tulipanbukett Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/24-stk-sma-epler-3740-80.html",
+    "category": "frukt-gront",
+    "title": "24 stk små epler",
+    "sku": "3740-80",
+    "price": "499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ea91742fd02cc8776d65ec05eeb09cef-image.jpg",
+    "description": "24 stk epler. Ø : 4cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/agurk-24cm.html",
+    "category": "frukt-gront",
+    "title": "Agurk 24cm",
+    "sku": "6322-90",
+    "price": "79.00",
+    "inventory": "11",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1d18e9db112d08be7c9cfdff94e06886-image.jpg",
+    "description": "Agurk Lengde - 24cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/appelsin.html",
+    "category": "frukt-gront",
+    "title": "Appelsin",
+    "sku": "849-004",
+    "price": "69.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5781d439121f569b88b52de920d223d1-image.jpg",
+    "description": "Appelsin Høyde&Bredde : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/appelsinkvist-75cm.html",
+    "category": "frukt-gront",
+    "title": "Appelsinkvist 75cm",
+    "sku": "6707",
+    "price": "279.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a799c1accf055112182acac71b6a4b49-image.jpg",
+    "description": "Appelsinkvist. Høyde : 75cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/artisjokk-6157-95.html",
+    "category": "frukt-gront",
+    "title": "Artisjokk",
+    "sku": "6157-95",
+    "price": "119.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3a9c783c58f6fbc2d403e3f18b948cc7-image.jpg",
+    "description": "Artisjokk Høyde : 11cm Diameter : 11cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/artisjokk.html",
+    "category": "frukt-gront",
+    "title": "Artisjokk",
+    "sku": "5554-42",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ce2727f2fe8ab69df98089ce354e6d9b-image.jpg",
+    "description": "Artisjokk Høyde : 15cm Diameter : 13cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/asparges.html",
+    "category": "frukt-gront",
+    "title": "Store Asparges 35cm",
+    "sku": "9963",
+    "price": "69.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5dc6875c0c8cef488fabcffb00fbac1c-image.jpg",
+    "description": "Asparges Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/banan-20cm-1184-50.html",
+    "category": "frukt-gront",
+    "title": "Banan 20cm",
+    "sku": "1184-50",
+    "price": "69.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/bedeefbbfc280719aba82ba94550a21a-image.jpg",
+    "description": "Banan Lengde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/basilikum-25cm.html",
+    "category": "frukt-gront",
+    "title": "Basilikum 25cm",
+    "sku": "5993-90",
+    "price": "89.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/916656320356b8c0eb98b8c4c9864aec-image.jpg",
+    "description": "Basilikum Høyde : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/basilikum-38cm.html",
+    "category": "frukt-gront",
+    "title": "Basilikum 38cm",
+    "sku": "5995-90",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4a85b3c2042c17841ff9757262eec22a-image.jpg",
+    "description": "Basilikum Høyde : 38cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/basilikum-i-potte.html",
+    "category": "frukt-gront",
+    "title": "Basilikum i potte",
+    "sku": "5998-90-1",
+    "price": "389.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a654b3f929270471b14ab0b8f096b97c-image.jpg",
+    "description": "Basilikum i potte Høyde : 38cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/basilikum.html",
+    "category": "frukt-gront",
+    "title": "Basilikum",
+    "sku": "9129-85",
+    "price": "89.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4b2b549b7e31976c3f02497c76a13552-image.jpg",
+    "description": "Basilikum Høyde - 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/blabaer.html",
+    "category": "frukt-gront",
+    "title": "Blåbær",
+    "sku": "9604-75",
+    "price": "129.00",
+    "inventory": "89",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0caccbfb1b7d0c6c4097c8826916bcd5-image.jpg",
+    "description": "Boks med blåbær Diameter - 1,5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/bonner.html",
+    "category": "frukt-gront",
+    "title": "Bønner",
+    "sku": "9278-90",
+    "price": "89.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7d5eed8c42d687e2b5611f6e43704241-image.jpg",
+    "description": "Bunt med bønner Høyde - 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/carambole.html",
+    "category": "frukt-gront",
+    "title": "Carambole",
+    "sku": "9258-50",
+    "price": "89.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c0b831dc6722e6838566d9e4422f1620-image.jpg",
+    "description": "Carambole Lengde - 12cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/eple-gronn-8cm.html",
+    "category": "frukt-gront",
+    "title": "Eple Grønn 8cm",
+    "sku": "1332-90",
+    "price": "59.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8aa4249808d7be535cce3d9614968ed1-image.jpg",
+    "description": "Eple Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/eple-gronnrod-1332-96.html",
+    "category": "frukt-gront",
+    "title": "Eple grønn/rød",
+    "sku": "1332-96",
+    "price": "59.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fcf8e74b7b949c15a6ddbf8b16289f24-image.jpg",
+    "description": "Eple Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/eple-gronnrod.html",
+    "category": "frukt-gront",
+    "title": "Eple Grønn/rød",
+    "sku": "1357-90",
+    "price": "45.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/74fc0350949786a44260a8ae6eeaae36-image.jpg",
+    "description": "Eple Grønn/rød Høyde/bredde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/eple-rod-10x8cm.html",
+    "category": "frukt-gront",
+    "title": "Eple rød 10x8cm",
+    "sku": "3154-85",
+    "price": "79.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f6faa0451b087946550dc23a43e39f8b-image.jpg",
+    "description": "Eple Farge : Rød Mål : 10x8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/eple-rod-3152-85.html",
+    "category": "frukt-gront",
+    "title": "Eple Rød",
+    "sku": "3152-85",
+    "price": "49.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b3624596b8ee81c3730d088eede578ca-image.jpg",
+    "description": "Eple Farge : Rød Diameter : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/kirsebaer.html",
+    "category": "frukt-gront",
+    "title": "Kirsebær",
+    "sku": "1959-80",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/853f8cd19801931ce5ebe1c724d6b1d6-image.jpg",
+    "description": "Kirsebær 6stk (x2) 2 moreller på hver kvist. En rød og en mørk rød Merk at bildet viser fler enn antallet i pakken."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/kiwi.html",
+    "category": "frukt-gront",
+    "title": "Kiwi",
+    "sku": "8554-90",
+    "price": "49.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/21ec124886db20928a7a3177d336ea92-image.jpg",
+    "description": "Kiwi Bredde : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/lime-halv.html",
+    "category": "frukt-gront",
+    "title": "Lime halv",
+    "sku": "8558-90",
+    "price": "30.00",
+    "inventory": "14",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/82c6498e9245a10527081255143b6277-image.jpg",
+    "description": "Halv Lime Bredde : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/lime.html",
+    "category": "frukt-gront",
+    "title": "Lime",
+    "sku": "8556-90",
+    "price": "39.00",
+    "inventory": "80",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/53b385061e53172e642ee86c3b52f938-image.jpg",
+    "description": "Lime Bredde : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/liten-paprika-gronn.html",
+    "category": "frukt-gront",
+    "title": "Søtpaprika grønn 19cm",
+    "sku": "4491",
+    "price": "89.00",
+    "inventory": "36",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/67031fd8b99ba296fc9964ae7cb93db7-image.jpg",
+    "description": "Søtpaprika Lengde : 19cm Bredde : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/liten-paprika-rod.html",
+    "category": "frukt-gront",
+    "title": "Søtpraprika rød 19cm",
+    "sku": "4492",
+    "price": "89.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d27d20de0f4169eb00488e0a7db8d7c3-image.jpg",
+    "description": "Søtpaprika Lengde : 19cm Bredde : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/maiskolbe.html",
+    "category": "frukt-gront",
+    "title": "Maiskolbe",
+    "sku": "6326-50",
+    "price": "59.00",
+    "inventory": "26",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/44e6ee47c50c4330c4a96820ec8d62b6-image.jpg",
+    "description": "Maiskolbe Lengde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/melon-1791-31.html",
+    "category": "frukt-gront",
+    "title": "Melon",
+    "sku": "1791-31",
+    "price": "249.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/679d7e9ddf267bb5e021f1e45882911a-image.jpg",
+    "description": "Melon Diameter - 14cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/mynte-25cm.html",
+    "category": "frukt-gront",
+    "title": "Mynte 25cm",
+    "sku": "5994-90",
+    "price": "89.00",
+    "inventory": "17",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5eb8c3479f79466bb7d038dc25751243-image.jpg",
+    "description": "Mynte Høyde : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/mynte-38cm.html",
+    "category": "frukt-gront",
+    "title": "Mynte 38cm",
+    "sku": "5996-90",
+    "price": "169.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fb9aa2b584a6aebc36c695f9382f3cea-image.jpg",
+    "description": "Mynte Høyde : 38cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/oliven-gronne.html",
+    "category": "frukt-gront",
+    "title": "Oliven Grønne",
+    "sku": "9937-90",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e0c68be769fc9395704fa94959499b98-image.jpg",
+    "description": "Oliven GRønne Bredde : 3-5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/paprika-gronn.html",
+    "category": "frukt-gront",
+    "title": "Paprika Grønn",
+    "sku": "6124",
+    "price": "89.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6f1e7e7cd2dce57477ab3a344bf4af81-image.jpg",
+    "description": "Paprika Lengde : 11cm Merk : Den grønne på bildet."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/plomme.html",
+    "category": "frukt-gront",
+    "title": "Plomme",
+    "sku": "3158-85",
+    "price": "39.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/99607d49212d7af37bb76a53898c6435-image.jpg",
+    "description": "Plomme Diameter - 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/pose-med-jordbar.html",
+    "category": "frukt-gront",
+    "title": "Pose med jordbær",
+    "sku": "5954-80",
+    "price": "119.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ba79c18865e9f9146cc4fbac70ec0ef0-image.jpg",
+    "description": "Pose med jordbær 6 Stk. Bredde : 4,5-5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/rambutan.html",
+    "category": "frukt-gront",
+    "title": "Rambutan",
+    "sku": "8559-80",
+    "price": "39.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/85c7236490410815bdfea23c02cf4ca4-image.jpg",
+    "description": "Rambutan Bredde : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/rod-lok.html",
+    "category": "frukt-gront",
+    "title": "Rød Løk",
+    "sku": "5410-85",
+    "price": "49.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/055991b63b0b03fa12255a5f688cd665-image.jpg",
+    "description": "Rød Løk Høyde : 11cm Bredde : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/rodkal.html",
+    "category": "frukt-gront",
+    "title": "Rødkål",
+    "sku": "2738-80",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fddc0204354e0a7e33c96dc47f9c9379-image.jpg",
+    "description": "Rødkål Høyde : 11cm Bredde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/rosmarin-25cm.html",
+    "category": "frukt-gront",
+    "title": "Rosmarin 25cm",
+    "sku": "9534-90",
+    "price": "79.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4a5f4a4209e9d73827213b89bdf1aa51-image.jpg",
+    "description": "Rosmankvist Høyde : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/salat-15cm.html",
+    "category": "frukt-gront",
+    "title": "Salat 15cm",
+    "sku": "3301",
+    "price": "279.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0234d8d8d229eaddff9ae42abeafd3c3-image.jpg",
+    "description": "Salat Lengde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/salatblader-6-stk-9277-96.html",
+    "category": "frukt-gront",
+    "title": "Salatblader 6 stk",
+    "sku": "9277-96",
+    "price": "149.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6e9f45597c20d21dd9c48b208f8223de-image.jpg",
+    "description": "6 stk salatblader Høyde - 20-26cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/salatblader-6-stk.html",
+    "category": "frukt-gront",
+    "title": "Salatblader 6 stk.",
+    "sku": "3479-90",
+    "price": "99.00",
+    "inventory": "42",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4b5d2c16f6d2a7a20a6642e20c2d7f71-image.jpg",
+    "description": "Salatblader 6stk Høyde : 16cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/sitrusbusk-32cm.html",
+    "category": "frukt-gront",
+    "title": "Sitrusbusk 32cm",
+    "sku": "801-1",
+    "price": "279.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7535ae8e7c967d518cf177519d0e5896-image.jpg",
+    "description": "Sitrusbusk i potte. Høyde : 32cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/sitrusmix-skivet-5-stk.html",
+    "category": "frukt-gront",
+    "title": "Sitrusmix skivet 5 stk",
+    "sku": "9257-99",
+    "price": "169.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ec9e3627609fd495245dc0c05fdcde06-image.jpg",
+    "description": "Mix av sitron- og limeskiver Diameter - 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/sma-tomater-pa-kvist.html",
+    "category": "frukt-gront",
+    "title": "Små tomater på kvist",
+    "sku": "3312",
+    "price": "129.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2483c74d497ed358d78c4ba286b55ac8-image.jpg",
+    "description": "Små tomater på kvist."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/sma-tomater.html",
+    "category": "frukt-gront",
+    "title": "Små Tomater",
+    "sku": "9134-80",
+    "price": "179.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4943b11c79eb9ef9fb527f36aa50190a-image.jpg",
+    "description": "Kvist-tomater"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/tomater.html",
+    "category": "frukt-gront",
+    "title": "Tomater",
+    "sku": "5409-80",
+    "price": "59.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3402454b5797bd4e1f72399c6ab89306-image.jpg",
+    "description": "Tomater Lengde/Bredde : 4,5-5,5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/frukt-gront/vindrueklaser-3-stk.html",
+    "category": "frukt-gront",
+    "title": "Vindrueklaser 3 stk",
+    "sku": "6324-99",
+    "price": "229.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1cdf6936fc3a8de12e15e56c0aae27ec-image.jpg",
+    "description": "3 stk vindrueklaser i forskjellige farger Lengde : 14cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/dekorstjerne-20cm.html",
+    "category": "jul",
+    "title": "Dekorstjerne 20cm",
+    "sku": "1296-90",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/bfc4209c66b14105843f1a7465bcf8b5-image.jpg",
+    "description": "Dekorstjerne til å henge opp. Fin i vinduet. Lik på begge sider. Høyde : 20cm Bredde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/engel-21cm.html",
+    "category": "jul",
+    "title": "Engel 21cm",
+    "sku": "1216-10",
+    "price": "99.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/47ac9b5f8f0d56fccc8675648bf0e2bf-image.jpg",
+    "description": "Hengende engel Høyde : 21cm Bredde : 13cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/englevinger-13cm-rosa.html",
+    "category": "jul",
+    "title": "Englevinger 13cm rosa",
+    "sku": "1243-20",
+    "price": "19.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/56ece3a6f5bd714df5271a20e04d0247-image.jpg",
+    "description": "Englevinger Høyde : 7cm Bredde : 13cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/englevinger-23cm-rosa.html",
+    "category": "jul",
+    "title": "Englevinger 23cm rosa",
+    "sku": "1244-20",
+    "price": "29.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0cdcd8d81853e83311bbcb35a383753d-image.jpg",
+    "description": "Englevinger Høyde : 15cm Bredde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/hjerte-11cm.html",
+    "category": "jul",
+    "title": "Hjerte 11cm",
+    "sku": "5797-70",
+    "price": "35.00",
+    "inventory": "44",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/004b3d7929a14e80f1b4d91220d184bc-image.jpg",
+    "description": "Hjerte Bredde : 11m"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/hjerte-av-mose-15cm.html",
+    "category": "jul",
+    "title": "Hjerte av mose 15cm",
+    "sku": "1834-90",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/77a1a849374657bc7f1ed35b297b587f-image.jpg",
+    "description": "Hjerte av mose Diameter : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/hjerte-i-tre-10cm-lilla.html",
+    "category": "jul",
+    "title": "Hjerte i tre 10cm lilla",
+    "sku": "5756-76",
+    "price": "39.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/16d1d74a88bf933ad8bf32a0a57a1281-image.jpg",
+    "description": "Søtt hjerte i tre Bredde : 10cm Farge : Lilla"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/hjerte-i-tre-15cm-lilla.html",
+    "category": "jul",
+    "title": "Hjerte i tre 15cm lilla",
+    "sku": "5757-76",
+    "price": "59.00",
+    "inventory": "11",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/152bf71dd26659d70ff6eb5c5917b29f-image.jpg",
+    "description": "Søtt hjerte i tre Bredde : 15cm Farge : Lilla"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/hjertedekorasjon-10cm.html",
+    "category": "jul",
+    "title": "Hjertedekorasjon 10cm",
+    "sku": "6012-70",
+    "price": "29.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/07b0b9101cbc7094f376117653311800-image.jpg",
+    "description": "Hjertedekorasjon Høyde : 10cm Diameter : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-10cm-1462-10-1.html",
+    "category": "jul",
+    "title": "Julestjerne 10cm",
+    "sku": "1462-10-1",
+    "price": "49.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8d5bffef6daaa668b4f5b3ca874fe802-image.jpg",
+    "description": "Julestjerne i potte. Høyde 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-15cm-k-rod.html",
+    "category": "jul",
+    "title": "Julestjerne 15cm K rød",
+    "sku": "3080-80-1",
+    "price": "59.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/48fff6d2822eb3c469d4e002e8e678a0-image.jpg",
+    "description": "Julestjerne i potte Høyde : 15cm Farge : Rød"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-26cm-hvit.html",
+    "category": "jul",
+    "title": "Julestjerne 26cm Hvit",
+    "sku": "7691-10-1",
+    "price": "129.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8216d8a6784547f1a318888fe6c4291c-image.jpg",
+    "description": "Julestjerne i potte Høyde : 26cm Farge : Hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-26cm-rod.html",
+    "category": "jul",
+    "title": "Julestjerne 26cm Rød",
+    "sku": "7691-80-1",
+    "price": "129.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5c82e0bda12cd69eb674cbdcdbb74e23-image.jpg",
+    "description": "Julestjerne i potte Høyde : 26cm Farge : Rød"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-27cm-hvit.html",
+    "category": "jul",
+    "title": "Julestjerne 27cm Hvit",
+    "sku": "6989-10-1",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9d310841d30b36a2f1df4c231eace0a8-image.jpg",
+    "description": "Julestjerne Høyde : 27cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-35cm-hvit.html",
+    "category": "jul",
+    "title": "Julestjerne 35cm hvit",
+    "sku": "6595-10-1",
+    "price": "199.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7c799265d06d0459864fa70ef5a159f1-image.jpg",
+    "description": "Julestjerne i potte Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-38cm-hvit.html",
+    "category": "jul",
+    "title": "Julestjerne 38cm Hvit",
+    "sku": "3070-10-1",
+    "price": "349.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/97a6ef2c8ac577137d95ff276de341f1-image.jpg",
+    "description": "Julestjerne i potte Høyde : 38cm Farge : Hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/julestjerne-38cm-rod.html",
+    "category": "jul",
+    "title": "Julestjerne 38cm rød",
+    "sku": "3070-80-1",
+    "price": "349.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a1907a091e4e9e4a23e3b59dbc64036f-image.jpg",
+    "description": "Stor og flott Julestjerne i potte Høyde : 38cm Farge : Rød"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/lyslykt-35cm.html",
+    "category": "jul",
+    "title": "Lyslykt 35cm",
+    "sku": "4355-02",
+    "price": "499.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f1b8cd1a79029581709633d7a0f715ef-image.jpg",
+    "description": "Lyslykt i metall Høyde : 35cm Diameter : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/lyslykt-juletre.html",
+    "category": "jul",
+    "title": "Lyslykt juletre",
+    "sku": "jul01",
+    "price": "49.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d961d6fa5743184176796db0d188a21d-image.jpg",
+    "description": "Lyslykt"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/reinsdyrdekorasjon-11cm.html",
+    "category": "jul",
+    "title": "Reinsdyrdekorasjon 11cm",
+    "sku": "5794-70",
+    "price": "129.00",
+    "inventory": "30",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/607ab7ee6e4fe08c5bd7ea509f85a03b-image.jpg",
+    "description": "Reinsdyrdekorasjon Diameter : 11cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/reinsdyrdekorasjon-25cm.html",
+    "category": "jul",
+    "title": "Reinsdyrdekorasjon 25cm",
+    "sku": "5795-70",
+    "price": "299.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4ce17c3f5b1f5ed824166efec9224dad-image.jpg",
+    "description": "Reinsdyrdekorasjon Diameter : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/stjerne-12cm.html",
+    "category": "jul",
+    "title": "Stjerne 12cm",
+    "sku": "5760-70",
+    "price": "35.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/da293a09ea9a12119da66ed2336e40b2-image.jpg",
+    "description": "Stjerne Bredde : 12cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/jul/stjerne-30cm.html",
+    "category": "jul",
+    "title": "Stjerne 30cm",
+    "sku": "5855-01",
+    "price": "179.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/826b870493c0fdfe8045adb0535ac690-image.jpg",
+    "description": "Stjerne Diameter : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/5-armet-kandelaber-50cm.html",
+    "category": "interiorartikler",
+    "title": "5-armet Kandelaber 50cm",
+    "sku": "4150-02",
+    "price": "999.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/831d1b0a33eed19301b032890da66caa-image.jpg",
+    "description": "5-armet Kandelaber Høyde : 50 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/dekorstener-1004-101.html",
+    "category": "interiorartikler",
+    "title": "Dekorstener",
+    "sku": "1004-101",
+    "price": "149.00",
+    "inventory": "30",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4bcd0083c9e4979b6b6475c0cd997907-image.jpg",
+    "description": "Dekorstener Vekt : 3,5 kg Størrelse :5-8cm Farge : Hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/dekorstener.html",
+    "category": "interiorartikler",
+    "title": "Dekorstener",
+    "sku": "1003-101",
+    "price": "149.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/43730abc8720ebcbe2131b76ebdaa160-image.jpg",
+    "description": "Dekorstener Antall : 2kg Størrelse : 2-4cm Farge : hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/elg-10cm.html",
+    "category": "interiorartikler",
+    "title": "Elg 10cm",
+    "sku": "40181484",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a188b15e8d276d3d13bca5432ecc4be9-image.jpg",
+    "description": "Elg Høyde : 10cm Lengde : 10cm Bredde : 4cm Material : Polyresin"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/etasjefat-55cm.html",
+    "category": "interiorartikler",
+    "title": "Etasjefat 55cm",
+    "sku": "40212193",
+    "price": "1199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/900f3613ec0502159451742446fa75ed-image.jpg",
+    "description": "Nydelig sort etasjefat i metall fra Holmen interiør. Høyde : 55cm Ø : 14-35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/fat-av-metall-40cm.html",
+    "category": "interiorartikler",
+    "title": "Fat av metall 40cm",
+    "sku": "4315-02",
+    "price": "699.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/181f35ff35babc33e86cedf6676986fe-image.jpg",
+    "description": "Metallfat for servering eller pynt Lengde & Bredde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/fat-av-metall.html",
+    "category": "interiorartikler",
+    "title": "Fat av metall",
+    "sku": "4315-01",
+    "price": "499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0be8c7c1760080d15182f841348c7519-image.jpg",
+    "description": "Fat av metall, Røff eangde/bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/glassvase-60cm.html",
+    "category": "interiorartikler",
+    "title": "Glassvase 60cm",
+    "sku": "40180011",
+    "price": "499.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/754cbf4482d9abb109979f7a11d4cabf-image.jpg",
+    "description": "Glassvase Høyde : 60cm Ø : 17cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/glassvase-80cm.html",
+    "category": "interiorartikler",
+    "title": "Glassvase 80cm",
+    "sku": "40180012",
+    "price": "599.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4e50f48e4cd02c173e353ef8507dd94e-image.jpg",
+    "description": "Glassvase Høyde : 80cm Ø ; 18cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/hjerte-25cm.html",
+    "category": "interiorartikler",
+    "title": "Hjerte 25cm",
+    "sku": "9073-02",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/59bb3892212386481ccd3bf904c80644-image.jpg",
+    "description": "Hengende hjerte Ø : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/leirepotte-12cm-2.html",
+    "category": "interiorartikler",
+    "title": "Leirepotte 12cm",
+    "sku": "4342-01",
+    "price": "119.00",
+    "inventory": "22",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2fee67ac1559b19a645a899d06908e0d-image.jpg",
+    "description": "Leirepotte Høyde : 12cm Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/leirepotte-12cm.html",
+    "category": "interiorartikler",
+    "title": "Leirepotte 12cm",
+    "sku": "4343-01",
+    "price": "119.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c85a97da8feaac1a92b33c94c3eb8d76-image.jpg",
+    "description": "Potte av leire Høyde : 12cm Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/leirepotte-14cm-2.html",
+    "category": "interiorartikler",
+    "title": "Leirepotte 14cm",
+    "sku": "4342-02",
+    "price": "159.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/942b2ed129c0f657a6b063b046f2aa50-image.jpg",
+    "description": "Leirepotte Høyde : 14cm Ø topp : 13cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/lysbrikke-roff-18cm.html",
+    "category": "interiorartikler",
+    "title": "Lysbrikke røff 18cm",
+    "sku": "4233-01",
+    "price": "489.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/595bd42c59297dbac4eb011191a50a4a-image.jpg",
+    "description": "Lysbrikke i metall Røff Plass til 7 lys Høyde : 18cm Bredde : 42cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/lysestake.html",
+    "category": "interiorartikler",
+    "title": "Lysestake",
+    "sku": "4461-02",
+    "price": "749.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/74bc03b3e669093f22b730735f7a0a4a-image.jpg",
+    "description": "Lysestake i metall. (For kubbelys) Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/lyslykt-38cm.html",
+    "category": "interiorartikler",
+    "title": "Lyslykt 38cm",
+    "sku": "4457-02",
+    "price": "1399.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/795aa5f77d9d762df8fe667d367df7cd-image.jpg",
+    "description": "Lyslykt for 2 lys. Høyde : 26cm Lengde : 38cm Bredde :17cm Ø : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/lyslykt-61cm.html",
+    "category": "interiorartikler",
+    "title": "Lyslykt 61cm",
+    "sku": "4457-03",
+    "price": "1799.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/dc7b1b055efd34cdb01eebc37efeab02-image.jpg",
+    "description": "Lyslykt for 3 lys Lengde : 61cm Høyde : 26 Bredde : 17cm Ø : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/metallfat-100cm-oval.html",
+    "category": "interiorartikler",
+    "title": "Metallfat 100cm Oval",
+    "sku": "4316-05",
+    "price": "3499.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9245d3f40bd47ab6232233df308f9de7-image.jpg",
+    "description": "Fat i metall. Lengde : 100cm Bredde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/metallfat-100cm.html",
+    "category": "interiorartikler",
+    "title": "Metallfat 100cm",
+    "sku": "4314-03",
+    "price": "2299.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f751f778e9ec4ae7313448b9e6ee4ce2-image.jpg",
+    "description": "Fat i metall. Lengde : 100cm Bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/metallfat-120cm.html",
+    "category": "interiorartikler",
+    "title": "Metallfat 120cm",
+    "sku": "4314-04",
+    "price": "2799.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/20a0ef571d23ae77a3bd9597b20445a3-image.jpg",
+    "description": "Fat i metall. Lengde :120cm Bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/metallfat-80cm.html",
+    "category": "interiorartikler",
+    "title": "Metallfat 80cm",
+    "sku": "4314-02",
+    "price": "1499.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3081add0e0d6b3409c435726518a33de-image.jpg",
+    "description": "Fat i metall. Lengde : 80cm Bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/pose-med-kongler-2.html",
+    "category": "interiorartikler",
+    "title": "Pose med kongler",
+    "sku": "1745-70",
+    "price": "69.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a391c24193c3f2409028aa4d1ff806e0-image.jpg",
+    "description": "Pose med dekorasjonskongler."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/pose-med-kongler.html",
+    "category": "interiorartikler",
+    "title": "Pose med kongler",
+    "sku": "1747-70",
+    "price": "69.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/704f75250729906d629cbb163ffc8e9c-image.jpg",
+    "description": "Pose med dekorasjonskongler."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/potte-i-metall.html",
+    "category": "interiorartikler",
+    "title": "Potte i metall",
+    "sku": "4251-01",
+    "price": "799.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ad445aee8b18c84f017bfbe73365ad57-image.jpg",
+    "description": "Nydelig potte i metall. Høyde : 15cm Bredde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/serveringsfat-gerry.html",
+    "category": "interiorartikler",
+    "title": "Serveringsfat Gerry",
+    "sku": "40200445",
+    "price": "599.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/de135f65569700bb72d4d72ac40764f3-image.jpg",
+    "description": "Gerry serveringsfat av tre fra Holmen Interiør. Høyde : 7cm Bredde : 31cm Lengde : 44cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/silas-potte-12cm.html",
+    "category": "interiorartikler",
+    "title": "Silas potte 12cm",
+    "sku": "40220454",
+    "price": "129.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/293ac9028306b4de6593c57fa7fa4ab5-image.jpg",
+    "description": "Potte av keramikk Høyde : 11cm Ø : 12cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/interiorartikler/vase-i-metall-88cm.html",
+    "category": "interiorartikler",
+    "title": "Vase i metall 88cm",
+    "sku": "4437-02",
+    "price": "2499.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/94cbeaf34cb26c6b5bf803cc63d93c69-image.jpg",
+    "description": "Vase i metall Høyde : 88cm Ø topp : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/2-stk-kaktusfrukter.html",
+    "category": "kaktus",
+    "title": "3 stk Kaktusfrukter",
+    "sku": "5558-99",
+    "price": "139.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cd88642d73f53ebaf0e08f4be6cc0293-image.jpg",
+    "description": "3 stk. Kaktusfrukter Lengde : 9cm Bredde : 5,5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/3-stk-kaktus-13-20cm.html",
+    "category": "kaktus",
+    "title": "3 stk Kaktus 13-20cm",
+    "sku": "9170-99-1",
+    "price": "199.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e67527f6f4e6061130dd300bedcff2d6-image.jpg",
+    "description": "3 stk kaktus i potte. Høyde : 13-20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/3-stk-kaktus.html",
+    "category": "kaktus",
+    "title": "3 stk kaktus",
+    "sku": "9177-99-1",
+    "price": "179.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/98c9db2964d973fb7b2f1871aba4de9c-image.jpg",
+    "description": "3 stk kaktus i potte. Assortert. Høyde : 8-13cm Potte høyde : 5cm Potte Ø topp : 6cm Potte Ø bunn : 4cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/4-stk-kaktus.html",
+    "category": "kaktus",
+    "title": "4 stk kaktus",
+    "sku": "9174-99-1",
+    "price": "449.00",
+    "inventory": "13",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0386217a5100426e3a926f1aa24e7e33-image.jpg",
+    "description": "4 stk assorterte kaktus i potte. Høyde : 15-22cm Potte høyde : 6cm Potte Ø topp : 8cm Potte Ø bunn : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/assorterte-kaktus-5-11cm-24-stk.html",
+    "category": "kaktus",
+    "title": "Assorterte Kaktus 5-11cm - 24 stk",
+    "sku": "1508-99-1",
+    "price": "799.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/de9ee7fbf50e8370a0b29edfc5d5faac-image.jpg",
+    "description": "Nydelige små kaktus i potte. Antall : 24 stk Høyde : 5-11cm Potte høyde : 4cm Potte diameter topp : 4cm Potte diameter bunn : 3cm Kommer i trekasser som på bildet."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-23cm-2.html",
+    "category": "kaktus",
+    "title": "Kaktus 23cm",
+    "sku": "9155-90-1",
+    "price": "119.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5c8e17802ccf60f81b7594aebc07d8b8-image.jpg",
+    "description": "Kaktus i potte. Høyde : 23cm Ø : 14cm Potte høyde ; 9cm Potte Ø topp : 11cm Potte Ø bunn : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-23cm-4.html",
+    "category": "kaktus",
+    "title": "Kaktus 23cm",
+    "sku": "9580-80-1",
+    "price": "99.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8c686f3daa8802324fb1c0fd733db0e5-image.jpg",
+    "description": "Kaktus i potte. Høyde : 23cm Potte høyde : 6cm Potte Ø topp : 8cm Potte Ø bunn : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-23cm.html",
+    "category": "kaktus",
+    "title": "Kaktus 23cm",
+    "sku": "8102",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/74c438cb6a53179e3c5011ea70a65de9-image.jpg",
+    "description": "Kaktus i potte Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-28cm.html",
+    "category": "kaktus",
+    "title": "Kaktus 28cm",
+    "sku": "8114",
+    "price": "249.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5f23d582704d5c8ab45b40f7bdeeb9db-image.jpg",
+    "description": "Kaktus i potte Høyde : 28cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-97cm-1666-90-1.html",
+    "category": "kaktus",
+    "title": "Kaktus 97cm",
+    "sku": "1666-90-1",
+    "price": "2499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0729676cf6e6550a009550e116d5ebe6-image.jpg",
+    "description": "Kaktus i potte Høyde : 97cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kaktus/kaktus-98cm.html",
+    "category": "kaktus",
+    "title": "Kaktus 98cm",
+    "sku": "1663-90-1",
+    "price": "1499.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/06e4c491afe0012cc3ada788a98478c7-image.jpg",
+    "description": "Kaktus i potte Høyde : 98cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/bambusgrilander-180cm.html",
+    "category": "girlander",
+    "title": "Bambusgrilander 180cm",
+    "sku": "1557-90",
+    "price": "299.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/dc1a5e8c063f1463ee61dcef1a1a975b-image.jpg",
+    "description": "Bambus Lengde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/blomkarsegirlander-120cm.html",
+    "category": "girlander",
+    "title": "Blomkarsegirlander 120cm",
+    "sku": "8251-35",
+    "price": "229.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c73b973ac8c664d5f04c1023d93d546e-image.jpg",
+    "description": "Blomkarse Lengde : 120cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoy-girlang-120cm.html",
+    "category": "girlander",
+    "title": "Eføy Girlang 120cm",
+    "sku": "6123-95",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8a6e128d07e051fcf98b480d32534481-image.jpg",
+    "description": "Eføy Girland Lengde : 120cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoygirlang-180cm.html",
+    "category": "girlander",
+    "title": "Eføygirlang 180cm",
+    "sku": "5815-95",
+    "price": "89.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cd960453dcc1579aca4ce77b0c1b78cd-image.jpg",
+    "description": "Eføygirlang Lengde : 180cm Diameter : 6-8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoygirlang-205cm-gronnhvit-taler-sollys.html",
+    "category": "girlander",
+    "title": "Eføygirlang 205cm Grønn/Hvit- Tåler sollys",
+    "sku": "5730-1",
+    "price": "349.00",
+    "inventory": "21",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5ad1d86c249ac8232d99895500460e79-image.jpg",
+    "description": "Eføygirlang Tåler sollys meget godt. Lengde : 205cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoygirlang-205cm-taler-sollys.html",
+    "category": "girlander",
+    "title": "Eføygirlang 205cm - Tåler sollys",
+    "sku": "5730",
+    "price": "349.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/952b34e2264675420b96fdb6250546f6-image.jpg",
+    "description": "Girlang av Eføy. Tåler å sollys meget godt. Lengde : 205cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoygrilang-120cm.html",
+    "category": "girlander",
+    "title": "Eføygrilang 120cm",
+    "sku": "6122-90",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/867c5f376702ca7bed0e9fe8fff7cfd8-image.jpg",
+    "description": "Eføygirlang Lengde : 120cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/efoygrilang-180cm-gronnhvit.html",
+    "category": "girlander",
+    "title": "Eføygrilang 180cm Grønn/hvit",
+    "sku": "1556-95",
+    "price": "239.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cca5f0848b9ef04cfcb9bd7de2f3e20f-image.jpg",
+    "description": "Eføygirlang Lengde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/gullrankegirlander-125cm.html",
+    "category": "girlander",
+    "title": "Gullrankegirlander 125cm",
+    "sku": "6587-95",
+    "price": "169.00",
+    "inventory": "13",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/dca12a38da261c16d0dab2492ba7a98c-image.jpg",
+    "description": "Gullranke Lengde : 125cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/hostlovgirlander-180cm.html",
+    "category": "girlander",
+    "title": "Høstløvgirlander 180cm",
+    "sku": "1950-35",
+    "price": "249.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3e139bbf11830b9cbf17cf2507330a56-image.jpg",
+    "description": "Høstløvgirlander Lengde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/ipomeagirlander-120cm-bla.html",
+    "category": "girlander",
+    "title": "Ipomeagirlander 120cm blå",
+    "sku": "3596-60",
+    "price": "199.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2f875ec4cb5be35b2c4eaf97754ded4a-image.jpg",
+    "description": "Ipomea Lengde : 120cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/ipomeagirlander-120cm-hvit.html",
+    "category": "girlander",
+    "title": "Ipomeagirlander 120cm hvit",
+    "sku": "3596-10",
+    "price": "199.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b2f735d5c1b2892b3a2088a476f5d19a-image.jpg",
+    "description": "Ipomea Lengde : 120cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/ipomeagirlander-120cm-rosa.html",
+    "category": "girlander",
+    "title": "Ipomeagirlander 120cm rosa",
+    "sku": "3596-20",
+    "price": "199.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8d6ba718732c6bf0ded0c3607a9ef545-image.jpg",
+    "description": "Ipomea Lengde : 120cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/palettbladgirlander-160cm.html",
+    "category": "girlander",
+    "title": "Palettbladgirlander 160cm",
+    "sku": "2593-96",
+    "price": "229.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a27d731f9cc1e0352f2e5b25070c27a4-image.jpg",
+    "description": "Palettblad Lengde : 160cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/peperomiagirlang-180cm-gronn.html",
+    "category": "girlander",
+    "title": "Peperomiagirlang 180cm grønn",
+    "sku": "2045-90",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/73e04bfef3213e8788dec6ee3d532fcc-image.jpg",
+    "description": "Peperomia Lengde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/peperomiagirlang-180cm-mork-gronn.html",
+    "category": "girlander",
+    "title": "Peperomiagirlang 180cm mørk grønn",
+    "sku": "2045-95",
+    "price": "229.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/335abec690aa9074d1fbd88ac68fa4aa-image.jpg",
+    "description": "Peperomia Lengde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/rosegirlang-160cm-hvit.html",
+    "category": "girlander",
+    "title": "Rosegirlang 160cm hvit",
+    "sku": "2194-10",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/476816f5b60b2f6f2eb31212e22644dc-image.jpg",
+    "description": "Rosegirlang Lengde : 160cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/rosegirlang-160cm-rod.html",
+    "category": "girlander",
+    "title": "Rosegirlang 160cm rød",
+    "sku": "2194-80",
+    "price": "179.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/13dc8294dc20df2abbcbe2ed2b0b9fb8-image.jpg",
+    "description": "Rosegirlang Lengde : 160cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/girlander/rosegirlang-160cm-rosa.html",
+    "category": "girlander",
+    "title": "Rosegirlang 160cm rosa",
+    "sku": "2194-20",
+    "price": "179.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/efe59e7b9b4abb503b1fafbb95b78748-image.jpg",
+    "description": "Rosegirlang Lengde : 160cm Merk : Tåler ikke utendørs bruk. Vil falme over tid."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/blomsterkrans-27cm-9267-99.html",
+    "category": "kranser",
+    "title": "Blomsterkrans 27cm",
+    "sku": "9267-99",
+    "price": "189.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d717b80e85dc295cdb85af973b1320b6-image.jpg",
+    "description": "Blomsterkrans Ø 27cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/blomsterkrans-27cm.html",
+    "category": "kranser",
+    "title": "Blomsterkrans 27cm",
+    "sku": "9269-45",
+    "price": "229.00",
+    "inventory": "18",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/15833302de926289c6cbe5927cddf9a2-image.jpg",
+    "description": "Blomsterkrans Ø 27cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/blomsterkrans-30cm.html",
+    "category": "kranser",
+    "title": "Blomsterkrans 30cm",
+    "sku": "2531-80",
+    "price": "249.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9df2ec7934ed401ae9daf4043c1ea0e6-image.jpg",
+    "description": "Blomsterkrans Ø : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/blomsterkrans-34cm.html",
+    "category": "kranser",
+    "title": "Blomsterkrans 34cm",
+    "sku": "6196-20",
+    "price": "299.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1d34e59a50fbd792e34ebb8a028dbfc0-image.jpg",
+    "description": "Blomsterkrans Diameter : 34cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/granbarkrans-28cm-9054-01.html",
+    "category": "kranser",
+    "title": "Granbarkrans 28cm",
+    "sku": "9054-01",
+    "price": "229.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6b7c44b024effa3f7801f11a899f0cc2-image.jpg",
+    "description": "Granbarkrans Diameter 28cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/granbarkrans-35cm-9054-02.html",
+    "category": "kranser",
+    "title": "Granbarkrans 35cm",
+    "sku": "9054-02",
+    "price": "299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8fafb908494801ca8ec878ac5cc181af-image.jpg",
+    "description": "Granbarkrans Diameter 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/granbarkrans-40cm.html",
+    "category": "kranser",
+    "title": "Granbarkrans 40cm",
+    "sku": "3564-01",
+    "price": "399.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f62cddc16e829abbda2318e8b06d105a-image.jpg",
+    "description": "Granbarkrans Ø : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/hengekrans-40c.html",
+    "category": "kranser",
+    "title": "Hengekrans 40cm",
+    "sku": "9600-90",
+    "price": "749.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2d18b2610108a3557d36cf53c191ec54-image.jpg",
+    "description": "Takhengt krans Diameter : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/hengende-krans-80cm.html",
+    "category": "kranser",
+    "title": "Hengende krans 80cm",
+    "sku": "9876-90",
+    "price": "599.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2e54d306b08014a189a366fc33af12cc-image.jpg",
+    "description": "Hengende krans. Høyde : 80cm Diameter : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/hostkrans-60cm.html",
+    "category": "kranser",
+    "title": "Høstkrans 60cm",
+    "sku": "1684-35",
+    "price": "689.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b51aaee2f8939acdaf5cba62f303b870-image.jpg",
+    "description": "Høstkrans Diameter : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/kornkrans-30cm.html",
+    "category": "kranser",
+    "title": "Kornkrans 30cm",
+    "sku": "8450-50",
+    "price": "329.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/18c41f18857c8bb9022013e1e4f8e3fe-image.jpg",
+    "description": "Krans av korn. Bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-25-cm.html",
+    "category": "kranser",
+    "title": "Krans 25 cm",
+    "sku": "9461-60",
+    "price": "269.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ae3cff05a220f247227caf38eb099c7c-image.jpg",
+    "description": "Krans Ø : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-25cm.html",
+    "category": "kranser",
+    "title": "Krans 25cm",
+    "sku": "2814-10",
+    "price": "299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/873fd07a8117342916358970ff31a2a5-image.jpg",
+    "description": "Krans Diameter : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-31cm.html",
+    "category": "kranser",
+    "title": "Krans 31cm",
+    "sku": "7509-70",
+    "price": "249.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3b5412091a6e4c1059799b5255b72429-image.jpg",
+    "description": "Krans Diameter 31cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-35cm-2815-10.html",
+    "category": "kranser",
+    "title": "Krans 35cm",
+    "sku": "2815-10",
+    "price": "499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/88c34452d36a82bece2dfeb039fbcce5-image.jpg",
+    "description": "Krans Diameter : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-38cm.html",
+    "category": "kranser",
+    "title": "Krans 38cm",
+    "sku": "1400-70",
+    "price": "299.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/254617f49b825dbd31602fc5d12790d8-image.jpg",
+    "description": "Krans Diameter : 38cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-42cm.html",
+    "category": "kranser",
+    "title": "Krans 42cm",
+    "sku": "5472-90",
+    "price": "379.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5f8a01e80ac14ad4c19877fd964c83bc-image.jpg",
+    "description": "Krans Diameter : 42cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/krans-45cm-2808-90.html",
+    "category": "kranser",
+    "title": "Krans 40cm",
+    "sku": "2808-90",
+    "price": "549.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c5fbc1f1f6a997f7e54544f6f439ab1f-image.jpg",
+    "description": "Krans Diameter : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/kvistkrans-30cm.html",
+    "category": "kranser",
+    "title": "Kvistkrans 30cm",
+    "sku": "5856-01",
+    "price": "299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b12ace8705d1d40dea89038666fe82c0-image.jpg",
+    "description": "Krans av kongler og kvist. Bredde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/lerkekrans-25cm.html",
+    "category": "kranser",
+    "title": "Lerkekrans 25cm",
+    "sku": "3298-01",
+    "price": "249.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0993b93cae0d26148c3d3362abeb6dda-image.jpg",
+    "description": "Lerkekrans Ø : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/lerkekrans-50cm.html",
+    "category": "kranser",
+    "title": "Lerkekrans 50cm",
+    "sku": "3417-01",
+    "price": "349.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/db351d1f065ad4e3f5f9513981bb6f44-image.jpg",
+    "description": "Lerkekrans Ø : Ca 50cm i ytterkant."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/solvkrans-45cm.html",
+    "category": "kranser",
+    "title": "Sølvkrans 45cm",
+    "sku": "5475-55",
+    "price": "299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/977a217bf536ead65b1f6bb8fa8c293f-image.jpg",
+    "description": "Sølvkrans Diameter : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/kranser/sommerkrans-30cm.html",
+    "category": "kranser",
+    "title": "Sommerkrans 30cm",
+    "sku": "1803-01",
+    "price": "219.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ec6eb55e26ff8a0ffbefc730e26824cf-image.jpg",
+    "description": "Sommerkrans Diameter : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-2319-40.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "2319-40",
+    "price": "39.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9710306adb299ac4e8ec95c464ac52f7-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-2672-10.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "2672-10",
+    "price": "39.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e861c019b3b277a1888c94a8f3cebf55-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3,5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-3cm-1734-10.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 3cm",
+    "sku": "1734-10",
+    "price": "39.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/49ac3d878e466d194249ca69a0ec44d4-image.jpg",
+    "description": "Lysmansjett Ø indre ring : 3cm For vanlig stearinlys"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-3cm-1734-20.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 3cm",
+    "sku": "1734-20",
+    "price": "39.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/127a8ed4c0ebd1d9ef13fa0cf990b373-image.jpg",
+    "description": "Lysmansjett Ø indre ring : 3cm For vanlig stearinlys"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-3cm-6198-40.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 3cm",
+    "sku": "6198-40",
+    "price": "49.00",
+    "inventory": "78",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e92f6ce392c7152daa7dc0beb54f6cc2-image.jpg",
+    "description": "Lysmansjett Ø indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5843-10.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5843-10",
+    "price": "49.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ef5b62fe7bb0d086ed197e9911efbd09-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5843-42.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5843-42",
+    "price": "59.00",
+    "inventory": "18",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8624728a533341adce7673b82941619b-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5843-85.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5843-85",
+    "price": "49.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8f1841647e49b6e343871e36d2f43b4e-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5846-10.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5846-10",
+    "price": "49.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ff3fee515ce239dd399e6cda57a9286e-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5846-40.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5846-40",
+    "price": "49.00",
+    "inventory": "68",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/da55150988e43981068eab30587a41b4-image.jpg",
+    "description": "Lysmansjett Bredde indre ring : 3cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-5917-10.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett",
+    "sku": "5917-10",
+    "price": "49.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d4f5e5d07dab7ce37c0e2e6a03e2303a-image.jpg",
+    "description": "Lysmansjett til vanlig stearinlys 3 cm hovedfarge hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-8cm-hvit.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 8cm hvit",
+    "sku": "2813-10",
+    "price": "99.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/91e19cf73c7ab90d2baaea11e449dffc-image.jpg",
+    "description": "Lysmansjett Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-8cm-lilla.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 8cm lilla",
+    "sku": "2813-42",
+    "price": "99.00",
+    "inventory": "14",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7e3968f8a946dd5e8ce4965fc1206495-image.jpg",
+    "description": "Lysmansjett Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-8cm-rod.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett 8cm rød",
+    "sku": "2813-85",
+    "price": "99.00",
+    "inventory": "26",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a3909a9cf95b4bce80745a3712795953-image.jpg",
+    "description": "Lysmansjett Diameter : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-gronnhvit.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett grønn/hvit",
+    "sku": "1897-01",
+    "price": "39.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cf19df7b75e37bd3c28860b41a7cc164-image.jpg",
+    "description": "Lysmansjett for stearinlys Diameter indre ring : 4cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-kubbelys-1.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett kubbelys",
+    "sku": "2344-40",
+    "price": "89.00",
+    "inventory": "85",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/92a19f7b588f96d0d84d041a3feaf9de-image.jpg",
+    "description": "Lysmansjett til kubbelys Bredde indre ring : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-kubbelys-1895-02.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett kubbelys",
+    "sku": "1895-02",
+    "price": "69.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/85493b07f71cc4ee71b2f22c0036c1f8-image.jpg",
+    "description": "Lysmansjett for kubbelys Diameter indre ring : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-kubbelys-2837-80.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett kubbelys",
+    "sku": "2837-80",
+    "price": "59.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ccb49ef4989b712789095974568c0b87-image.jpg",
+    "description": "Lysmansjett til kubbelys Bredde indre ring : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-kubbelys-lilla.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett kubbelys lilla",
+    "sku": "2002-40",
+    "price": "119.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5da51ebde22519fabe5f96c189b9a20d-image.jpg",
+    "description": "Lysmansjett Diameter 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-kubbelys-rod.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett Kubbelys rød",
+    "sku": "2002-80",
+    "price": "119.00",
+    "inventory": "39",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/48712a592cd7d5d7bba4e25bfe82c875-image.jpg",
+    "description": "Lysmansjett Diameter 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/lysmansjetter/lysmansjett-rod.html",
+    "category": "lysmansjetter",
+    "title": "Lysmansjett rød",
+    "sku": "2670-80",
+    "price": "49.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/581244b23060d92eac8a3060acf7a3cb-image.jpg",
+    "description": "Lysmansjett til stearinlys 3cm indre ring."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/palmer/areca-palme-120cm.html",
+    "category": "palmer",
+    "title": "Areca Palme 120cm",
+    "sku": "7149-120",
+    "price": "1399.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/737bd4384cf6c073e75bebe2fadc08fd-image.jpg",
+    "description": "Areca Palme i potte Høyde : 120cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/palmer/areca-palme-270cm.html",
+    "category": "palmer",
+    "title": "Areca Palme 270cm",
+    "sku": "7149-270",
+    "price": "4999.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/82ea6e7698357ffe3be42d9549934178-image.jpg",
+    "description": "Areca Palme Høyde : 270cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/palmer/cycas-palme-40cm.html",
+    "category": "palmer",
+    "title": "Cycas palme 40cm",
+    "sku": "2990-90-1",
+    "price": "229.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/abead7ebe04c7e3eb2766724b8bbaa9b-image.jpg",
+    "description": "Cycas Palme i potte Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/palmer/kentia-palme-210cm.html",
+    "category": "palmer",
+    "title": "Kentia Palme 210cm",
+    "sku": "7203-210",
+    "price": "5999.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d4dee2560c3f8aa8980189bcf55f39ac-image.jpg",
+    "description": "Farge: Grønn Høyde: 210cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/palmer/phoenix-palme-230cm-67-230.html",
+    "category": "palmer",
+    "title": "Phoenix Palme 230cm",
+    "sku": "67-230",
+    "price": "4499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1bdeee1d25322dc0755bdbbb2a710096-image.jpg",
+    "description": "Phoenix Palme Høyde : 230cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/alunrot-hvit-45cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Alunrot hvit 45cm",
+    "sku": "9697-10-1",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/875c8a5c8397561ab57a433e2c550283-image.jpg",
+    "description": "Alunrot i potte Høyde : 45cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/alunrot-rosa-45cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Alunrot rosa 45cm",
+    "sku": "9697-20-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/10b59cd343f9e1c474fa2cbd07943987-image.jpg",
+    "description": "Alunrot i potte Høyde : 45cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/begonia-2164-10-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Begonia 28cm Hvit",
+    "sku": "2164-10-1",
+    "price": "149.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/815c6a5958358137f3ddd47fd592aba4-image.jpg",
+    "description": "Begonia hvit 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/begonia-2164-21-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Begonia 28cm Lys Rosa",
+    "sku": "2164-21-1",
+    "price": "149.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b74d5c56ba57b6c8d5ff3f96bbff6b5b-image.jpg",
+    "description": "Begonia lys rosa 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/begonia.html",
+    "category": "potteplanter-blomster",
+    "title": "Begonia 28cm Rosa",
+    "sku": "2164-20-1",
+    "price": "149.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/49c2ba0bdce6798b47d753d4aa225deb-image.jpg",
+    "description": "Farge: Rosa Høyde: 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/blomst-for-dagen-8246-20-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Blomst for dagen",
+    "sku": "8246-20-1",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/be80db967f2dba418959c926ac697910-image.jpg",
+    "description": "Farge : Rosa Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/blomst-for-dagen-8246-22-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Blomst for dagen",
+    "sku": "8246-22-1",
+    "price": "149.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/eef294e2b3a2d223d133faf14b4bd8fa-image.jpg",
+    "description": "Farge : Rosa Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/blomst-for-dagen-8246-41-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Blomst for dagen",
+    "sku": "8246-41-1",
+    "price": "149.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fda452a16de04fefa73afab2a3537910-image.jpg",
+    "description": "Farge : Lilla Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/blomst-for-dagen-8246-60-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Blomst for dagen",
+    "sku": "8246-60-1",
+    "price": "149.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/23a116c0f0b10fdcb2578ad8040f9f12-image.jpg",
+    "description": "Farge : Blå Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/blomst-for-dagen-8246-65-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Blomst for dagen",
+    "sku": "8246-65-1",
+    "price": "149.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/65372bb7ee216897a21b1a972102805d-image.jpg",
+    "description": "Farge : Blå Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/bougainvillea-115cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Bougainvillea 115cm",
+    "sku": "1173-25",
+    "price": "329.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/304bd037b392db38e721f5c7c2117fcb-image.jpg",
+    "description": "Bougainvillea UTEN potte. Lengde 115cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/bromelia-40-cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Bromelia 40 cm",
+    "sku": "9164-25-1",
+    "price": "329.00",
+    "inventory": "27",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/aebd42d1b22daf4668a3736fdc26b5b0-image.jpg",
+    "description": "Bromelia i potte Høyde : 40cm Potte høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/busknellik-20cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Busknellik 20cm Hvit",
+    "sku": "3426-10-1",
+    "price": "89.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/65c8d9bf130291b520e1046ee11ac69b-image.jpg",
+    "description": "Busknellik i potte. Høyde : 20cm Høyde potte : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/busknellik-20cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Busknellik 20cm Rosa",
+    "sku": "3426-20-1",
+    "price": "89.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8959196bcd61ea70eea891799e6f038e-image.jpg",
+    "description": "Busknellik i potte. Høyde : 20cm Høyde potte : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/calla-40cm-oransje.html",
+    "category": "potteplanter-blomster",
+    "title": "Calla 40cm oransje",
+    "sku": "9702-35-1",
+    "price": "229.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8b7fb9610c393b32d04a79a97d099cde-image.jpg",
+    "description": "Calla i potte Høyde : 40cm Potte Høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/dahlia-30cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Dahlia 30cm Hvit",
+    "sku": "1178-10-1",
+    "price": "159.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7b56f77ca1e55c2899a4ffcd95e6c2c9-image.jpg",
+    "description": "dahlia i potte. Høyde 30cm inkl. potte Pottehøyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/dahlia-30cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Dahlia 30cm Rosa",
+    "sku": "1178-20-1",
+    "price": "159.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6ead8a682fa12db61b37c91899fe056e-image.jpg",
+    "description": "dahlia i potte. Høyde 30cm inkl. potte Pottehøyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/dahlia-30cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Dahlia 30cm",
+    "sku": "1178-41-1",
+    "price": "159.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0a69faac2bcc20c8498a93a14824f471-image.jpg",
+    "description": "dahlia i potte. Høyde 30cm inkl. potte Pottehøyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/flittiglise-30cm-rosahvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Flittiglise 30cm rosa/hvit",
+    "sku": "9727-21-1",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3b0d3d87355879c670b5ba106d0cb44d-image.jpg",
+    "description": "Flittiglise i potte. Høyde : 30cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/geranium-hengende-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Geranium hengende hvit",
+    "sku": "2064-10-1",
+    "price": "299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/59d839f5a146012183135eda354f101a-image.jpg",
+    "description": "Hengende geranium i potte Lengde : 50cm Potte høyde : 9cm Potte Ø topp : 11cm Potte Ø bunn : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/geranium-hvit-35cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Geranium Hvit 35cm",
+    "sku": "3489-10-1",
+    "price": "149.00",
+    "inventory": "14",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/933c00c0ced41683c5da38d3f5c34872-image.jpg",
+    "description": "Geranium i potte Høyde: 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/geranium-lys-rosa-35cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Geranium lys rosa 35cm",
+    "sku": "3489-20-1",
+    "price": "149.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7baa170121ed226f032aeb9d6575bf62-image.jpg",
+    "description": "Geranium i potte Høyde : 35cm Potte Høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/geranium-rod-35cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Geranium rød 35cm",
+    "sku": "3489-85-1",
+    "price": "149.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ae52720c6a4df7e9dfda05d7c2efeaf2-image.jpg",
+    "description": "Geranium i potte Høyde : 35cm Potte Høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/hortensia-30cm-hvitgul.html",
+    "category": "potteplanter-blomster",
+    "title": "Hortensia 30cm Hvit/gul",
+    "sku": "1565-51-1",
+    "price": "149.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1603d3b8bad76582be00d4c7fe994859-image.jpg",
+    "description": "Hortensia i potte Høyde : 30cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/hortensia-37cm-gulhvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Hortensia 37cm gul/hvit",
+    "sku": "6871-51-1",
+    "price": "239.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e32cb6c10fe87fe1ad9d1bca186d4bb1-image.jpg",
+    "description": "Hortensia i potte Høyde : 37cm Potte Høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/hyacint-22cm-bla.html",
+    "category": "potteplanter-blomster",
+    "title": "Hyacint 22cm blå",
+    "sku": "9386-60-1",
+    "price": "139.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e01f7bab5f1367baf5a23777e08c06c8-image.jpg",
+    "description": "Hyacint i potte. Høyde : 22cm Potte høyde : 6cm Potte diameter : 8/6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/ipomea-8247-20-2.html",
+    "category": "potteplanter-blomster",
+    "title": "Ipomea",
+    "sku": "8247-20-1",
+    "price": "399.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/47f614867e5408033070aab0dff0e8e7-image.jpg",
+    "description": "Ïpomea Lengde : 60cm Farge : Rosa"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/ipomea-8247-60-2.html",
+    "category": "potteplanter-blomster",
+    "title": "Ipomea Blå",
+    "sku": "8247-60-1",
+    "price": "399.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f4d5e100352c8741109cc38701b04589-image.jpg",
+    "description": "Ïpmea Lengde : 60cm Farge : Mørk blå"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/ipomea.html",
+    "category": "potteplanter-blomster",
+    "title": "Ipomea",
+    "sku": "8247-10-1",
+    "price": "399.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/bdbf6516aaa5c280fb1a0aa7fac9c2fa-image.jpg",
+    "description": "Ïpomea Lengde : 60cm Farge : hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/jernurt-28cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Jernurt 28cm hvit",
+    "sku": "8131-10-1",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/65d19bbe061a4db9d4fa5154374ac1b3-image.jpg",
+    "description": "Jernurt i potte Høyde : 28cm inkl. potte Potethøyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/kalanchoe-20cm-lilla.html",
+    "category": "potteplanter-blomster",
+    "title": "Kalanchoe 20cm Lilla",
+    "sku": "3423-40-1",
+    "price": "149.00",
+    "inventory": "3",
+    "image": "",
+    "description": "Kalanchoe Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/kalanchoe-mix-12-stk.html",
+    "category": "potteplanter-blomster",
+    "title": "Kalanchoe mix - 12 stk",
+    "sku": "9246-99-1",
+    "price": "1129.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/05fdcdc916c0e71ebf094304139202d3-image.jpg",
+    "description": "Kalanchoe mix Antall : 12 stk Høyde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/kirsebarblomst-i-potte-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Kirsebærblomst i potte Hvit",
+    "sku": "6276-10-1",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2a35c18598a8cfb69af920ceaace847e-image.jpg",
+    "description": "Kirsebærblomst i potte. Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krokus-hvit-20cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Krokus Hvit 20cm",
+    "sku": "1496-10",
+    "price": "59.00",
+    "inventory": "17",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a8edd559798334a63f17766ba35bc205-image.jpg",
+    "description": "Krokus i potte Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-2169-50-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm rosa",
+    "sku": "2169-20-1",
+    "price": "149.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/90401493743d85b5f7be9ce0e2f40306-image.jpg",
+    "description": "Krysantemum Rosa 30 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-30cm-burgunder-2.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm burgunder",
+    "sku": "3508-85-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4043552859b31bb2ee38ca70c49378e5-image.jpg",
+    "description": "Krysantemum i potte. Høyde : 30cm Potte høyde : 8cm Potte Ø : 10/7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-30cm-gul.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm gul",
+    "sku": "3508-50-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/052ff9022ae9dbfb335578633150d8f3-image.jpg",
+    "description": "Krysantemum i potte. Høyde : 30cm Potte høyde : 8cm Potte Ø : 10/7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-30cm-hvit-2.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm Hvit",
+    "sku": "3508-10-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4ddf6d73ecad1f4af946c99d90375037-image.jpg",
+    "description": "Krysantemum i potte. Høyde : 30cm Potte høyde : 8cm Potte Ø : 10/7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-30cm-oransje.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm oransje",
+    "sku": "3508-35-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cd38a2e7b60ddb6802b450ad774f0155-image.jpg",
+    "description": "Krysantemum i potte. Høyde : 30cm Potte høyde : 8cm Potte Ø : 10/7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/krysantemum-30cm-oransjerod.html",
+    "category": "potteplanter-blomster",
+    "title": "Krysantemum 30cm oransjerød",
+    "sku": "3508-33-1",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1928fcd7b65b4f758bfe8e891ee64006-image.jpg",
+    "description": "Krysantemum i potte. Høyde : 30cm Potte høyde : 8cm Potte Ø : 10/7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/lavendel-45cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Lavendel 45cm",
+    "sku": "9713-40-1",
+    "price": "179.00",
+    "inventory": "17",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/60fb0d41ff9af612a9ca69f8b98748c0-image.jpg",
+    "description": "Lavendel i potte Høyde : 45cm inkl potte. Pottehøyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/lyng-6644-40-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Lyng Lilla",
+    "sku": "6644-40-1",
+    "price": "159.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2a31bca699189e07a3a0bf2b994b2950-image.jpg",
+    "description": "Farge: Lilla Høyde: 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/lyng-6644-85-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Lyng Rød",
+    "sku": "6644-85-1",
+    "price": "159.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4a443de7486359e1625f8934a373274b-image.jpg",
+    "description": "Farge: Rød Høyde: 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/lyng.html",
+    "category": "potteplanter-blomster",
+    "title": "Lyng Hvit",
+    "sku": "6644-10-1",
+    "price": "159.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1f5cd144f3320197c2cc1c30fe966db9-image.jpg",
+    "description": "Farge: Hvit Høyde: 28 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/margeritt.html",
+    "category": "potteplanter-blomster",
+    "title": "Margeritt",
+    "sku": "3425-10-1",
+    "price": "269.00",
+    "inventory": "11",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/73f2a4a95aeb3dd9e82ae756ef16a503-image.jpg",
+    "description": "Farge : Hvit Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/miniblomster-miks.html",
+    "category": "potteplanter-blomster",
+    "title": "Miniblomster miks",
+    "sku": "5694-99-1",
+    "price": "259.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/35281ef0a8c4d543ed3b2834fd01cf58-image.jpg",
+    "description": "Farge: miks som vist på bildet Høyde: 14 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/passiflora-lilla-40cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Passiflora lilla 40cm",
+    "sku": "6521-40-1",
+    "price": "229.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/61593c7989f6188c72a642a1da14e7f9-image.jpg",
+    "description": "Passiflora (Pasjonsblomst) i potte Høyde : 40cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pens-23cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Pensé 23cm Hvit",
+    "sku": "6283-10-1",
+    "price": "89.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3077a1817f81bd401e36b31067501557-image.jpg",
+    "description": "Pensé i potte. Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pens-23cm-lilla.html",
+    "category": "potteplanter-blomster",
+    "title": "Pensé 23cm Lilla",
+    "sku": "6283-40-1",
+    "price": "79.00",
+    "inventory": "14",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fc6425ecf038a3bd7e3d2e43b049e47e-image.jpg",
+    "description": "Pensé i potte. Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pens-23cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Pensé 23cm Rosa",
+    "sku": "6283-20-1",
+    "price": "79.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2c035c1f2d42efb515681c36ae54f118-image.jpg",
+    "description": "Pensé i potte. Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pense-bla-23cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Pense Blå 23cm",
+    "sku": "6283-60-1",
+    "price": "89.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3278c90399ef57cce7df38bb2c5179c6-image.jpg",
+    "description": "Pense Høyde : 23cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/petunia-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Petunia Hvit",
+    "sku": "6382-10-1",
+    "price": "249.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5eae72f6318a347235e2b4ba5229bcc4-image.jpg",
+    "description": "Petunia i potte Høyde : 30cm Potte Høyde : 9cm Potte Ø topp : 11cm Potte Ø bunn : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/petunia-rod.html",
+    "category": "potteplanter-blomster",
+    "title": "Petunia rød",
+    "sku": "6382-80-1",
+    "price": "249.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0df407b308dd9ca8339154916360a9e1-image.jpg",
+    "description": "Petunia i potte Høyde : 30cm Potte Høyde : 9cm Potte Ø topp : 11cm Potte Ø bunn : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-2911-51-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis Gul 45cm",
+    "sku": "2911-51-1",
+    "price": "179.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0862f5178eec3a85eb7fa147e83eac0b-image.jpg",
+    "description": "Farge: Gul Høyde: 45 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-2911-95.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis Grønn 45cm",
+    "sku": "2911-95-1",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/94b6f6835b19541bdf9179b262eb5a49-image.jpg",
+    "description": "Farge: Grønn Høyde: 45 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-45cm-lilla.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 45cm lilla",
+    "sku": "2911-45-1",
+    "price": "179.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/19e8622618014129916fe697e697a0b3-image.jpg",
+    "description": "Phalaenopsis i potte. Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-45cm-mork-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis Mørk Lilla 45cm",
+    "sku": "2911-42-1",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8ddaf164a2b9715f68a957aa40effa0a-image.jpg",
+    "description": "Phalaenopsis Høyde : 45cm Farge ; Mørk Lilla"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-45cm-rosa-2911-20-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 45cm Rosa",
+    "sku": "2911-20-1",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/187f8c56920f4f7b576cc7d6ae9e1038-image.jpg",
+    "description": "Phalaenopsis i potte. Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-60cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 60cm Hvit",
+    "sku": "5754-10-1",
+    "price": "399.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/70048dc87df80c93560e3d99f40d7c0d-image.jpg",
+    "description": "Phalaenopsis i potte Høyde : 60cm Farge ; Hvit"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-60cm-lilla-5754-45-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 60cm lilla",
+    "sku": "5754-45-1",
+    "price": "399.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/532d84b0f9dac3ee5a1d0e5f68643356-image.jpg",
+    "description": "Phalaenopsis i potte Høyde : 60cm Farge ; lilla"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-60cm-lys-lilla.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 60cm Lys Lilla",
+    "sku": "5754-41-1",
+    "price": "399.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/42a6c4e6f7c9d3f10686fd5a21f59032-image.jpg",
+    "description": "Phalaenopsis Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-60cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 60cm Rosa",
+    "sku": "5754-20-1",
+    "price": "399.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/94dfe7ea84bfa14b8a01b99de0641d1e-image.jpg",
+    "description": "Phalaenopsis i potte Høyde : 60cm Farge ; Rosa"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis-65cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis 65cm",
+    "sku": "1877-10-1",
+    "price": "1499.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3134030547821e3831652664e0a81524-image.jpg",
+    "description": "Stor flott Phalaenopsis i glasspotte. Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/phalaenopsis.html",
+    "category": "potteplanter-blomster",
+    "title": "Phalaenopsis Hvit 45cm",
+    "sku": "2911-10-1",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2f814c8c0b43f98c42019634d510bf1a-image.jpg",
+    "description": "Farge: Hvit Høyde: 45 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pion-35cm-rod.html",
+    "category": "potteplanter-blomster",
+    "title": "Pion 35cm rød",
+    "sku": "8149-85-1",
+    "price": "199.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2d503a868fcf0829f3fb53bd22d3a3c1-image.jpg",
+    "description": "Pion i potte. Høyde : 35cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/prarieklokke-2971-20-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Prærieklokke Rosa",
+    "sku": "2971-20-1",
+    "price": "149.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e3c87a13be51757223fc4b053b3edc48-image.jpg",
+    "description": "Farge: Rosa Høyde: 30 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/prarieklokke-2971-60-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Prærieklokke Blå",
+    "sku": "2971-60-1",
+    "price": "149.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e7bb7de89c15e0bc7bcdeabd05adfaa6-image.jpg",
+    "description": "Farge: Blå Høyde: 30 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/prarieklokke.html",
+    "category": "potteplanter-blomster",
+    "title": "Prærieklokke Hvit",
+    "sku": "2971-10-1",
+    "price": "149.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/aa2d22ed1e785cb309cb508644ce30f3-image.jpg",
+    "description": "Farge: Hvit Høyde: 30 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pyntekurv-40cm-gul.html",
+    "category": "potteplanter-blomster",
+    "title": "Pyntekurv 40cm gul",
+    "sku": "3420-50-1",
+    "price": "159.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9b581000704594dc76818b1b351b46d9-image.jpg",
+    "description": "Pyntekurv i potte. Høyde : 40cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pyntekurv-40cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Pyntekurv 40cm hvit",
+    "sku": "3420-10-1",
+    "price": "159.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3cedea440e0fb64ed89465dc5d4adf44-image.jpg",
+    "description": "Pyntekurv i potte. Høyde : 40cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/pyntekurv-40cm-lilla.html",
+    "category": "potteplanter-blomster",
+    "title": "Pyntekurv 40cm lilla",
+    "sku": "3420-40-1",
+    "price": "159.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9ad0e78bcb90f03da7c73c9ff9254f7d-image.jpg",
+    "description": "Pyntekurv i potte. Høyde : 40cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/ranunkel-30cm-gul.html",
+    "category": "potteplanter-blomster",
+    "title": "Ranunkel 30cm Gul",
+    "sku": "8284-51-1",
+    "price": "149.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2bbe50624cde485e176d9fa6df7311ab-image.jpg",
+    "description": "Ranunkel Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/ranunkel-30cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Ranunkel 30cm Hvit",
+    "sku": "8284-10-1",
+    "price": "149.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6cecb7e6417c02f73d4ebbf6aeecf971-image.jpg",
+    "description": "Ranunkel i potte. Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/rose-34cm-gul.html",
+    "category": "potteplanter-blomster",
+    "title": "Rose 34cm gul",
+    "sku": "3506-50-1",
+    "price": "149.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/afa882376a5d0b7b1e547e1092a7b6c0-image.jpg",
+    "description": "Rose i potte. Høyde : 34cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/rose-34cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Rose 34cm rosa",
+    "sku": "3506-20-1",
+    "price": "179.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9e1f11bee10025c395fb923f2859c294-image.jpg",
+    "description": "Rose i potte. Høyde : 34cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/roser-2009-35-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Roser Oransje",
+    "sku": "1613-35-1",
+    "price": "149.00",
+    "inventory": "43",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7084b2216ef4f4e2aa03853dcc91449c-image.jpg",
+    "description": "Farge : Oransje Høyde : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/snodrape-20cm.html",
+    "category": "potteplanter-blomster",
+    "title": "Snødråpe 20cm",
+    "sku": "9206",
+    "price": "159.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f7b2368a8eb15343d2747288e98fdd57-image.jpg",
+    "description": "Snødråpe i potte Høyde : 20cm MERK : potten er ikke lik som på bildet. Potten er av sten."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/valmue-40cm-hvit.html",
+    "category": "potteplanter-blomster",
+    "title": "Valmue 40cm hvit",
+    "sku": "1564-10",
+    "price": "149.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/30ae0babc7b56b5b48353f37e5bdd355-image.jpg",
+    "description": "Valmue i potte. Høyde : 40cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/valmue-40cm-rosa.html",
+    "category": "potteplanter-blomster",
+    "title": "Valmue 40cm rosa",
+    "sku": "1564-20-1",
+    "price": "149.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2cbbbfeafe57e91916e0e77d00afc191-image.jpg",
+    "description": "Valmue i potte. Høyde : 40cm Potte høyde: 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/veronica-46cm-lilla-8130-42-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Veronica 46cm lilla",
+    "sku": "8130-42-1",
+    "price": "179.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/79ee47a20ea152192c9c53814f978d90-image.jpg",
+    "description": "Veronica i potte Høyde : 46cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/veronica-8130-40-1.html",
+    "category": "potteplanter-blomster",
+    "title": "Veronica",
+    "sku": "8130-40-1",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1535888912314432584d28f61e2304e9-image.jpg",
+    "description": "Farge: Lilla Høyde: 46 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-blomster/veronica.html",
+    "category": "potteplanter-blomster",
+    "title": "Veronica",
+    "sku": "8130-10-1",
+    "price": "179.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/dda4fa19cf2db9f19368e986c93e72c4-image.jpg",
+    "description": "Farge: Hvit Høyde: 46 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/aloe-45cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Aloe 45cm",
+    "sku": "2324",
+    "price": "899.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/823d83ff0cb2131efa8f96f3c477c4b5-image.jpg",
+    "description": "Aloe Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/aloe-50cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Aloe 50cm",
+    "sku": "2327",
+    "price": "899.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0fcd6dcef58188c5ea5186d8b000802f-image.jpg",
+    "description": "Aloe Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/bonsai-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Bonsai 35cm",
+    "sku": "1851-95-1",
+    "price": "499.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/570329cc33157a1371669f35a1c48f9a-image.jpg",
+    "description": "Kunstog Bonsai i potte. Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/bonsai-40cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Bonsai 40cm",
+    "sku": "1852-95-1",
+    "price": "969.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8f9bbd633a564c121ebc4eb259dac12a-image.jpg",
+    "description": "Bonsai i potte. Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/buxbom-ball-15cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Buxbom Ball 15cm",
+    "sku": "5606-75",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2d6168f983cc3e7e83a369971afc8647-image.jpg",
+    "description": "Buxbom Ball Fage : Sort Bredde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/calathea-55cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Calathea 55cm",
+    "sku": "2139-85-1",
+    "price": "349.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/456c2804f48513fc114065aa04237ad4-image.jpg",
+    "description": "Calathea i potte Høyde : 55cm Potte høyde : 8cm Potte Ø bunn : 7cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/ceropegia-22cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Ceropegia 22cm",
+    "sku": "9011-90-1",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b1f90ddafeba45bdd5d1914be059a47e-image.jpg",
+    "description": "Ceropgia ring. Høyde : 22cm Diameter 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/ceropgia-28cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Ceropgia 28cm",
+    "sku": "9012-90-1",
+    "price": "379.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a83bf401a8deaf65051c393b54bef5d0-image.jpg",
+    "description": "Ceropgia ring. Høyde : 28cm diameter 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/clorophyton-med-blomster.html",
+    "category": "potteplanter-gronne",
+    "title": "Clorophyton med blomster",
+    "sku": "2537-95-1",
+    "price": "189.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/98eea42eacc6c72eed31ab61a5ead53e-image.jpg",
+    "description": "Stor fin Clorophyton (Grønnrenner) med hvite blomster Høyde : 35 cm Bredde : 45 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/cucullata-60cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Cucullata 60cm",
+    "sku": "9607-90-3",
+    "price": "299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6660afc8f97a1aef38602de41fd0ce55-image.jpg",
+    "description": "Cucullata - Hengende. Høyde : 60cm Potte H : 7cm Potte Ø 9cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/draecena-40cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Draecena 40cm",
+    "sku": "5809-96-1",
+    "price": "169.00",
+    "inventory": "15",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/76010b235f3fd2eaa91427001e8e8877-image.jpg",
+    "description": "Draecena i potte Høyde : 40 cm Potte høyde : 8cm Potte diameter topp : 10cm Potte diameter bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/drueranke-120cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Drueranke 120cm",
+    "sku": "5848",
+    "price": "249.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0f5a81bfc94e11f4cb8f6257466340e1-image.jpg",
+    "description": "Drueranke Lengde 120cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/echeveria-40-cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Echeveria 40 cm",
+    "sku": "9062-96-1",
+    "price": "299.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ba4273a6c94b99194ab20aa6731c5c50-image.jpg",
+    "description": "Echeveria i potte. Høyde : 40cm Høyde potte : 13cm Potte Ø topp : 16cm Potte Ø bunn : 12cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-65cm-taler-sollys-5728.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 65cm - Tåler sollys",
+    "sku": "5728",
+    "price": "429.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6debca66264114b205a6a1a6adfc918a-image.jpg",
+    "description": "Flott eføy som tåler sollys godt. NB : Uten potte Lengde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-65cm-taler-sollys.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 50cm - tåler sollys",
+    "sku": "5727",
+    "price": "269.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d0c07078cd7c24c634ee8a3126921ee2-image.jpg",
+    "description": "Eføy Tåler sollys meget godt. Lengde : 50cm NB : Leveres er uten potte."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-70cm-6366-90.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 70cm",
+    "sku": "6366-90",
+    "price": "199.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4f759afa0f0599442fac0df6563a9a91-image.jpg",
+    "description": "Eføy Lengde : 70cm NB : Uten potte."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-70cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 70cm",
+    "sku": "6367-95",
+    "price": "199.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b6211022935ea25a99aa768241b0bad2-image.jpg",
+    "description": "Eføy 70cm NB : Uten potte."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-75cm-taler-sollys.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 75cm - Tåler sollys",
+    "sku": "5729",
+    "price": "599.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3d59ff78d3c826be91bcfeed0ec97bae-image.jpg",
+    "description": "Eføy Tåler sollys meget godt. Lengde : 75cm NB : Leveres er uten potte."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-85cm-mork.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy 85cm mørk",
+    "sku": "6166-90-1",
+    "price": "299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8926acb543d81f42ead0ce543eb56de0-image.jpg",
+    "description": "Eføy i potte Lengde : 85cm Høyde : 22cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoy-ring-i-potte-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføy ring i potte 35cm",
+    "sku": "5811-90-1",
+    "price": "169.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4555382706a4a5ff7ab9a7f8a79f8231-image.jpg",
+    "description": "Eføying i potte Høyde : 35 cm Diameter : 30cm Potte høyde : 8cm Potte diameter topp : 10cm Potte diameter bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoyring-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføyring 35cm",
+    "sku": "5812-95-1",
+    "price": "179.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4b09e43a06888cc88baf23b88e5dbd2c-image.jpg",
+    "description": "Eføyring i potte Høyde : 40 cm Diameter : 30cm Potte høyde : 8cm Potte diameter topp : 10cm Potte diameter bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/efoyring-i-potte-38cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Eføyring i potte 38cm",
+    "sku": "3271-95-1",
+    "price": "179.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1f24ef2515d36e6efbac43c6d2b7925f-image.jpg",
+    "description": "Eføyting i potte Høyde : 38cm Ø : 25cm Potte høyde : 8cm Potte Ø bunn : 8cm Potte Ø topp : 10cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/fiolfikus-40cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Fiolfikus 40cm",
+    "sku": "1650-90-1",
+    "price": "229.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/52fa05dd89cf5b591091546c67a20a77-image.jpg",
+    "description": "Fiolfikus i potte. Høyde : 40cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/fittonia-40cm-2.html",
+    "category": "potteplanter-gronne",
+    "title": "Fittonia 40cm",
+    "sku": "5807-96-1",
+    "price": "199.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d59ab156cd82dd30c2c2e13ce365a3c1-image.jpg",
+    "description": "Fittonia i potte Høyde : 40cm Potte Ø topp : 10cm Potte Ø bunn : 7cm Potte høyde : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/gress-50cm-7130-050.html",
+    "category": "potteplanter-gronne",
+    "title": "Gress 50cm",
+    "sku": "7130-050",
+    "price": "149.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8998fef2112be5a769e935efce039009-image.jpg",
+    "description": "Gress i potte Høyde : 50cm Potte høyde : 8cm Potte diameter topp : 9cm Potte diameter bunn : 6cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/gress-85cm-3597-91.html",
+    "category": "potteplanter-gronne",
+    "title": "Gress 85cm",
+    "sku": "3597-91",
+    "price": "39.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a27c0ac0d2f95edee24dc00a1537611a-image.jpg",
+    "description": "Gress Høyde : 85"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/gress-i-potte-80cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Gress 80cm",
+    "sku": "7126-080",
+    "price": "349.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/717b6717d008ba667d008b5c78737bc7-image.jpg",
+    "description": "Gress i potte. Høyde : 80cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/gullranke-55cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Gullranke 55cm",
+    "sku": "1175-95-1",
+    "price": "249.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0485223bc2fe53955044a451751c1d34-image.jpg",
+    "description": "Gullranke i potte Lengde : 55cm Høyde : 25cm Potte høyde : 8cm Potte diameter topp : 10cm Potte diameter bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/juletre-36cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Juletre 36cm",
+    "sku": "1961-90-1",
+    "price": "179.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/42a7b56584830641b386e5537a0280ea-image.jpg",
+    "description": "Søtt lite juletre i potte. Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/marginata-20-cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Marginata 20 cm",
+    "sku": "6282-90-1",
+    "price": "99.00",
+    "inventory": "30",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/dd510a52c5588f198751fccd74c6ab6c-image.jpg",
+    "description": "Marginata i potte. Høyde : 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/monstera-60-cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Monstera 60 cm",
+    "sku": "1356-90",
+    "price": "549.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/91b7a6a538a0d93fbe1a9899240b6bb1-image.jpg",
+    "description": "Monstera i potte. Høyde : 60cm Potte høyde 15 cm Potte diameter topp 14 cm Potte diameter bunn 10 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/muehlenbeckia-ball-30cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Muehlenbeckia ball 30cm",
+    "sku": "2573-90",
+    "price": "699.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1121cf0f5b40bdde838785a0e6d3b94f-image.jpg",
+    "description": "Muehlenbeckia ball Diameter : 30cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/oliventre-55cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Oliventre 55cm",
+    "sku": "3934-90-1",
+    "price": "429.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0d74f4afa3952b30996f09c3a5ae9f40-image.jpg",
+    "description": "Oliventre i potte. Høyde : 55cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/ormegress-60cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Ormegress 60cm",
+    "sku": "1690-90-1",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/25958132be56a9b4f3430d3320c504fc-image.jpg",
+    "description": "Ormegress i potte. Høyde: 25cm Diameter : 50-60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/ormegress-85cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Ormegress 45cm",
+    "sku": "2374",
+    "price": "299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/865c6db3de2ea025ee8c3d78f71f830a-image.jpg",
+    "description": "Ormegress i potte Diameter : 45cm Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/prikkeblad-55cm-3090-95-1.html",
+    "category": "potteplanter-gronne",
+    "title": "Prikkeblad 55cm",
+    "sku": "3090-95-1",
+    "price": "299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/344253bbc6bf0eea78f1fb3047f5c4bc-image.jpg",
+    "description": "Prikkeblad i potte Høyde : 55cm Potte høyde : 9cm Potte Ø bunn : 8cm Potte Ø topp : 11cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/prikkeblad-55cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Prikkeblad 55cm",
+    "sku": "3060-95-1",
+    "price": "349.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ac81a0cccfa57aeef41a1f73dfc091d0-image.jpg",
+    "description": "Prikkeblad i potte. Høyde : 55cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/rexbegonia-20-cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Rexbegonia 20 cm",
+    "sku": "9136-25-1",
+    "price": "129.00",
+    "inventory": "24",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e3fb216921a0b6df892b36567aecdd76-image.jpg",
+    "description": "Rexbegonia i potte Høyde : 20cm Potte høyde : 6cm Potte Ø bunn : 6cm Potte Ø topp : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/rosmarin-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Rosmarin 35cm",
+    "sku": "9107-90-1",
+    "price": "229.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/429f8ea32c2f4839cd21a49795ec4bfb-image.jpg",
+    "description": "Rosmarin i potte Høyde : 35cm Potte høyde : 8cm Potte Ø topp : 10cm Potte Ø bunn : 7cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/senecio-45cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Senecio 45cm",
+    "sku": "2227-96",
+    "price": "449.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/914a552c5eda576e893059c906872c05-image.jpg",
+    "description": "Takhengt Senecio Lengde : 45cm Diameter : 28cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/sitrusbusk-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Sitrusbusk 35cm",
+    "sku": "5924",
+    "price": "699.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cbe99a0a554472bf8f967f98978a2eb0-image.jpg",
+    "description": "Sitrusbusk i potte. Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/succulent-30cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Succulent 30cm",
+    "sku": "2456-40-1",
+    "price": "179.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9abf30d397d49ed576db1f374888f076-image.jpg",
+    "description": "Succulent 30cm Pot height 7 cm Pot ø top 9 cm Pot ø bottom 6 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/succulent-mix-2.html",
+    "category": "potteplanter-gronne",
+    "title": "Succulent mix",
+    "sku": "3659-99-1",
+    "price": "329.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d1d7c3bc953333ad20c9606320a6ca25-image.jpg",
+    "description": "2 stk succulenter i potte. Høyde : 13-20cm Potte høyde : 6cm Potte Ø bunn : 5cm Potte Ø topp : 8cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/tillandsia-45cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Tillandsia 45cm",
+    "sku": "9253-95-3",
+    "price": "159.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/499592972a3c5b5be189d928a8d6fcdd-image.jpg",
+    "description": "Takhengt Tillandsia i potte Lengde : 45cm Potte Høyde : 6cm Potte Diameter topp : 8cm Potte Diameter bunn : 5cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/tyttebaerball-15cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Tyttebærball 15cm",
+    "sku": "6337-90",
+    "price": "179.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b02bc743ba7d59022fc780a736f65a50-image.jpg",
+    "description": "Ball av tyttebærlyng. Diameter : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/vinbusk-35cm.html",
+    "category": "potteplanter-gronne",
+    "title": "Vinbusk 35cm",
+    "sku": "2614-90-1",
+    "price": "229.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2e677c864abb04a12da9022f5779b36b-image.jpg",
+    "description": "Vinbusk uten druer Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/potteplanter-gronne/yucca.html",
+    "category": "potteplanter-gronne",
+    "title": "Yucca",
+    "sku": "2928-90-1",
+    "price": "799.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f14dac96be1860c7fa50b5bae59da572-image.jpg",
+    "description": "Agave i potte Høyde : 58cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/adiantum-60cm.html",
+    "category": "snitt",
+    "title": "Adiantum 60cm",
+    "sku": "6209-90",
+    "price": "29.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/016cfdde414c900c30b7979ceb24fa63-image.jpg",
+    "description": "Adiantumblad Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/aspargesblad-80cm.html",
+    "category": "snitt",
+    "title": "Aspargesblad 80cm",
+    "sku": "2102-90",
+    "price": "89.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c60a10cf3218d671c67ba6982aaf100d-image.jpg",
+    "description": "Aspergesblad Høyde : 80cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/bjork-70m.html",
+    "category": "snitt",
+    "title": "Bjørk 70cm",
+    "sku": "391a",
+    "price": "139.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/32f5eeb9d6a35caac199bfeb2bbf8be0-image.jpg",
+    "description": "Bjørkekvist med blader Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/blaklokke-65cm-hvit.html",
+    "category": "snitt",
+    "title": "Blåklokke 65cm - Hvit",
+    "sku": "3497-10",
+    "price": "39.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/56bf996263a6ed5c4d33e0b6c9ff1264-image.jpg",
+    "description": "Blåklokke Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/brudeslor-50cm.html",
+    "category": "snitt",
+    "title": "Brudeslør 50cm",
+    "sku": "8710-10",
+    "price": "45.00",
+    "inventory": "29",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9492c0b147d3030bbda979a2a5dbcafe-image.jpg",
+    "description": "Brudeslør Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/buxbom-kvist-25cm.html",
+    "category": "snitt",
+    "title": "Buxbom kvist 25cm",
+    "sku": "2657-90",
+    "price": "15.00",
+    "inventory": "28",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cdd9f2337de2678d4159f384d057753a-image.jpg",
+    "description": "Kvist av buxbom For dekorasjoner o.l Høyde : 25cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/clematis-110cm.html",
+    "category": "snitt",
+    "title": "Clematis 110cm",
+    "sku": "1457-60",
+    "price": "129.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2d2b44375a6f0c0bdb422ed1e2b382f4-image.jpg",
+    "description": "Clematis snitt Høyde : 110cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/delphinium-90cm.html",
+    "category": "snitt",
+    "title": "Delphinium 90cm",
+    "sku": "1800-60",
+    "price": "99.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3fad819b28108ae0e6b6cd6f9597fde4-image.jpg",
+    "description": "Delphinium Høyde : 90cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/engletrompet-90cm-oransje.html",
+    "category": "snitt",
+    "title": "Engletrompet 90cm oransje",
+    "sku": "2017-35",
+    "price": "229.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/30fa62cd8ad0a3886fd1759ca7edc0d2-image.jpg",
+    "description": "Engletrompet Høyde : 90cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/engletrompet-90cm.html",
+    "category": "snitt",
+    "title": "Engletrompet 90cm",
+    "sku": "2017-10",
+    "price": "229.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ddfce6d302414c2666bf23fde29f3f90-image.jpg",
+    "description": "Engletrompet Høyde : 90cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/epleblomst-49cm.html",
+    "category": "snitt",
+    "title": "Epleblomst 49cm",
+    "sku": "7087",
+    "price": "29.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d366ee8766bedd5474a47f913e794544-image.jpg",
+    "description": "Kvist med epleblomster Høyde : 49cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/epleblomst-50cm.html",
+    "category": "snitt",
+    "title": "Epleblomst 50cm",
+    "sku": "5423-10",
+    "price": "69.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e649ca1dd437579199d0fc41d3bb610b-image.jpg",
+    "description": "Kvist med epleblomster Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eternell-50cm-bla.html",
+    "category": "snitt",
+    "title": "Eternell 50cm blå",
+    "sku": "2434-60",
+    "price": "29.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f98dfae9a55fac0ba4433e8926e54c26-image.jpg",
+    "description": "Eternell snittblomst Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eternell-50cm-hvit.html",
+    "category": "snitt",
+    "title": "Eternell 50cm hvit",
+    "sku": "2434-10",
+    "price": "29.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b5489f779f2e1a81ff3472fb94a516cc-image.jpg",
+    "description": "Eternell snittblomst Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eternell-50cm-lilla.html",
+    "category": "snitt",
+    "title": "Eternell 50cm lilla",
+    "sku": "2434-40",
+    "price": "29.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a18f4a4e2080b8d9b9ede2e39951969b-image.jpg",
+    "description": "Eternell snittblomst Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eternell-50cm-rosa.html",
+    "category": "snitt",
+    "title": "Eternell 50cm rosa",
+    "sku": "2434-20",
+    "price": "29.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9b062e9bf74b82354dc13dc62b1bf87e-image.jpg",
+    "description": "Eternell snittblomst Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eukalyptus-40cm.html",
+    "category": "snitt",
+    "title": "Eukalyptus 40cm",
+    "sku": "1437-90",
+    "price": "39.00",
+    "inventory": "17",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c92bd1834890f14b98b0d0ef6655505d-image.jpg",
+    "description": "Eukalyptus Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eukalyptusgren-60cm.html",
+    "category": "snitt",
+    "title": "Eukalyptusgren 60cm",
+    "sku": "7567-90",
+    "price": "59.00",
+    "inventory": "80",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fc703db6a8b93889d0592dd83494a392-image.jpg",
+    "description": "Eukalyptusgren Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eukalyptusgren-70cm.html",
+    "category": "snitt",
+    "title": "Eukalyptusgren 70cm",
+    "sku": "1438-90",
+    "price": "69.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/88b8ccb9a4eeb05c003f814155efb963-image.jpg",
+    "description": "Eukalyptusgren Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/eukalyptusgren-74cm.html",
+    "category": "snitt",
+    "title": "Eukalyptusgren 74cm",
+    "sku": "7568-90",
+    "price": "69.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e02d2d3e88e38bd36712a5b6b0a5ea93-image.jpg",
+    "description": "Eukalyptusgren Høyde : 74cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/flyteblader.html",
+    "category": "snitt",
+    "title": "Flyteblader",
+    "sku": "3635-90",
+    "price": "29.40",
+    "inventory": "38",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c27e77e6ca90bdcf0783e917cf0c79c8-image.jpg",
+    "description": "Flyteblader Pakke med blader som flyter. Perfekt for hagedammen."
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/furukvist-50cm.html",
+    "category": "snitt",
+    "title": "Furukvist 50cm",
+    "sku": "6101-90",
+    "price": "49.00",
+    "inventory": "41",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6d8a5bf18a1efb961a33302d0c6eea40-image.jpg",
+    "description": "Furukvist med kongler Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/gasunger-36cm-1578-90.html",
+    "category": "snitt",
+    "title": "Gåsunger 36cm",
+    "sku": "1578-90",
+    "price": "29.00",
+    "inventory": "41",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/92b05288b0c0ca3cbaaf85fb952248c9-image.jpg",
+    "description": "Gåsunger Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/gasunger-40cm.html",
+    "category": "snitt",
+    "title": "Gåsunger 40cm",
+    "sku": "4026",
+    "price": "69.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/835928328b25dd69d44940f0236f8f37-image.jpg",
+    "description": "Gåsunger Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/gasunger-8cm.html",
+    "category": "snitt",
+    "title": "Gåsunger 85cm",
+    "sku": "6116-90",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/eafaf642c4783706e7280d024d4ff6d4-image.jpg",
+    "description": "Kvist med Gåsunger Høyde : 85cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/hortensia-40cm-2408-65.html",
+    "category": "snitt",
+    "title": "Hortensia 40cm",
+    "sku": "2408-65",
+    "price": "69.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1d7ca7fb872463a167296a03ac1bcf81-image.jpg",
+    "description": "Hortensia Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/hortensia-40cm-lilla-2408-41.html",
+    "category": "snitt",
+    "title": "Hortensia 40cm lilla",
+    "sku": "2408-41",
+    "price": "69.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5099f75b3e89d7bfb8a2446d6331e13a-image.jpg",
+    "description": "Hortensia Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/hortensia-40cm-lilla.html",
+    "category": "snitt",
+    "title": "Hortensia 40cm Lilla",
+    "sku": "2408-40",
+    "price": "69.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b7221fa5b3481cecc0d38297128147bd-image.jpg",
+    "description": "Hortensia Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/hortensia-40cm-rosa.html",
+    "category": "snitt",
+    "title": "Hortensia 40cm rosa",
+    "sku": "2408-21",
+    "price": "69.00",
+    "inventory": "16",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/bf41276d4c95d78799e0aee7d695a600-image.jpg",
+    "description": "Hortensia Høyde : 40cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kattost-160cm.html",
+    "category": "snitt",
+    "title": "Kattost 160cm",
+    "sku": "1606-10",
+    "price": "259.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/381d7598c986d8e15a889c9c0c330b93-image.jpg",
+    "description": "Kattost Lengde : 160cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kirsebaerblomst-70cm-krem.html",
+    "category": "snitt",
+    "title": "Kirsebærblomst 70cm krem",
+    "sku": "390a-01",
+    "price": "79.00",
+    "inventory": "23",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5387031c7c737207c6a58cedb5d19a30-image.jpg",
+    "description": "Kirsebærsblomst Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kirsebarsblomst-hvit-45cm.html",
+    "category": "snitt",
+    "title": "Kirsebærsblomst Hvit 45cm",
+    "sku": "5928-10",
+    "price": "49.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/da536070e4303edde13b250050bf8c83-image.jpg",
+    "description": "Kirsebærsblomst Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kirsebarsblomst-rosa-45cm.html",
+    "category": "snitt",
+    "title": "Kirsebærsblomst Rosa 45cm",
+    "sku": "5928-20",
+    "price": "49.00",
+    "inventory": "16",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/58513f8fd8545bfc0b2e8eb7f017be75-image.jpg",
+    "description": "Kirsebærsblomst Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kirsebarskvist-hvit.html",
+    "category": "snitt",
+    "title": "Kirsebærskvist hvit",
+    "sku": "3431-10",
+    "price": "59.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/cd79c2b0889b2b15a0c95c38d42db7f4-image.jpg",
+    "description": "Kirsebærskvist hvit 60 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kirsebarskvist-rosa.html",
+    "category": "snitt",
+    "title": "Kirsebærskvist rosa",
+    "sku": "3431-20",
+    "price": "59.00",
+    "inventory": "19",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3034c651358c75682720b443577c20a7-image.jpg",
+    "description": "Kirsebærskvist rosa 60 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kvist-35cm.html",
+    "category": "snitt",
+    "title": "Kvist 35cm",
+    "sku": "8416-90",
+    "price": "29.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/19b397055fe3248845aa97b9e49f2687-image.jpg",
+    "description": "Kvist Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kvist-med-kongler-60cm.html",
+    "category": "snitt",
+    "title": "Kvist med kongler 60cm",
+    "sku": "9118-70",
+    "price": "49.00",
+    "inventory": "29",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7e4407ede3a3128237148a6931f3c704-image.jpg",
+    "description": "Kvist med kongler Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/kvist-med-kongler-70cm.html",
+    "category": "snitt",
+    "title": "Kvist med kongler 70cm",
+    "sku": "3237-01",
+    "price": "129.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b78cf05c978052cd948aa3e89e2e4728-image.jpg",
+    "description": "Kvist med kongler Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/lerkekvist-65cm.html",
+    "category": "snitt",
+    "title": "Lerkekvist 65cm",
+    "sku": "9940-03",
+    "price": "129.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2a74a65fcb87f0e22f0b1388e281a4cf-image.jpg",
+    "description": "Lerkekvist Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/lerkekvist-95cm.html",
+    "category": "snitt",
+    "title": "lerkekvist 95cm",
+    "sku": "3532-91",
+    "price": "249.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b72343c2c324b6eea079ac44aa3fabd7-image.jpg",
+    "description": "Lerkekvist Høyde : 95cm Farge : grønn/grå"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/liljekonvall-21cm.html",
+    "category": "snitt",
+    "title": "Liljekonvall 20cm",
+    "sku": "2562-10",
+    "price": "29.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7dd99fa128d98413aedd32a573e55221-image.jpg",
+    "description": "Liljekonvall Høyde: 20cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/magnolia-65cm-oransje.html",
+    "category": "snitt",
+    "title": "Magnolia 65cm Oransje",
+    "sku": "1109-30",
+    "price": "129.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3de2a98d07dba1fb83cc97e16b471c39-image.jpg",
+    "description": "Magnolia Høyde ; 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/magnolia-65cm.html",
+    "category": "snitt",
+    "title": "Magnolia 65cm",
+    "sku": "1109-10",
+    "price": "99.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c7f1fd5978ae4863ef9e734c316c2308-image.jpg",
+    "description": "Magnolia snitt. Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/magnolia-hvit-60cm.html",
+    "category": "snitt",
+    "title": "Magnolia Hvit 60cm",
+    "sku": "6173-10",
+    "price": "129.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f11d488638834f120dcaf891ff9a491d-image.jpg",
+    "description": "Magnolia Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/magnolia-mork-rosa-60cm.html",
+    "category": "snitt",
+    "title": "Magnolia Mørk Rosa 60cm",
+    "sku": "6173-22",
+    "price": "129.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/05c97c75257936e4f96f1c340d9094fc-image.jpg",
+    "description": "Magnolia Høyde ; 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/magnolia-rosa-60cm.html",
+    "category": "snitt",
+    "title": "Magnolia Rosa 60cm",
+    "sku": "6173-20",
+    "price": "129.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b5db3628107fe4355f84cac3151be6e1-image.jpg",
+    "description": "Magnolia Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/margeritt-32cm.html",
+    "category": "snitt",
+    "title": "Margeritt 32cm",
+    "sku": "6207-10",
+    "price": "29.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3dad8561f420a8fa4c20e9726181807d-image.jpg",
+    "description": "Margeritt Høyde: 32cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/narsiss-hvit-2.html",
+    "category": "snitt",
+    "title": "Narsiss hvit 2",
+    "sku": "5923-10",
+    "price": "15.00",
+    "inventory": "23",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e2b33161fd05fd0dc1ac3c49aafb39b3-image.jpg",
+    "description": "Narsiss Hvit 2 25 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/olivenkvist-55cm.html",
+    "category": "snitt",
+    "title": "Olivenkvist 55cm",
+    "sku": "4430",
+    "price": "149.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e8355a1b34a344ba25c0521933815dca-image.jpg",
+    "description": "Olivenkvist Høyde : 55cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/ormegressblad-45cm.html",
+    "category": "snitt",
+    "title": "Ormegressblad 45cm",
+    "sku": "1995-01",
+    "price": "39.00",
+    "inventory": "47",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/129a503bb2fa8c4db3dd07f5a916c583-image.jpg",
+    "description": "Ormegressblad Høyde : 45cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/ormegressblad-60cm.html",
+    "category": "snitt",
+    "title": "Ormegressblad 60cm",
+    "sku": "6208-90",
+    "price": "39.00",
+    "inventory": "26",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4c1c16ca73e5e5e39177be097da7036b-image.jpg",
+    "description": "Ormegressblad Høyde : 60cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/pinselilje-35cm-1513-11.html",
+    "category": "snitt",
+    "title": "Pinselilje 35cm",
+    "sku": "1513-11",
+    "price": "59.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7451e81409e5d0d13c24c648422f1280-image.jpg",
+    "description": "Pinselilje Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/pinselilje-35cm.html",
+    "category": "snitt",
+    "title": "Pinselilje 35cm",
+    "sku": "1513-10",
+    "price": "59.00",
+    "inventory": "100",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6fb3620b91ae99d44d6abfb93a4b5387-image.jpg",
+    "description": "Pinselilje Høyde : 35cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/prestekrage-50cm.html",
+    "category": "snitt",
+    "title": "Prestekrage 50cm",
+    "sku": "1576-10",
+    "price": "59.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3c6c19b7023c5984525f73ee674d2e9d-image.jpg",
+    "description": "Prestekrage Høyde: 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/pyntekorg-65cm-gul.html",
+    "category": "snitt",
+    "title": "Pyntekorg 65cm gul",
+    "sku": "9624-50",
+    "price": "149.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fa7d391693e635cb679f84a60014e655-image.jpg",
+    "description": "Pyntekorg Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-beige.html",
+    "category": "snitt",
+    "title": "Rose 50cm beige",
+    "sku": "9603-71",
+    "price": "39.00",
+    "inventory": "38",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3afdc556ecd62392d3feeb5e501bfcdc-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-gronn-2889-96.html",
+    "category": "snitt",
+    "title": "Rose 50cm Grønn",
+    "sku": "2889-96",
+    "price": "39.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/be95622bdb20c5d70545289d18e01fc3-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-gronn.html",
+    "category": "snitt",
+    "title": "Rose 50cm Grønn",
+    "sku": "2889-90",
+    "price": "39.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4fabf2c748ce77595754afd3178d00f8-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-gul-2.html",
+    "category": "snitt",
+    "title": "Rose 50cm gul",
+    "sku": "9603-51",
+    "price": "39.00",
+    "inventory": "47",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0750b7ff4b6a28a2ba628a46bbab4dbd-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-gul.html",
+    "category": "snitt",
+    "title": "Rose 50cm Gul",
+    "sku": "2889-51",
+    "price": "39.00",
+    "inventory": "13",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/9b4080094fdf9505df70528e217d9dfd-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-hvit.html",
+    "category": "snitt",
+    "title": "Rose 50cm hvit",
+    "sku": "9603-10",
+    "price": "39.00",
+    "inventory": "37",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7ea7a4c8d099a07223a50f4d4bbbf651-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-hvitrosa.html",
+    "category": "snitt",
+    "title": "Rose 50cm Hvit",
+    "sku": "2889-11",
+    "price": "39.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/450e7a46fac9188162c14eac07f4a20e-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-lilla-2889-40.html",
+    "category": "snitt",
+    "title": "Rose 50cm Lilla",
+    "sku": "2889-40",
+    "price": "39.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4514cbeb86f068b526eeae526ac7880a-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-lilla-2889-48.html",
+    "category": "snitt",
+    "title": "Rose 50cm Lilla",
+    "sku": "2889-48",
+    "price": "39.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f8774a22bd88699f836aed7df5eb5bad-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-lilla-2891.html",
+    "category": "snitt",
+    "title": "Rose 50cm lilla",
+    "sku": "9603-41",
+    "price": "39.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4edab440946fd2b3318fb0fad7374f5a-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-lilla.html",
+    "category": "snitt",
+    "title": "Rose 50cm lilla",
+    "sku": "9603-40",
+    "price": "39.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/8ae8479bfbc5ecc6a741b7e3b74674be-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-oransje-2.html",
+    "category": "snitt",
+    "title": "Rose 50cm oransje",
+    "sku": "9603-30",
+    "price": "39.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/758fe3152330c430a85931a99ac497ab-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-oransje-4.html",
+    "category": "snitt",
+    "title": "Rose 50cm oransje",
+    "sku": "9603-32",
+    "price": "39.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2de1703e343be1c0e0a0845310216eaa-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rod-2.html",
+    "category": "snitt",
+    "title": "Rose 50cm rød",
+    "sku": "9603-80",
+    "price": "39.00",
+    "inventory": "26",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/92bda2c516d498ddc5310bd44b7b6f13-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rod.html",
+    "category": "snitt",
+    "title": "Rose 50cm Rød",
+    "sku": "2889-80",
+    "price": "39.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/509e7f9e59d083b72b503628082ae314-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa-2889-24.html",
+    "category": "snitt",
+    "title": "Rose 50cm Rosa",
+    "sku": "2889-24",
+    "price": "39.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/a8384e9820e28c0c3e9ea8d5e206dde6-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa-2889-25.html",
+    "category": "snitt",
+    "title": "Rose 50cm Rosa",
+    "sku": "2889-25",
+    "price": "39.00",
+    "inventory": "22",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/07b20c24db8d1ce51f9fc681ca9769a5-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa-2891.html",
+    "category": "snitt",
+    "title": "Rose 50cm rosa",
+    "sku": "9603-20",
+    "price": "39.00",
+    "inventory": "45",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/7e4f49224d2eb80a8a001f4757de1987-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa-2893.html",
+    "category": "snitt",
+    "title": "Rose 50cm rosa",
+    "sku": "9603-21",
+    "price": "39.00",
+    "inventory": "48",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f275c7b077513b2a94105c23dd450e00-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa-2895.html",
+    "category": "snitt",
+    "title": "Rose 50cm rosa",
+    "sku": "9603-25",
+    "price": "39.00",
+    "inventory": "45",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1f55f610f135d8cfca9525b318a97198-image.jpg",
+    "description": "Snittrose Høyde : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-50cm-rosa.html",
+    "category": "snitt",
+    "title": "Rose 50cm Rosa",
+    "sku": "2889-20",
+    "price": "39.00",
+    "inventory": "32",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6d6c2d3fecd449e90a00d00a7270f7f6-image.jpg",
+    "description": "Kunstig Rose Høyde :50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-70cm-real-touch-rosa.html",
+    "category": "snitt",
+    "title": "Rose 70cm Real Touch Rosa",
+    "sku": "6232",
+    "price": "99.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/eebe9e4b4ad6157ab771bd929e432407-image.jpg",
+    "description": "Kunstig Rose Laget real touch materiale. Føles ekte. Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-75cm-lilla-2890-43.html",
+    "category": "snitt",
+    "title": "Rose 75cm Lilla",
+    "sku": "2890-43",
+    "price": "99.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b98a8b00714659cb31bb187f0c8babeb-image.jpg",
+    "description": "Kunstig Rose Høyde : 75cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-75cm-lilla.html",
+    "category": "snitt",
+    "title": "Rose 75cm Lilla",
+    "sku": "2890-40",
+    "price": "99.00",
+    "inventory": "9",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/96b3806b3e1e1713d8bd1eb0509f16bb-image.jpg",
+    "description": "Kunstig Rose Høyde : 75cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-75cm-rod.html",
+    "category": "snitt",
+    "title": "Rose 75cm Rød",
+    "sku": "2890-80",
+    "price": "99.00",
+    "inventory": "11",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f0e5aad191bdee2096486c65b508d235-image.jpg",
+    "description": "Kunstig Rose Høyde : 75cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/rose-75cm-rosa-2890-23.html",
+    "category": "snitt",
+    "title": "Rose 75cm Rosa",
+    "sku": "2890-23",
+    "price": "99.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3fece2709b505d4aecc0827c27d81775-image.jpg",
+    "description": "Kunstig Rose Høyde : 75cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/slorasparges-70cm.html",
+    "category": "snitt",
+    "title": "Slørasparges 70cm",
+    "sku": "9249-90",
+    "price": "69.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1558ea33aac0a0bc3b854f7b7edfb1b8-image.jpg",
+    "description": "Slørasparges Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/solsikke-65cm.html",
+    "category": "snitt",
+    "title": "solsikke 65cm",
+    "sku": "9383-50",
+    "price": "139.00",
+    "inventory": "5",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/39c5e35a7be7afb51b73212cb22a4300-image.jpg",
+    "description": "Solsikke Høyde : 65cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/solsikke-70cm.html",
+    "category": "snitt",
+    "title": "Solsikke 70cm",
+    "sku": "9128-50",
+    "price": "199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/3269a0db520d7cbdb2e0d77628495823-image.jpg",
+    "description": "Solsikke Høyde : 70cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tlipan-miks.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-80",
+    "price": "159.00",
+    "inventory": "6",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/acec574faf76093d0d846bed167e944b-image.jpg",
+    "description": "Assortert 3 stk Farge : Rød Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-37cm-1988-21.html",
+    "category": "snitt",
+    "title": "Tulipan 37cm",
+    "sku": "1988-21",
+    "price": "29.00",
+    "inventory": "25",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/81f08758e5602b0a3228651f194c77ac-image.jpg",
+    "description": "Tulipan Høyde : 37cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-37cm-1988-30.html",
+    "category": "snitt",
+    "title": "Tulipan 37cm",
+    "sku": "1988-30",
+    "price": "29.00",
+    "inventory": "35",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/040215a8ee1a67d5cc2eb493128353d8-image.jpg",
+    "description": "Tulipan Høyde : 37cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-20.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-20",
+    "price": "159.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/97eab864d0184995ea1004172aae8715-image.jpg",
+    "description": "Assortert 3 stk Farge : Rosa Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-21.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-21",
+    "price": "159.00",
+    "inventory": "13",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/31cf1c624229619fbbc544d3b768894d-image.jpg",
+    "description": "Assortert 3 stk Farge : Rosa Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-22.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-22",
+    "price": "159.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/c22f59c633827fd5b7c59e36dbd94d33-image.jpg",
+    "description": "Assortert 3 stk Farge : Rosa Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-23.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-23",
+    "price": "159.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2cc04404b18235d029919bebf6879d7c-image.jpg",
+    "description": "Assortert 3 stk Farge : Rosa Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-35.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-35",
+    "price": "159.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5109a7f04840960b6111cf2e58eb9fbf-image.jpg",
+    "description": "Assortert 3 stk Farge : Orange Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-39.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-39",
+    "price": "159.00",
+    "inventory": "13",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d6004e6338cd745eebd7a82a6a9381dc-image.jpg",
+    "description": "Assortert 3 stk Farge : Orange Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-40.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-40",
+    "price": "159.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/1e1f470f0bb07bbd53a1f50425034cfe-image.jpg",
+    "description": "Assortert 3 stk Farge : Lilla Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-2620-50.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-50",
+    "price": "159.00",
+    "inventory": "8",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/5e5a92258092e28df662b7dbaf4b52b1-image.jpg",
+    "description": "Assortert 3 stk Farge : Gul Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks-lilla.html",
+    "category": "snitt",
+    "title": "Tulipan Miks Lilla",
+    "sku": "2620-45",
+    "price": "159.00",
+    "inventory": "7",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fa6b809bd9c44adee3a666413a9524bb-image.jpg",
+    "description": "3 stk Tulipaner Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/tulipan-miks.html",
+    "category": "snitt",
+    "title": "Tulipan Miks",
+    "sku": "2620-10",
+    "price": "159.00",
+    "inventory": "20",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b47007e7b1dd3292e7567347cb420b37-image.jpg",
+    "description": "Assortert 3 stk Farge : Hvit Høyde : 36cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/snitt/valmue-43cm.html",
+    "category": "snitt",
+    "title": "Valmue 43cm",
+    "sku": "valmue",
+    "price": "39.00",
+    "inventory": "10",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e46d03989ba829c3dfa3b5914a17e6ba-image.jpg",
+    "description": "Valmue Høyde : 43cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/bambus-150cm.html",
+    "category": "trar-busker",
+    "title": "Bambus 150cm",
+    "sku": "54-135",
+    "price": "2299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/76854fac1137ee466a24d3855069e001-image.jpg",
+    "description": "Bambus i potte. Høyde : 150cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/bambus-210cm.html",
+    "category": "trar-busker",
+    "title": "Bambus 210cm",
+    "sku": "7322-210",
+    "price": "2899.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6e6cabfd843a0d879a9dc23c2f2c4a76-image.jpg",
+    "description": "Bambus i potte. Høyde : 210cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/bambus-med-potte-160cm.html",
+    "category": "trar-busker",
+    "title": "Bambus med potte 160cm",
+    "sku": "7456-160",
+    "price": "2999.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/6faee8609e91cb692af4d681d8e12621-image.jpg",
+    "description": "Flott Bambus inkl. potte. Høyde : 160CM"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/boxwood-pa-stamme-50cm.html",
+    "category": "trar-busker",
+    "title": "Boxwood på stamme 70cm",
+    "sku": "1007-050",
+    "price": "3499.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fc7b5e43da618c8f0929f224542a1979-image.jpg",
+    "description": "Boxwood på stamme. Høyde : ca 70cm Ø : 50cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/buxbom-115cm.html",
+    "category": "trar-busker",
+    "title": "Buxbom 115cm",
+    "sku": "7119-115",
+    "price": "2799.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/ed07386268f4071e2d4f4fc24b262af7-image.jpg",
+    "description": "Buxbom på stamme. Høyde : 115cm Bredde : 55cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/buxbom-sprial-130cm.html",
+    "category": "trar-busker",
+    "title": "Buxbom Spiral 130cm",
+    "sku": "12-130",
+    "price": "3499.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/732a3a3dc6cde0cfc15940bc90ec1c61-image.jpg",
+    "description": "Nydelig Buxbom spiral med ekte tre i stammen. Perfekt for uteplassen, inngangspartiet eller veranda. Tåler sollys veldig godt og falmer ikke. Høyde : 130cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/buxbomkule-85cm.html",
+    "category": "trar-busker",
+    "title": "Buxbomkule 85cm",
+    "sku": "9954-085",
+    "price": "7999.00",
+    "inventory": "",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/d25b6b67522e7e67529e67b2ef9f0201-image.jpg",
+    "description": "Buxbomkule i potte. Tåler meget godt sollys. Height 85 cm Diameter ø 65 cm Pot height 18 cm Pot ø top 17 cm Pot ø bottom 17 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/drueplante-130cm.html",
+    "category": "trar-busker",
+    "title": "Drueplante 130cm",
+    "sku": "1111-130",
+    "price": "2299.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/54db885e1cd9279bb4af65329666c45f-image.jpg",
+    "description": "Drueplante i potte. Høyde : 130cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/eik-170cm.html",
+    "category": "trar-busker",
+    "title": "Eik 170cm",
+    "sku": "7216-170",
+    "price": "3199.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/49ecfbb3f079fbd45b5dad39dbcf1490-image.jpg",
+    "description": "Eiketre i potte Høyde : 170cm inkl potte. Pottehøyde : 15cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/fikus-150cm.html",
+    "category": "trar-busker",
+    "title": "Fikus 150cm",
+    "sku": "7215-150",
+    "price": "1999.00",
+    "inventory": "12",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/0492fdf00dcd04fb6010b36953841982-image.jpg",
+    "description": "Fikus i potte. Høyde : 150cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/fikus-benjamin-150-cm.html",
+    "category": "trar-busker",
+    "title": "Fikus Benjamin 150 cm",
+    "sku": "7174-150",
+    "price": "1799.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/275f286717fe6649fca051126667fc15-image.jpg",
+    "description": "Fikus Benjamin i potte. Høyde : 150cm Potte høyde : 13cm Potte Ø topp : 14cm Potte Ø bunn : 14cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/fikus-benjamin-210-cm.html",
+    "category": "trar-busker",
+    "title": "Fikus Benjamin 210 cm",
+    "sku": "7174-210",
+    "price": "2999.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/40c737e9ae69441a0a4f20dfe1511be7-image.jpg",
+    "description": "Fikus Benjamin i potte. Høyde : 210cm Potte høyde : 17cm Potte Ø topp : 18cm Potte Ø bunn : 18cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/lerketre-i-potte-100cm.html",
+    "category": "trar-busker",
+    "title": "Lerketre i potte 100cm",
+    "sku": "7396-100",
+    "price": "1299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/45157a593f6202bc49188c3549e14ab0-image.jpg",
+    "description": "Nydelig kunstig Lerketre med kongler i flott potte. Høyde : 100cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/lerketre-i-potte-180cm.html",
+    "category": "trar-busker",
+    "title": "Lerketre i potte 180cm",
+    "sku": "7396-180",
+    "price": "3299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/31f37e91e2300bd588c3a14a2732e280-image.jpg",
+    "description": "Nydelig kunstig Lerketre fra MR Plant med kongler i flott potte. Høyde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/margeritt-pa-stamme.html",
+    "category": "trar-busker",
+    "title": "Margeritt på stamme",
+    "sku": "8272-105",
+    "price": "1199.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fd4213da49dd9bc2407cfab22753debb-image.jpg",
+    "description": "Margeritt på stamme, i potte Høyde : 105cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/monstera-120cm-2.html",
+    "category": "trar-busker",
+    "title": "Monstera 120cm",
+    "sku": "7044-120",
+    "price": "1499.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/aeda6da74e0c9a964ef68eb23179fe53-image.jpg",
+    "description": "Monstera i potte. Høyde 120cm Potte høyde : 12cm Potte Ø : 16cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/oliventre-120cm.html",
+    "category": "trar-busker",
+    "title": "Oliventre 120cm",
+    "sku": "7336-120",
+    "price": "2999.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/2fb639e07c69de0b73b52f37f482754a-image.jpg",
+    "description": "Kunstig Oliventre Farge: Grønn Høyde: 120cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/oliventre-160cm.html",
+    "category": "trar-busker",
+    "title": "Oliventre 150cm",
+    "sku": "7336-160",
+    "price": "3299.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/fc4ee355149ee0b296a1ac8f8bf43496-image.jpg",
+    "description": "Kunstig Oliventre Farge: Grønn Høyde: 150cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/oliventre-80cm.html",
+    "category": "trar-busker",
+    "title": "Oliventre 80cm",
+    "sku": "7336-080",
+    "price": "1499.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/b7a0436a963dcbae56a24798388af238-image.jpg",
+    "description": "Kunstig Oliventre Farge: Grønn Høyde: 80cm Ekte treverk i stammen"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/ormegress-pa-stamme-100cm.html",
+    "category": "trar-busker",
+    "title": "Ormegress på stamme 100cm",
+    "sku": "7230-100",
+    "price": "1499.00",
+    "inventory": "4",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/f5656e6c3d155df1963f4c85cc66ebc0-image.jpg",
+    "description": "Ormegress på stamme. Høyde : 100cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/ormegress-pa-stamme-180cm.html",
+    "category": "trar-busker",
+    "title": "Ormegress på stamme 180cm",
+    "sku": "7230-180",
+    "price": "2999.00",
+    "inventory": "3",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/e145275d526d6412b97e49125a3568fb-image.jpg",
+    "description": "Ormegress på stamme. Høyde : 180cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/sitrustre-70cm.html",
+    "category": "trar-busker",
+    "title": "Sitrustre 70cm",
+    "sku": "7012-070",
+    "price": "699.00",
+    "inventory": "1",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/da52d8235fa88bd2c7231a5dd07ad4db-image.jpg",
+    "description": "Sitrustre i potte Height 70 cm Pot height 11 cm Pot ø top 13 cm Pot ø bottom 8 cm"
+  },
+  {
+    "file": "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/trar-busker/thuja-120cm.html",
+    "category": "trar-busker",
+    "title": "Thuja 120cm",
+    "sku": "7025-120",
+    "price": "2399.00",
+    "inventory": "2",
+    "image": "../../assets/img/640/640/bilder_nettbutikk/4a5594e2d31c6f5fc48bd0d1101fe0dc-image.jpg",
+    "description": "Thuja i potte. Høyde : 120cm Potte høyde : 14cm Potte Ø topp : 16cm Potte Ø bunn : 15cm"
+  }
+]

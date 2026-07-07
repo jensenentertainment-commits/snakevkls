@@ -364,20 +364,32 @@ await logActivity({
                     <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
                       Lokasjonsliste
                     </h2>
-                    <p className="mt-1 text-sm text-neutral-500">
-                      {loading
-                        ? "Henter lokasjoner..."
-                        : `${filteredLocations.length} av ${locations.length} lokasjoner vises`}
-                    </p>
+                    <p className="mt-1 text-sm text-neutral-600">
+  {loading
+    ? "Børre henter lokasjoner."
+    : emptyLocationCount > 0
+      ? `Børre ser ${emptyLocationCount} tomme lokasjoner. Det kan være helt greit, eller lageret har vært kreativt.`
+      : missingZoneCount > 0
+        ? `Børre ser ${missingZoneCount} lokasjoner uten sone. Det er vanskelig å sortere ting uten rammer.`
+        : "Børre finner ingen store lokasjonsproblemer akkurat nå."}
+</p>
                   </div>
 
-                  <Link
-                    href="/products"
-                    className="text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
-                  >
-                    Gå til produkter
-                  </Link>
-                </div>
+               <div className="flex flex-col items-start gap-2 sm:items-end">
+  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+    {loading
+      ? "Henter lokasjoner"
+      : `Viser ${filteredLocations.length} av ${locations.length}`}
+  </p>
+
+  <Link
+    href="/products"
+    className="text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+  >
+    Gå til produkter
+  </Link>
+</div>
+   </div>
 
 
                 {/* Mobil / nettbrett */}

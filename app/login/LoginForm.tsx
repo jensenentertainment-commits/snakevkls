@@ -28,7 +28,7 @@ export default function LoginForm() {
       return;
     }
 
-    window.location.assign("/");
+    window.location.assign("/dashboard");
   }
 
   return (
@@ -45,7 +45,7 @@ export default function LoginForm() {
         className="w-full max-w-sm rounded-[32px] border border-white/10 bg-white/[0.045] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl"
       >
         <p className="text-xs uppercase tracking-[0.24em] text-white/45">
-          Snake VKLS
+          Snake OS
         </p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight">

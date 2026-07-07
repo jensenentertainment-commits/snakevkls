@@ -17,6 +17,7 @@ import SnakeHero from "../components/SnakeHero";
 import { supabase } from "@/lib/supabase";
 import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
+import BorrePanel from "../components/BorrePanel";
 
  const ASSIGN_ENDPOINT = "/api/inventory/set-location";
 
@@ -289,8 +290,8 @@ if (!res.ok) {
   eyebrow="Snake / Ryddemodus"
   title="Sett eksakte lokasjoner"
   description="Én vare om gangen. Velg riktig lokasjon, lagre, og gå videre. Dette er Snake sin fokuserte arbeidsflyt for produkter som har sone, men mangler fast plassering."
-  backHref="/"
-  backLabel="Tilbake til dashboard"
+  backHref="/lager"
+  backLabel="Tilbake"
   right={
     <div className="grid grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
       <MiniStat label="i kø" value={products.length} />
@@ -316,6 +317,8 @@ if (!res.ok) {
     </div>
   </div>
 </SnakeHero>
+
+
 
           <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[1fr_420px]">
             <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
@@ -457,33 +460,30 @@ if (!res.ok) {
             </section>
 
             <aside className="space-y-5">
-              <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#055a7d]/15 bg-[#055a7d]/10 text-[#055a7d]">
-                    <Layers className="h-5 w-5" />
-                  </div>
+              <section className="rounded-[26px] border border-black/10 bg-white p-5 shadow-md">
+  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
+    Børre / Snake Intelligence
+  </p>
 
-                  <div>
-                    <h2 className="text-lg font-semibold text-neutral-950">
-                      Ryddemodus v2
-                    </h2>
-                    <p className="text-sm text-neutral-500">
-                      Fokusert kø. Mindre støy.
-                    </p>
-                  </div>
-                </div>
+  <h2 className="mt-3 text-2xl font-black text-neutral-950">
+    Børre følger køen
+  </h2>
 
-                <div className="mt-5 space-y-3 text-sm leading-6 text-neutral-600">
-                  <p>
-                    Denne siden viser produkter som allerede har sone, men
-                    mangler eksakt lokasjon.
-                  </p>
-                  <p>
-                    Hopp over legger produktet bakerst i køen, slik at du kan
-                    fortsette uten å stoppe flyten.
-                  </p>
-                </div>
-              </section>
+  <p className="mt-3 text-sm leading-6 text-neutral-600">
+    Denne siden viser produkter som allerede har sone, men mangler eksakt lokasjon.
+  </p>
+
+  <div className="mt-5 rounded-2xl border border-black/10 bg-neutral-50 p-4">
+    <p className="text-sm font-semibold text-neutral-950">
+      Børre anbefaler:
+    </p>
+
+    <p className="mt-2 text-sm leading-6 text-neutral-600">
+      Velg riktig lokasjon, lagre, og gå videre. Hopp over hvis du er usikker.
+      Produktet legger seg bakerst i køen.
+    </p>
+  </div>
+</section>
 
               <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
                 <h2 className="text-lg font-semibold text-neutral-950">

@@ -8,6 +8,8 @@ import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
+import BorrePanel from "@/app/components/BorrePanel";
+
 
 type Severity = "critical" | "warning" | "info";
 type IssueFilter = "all" | Severity;
@@ -317,28 +319,42 @@ const productsWithoutLocation = products.filter((product) => {
 
           <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
             <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-              <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <div>
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
-                    Prioritert arbeidsliste
-                  </h2>
+             <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+  <div>
+    <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+      Prioritert arbeidsliste
+    </h2>
 
-                  <p className="mt-1 text-sm text-neutral-500">
-                    {loading
-                      ? "Henter avvik..."
-                      : `${filteredIssues.length} av ${totalIssues} avvik vises`}
-                  </p>
-                </div>
+    <p className="mt-1 text-sm text-neutral-600">
+      {loading
+        ? "Børre henter avvik."
+        : criticalCount > 0
+          ? `Børre ser ${criticalCount} kritiske avvik. Start der før lageret begynner å improvisere.`
+          : warningCount > 0
+            ? `Børre ser ${warningCount} ting som bør sjekkes. Ikke krise, men heller ikke pynt.`
+            : totalIssues > 0
+              ? `Børre ser ${totalIssues} avvik totalt. Det meste virker håndterbart.`
+              : "Børre finner ingen avvik akkurat nå. Dette er sjelden nok til å nevnes."}
+    </p>
+  </div>
 
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
-                  >
-                    Nullstill søk
-                  </button>
-                )}
-              </div>
+  <div className="flex flex-col gap-2 sm:items-end">
+    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+      {loading
+        ? "Henter avvik"
+        : `Viser ${filteredIssues.length} av ${totalIssues}`}
+    </p>
+
+    {query && (
+      <button
+        onClick={() => setQuery("")}
+        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+      >
+        Nullstill søk
+      </button>
+    )}
+  </div>
+</div>
 
               {loading ? (
                 <EmptyState text="Laster avvik..." />

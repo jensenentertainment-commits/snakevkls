@@ -55,6 +55,8 @@ const [completing, setCompleting] = useState(false);
   ? completedLocationIds.includes(selectedLocation.id)
   : false;
 
+
+  
   const filteredLocations = useMemo(() => {
     const term = search.trim().toLowerCase();
 
@@ -354,9 +356,9 @@ function getLocationProgress() {
             <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
   {!selectedLocation ? (
     <EmptyState
-      title="Velg en lokasjon"
-      text="Snake viser forventet innhold når en lokasjon er valgt."
-    />
+  title="Velg en lokasjon"
+  text="Børre venter på en lokasjon før han begynner å mene noe."
+/>
   ) : selectedLocation.inventory.length === 0 ? (
     <EmptyState
       title="Tom lokasjon"
@@ -364,10 +366,26 @@ function getLocationProgress() {
     />
   ) : (
                 <>
-  {(() => {
-    const progress = getLocationProgress();
+ {(() => {
+  const progress = getLocationProgress();
 
-    if (!progress) return null;
+  if (!progress) return null;
+
+  const remaining = progress.total - progress.counted;
+
+  return (
+    <>
+      <div className="mb-5 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#b58a14]">
+          Børre / Lokasjonstelling
+        </p>
+
+        <p className="mt-2 text-sm leading-6 text-neutral-600">
+          {remaining > 0
+            ? `Børre følger tellingen. ${remaining} lagerlinjer gjenstår på ${selectedLocation.code}.`
+            : `Alle linjer på ${selectedLocation.code} er telt. Børre noterer kontrollert fremgang.`}
+        </p>
+      </div>
 
     return (
       <div
@@ -427,9 +445,10 @@ function getLocationProgress() {
 )}
           </div>
         </div>
-      </div>
-    );
-  })()}
+           </div>
+    </>
+  );
+})()}
 
 
                   <div className="mt-6 space-y-3">

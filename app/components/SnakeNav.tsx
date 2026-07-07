@@ -3,11 +3,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Settings } from "lucide-react";
+
 import { supabase } from "@/lib/supabase";
 import SnakeLogoutButton from "./SnakeLogoutButton";
 import { usePathname } from "next/navigation";
-import { SNAKE_VERSION } from "@/lib/version";
+import {
+  Activity,
+  Bot,
+  Boxes,
+  ClipboardCheck,
+  FlaskConical,
+  MapPin,
+  Package,
+  Search,
+  Settings,
+  TriangleAlert,
+  Wrench,
+} from "lucide-react";
 
 
 type Profile = {
@@ -76,7 +88,7 @@ if (nextProfile) {
 const pathname = usePathname();
   return (
     <header className="relative z-[9999] mb-8 flex items-center justify-between gap-6">
-      <Link href="/" className="flex items-center gap-4">
+      <Link href="/dashboard" className="flex items-center gap-4">
         <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04] shadow-lg shadow-black/20">
           <Image
             src="/vk_logo2.png"
@@ -89,44 +101,76 @@ const pathname = usePathname();
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-white/72">
-            SNAKE VKLS
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/72">
+            SNAKE OS
           </p>
-          <h1 className="text-sm font-medium uppercase tracking-[0.08em text-white/72">
-            Varekompaniets Lagersystem
-          </h1>
+          
         </div>
       </Link>
 
-      <nav className="hidden items-center gap-2 rounded-full border border-white/[0.08] bg-[#083844]/88 backdrop-blur-xl p-1 shadow-lg shadow-black/20 md:flex">
-        <NavLink href="/" label="Forside" pathname={pathname} />
-        <NavLink href="/products" label="Produkter" pathname={pathname} />
-        <NavLink href="/locations" label="Lokasjoner" pathname={pathname} />
-        <NavLink href="/issues" label="Avvik" pathname={pathname}/>
-        <NavLink href="/fix-locations" label="Ryddemodus" pathname={pathname}/>
-        <NavLink href="/location-count" label="Lokasjonstelling" pathname={pathname}/>
-        <NavLink href="/activities" label="Aktivitet" pathname={pathname} />
+      <nav className="hidden items-center gap-1 rounded-full border border-white/[0.08] bg-[#083844]/88 p-1 shadow-lg shadow-black/20 backdrop-blur-xl md:flex">
+  <NavLink href="/lager" label="Lager" icon={<Package />} pathname={pathname} />
+  <NavLink href="/products" label="Produkter" icon={<Search />} pathname={pathname} />
+  <NavLink href="/locations" label="Lokasjoner" icon={<MapPin />} pathname={pathname} />
 
-        {isAdmin && (
+  <div className="mx-1 h-6 w-px bg-white/10" />
+
+  <NavLink href="/fix-locations" label="Ryddemodus" icon={<Wrench />} pathname={pathname} />
+  <NavLink href="/issues" label="Avvik" icon={<TriangleAlert />} pathname={pathname} />
+  <NavLink href="/location-count" label="Telling" icon={<ClipboardCheck />} pathname={pathname} />
+  <NavLink href="/activities" label="Aktivitet" icon={<Activity />} pathname={pathname} />
+</nav>
+
+{isAdmin && (
   <Link
     href="/settings"
     title="Innstillinger"
-    className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
+    className={`inline-flex h-12 w-12 items-center justify-center rounded-full border transition ${
       pathname.startsWith("/settings")
-        ? "bg-[#b58a14] text-white shadow-lg shadow-[#b58a14]/25"
-        : "text-white/68 hover:bg-[color:rgba(75,108,147,0.18)] hover:text-white"
+        ? "border-[#b58a14]/40 bg-[#b58a14] text-white shadow-lg shadow-[#b58a14]/25"
+        : "border-white/10 bg-white/[0.04] text-white/60 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
     }`}
   >
     <Settings className="h-[18px] w-[18px]" />
   </Link>
 )}
 
+        
+{isAdmin && (
+  <Link
+    href="/labs"
+    title="Labs"
+    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] transition ${
+      pathname.startsWith("/labs")
+        ? "border-violet-400/50 bg-violet-500 text-white"
+        : "border-violet-400/25 bg-violet-500/10 text-violet-200 hover:border-violet-400/50 hover:bg-violet-500/20 hover:text-white"
+    }`}
+  >
+    <FlaskConical className="h-4 w-4" />
+    LABS
+  </Link>
+)}
+
+
+
 <Link
-  href="/changelog"
-  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45 transition hover:bg-white/10 hover:text-white/70"
+  href="/borre"
+  title="Børre"
+  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] transition ${
+    pathname.startsWith("/borre")
+      ? "border-[#b58a14]/50 bg-[#b58a14] text-white"
+      : "border-[#b58a14]/35 bg-[#b58a14]/10 text-[#e8c25a] hover:border-[#b58a14]/60 hover:bg-[#b58a14]/20 hover:text-white"
+  }`}
 >
-  SNAKE v{SNAKE_VERSION}
+  <Bot className="h-4 w-4" />
+  BØRRE
 </Link>
+
+        
+
+   
+
+
 
       <div ref={userMenuRef} className="relative z-[500] pl-3">
   <button
@@ -188,7 +232,7 @@ const pathname = usePathname();
   </div>
 </div>
   
-      </nav>
+      
     </header>
   );
 }
@@ -196,26 +240,26 @@ const pathname = usePathname();
 function NavLink({
   href,
   label,
+  icon,
   pathname,
 }: {
   href: string;
   label: string;
+  icon: React.ReactNode;
   pathname: string;
 }) {
-  const active =
-    href === "/"
-      ? pathname === "/"
-      : pathname.startsWith(href);
+  const active = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link
       href={href}
-      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+      className={`inline-flex items-center gap-2 rounded-2xl border px-3.5 py-2 text-xs font-black uppercase tracking-[0.12em] transition ${
         active
-          ? "bg-white/[0.08] text-white shadow-inner shadow-white/5"
-          : "text-white/68 hover:bg-[color:rgba(75,108,147,0.18)] hover:text-white"
+          ? "border-[#b58a14]/45 bg-[#b58a14]/20 text-white"
+          : "border-transparent text-white/58 hover:border-white/10 hover:bg-white/[0.07] hover:text-white"
       }`}
     >
+      <span className="[&>svg]:h-4 [&>svg]:w-4">{icon}</span>
       {label}
     </Link>
   );

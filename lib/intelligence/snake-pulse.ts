@@ -156,61 +156,48 @@ const PULSES: Record<PulseCategory, string[]> = {
   ],
 };
 
-function randomItem<T>(items: T[]): T {
-  return items[Math.floor(Math.random() * items.length)];
+function pickItem<T>(items: T[], seed: number): T {
+  const index = Math.abs(seed) % items.length;
+  return items[index];
 }
 
-function maybeDynamicPulse(context: Required<PulseContext>) {
+function maybeDynamicPulse(
+  context: Required<PulseContext>,
+  seed: number
+): string | null {
   const dynamic: string[] = [];
 
   if (context.missingLocations > 0) {
     dynamic.push(
-      `${context.missingLocations} varer mangler fortsatt lokasjon. De virker overraskende komfortable med situasjonen.`,
-      `${context.missingLocations} varer venter på fast adresse. Snake later som dette er normalt.`,
-      `${context.missingLocations} plasseringer gjenstår. Fremtiden har spørsmål.`,
-      `${context.missingLocations} varer mangler lokasjon. Dette er en form for geografi.`,
-      `${context.missingLocations} produkter har ennå ikke funnet hjem. Ryddemodus vet hvor du bor.`
+      `${context.missingLocations} produkter mangler lokasjon. De virker overraskende komfortable med situasjonen.`
     );
   }
 
   if (context.quantityDiffs > 0) {
     dynamic.push(
-      `${context.quantityDiffs} differanser observert. Systemet velger foreløpig å ikke få panikk.`,
-      `${context.quantityDiffs} quantity-diff registrert. Lageret har meninger.`,
-      `${context.quantityDiffs} avvik mellom Snake og Shopify. Noen tall bør snakke sammen.`,
-      `${context.quantityDiffs} lageravvik funnet. Dette virker som et problem for noen.`,
-      `${context.quantityDiffs} differanser registrert. Snake anbefaler moderat skepsis.`
+      `${context.quantityDiffs} produkter har avvik. Snake foreslår at vi ikke later som dette er pynt.`
     );
   }
 
   if (context.unresolvedIssues > 0) {
     dynamic.push(
-      `${context.unresolvedIssues} åpne avklaringer venter. De har ikke glemt deg.`,
-      `${context.unresolvedIssues} ting bør sjekkes. Snake peker stille.`,
-      `${context.unresolvedIssues} uløste signaler ligger og ser på deg.`,
-      `${context.unresolvedIssues} forhold krever oppmerksomhet. Gjerne før de får venner.`
+      `${context.unresolvedIssues} ting bør sjekkes. Ikke krise, men heller ikke dekor.`
     );
   }
 
-  if (context.warehouseHealth < 50) {
+  if (context.warehouseHealth < 40) {
     dynamic.push(
-      `Snake Health er ${context.warehouseHealth}/100. Lageret bør kanskje sette seg ned litt.`,
-      `Snake Health ${context.warehouseHealth}/100. Systemet anbefaler rolig alvor.`,
-      `Lagerhelsen er ${context.warehouseHealth}/100. Ikke krise, men heller ikke spa.`
+      `Snake Health er ${context.warehouseHealth}/100. Systemet anbefaler rolig alvor.`
     );
   }
 
   if (!context.pickEnabled) {
-    dynamic.push(
-      "Plukk er ikke aktivert. Det er sikkert greit. Foreløpig.",
-      "Plukkemodul avventer modenhet.",
-      "Plukk kommer senere. Lageret får øve på å stå stille først."
-    );
+    dynamic.push("Plukkemodul avventer modenhet.");
   }
 
   if (dynamic.length === 0) return null;
 
-  return randomItem(dynamic);
+  return pickItem(dynamic, seed);
 }
 
 export function getSnakePulse(context?: PulseContext) {
@@ -222,9 +209,17 @@ export function getSnakePulse(context?: PulseContext) {
     pickEnabled: context?.pickEnabled ?? false,
   };
 
-  // 22 % sjanse for dynamisk kommentar basert på ekte Snake-data
-  if (Math.random() < 0.22) {
-    const dynamicPulse = maybeDynamicPulse(safeContext);
+  const seed =
+    safeContext.missingLocations * 3 +
+    safeContext.quantityDiffs * 5 +
+    safeContext.unresolvedIssues * 7 +
+    safeContext.warehouseHealth * 11 +
+    (safeContext.pickEnabled ? 13 : 17);
+
+  const shouldUseDynamic = seed % 5 === 0;
+
+  if (shouldUseDynamic) {
+    const dynamicPulse = maybeDynamicPulse(safeContext, seed);
 
     if (dynamicPulse) return dynamicPulse;
   }
@@ -261,15 +256,14 @@ export function getSnakePulse(context?: PulseContext) {
     categories.push("stable", "stable");
   }
 
-  if (Math.random() < 0.14) {
+  if (seed % 7 === 0) {
     categories.push("existential");
   }
 
- const selectedCategory: PulseCategory = randomItem(
-  categories.length
-    ? categories
-    : (["stable"] as PulseCategory[])
-);
+  const selectedCategory = pickItem(
+    categories.length ? categories : (["stable"] as PulseCategory[]),
+    seed
+  );
 
-return randomItem(PULSES[selectedCategory]);
+  return pickItem(PULSES[selectedCategory], seed + selectedCategory.length);
 }

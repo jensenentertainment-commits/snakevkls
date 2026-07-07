@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSnakePulse } from "@/lib/snake-pulse";
+import { getSnakePulse } from "@/lib/intelligence/snake-pulse";
 
 type SnakeFooterProps = {
   missingLocations?: number;
@@ -75,7 +75,7 @@ useEffect(() => {
         </div>
 
         <div className="uppercase tracking-[0.2em] text-white/35">
-          Snake VKLS BY JENSEN DIGITAL
+          Snake OS BY JENSEN DIGITAL
         </div>
       </div>
     </footer>

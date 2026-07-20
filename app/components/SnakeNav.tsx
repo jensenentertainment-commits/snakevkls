@@ -20,10 +20,12 @@ import {
   TriangleAlert,
   Wrench,
 } from "lucide-react";
+import { isRole, type Role } from "@/lib/auth/roles";
 
 
 type Profile = {
-  role: "admin" | "lager" | "viewer";
+  role: Role;
+  active: boolean;
   display_name: string | null;
 };
 
@@ -39,7 +41,21 @@ useEffect(() => {
   const cached = window.localStorage.getItem("snake_profile");
 
   if (cached) {
-    setProfile(JSON.parse(cached) as Profile);
+    try {
+      const cachedProfile = JSON.parse(cached) as Partial<Profile>;
+
+      if (
+        cachedProfile.active === true &&
+        isRole(cachedProfile.role) &&
+        typeof cachedProfile.display_name !== "undefined"
+      ) {
+        setProfile(cachedProfile as Profile);
+      } else {
+        window.localStorage.removeItem("snake_profile");
+      }
+    } catch {
+      window.localStorage.removeItem("snake_profile");
+    }
   }
 
   loadProfile();
@@ -71,15 +87,17 @@ useEffect(() => {
 
     const { data } = await supabase
       .from("profiles")
-      .select("role, display_name")
+      .select("role, display_name, active")
       .eq("id", user.id)
       .single();
 const nextProfile = data as Profile | null;
 
-setProfile(nextProfile);
+setProfile(nextProfile?.active && isRole(nextProfile.role) ? nextProfile : null);
 
-if (nextProfile) {
+if (nextProfile?.active && isRole(nextProfile.role)) {
   window.localStorage.setItem("snake_profile", JSON.stringify(nextProfile));
+} else {
+  window.localStorage.removeItem("snake_profile");
 }
     
   }

@@ -4,6 +4,7 @@ import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import ChangePasswordCard from "../components/settings/ChangePasswordCard";
 import AccountProfileCard from "../components/account/AccountProfileCard";
+import { isRole } from "@/lib/auth/roles";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +21,13 @@ export default async function AccountPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name, role")
+    .select("display_name, role, active")
     .eq("id", user.id)
     .single();
+
+  if (!profile?.active || !isRole(profile.role)) {
+    redirect("/login?error=access_denied");
+  }
 
   const { data: activity } = await supabase
     .from("activity_log")
@@ -61,7 +66,7 @@ export default async function AccountPage() {
               <AccountProfileCard
                 displayName={profile?.display_name ?? ""}
                 email={user.email ?? ""}
-                role={profile?.role ?? "viewer"}
+                role={profile.role}
               />
 
               <ChangePasswordCard />

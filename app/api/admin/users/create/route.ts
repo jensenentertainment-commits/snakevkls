@@ -7,7 +7,7 @@ type Body = {
   email: string;
   password: string;
   displayName: string;
-  role: "admin" | "lager" | "viewer";
+  role: "admin" | "lager";
   active?: boolean;
 };
 
@@ -44,7 +44,7 @@ if (!auth.ok) return auth.response;
     );
   }
 
-  if (!["admin", "lager", "viewer"].includes(role)) {
+  if (!["admin", "lager"].includes(role)) {
     return NextResponse.json({ error: "Ugyldig rolle" }, { status: 400 });
   }
 

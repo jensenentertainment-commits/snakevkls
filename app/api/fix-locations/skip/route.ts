@@ -37,7 +37,7 @@ function getSupabaseAdmin() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireRole(["admin", "lager", "viewer"]);
+  const auth = await requireRole(["admin", "lager"]);
 
   if (!auth.ok) return auth.response;
 

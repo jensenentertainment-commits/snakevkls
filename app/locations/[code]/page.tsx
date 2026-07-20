@@ -9,6 +9,7 @@ import SnakeNav from "../../components/SnakeNav";
 import SnakeFooter from "../../components/SnakeFooter";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
 import SnakeHero from "../../components/SnakeHero";
+import type { Role } from "@/lib/auth/roles";
 
 type LocationDetail = {
   id: string;
@@ -31,8 +32,6 @@ type LocationDetail = {
     } | null;
   }[];
 };
-type Role = "admin" | "lager" | "viewer";
-
 export default function LocationDetailPage() {
   const supabase = useMemo(() => createClient(), []);
   const params = useParams<{ code: string }>();
@@ -76,11 +75,11 @@ async function loadRole() {
 
   const { data } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, active")
     .eq("id", user.id)
     .single();
 
-  setRole((data?.role as Role) ?? null);
+  setRole(data?.active ? (data.role as Role) : null);
 }
 
 async function loadLocation() {

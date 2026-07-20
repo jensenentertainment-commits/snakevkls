@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/types/auth";
+import { isRole } from "@/lib/auth/roles";
 
 import { getBorreDashboardBrief } from "@/lib/intelligence/borre/dashboard-brief";
 
@@ -19,19 +20,19 @@ const cards: DashboardCard[] = [
     title: "Lager",
     href: "/lager",
     description: "Produkter, lokasjoner og lagerhelse.",
-    roles: ["admin", "lager", "viewer"],
+    roles: ["admin", "lager"],
   },
   {
     title: "Ordre",
     href: "/ordre",
     description: "Manuelle ordre og salg utenfor Shopify.",
-    roles: ["admin", "lager", "viewer"],
+    roles: ["admin", "lager"],
   },
   {
   title: "Børre",
   href: "/borre",
   description: "Er du i tvil, spør Børre.",
-  roles: ["admin", "lager", "viewer"],
+  roles: ["admin", "lager"],
 },
   {
     title: "Viper",
@@ -81,13 +82,15 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name, role")
+    .select("display_name, role, active")
     .eq("id", user.id)
     .single();
 
     const { greeting, welcome } = getTimeOfDayText();
 
-  const role = (profile?.role ?? "viewer") as Role;
+  if (!profile?.active || !isRole(profile.role)) redirect("/login?error=access_denied");
+
+  const role: Role = profile.role;
   const fullName = profile?.display_name || user.email || "bruker";
 const firstName = fullName.split(" ")[0];
 

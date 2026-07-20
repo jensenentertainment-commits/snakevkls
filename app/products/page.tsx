@@ -29,6 +29,7 @@ import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
 import RoleGate from "../components/auth/RoleGate";
 import BorrePanel from "@/app/components/BorrePanel";
+import type { Role } from "@/lib/auth/roles";
 
 
 
@@ -65,8 +66,6 @@ function ProductsPageContent() {
   const searchParams = useSearchParams();
   const tableRef = useRef<HTMLDivElement | null>(null);
 
-  type Role = "admin" | "lager" | "viewer";
-
 const [role, setRole] = useState<Role | null>(null);
 
 useEffect(() => {
@@ -82,11 +81,11 @@ async function loadRole() {
 
   const { data } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, active")
     .eq("id", user.id)
     .single();
 
-  setRole((data?.role as Role) ?? null);
+  setRole(data?.active ? (data.role as Role) : null);
 }
 
 const canWrite = role === "admin" || role === "lager";
@@ -891,7 +890,7 @@ function Empty({ text }: { text: string }) {
 
 export default function ProductsPage() {
   return (
-    <RoleGate allowedRoles={["admin", "lager", "viewer"]}>
+    <RoleGate allowedRoles={["admin", "lager"]}>
       <Suspense fallback={null}>
         <ProductsPageContent />
       </Suspense>

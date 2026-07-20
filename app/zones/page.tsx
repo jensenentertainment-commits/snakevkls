@@ -7,6 +7,7 @@ import SnakeNav from "../components/SnakeNav";
 import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
+import RoleGate from "../components/auth/RoleGate";
 import ZoneModal from "../components/zones/ZoneModal";
 
 type ZoneRow = {
@@ -18,6 +19,14 @@ type ZoneRow = {
 };
 
 export default function ZonesPage() {
+  return (
+    <RoleGate allowedRoles={["admin"]}>
+      <ZonesContent />
+    </RoleGate>
+  );
+}
+
+function ZonesContent() {
   const [zones, setZones] = useState<ZoneRow[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -8,6 +8,7 @@ import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
 import RoleGate from "../components/auth/RoleGate";
+import type { Role } from "@/lib/auth/roles";
 
 
 
@@ -15,7 +16,7 @@ type UserProfile = {
   id: string;
   email: string | null;
   display_name: string | null;
-  role: "admin" | "lager" | "viewer";
+  role: Role;
   active: boolean;
   created_at: string;
 };
@@ -61,8 +62,7 @@ const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserDisplayName, setNewUserDisplayName] = useState("");
 
-  const [newUserRole, setNewUserRole] =
-    useState<"admin" | "lager" | "viewer">("lager");
+  const [newUserRole, setNewUserRole] = useState<Role>("lager");
 
   const [newUserActive, setNewUserActive] = useState(true);
 
@@ -213,7 +213,7 @@ async function loadCurrentUser() {
   userId: string,
   updates: {
     displayName?: string | null;
-    role?: "admin" | "lager" | "viewer";
+    role?: Role;
     active?: boolean;
   }
 ) {
@@ -525,14 +525,13 @@ const filteredZones = useMemo(() => {
           value={user.role}
           onChange={(e) =>
             handleUpdateUser(user.id, {
-              role: e.target.value as "admin" | "lager" | "viewer",
+              role: e.target.value as Role,
             })
           }
           className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
         >
           <option value="admin">Admin</option>
           <option value="lager">Lager</option>
-          <option value="viewer">Viewer</option>
         </select>
 
         <div
@@ -666,8 +665,8 @@ function CreateUserModal({
   setPassword: (value: string) => void;
   displayName: string;
   setDisplayName: (value: string) => void;
-  role: "admin" | "lager" | "viewer";
-  setRole: (value: "admin" | "lager" | "viewer") => void;
+  role: Role;
+  setRole: (value: Role) => void;
   active: boolean;
   setActive: (value: boolean) => void;
   saving: boolean;
@@ -712,13 +711,12 @@ function CreateUserModal({
           <select
             value={role}
             onChange={(e) =>
-              setRole(e.target.value as "admin" | "lager" | "viewer")
+              setRole(e.target.value as Role)
             }
             className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
           >
             <option value="admin">Admin</option>
             <option value="lager">Lager</option>
-            <option value="viewer">Viewer</option>
           </select>
 
           <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">

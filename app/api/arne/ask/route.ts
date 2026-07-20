@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { createClient } from "@/lib/supabase/server";
+import { requireRole } from "@/lib/auth/require-role";
 import { getBorreContext } from "@/lib/intelligence/borre/shared-context";
 import { getBorreDevelopmentContext } from "@/lib/intelligence/borre/development-context";
 import { getArneSystemPrompt } from "@/lib/intelligence/arne/system";
@@ -17,40 +17,8 @@ type ChatMessage = {
 };
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json(
-      { error: "Ikke innlogget" },
-      { status: 401 }
-    );
-  }
-
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profileError) {
-    console.error("Kunne ikke kontrollere Arne-tilgang:", profileError);
-
-    return NextResponse.json(
-      { error: "Kunne ikke kontrollere tilgang." },
-      { status: 500 }
-    );
-  }
-
-  if (profile?.role !== "admin") {
-    return NextResponse.json(
-      { error: "Kun administrator har tilgang til Arne." },
-      { status: 403 }
-    );
-  }
+  const auth = await requireRole(["admin"]);
+  if (!auth.ok) return auth.response;
 
   const body = await req.json();
   const { question, page, history = [] } = body;

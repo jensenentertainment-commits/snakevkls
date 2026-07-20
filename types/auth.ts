@@ -1,4 +1,6 @@
-export type Role = "admin" | "lager" | "viewer";
+export type { Role } from "@/lib/auth/roles";
+
+import type { Role } from "@/lib/auth/roles";
 
 export type Profile = {
   id: string;

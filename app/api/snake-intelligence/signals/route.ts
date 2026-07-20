@@ -25,7 +25,7 @@ function getSupabaseAdmin() {
 }
 
 export async function GET() {
-  const auth = await requireRole(["admin", "lager", "viewer"]);
+  const auth = await requireRole(["admin", "lager"]);
 
   if (!auth.ok) return auth.response;
 

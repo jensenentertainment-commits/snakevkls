@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { createClient } from "@/lib/supabase/server";
+import { requireRole } from "@/lib/auth/require-role";
 import { getDashboardStats } from "@/lib/dashboard";
 import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
 import { getBorreChatSystemPrompt } from "@/lib/intelligence/borre/chat-system";
@@ -12,15 +12,9 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: "Ikke innlogget" }, { status: 401 });
-  }
+  const auth = await requireRole(["admin", "lager"]);
+  if (!auth.ok) return auth.response;
+  const authClient = auth.authClient;
 
 const { question, page, history = [] } = await req.json();
 
@@ -49,7 +43,7 @@ const {
 } = stats;
 
 
-const { data: missingInventoryRows } = await supabase
+const { data: missingInventoryRows } = await authClient
   .from("inventory")
   .select("id, product_id, quantity")
   .is("location_id", null)
@@ -61,7 +55,7 @@ const productIds =
 
 const { data: missingLocationProductRows } =
   productIds.length > 0
-    ? await supabase
+    ? await authClient
         .from("products")
         .select("id, product_name, sku")
         .in("id", productIds)
@@ -104,7 +98,21 @@ const missingLocationProductsText =
 
 const system = getBorreChatSystemPrompt();
 
-const latestSync = latestShopifySync as any;
+type LatestSync = {
+  id?: string | null;
+  title?: string | null;
+  action?: string | null;
+  created_at?: string | null;
+  metadata?: {
+    duration_ms?: number;
+    imported?: number;
+    skipped_no_sku?: number;
+    collections_linked?: number;
+    source?: string;
+  } | null;
+};
+
+const latestSync = latestShopifySync as LatestSync | null;
 const meta = latestSync?.metadata ?? {};
 
 const durationText =

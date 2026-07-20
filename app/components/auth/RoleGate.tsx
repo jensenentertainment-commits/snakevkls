@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import SnakeNav from "../SnakeNav";
 import SnakeFooter from "../SnakeFooter";
 import { supabase } from "@/lib/supabase";
-
-type Role = "admin" | "lager" | "viewer";
+import type { Role } from "@/lib/auth/roles";
 
 type Profile = {
   role: Role;

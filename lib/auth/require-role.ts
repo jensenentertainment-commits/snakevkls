@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
+import { isRole, type Role } from "@/lib/auth/roles";
 
-export type Role = "admin" | "lager" | "viewer";
-
-export async function requireRole(allowedRoles: Role[]) {
+export async function requireRole(allowedRoles: readonly Role[]) {
   const authClient = await createServerSupabaseClient();
 
   const {
@@ -27,8 +26,8 @@ export async function requireRole(allowedRoles: Role[]) {
   if (
     profileError ||
     !profile?.active ||
-    !profile.role ||
-    !allowedRoles.includes(profile.role as Role)
+    !isRole(profile.role) ||
+    !allowedRoles.includes(profile.role)
   ) {
     return {
       ok: false as const,
@@ -38,6 +37,7 @@ export async function requireRole(allowedRoles: Role[]) {
 
   return {
     ok: true as const,
+    authClient,
     user,
     profile: profile as {
       role: Role;

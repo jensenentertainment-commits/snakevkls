@@ -15,11 +15,11 @@ export default async function ArnePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, active")
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") redirect("/dashboard");
+  if (!profile?.active || profile.role !== "admin") redirect("/dashboard");
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">

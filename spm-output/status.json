@@ -16,7 +16,7 @@
       "C:/My Web Sites/Elises Verden/elisesverden.no/produkt/bakverk/minimuffins-6-stk-med-topping.html"
     ]
   },
-  "updatedAt": "2026-07-05T16:01:01.890Z",
+  "updatedAt": "2026-07-10T20:10:01.163Z",
   "parse": {
     "products": 473,
     "outputFile": "C:\\Users\\jense\\vk-lager\\spm-output\\products.json",
@@ -85,8 +85,8 @@
   },
   "shopifyImages": {
     "total": 473,
-    "success": 0,
-    "failed": 27,
+    "success": 26,
+    "failed": 1,
     "skipped": 446,
     "results": [
       {
@@ -917,9 +917,20 @@
         "sku": "1462-10-1",
         "title": "Julestjerne 10cm",
         "file": "1462-10-1-julestjerne-10cm.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\1462-10-1-julestjerne-10cm.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "1462-10-1",
+          "productTitle": "Julestjerne 10cm",
+          "imageFile": "1462-10-1-julestjerne-10cm.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984338738",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3080-80-1",
@@ -933,9 +944,20 @@
         "sku": "7691-10-1",
         "title": "Julestjerne 26cm Hvit",
         "file": "7691-10-1-julestjerne-26cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\7691-10-1-julestjerne-26cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "7691-10-1",
+          "productTitle": "Julestjerne 26cm Hvit",
+          "imageFile": "7691-10-1-julestjerne-26cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984371506",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "7691-80-1",
@@ -949,25 +971,58 @@
         "sku": "6989-10-1",
         "title": "Julestjerne 27cm Hvit",
         "file": "6989-10-1-julestjerne-27cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6989-10-1-julestjerne-27cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6989-10-1",
+          "productTitle": "Julestjerne 27cm Hvit",
+          "imageFile": "6989-10-1-julestjerne-27cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984437042",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "6595-10-1",
         "title": "Julestjerne 35cm hvit",
         "file": "6595-10-1-julestjerne-35cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6595-10-1-julestjerne-35cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6595-10-1",
+          "productTitle": "Julestjerne 35cm hvit",
+          "imageFile": "6595-10-1-julestjerne-35cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984469810",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3070-10-1",
         "title": "Julestjerne 38cm Hvit",
         "file": "3070-10-1-julestjerne-38cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3070-10-1-julestjerne-38cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3070-10-1",
+          "productTitle": "Julestjerne 38cm Hvit",
+          "imageFile": "3070-10-1-julestjerne-38cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984535346",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3070-80-1",
@@ -1877,9 +1932,20 @@
         "sku": "9697-10-1",
         "title": "Alunrot hvit 45cm",
         "file": "9697-10-1-alunrot-hvit-45cm.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\9697-10-1-alunrot-hvit-45cm.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "9697-10-1",
+          "productTitle": "Alunrot hvit 45cm",
+          "imageFile": "9697-10-1-alunrot-hvit-45cm.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984568114",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "9697-20-1",
@@ -1893,9 +1959,20 @@
         "sku": "2164-10-1",
         "title": "Begonia 28cm Hvit",
         "file": "2164-10-1-begonia-28cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\2164-10-1-begonia-28cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "2164-10-1",
+          "productTitle": "Begonia 28cm Hvit",
+          "imageFile": "2164-10-1-begonia-28cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984633650",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "2164-21-1",
@@ -1973,9 +2050,20 @@
         "sku": "3426-10-1",
         "title": "Busknellik 20cm Hvit",
         "file": "3426-10-1-busknellik-20cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3426-10-1-busknellik-20cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3426-10-1",
+          "productTitle": "Busknellik 20cm Hvit",
+          "imageFile": "3426-10-1-busknellik-20cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984666418",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3426-20-1",
@@ -1997,9 +2085,20 @@
         "sku": "1178-10-1",
         "title": "Dahlia 30cm Hvit",
         "file": "1178-10-1-dahlia-30cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\1178-10-1-dahlia-30cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "1178-10-1",
+          "productTitle": "Dahlia 30cm Hvit",
+          "imageFile": "1178-10-1-dahlia-30cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984699186",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "1178-20-1",
@@ -2029,17 +2128,39 @@
         "sku": "2064-10-1",
         "title": "Geranium hengende hvit",
         "file": "2064-10-1-geranium-hengende-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\2064-10-1-geranium-hengende-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "2064-10-1",
+          "productTitle": "Geranium hengende hvit",
+          "imageFile": "2064-10-1-geranium-hengende-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984764722",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3489-10-1",
         "title": "Geranium Hvit 35cm",
         "file": "3489-10-1-geranium-hvit-35cm.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3489-10-1-geranium-hvit-35cm.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3489-10-1",
+          "productTitle": "Geranium Hvit 35cm",
+          "imageFile": "3489-10-1-geranium-hvit-35cm.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984797490",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3489-20-1",
@@ -2101,17 +2222,39 @@
         "sku": "8247-10-1",
         "title": "Ipomea",
         "file": "8247-10-1-ipomea.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\8247-10-1-ipomea.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "8247-10-1",
+          "productTitle": "Ipomea",
+          "imageFile": "8247-10-1-ipomea.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984863026",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "8131-10-1",
         "title": "Jernurt 28cm hvit",
         "file": "8131-10-1-jernurt-28cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\8131-10-1-jernurt-28cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "8131-10-1",
+          "productTitle": "Jernurt 28cm hvit",
+          "imageFile": "8131-10-1-jernurt-28cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984895794",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3423-40-1",
@@ -2132,9 +2275,20 @@
         "sku": "6276-10-1",
         "title": "Kirsebærblomst i potte Hvit",
         "file": "6276-10-1-kirsebaerblomst-i-potte-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6276-10-1-kirsebaerblomst-i-potte-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6276-10-1",
+          "productTitle": "Kirsebærblomst i potte Hvit",
+          "imageFile": "6276-10-1-kirsebaerblomst-i-potte-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984928562",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "1496-10",
@@ -2172,9 +2326,20 @@
         "sku": "3508-10-1",
         "title": "Krysantemum 30cm Hvit",
         "file": "3508-10-1-krysantemum-30cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3508-10-1-krysantemum-30cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3508-10-1",
+          "productTitle": "Krysantemum 30cm Hvit",
+          "imageFile": "3508-10-1-krysantemum-30cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024984994098",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3508-35-1",
@@ -2220,17 +2385,39 @@
         "sku": "6644-10-1",
         "title": "Lyng Hvit",
         "file": "6644-10-1-lyng-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6644-10-1-lyng-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6644-10-1",
+          "productTitle": "Lyng Hvit",
+          "imageFile": "6644-10-1-lyng-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985026866",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3425-10-1",
         "title": "Margeritt",
         "file": "3425-10-1-margeritt.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3425-10-1-margeritt.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3425-10-1",
+          "productTitle": "Margeritt",
+          "imageFile": "3425-10-1-margeritt.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985059634",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "5694-99-1",
@@ -2252,9 +2439,20 @@
         "sku": "6283-10-1",
         "title": "Pensé 23cm Hvit",
         "file": "6283-10-1-pens-23cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6283-10-1-pens-23cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6283-10-1",
+          "productTitle": "Pensé 23cm Hvit",
+          "imageFile": "6283-10-1-pens-23cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985092402",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "6283-40-1",
@@ -2284,9 +2482,20 @@
         "sku": "6382-10-1",
         "title": "Petunia Hvit",
         "file": "6382-10-1-petunia-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\6382-10-1-petunia-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "6382-10-1",
+          "productTitle": "Petunia Hvit",
+          "imageFile": "6382-10-1-petunia-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985125170",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "6382-80-1",
@@ -2340,9 +2549,20 @@
         "sku": "5754-10-1",
         "title": "Phalaenopsis 60cm Hvit",
         "file": "5754-10-1-phalaenopsis-60cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\5754-10-1-phalaenopsis-60cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "5754-10-1",
+          "productTitle": "Phalaenopsis 60cm Hvit",
+          "imageFile": "5754-10-1-phalaenopsis-60cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985190706",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "5754-45-1",
@@ -2372,17 +2592,39 @@
         "sku": "1877-10-1",
         "title": "Phalaenopsis 65cm",
         "file": "1877-10-1-phalaenopsis-65cm.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\1877-10-1-phalaenopsis-65cm.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "1877-10-1",
+          "productTitle": "Phalaenopsis 65cm",
+          "imageFile": "1877-10-1-phalaenopsis-65cm.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985256242",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "2911-10-1",
         "title": "Phalaenopsis Hvit 45cm",
         "file": "2911-10-1-phalaenopsis-hvit-45cm.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\2911-10-1-phalaenopsis-hvit-45cm.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "2911-10-1",
+          "productTitle": "Phalaenopsis Hvit 45cm",
+          "imageFile": "2911-10-1-phalaenopsis-hvit-45cm.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985289010",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "8149-85-1",
@@ -2412,9 +2654,20 @@
         "sku": "2971-10-1",
         "title": "Prærieklokke Hvit",
         "file": "2971-10-1-praerieklokke-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\2971-10-1-praerieklokke-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "2971-10-1",
+          "productTitle": "Prærieklokke Hvit",
+          "imageFile": "2971-10-1-praerieklokke-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985321778",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3420-50-1",
@@ -2428,9 +2681,20 @@
         "sku": "3420-10-1",
         "title": "Pyntekurv 40cm hvit",
         "file": "3420-10-1-pyntekurv-40cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\3420-10-1-pyntekurv-40cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "3420-10-1",
+          "productTitle": "Pyntekurv 40cm hvit",
+          "imageFile": "3420-10-1-pyntekurv-40cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985354546",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3420-40-1",
@@ -2452,9 +2716,20 @@
         "sku": "8284-10-1",
         "title": "Ranunkel 30cm Hvit",
         "file": "8284-10-1-ranunkel-30cm-hvit.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\8284-10-1-ranunkel-30cm-hvit.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "8284-10-1",
+          "productTitle": "Ranunkel 30cm Hvit",
+          "imageFile": "8284-10-1-ranunkel-30cm-hvit.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985387314",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "3506-50-1",
@@ -2524,9 +2799,20 @@
         "sku": "8130-10-1",
         "title": "Veronica",
         "file": "8130-10-1-veronica.jpg",
-        "success": false,
+        "imagePath": "C:\\Users\\jense\\vk-lager\\spm-output\\images\\8130-10-1-veronica.jpg",
+        "success": true,
         "skipped": false,
-        "error": "Fant ikke produkt i Shopify"
+        "result": {
+          "sku": "8130-10-1",
+          "productTitle": "Veronica",
+          "imageFile": "8130-10-1-veronica.jpg",
+          "media": [
+            {
+              "id": "gid://shopify/MediaImage/44024985420082",
+              "image": null
+            }
+          ]
+        }
       },
       {
         "sku": "2324",

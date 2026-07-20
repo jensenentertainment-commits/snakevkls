@@ -4,7 +4,7 @@ import AskBorre from "@/app/components/AskBorre";
 import SnakeNav from "@/app/components/SnakeNav";
 import SnakeFooter from "@/app/components/SnakeFooter";
 
-export default async function BorreProPage() {
+export default async function ArnePage() {
   const supabase = await createClient();
 
   const {
@@ -28,22 +28,22 @@ export default async function BorreProPage() {
 
         <header className="rounded-[32px] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/30 sm:p-8">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
-            Børre Pro
+            Arne
           </p>
 
           <h1 className="mt-3 text-4xl font-black tracking-[-0.04em]">
-            Børres kontor
+            Arnes kontor
           </h1>
 
           <p className="mt-4 max-w-3xl text-sm leading-7 text-white/65">
-            Her hjelper Børre med utviklingen av Snake. Diskuter nye moduler,
-            arbeidsflyt, database, brukeropplevelse og prioriteringer. Dette er
-            utviklingsrommet – ikke lagergulvet.
+            Her vurderer Arne hvordan Snake kan bli bedre. Diskuter retning,
+            arbeidsflyt, moduler, brukeropplevelse og prioriteringer. Arne
+            hjelper med hva som bør bygges, endres, vente eller droppes.
           </p>
         </header>
 
         <div className="mt-5">
-          <AskBorre mode="page" variant="pro" />
+          <AskBorre mode="page" variant="arne" />
         </div>
 
         <SnakeFooter />

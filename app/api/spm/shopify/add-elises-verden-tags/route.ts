@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth/require-role";
-import { updateAiProducts } from "@/lib/spm/shopify/update-ai-products";
-import { saveSpmStatus } from "@/lib/spm/status";
+import { addElisesVerdenTags } from "@/lib/spm/shopify/add-elises-verden-tags";
 
 export async function POST(request: Request) {
   try {
@@ -13,11 +12,18 @@ export async function POST(request: Request) {
 
     const body = await request.json().catch(() => ({}));
 
-    const limit =
+    const parsedLimit =
       body.limit !== undefined &&
       body.limit !== null &&
       body.limit !== ""
         ? Number(body.limit)
+        : undefined;
+
+    const limit =
+      parsedLimit !== undefined &&
+      Number.isFinite(parsedLimit) &&
+      parsedLimit > 0
+        ? Math.floor(parsedLimit)
         : undefined;
 
     const skus = Array.isArray(body.skus)
@@ -26,15 +32,14 @@ export async function POST(request: Request) {
           .filter(Boolean)
       : undefined;
 
-    const result = await updateAiProducts(limit, skus);
-
-    await saveSpmStatus({
-      shopifyAi: result,
-    });
+    const result = await addElisesVerdenTags(limit, skus);
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("SPM update AI products feilet:", error);
+    console.error(
+      "SPM add Elises Verden tags feilet:",
+      error
+    );
 
     return NextResponse.json(
       {

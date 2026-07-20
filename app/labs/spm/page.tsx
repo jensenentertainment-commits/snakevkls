@@ -30,6 +30,7 @@ export default function SPMPage() {
   const [images, setImages] = useState<any>(null);
   const [csv, setCsv] = useState<any>(null);
   const [imageImport, setImageImport] = useState<any>(null);
+  const [skuList, setSkuList] = useState("");
 
   const [testSku, setTestSku] = useState("");
   const [shopifyProduct, setShopifyProduct] = useState<any>(null);
@@ -498,6 +499,13 @@ async function handleBuildIndex() {
   }
 }
 
+function parseSkuList(value: string) {
+  return value
+    .split(/\n|,|;/)
+    .map((sku) => sku.trim())
+    .filter(Boolean);
+}
+
   return (
     <RoleGate allowedRoles={["admin"]}>
       <main className="min-h-screen bg-[#062f3b] text-white">
@@ -690,6 +698,16 @@ async function handleBuildIndex() {
               <summary className="cursor-pointer text-sm font-black uppercase tracking-[0.18em] text-[#b58a14]">
                 Avanserte Shopify-verktøy
               </summary>
+
+              <textarea
+  value={skuList}
+  onChange={(event) => setSkuList(event.target.value)}
+  placeholder={`SKU-liste, én per linje
+1462-10-1
+7691-10-1
+8130-10-1`}
+  className="min-h-[140px] w-full rounded-2xl border border-white/10 bg-[#071018] px-4 py-3 text-sm text-white outline-none placeholder:text-white/35"
+/>
 
               <div className="mt-5 flex flex-wrap gap-3">
                 <input

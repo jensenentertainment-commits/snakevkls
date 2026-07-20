@@ -9,8 +9,8 @@ import RoleGate from "../components/auth/RoleGate";
 const modules = [
 {
   href: "/borre/pro",
-  eyebrow: "Børre Pro",
-  title: "Børres kontor",
+  eyebrow: "Arne",
+  title: "Arnes kontor",
   description:
     "Adminassistent for utvikling av Snake, prioritering, arbeidsflyt og nye moduler.",
   status: "Aktiv",
@@ -22,7 +22,7 @@ const modules = [
     title: "Snake Product Migrator",
     description:
       "Importer, berik og klargjør produkter for Shopify.",
-    status: "Aktiv",
+    status: "Pensjonert",
   },
   {
     href: "/labs/shopify-control",

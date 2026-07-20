@@ -12,7 +12,10 @@ type AiProduct = {
   collections: string[];
 };
 
-export async function updateAiProducts(limit?: number) {
+export async function updateAiProducts(
+  limit?: number,
+  skus?: string[]
+) {
   const outputRoot = path.join(process.cwd(), "spm-output");
   const aiFile = path.join(outputRoot, "ai-products.json");
 
@@ -20,8 +23,10 @@ export async function updateAiProducts(limit?: number) {
     await fs.readFile(aiFile, "utf8")
   ) as AiProduct[];
 
-  const productsToProcess =
-    limit && limit > 0
+const productsToProcess =
+  skus && skus.length > 0
+    ? aiProducts.filter((product) => skus.includes(product.sku))
+    : limit && limit > 0
       ? aiProducts.slice(0, limit)
       : aiProducts;
 

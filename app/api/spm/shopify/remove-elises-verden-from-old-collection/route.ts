@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth/require-role";
-import { updateAiProducts } from "@/lib/spm/shopify/update-ai-products";
-import { saveSpmStatus } from "@/lib/spm/status";
+import { removeElisesVerdenFromOldCollection } from "@/lib/spm/shopify/remove-elises-verden-from-old-collection";
 
 export async function POST(request: Request) {
   try {
@@ -26,15 +25,17 @@ export async function POST(request: Request) {
           .filter(Boolean)
       : undefined;
 
-    const result = await updateAiProducts(limit, skus);
-
-    await saveSpmStatus({
-      shopifyAi: result,
-    });
+    const result = await removeElisesVerdenFromOldCollection(
+      limit,
+      skus
+    );
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("SPM update AI products feilet:", error);
+    console.error(
+      "SPM remove old collection feilet:",
+      error
+    );
 
     return NextResponse.json(
       {

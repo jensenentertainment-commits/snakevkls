@@ -75,6 +75,8 @@ async function findInLocalIndex(sku: string) {
 export async function findProductBySku(sku: string) {
   const normalizedSku = sku.trim();
 
+  
+
   if (!normalizedSku) {
     return null;
   }

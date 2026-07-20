@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
 
 type AskBorreMode = "floating" | "page";
-type AskBorreVariant = "regular" | "pro";
+type AssistantVariant = "borre" | "arne";
 
 type Props = {
   mode?: AskBorreMode;
-  variant?: AskBorreVariant;
+  variant?: AssistantVariant;
 };
 
 type Message = {
@@ -17,7 +17,7 @@ type Message = {
   text: string;
 };
 
-const regularSuggestions = [
+const borreSuggestions = [
   "Hva bør jeg gjøre først?",
   "Hvorfor er Snake Health lav?",
   "Status på Shopify-sync?",
@@ -25,12 +25,12 @@ const regularSuggestions = [
   "Gi meg en kort lagerstatus.",
 ];
 
-const proSuggestions = [
-  "Hva bør vi bygge neste?",
-  "Ser du svakheter i Snake?",
-  "Hvordan kan arbeidsflyten bli bedre?",
-  "Hva bør prioriteres nå?",
-  "Har du idéer til Snake Labs?",
+const arneSuggestions = [
+  "Hva bør vi prioritere nå?",
+  "Ser du varige svakheter i Snake?",
+  "Passer dagens roadmap fortsatt?",
+  "Hva bør vi ikke bygge ennå?",
+  "Har vi diskutert dette før?",
 ];
 
 const enabledRoutes = [
@@ -46,14 +46,14 @@ const enabledRoutes = [
 
 export default function AskBorre({
   mode = "floating",
-  variant = "regular",
+ variant = "borre",
 }: Props) {
   const pathname = usePathname();
   const isPage = mode === "page";
-  const isPro = variant === "pro";
+const isArne = variant === "arne";
 
-  const suggestions = isPro ? proSuggestions : regularSuggestions;
-  const endpoint = isPro ? "/api/borre/pro" : "/api/borre/ask";
+const suggestions = isArne ? arneSuggestions : borreSuggestions;
+const endpoint = isArne ? "/api/arne/ask" : "/api/borre/ask";
 
   const [open, setOpen] = useState(isPage);
   const [question, setQuestion] = useState("");
@@ -100,8 +100,10 @@ export default function AskBorre({
         {
           role: "assistant",
           text:
-            json.answer ??
-            "Børre fikk ikke svart. Det er uvanlig, men ikke umulig.",
+  json.answer ??
+  (isArne
+    ? "Arne fikk ikke svart. Det var dårlig timing."
+    : "Børre fikk ikke svart. Det er uvanlig, men ikke umulig."),
         },
       ]);
     } catch {
@@ -109,7 +111,9 @@ export default function AskBorre({
         ...prev,
         {
           role: "assistant",
-          text: "Børre mistet kontakten. Det var neppe med vilje.",
+          text: isArne
+  ? "Arne mistet kontakten. Det var neppe planlagt."
+  : "Børre mistet kontakten. Det var neppe med vilje.",
         },
       ]);
     } finally {
@@ -129,10 +133,10 @@ export default function AskBorre({
       <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.04] px-5 py-4">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
-            {isPro ? "Børre Pro" : "Børre"}
+            {isArne ? "Arne" : "Børre"}
           </p>
           <p className="mt-1 text-xs text-white/45">
-            {isPro ? "Utviklingsrommet for Snake." : "Er du i tvil, spør Børre."}
+            {isArne ? "Utviklingsrommet for Snake." : "Er du i tvil, spør Børre."}
           </p>
         </div>
 
@@ -164,8 +168,8 @@ export default function AskBorre({
       <div className="flex-1 overflow-y-auto px-5 py-4">
         {messages.length === 0 ? (
           <div className="rounded-2xl border border-white/10 bg-black/15 p-4 text-sm leading-6 text-white/55">
-            {isPro
-              ? "Børre Pro er klar. Spør om Snake, arbeidsflyt, moduler, kode eller hva som bør bygges videre."
+            {isArne
+              ? "Arne er klar. Spør om Snake, arbeidsflyt, moduler, kode eller hva som bør bygges videre."
               : "Børre er på plass. Spør om lagerstatus, Shopify-sync, avvik eller hva som bør ryddes først."}
           </div>
         ) : (
@@ -187,7 +191,7 @@ export default function AskBorre({
             {busy && (
               <div className="mr-8 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
                 <div className="flex items-center gap-2">
-                  <span>{isPro ? "Børre Pro tenker" : "Børre tenker"}</span>
+                  <span>{isArne ? "Arne tenker" : "Børre tenker"}</span>
                   <span className="flex gap-1">
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#b58a14]" />
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#b58a14] [animation-delay:120ms]" />
@@ -206,7 +210,7 @@ export default function AskBorre({
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder={isPro ? "Hva skal vi utvikle?" : "Hva lurer du på?"}
+          placeholder={isArne ? "Hva skal vi utvikle?" : "Hva lurer du på?"}
           className="min-h-24 w-full resize-none rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-white outline-none placeholder:text-white/35 focus:border-[#b58a14]/40"
         />
 
@@ -216,11 +220,11 @@ export default function AskBorre({
           className="mt-3 w-full rounded-2xl bg-[#b58a14] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#a77e05] disabled:opacity-50"
         >
           {busy
-            ? isPro
-              ? "Børre Pro tenker..."
+            ? isArne
+              ? "Arne tenker..."
               : "Børre tenker..."
-            : isPro
-              ? "Spør Børre Pro"
+            : isArne
+              ? "Spør Arne"
               : "Spør Børre"}
         </button>
       </div>

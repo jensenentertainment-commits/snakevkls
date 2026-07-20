@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getDashboardStats } from "@/lib/dashboard";
 import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
 import { getBorreChatSystemPrompt } from "@/lib/intelligence/borre/chat-system";
+import { buildSnakeKnowledgePrompt }
+from "@/lib/intelligence/shared/build-snake-knowledge";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -31,34 +33,21 @@ const { question, page, history = [] } = await req.json();
     );
   }
 
-
+const snakeKnowledge = buildSnakeKnowledgePrompt();
 
   const stats = await getDashboardStats();
 
-  const {
-    missingLocationCount,
-    missingSkuCount,
-    emptyLocationCount,
-    quantityDiffCount,
-    placedProductCount,
-    activeProductCount,
-    locationsNoZoneCount,
-    latestShopifySync,
-  } = stats;
+const {
+  missingLocationCount,
+  missingSkuCount,
+  emptyLocationCount,
+  quantityDiffCount,
+  placedProductCount,
+  activeProductCount,
+  locationsNoZoneCount,
+  latestShopifySync,
+} = stats;
 
-  const { data: missingLocationProducts } = await supabase
-  .from("inventory")
-  .select(`
-    id,
-    quantity,
-    products (
-      id,
-      title,
-      sku
-    )
-  `)
-  .is("location_id", null)
-  .limit(10);
 
 const { data: missingInventoryRows } = await supabase
   .from("inventory")
@@ -115,7 +104,7 @@ const missingLocationProductsText =
 
 const system = getBorreChatSystemPrompt();
 
-const latestSync = stats.latestShopifySync as any;
+const latestSync = latestShopifySync as any;
 const meta = latestSync?.metadata ?? {};
 
 const durationText =
@@ -176,10 +165,22 @@ const conversation = Array.isArray(history)
     model: "gpt-5-mini",
     input: [
   { role: "system", content: system },
-  {
-    role: "user",
-    content: `Dette er nåværende Snake-kontekst:\n${context}`,
-  },
+ {
+  role: "user",
+  content: `
+Dette er bakgrunnsinformasjon om Snake.
+Den skal bare brukes når den er relevant for brukerens spørsmål.
+Ikke analyser eller foreslå tiltak utelukkende fordi informasjonen finnes her.
+
+=== Snake Knowledge ===
+
+${snakeKnowledge}
+
+=== Operational Context ===
+
+${context}
+`,
+},
   ...conversation,
   {
     role: "user",

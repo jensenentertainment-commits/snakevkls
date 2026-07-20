@@ -28,7 +28,7 @@ export function getBorreDevelopmentContext() {
       "Kundeservice",
       "E-post i Snake",
       "Nettbutikk-chat koblet til Snake",
-      "Børre Pro",
+      "Arne",
     ],
 
     principles: [
@@ -36,14 +36,14 @@ export function getBorreDevelopmentContext() {
       "Ikke bygg funksjoner før behovet er tydelig.",
       "Snake skal føles rolig, praktisk og ryddig.",
       "Børre skal føles som en lagerassistent, ikke som en AI-chat.",
-      "Regular Børre hjelper med drift. Børre Pro hjelper med utvikling.",
+      "Regular Børre hjelper med drift. Arne hjelper med utvikling.",
       "Unngå store omskrivinger uten god grunn.",
     ],
 
     currentSprint: [
       "Rydde Børre-struktur i egne filer.",
       "Bruke felles Børre-context.",
-      "Gjøre Regular Børre ferdig før Børre Pro bygges fullt ut.",
+      "Gjøre Regular Børre ferdig før Arne bygges fullt ut.",
     ],
 
     nextLikelyWork: [

@@ -71,19 +71,22 @@ async function handleSavePlacement() {
 
   setSaveSaving(true);
 
-  const { error } = await supabase
-    .from("inventory")
-    .update({
-      zone_id: newZone || null,
-      location_id: newLocation || null,
+  const response = await fetch("/api/inventory/set-location", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      productId: product.id,
+      inventoryId: inv.id,
+      zoneId: newZone || null,
+      locationId: newLocation || null,
       quantity: Number(newQuantity),
-    })
-    .eq("id", inv.id);
+    }),
+  });
 
   setSaveSaving(false);
 
-  if (error) {
-    console.error(error);
+  if (!response.ok) {
+    console.error(await response.json());
     return;
   }
 
@@ -100,28 +103,22 @@ async function handleSaveMovement() {
 
   setMovementSaving(true);
 
-  const nextQuantity = Math.max(0, lagerQty - qty);
+  const response = await fetch("/api/inventory/stock-movement", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      productId: product.id,
+      quantity: qty,
+      reason: movementReason,
+      note: movementNote || null,
+    }),
+  });
 
-  const { error: inventoryError } = await supabase
-    .from("inventory")
-    .update({
-      quantity: nextQuantity,
-    })
-    .eq("id", inv.id);
-
-  if (inventoryError) {
-    console.error(inventoryError);
+  if (!response.ok) {
+    console.error(await response.json());
     setMovementSaving(false);
     return;
   }
-
-  await supabase.from("stock_movements").insert({
-    inventory_id: inv.id,
-    product_id: product.id,
-    quantity: -qty,
-    reason: movementReason,
-    note: movementNote || null,
-  });
 
   setMovementSaving(false);
   setShowMovementModal(false);

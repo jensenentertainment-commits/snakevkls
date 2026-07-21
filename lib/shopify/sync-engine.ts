@@ -2,7 +2,7 @@ export type ShopifySyncClaim = {
   acquired: boolean;
   resumed?: boolean;
   runId: string;
-  status: "running" | "failed" | "completed";
+  status: "running" | "paused" | "failed" | "completed";
   cursor: string | null;
   processedCount: number;
   pagesProcessed: number;
@@ -43,7 +43,10 @@ export type ShopifySyncCompleted = {
 
 export type ShopifySyncResult =
   | ShopifySyncCompleted
-  | (ShopifySyncProgress & { paused: true })
+  | (Omit<ShopifySyncProgress, "status"> & {
+      status: "paused";
+      paused: true;
+    })
   | {
       runId: string;
       status: "running";
@@ -152,7 +155,7 @@ export async function runPagedShopifySync<TVariant>(
       reason: "Kjøringen stoppet kontrollert før funksjonens tidsgrense.",
     });
 
-    return { ...progress, paused: true };
+    return { ...progress, status: "paused", paused: true };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Ukjent feil i Shopify-sync";

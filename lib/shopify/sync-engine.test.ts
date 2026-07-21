@@ -146,7 +146,7 @@ test("persists a cursor and resumes an interrupted sync", async () => {
   const interrupted = await runPagedShopifySync(createWorker(false), {
     maxPages: 1,
   });
-  assert.equal(interrupted.status, "running");
+  assert.equal(interrupted.status, "paused");
   assert.equal("paused" in interrupted && interrupted.paused, true);
   assert.equal(paused, true);
   assert.equal(storedCursor, "cursor-1");

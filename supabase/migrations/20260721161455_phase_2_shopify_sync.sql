@@ -4,7 +4,7 @@
 create table private.sync_runs (
   id uuid primary key default gen_random_uuid(),
   status text not null default 'running'
-    check (status in ('running', 'failed', 'completed')),
+    check (status in ('running', 'paused', 'failed', 'completed')),
   source text not null check (source in ('manual', 'cron')),
   actor_email text,
   started_at timestamptz not null default now(),
@@ -23,9 +23,9 @@ create table private.sync_runs (
   last_heartbeat_at timestamptz not null default now()
 );
 
-create unique index sync_runs_one_running_idx
+create unique index sync_runs_one_resumable_idx
   on private.sync_runs ((true))
-  where status = 'running';
+  where status in ('running', 'paused', 'failed');
 
 create table private.sync_run_variants (
   run_id uuid not null references private.sync_runs(id) on delete cascade,
@@ -116,7 +116,7 @@ begin
   else
     select * into current_run
     from private.sync_runs
-    where status = 'failed'
+    where status in ('paused', 'failed')
       and completed_at is null
     order by started_at desc
     limit 1
@@ -468,7 +468,8 @@ declare
   current_run private.sync_runs%rowtype;
 begin
   update private.sync_runs
-  set error_message = left(coalesce(requested_reason, 'Kontrollert pause'), 2000),
+  set status = 'paused',
+      error_message = left(coalesce(requested_reason, 'Kontrollert pause'), 2000),
       lease_token = null,
       lease_expires_at = null,
       last_heartbeat_at = now()

@@ -25,10 +25,13 @@ og fullført-/feilstatus manglet.
 
 ## Ny flyt
 
-1. Ruten claimer enten en ny kjøring eller en tidligere avbrutt/feilet kjøring.
+1. Ruten claimer enten en eksisterende resumable kjøring eller, bare når ingen
+   slik kjøring finnes, en ny kjøring.
 2. En tidsbegrenset lease sikrer at bare én manuell eller planlagt worker jobber
    på kjøringen.
-3. Shopify-varianter hentes cursorbasert, 100 om gangen og sortert på ID.
+3. Shopify-varianter hentes cursorbasert, 100 om gangen og sortert på ID. Samme
+   invocation fortsetter side for side så lenge det finnes flere sider og den
+   myke tidsgrensen ikke er nådd.
 4. Hele siden sendes til én database-RPC. Produkter, collections, settet med
    observerte variant-ID-er, cursor og tellere oppdateres i samme transaksjon.
 5. Etter siste side kjører en egen avsluttende RPC avstemming og markerer først
@@ -38,9 +41,11 @@ og fullført-/feilstatus manglet.
    Dette dekker draft, arkivert, slettet og andre produkter som ikke lenger
    returneres som aktive.
 
-Ved en kontrollert pause frigjøres leasen, mens status og cursor beholdes. Ved
-hard timeout utløper leasen automatisk. Neste autoriserte kall overtar samme
-kjøring og fortsetter fra siste atomisk lagrede cursor.
+Ved en kontrollert pause settes status til `paused` og leasen frigjøres, mens
+cursor og tellere beholdes. Ved hard timeout blir status stående `running`, men
+leasen utløper. Neste autoriserte cron- eller manuelle kall overtar samme
+kjøring og fortsetter fra siste atomisk lagrede cursor. En kjøring med aktiv
+lease returneres som opptatt og overtas ikke parallelt.
 
 ## Databaseendringer
 
@@ -84,7 +89,9 @@ kjøringen kontrollert før Vercels harde grense og kan startes igjen umiddelbar
 
 ## Feilhåndtering og samtidighet
 
-- En partial unique index tillater kun én `running` kjøring.
+- En partial unique index tillater kun én resumable kjøring med status
+  `running`, `paused` eller `failed`. En ny full sync kan derfor ikke opprettes
+  så lenge en eksisterende kjøring kan fortsettes.
 - Claim bruker en transaction-level advisory lock for å lukke race mellom cron
   og manuell start.
 - Cursor-konflikt og ugyldig/utløpt lease avvises i databasen.
@@ -92,6 +99,21 @@ kjøringen kontrollert før Vercels harde grense og kan startes igjen umiddelbar
 - Vanlige feil setter kjøringen til `failed` med feilmelding og aktivitetslogg.
 - Hard timeout oppdages som utløpt lease ved neste claim og logges som resume.
 - Fullført-status settes i samme transaksjon som sluttavstemmingen.
+
+### Statusoverganger
+
+- Ny kjøring: ingen resumable run → `running`.
+- Aktiv behandling: `running`; cursor/tellere committes etter hver hele side.
+- Myk tidsgrense: `running` → `paused`, uten sluttavstemming.
+- Håndtert feil: `running` → `failed`, med feilmelding og uten
+  sluttavstemming.
+- Resume: `paused` eller `failed` → `running`. `running` med utløpt/manglende
+  lease claimes på nytt som samme run.
+- Fullføring: `running` → `completed` bare etter at Shopify har returnert siste
+  side og sluttavstemmingen er ferdig i samme transaksjon.
+
+Produkter deaktiveres aldri i `running`, `paused` eller `failed`. Deaktivering
+finnes kun i fullførings-RPC-en etter at `has_next_page = false`.
 
 ## Lokal validering
 

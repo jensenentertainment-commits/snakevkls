@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { syncShopifyProducts } from "@/lib/shopify/sync-products";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
@@ -27,7 +28,9 @@ export async function GET(request: NextRequest) {
       source: "cron",
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(result, {
+      status: result.status === "completed" ? 200 : 202,
+    });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Cron Shopify sync feilet";

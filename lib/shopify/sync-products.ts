@@ -1,9 +1,21 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import {
+  runPagedShopifySync,
+  type ShopifySyncClaim,
+  type ShopifySyncCompleted,
+  type ShopifySyncPage,
+  type ShopifySyncProgress,
+  type ShopifySyncWorker,
+} from "@/lib/shopify/sync-engine";
 
 const SHOPIFY_QUERY = `
   query ProductVariants($cursor: String) {
-    productVariants(first: 100, after: $cursor, query: "product_status:active") {
+    productVariants(
+      first: 100
+      after: $cursor
+      query: "product_status:active"
+      sortKey: ID
+    ) {
       edges {
         cursor
         node {
@@ -37,6 +49,7 @@ const SHOPIFY_QUERY = `
       }
       pageInfo {
         hasNextPage
+        endCursor
       }
     }
   }
@@ -53,40 +66,43 @@ type ShopifyVariantNode = {
   sku: string | null;
   title: string;
   inventoryQuantity: number;
-  inventoryItem: {
-    id: string;
-  } | null;
+  inventoryItem: { id: string } | null;
   product: {
     id: string;
     title: string;
     status: string;
     vendor: string | null;
     productType: string | null;
-    featuredImage: {
-      url: string;
-    } | null;
-    collections: {
-      edges: {
-        node: ShopifyCollectionNode;
-      }[];
-    };
+    featuredImage: { url: string } | null;
+    collections: { edges: { node: ShopifyCollectionNode }[] };
   };
+};
+
+type ShopifyVariantPayload = {
+  sku: string | null;
+  productName: string;
+  variantName: string | null;
+  imageUrl: string | null;
+  vendor: string | null;
+  productType: string | null;
+  shopifyQuantity: number;
+  shopifyProductId: string;
+  shopifyVariantId: string;
+  shopifyInventoryItemId: string | null;
+  shopifyStatus: string;
+  collections: ShopifyCollectionNode[];
 };
 
 type SyncOptions = {
   actorEmail?: string | null;
   source?: "manual" | "cron";
+  maxPages?: number;
+  softDurationMs?: number;
 };
 
 async function logShopifySync(
   supabaseAdmin: SupabaseClient,
-  {
-    action,
-    title,
-    description,
-    metadata,
-    actorEmail,
-  }: {
+  input: {
     action: string;
     title: string;
     description?: string | null;
@@ -97,22 +113,29 @@ async function logShopifySync(
   const { error } = await supabaseAdmin.from("activity_log").insert({
     entity_type: "shopify_sync",
     entity_id: null,
-    action,
-    title,
-    description: description ?? null,
-    actor_email: actorEmail ?? null,
-    metadata: metadata ?? null,
+    action: input.action,
+    title: input.title,
+    description: input.description ?? null,
+    actor_email: input.actorEmail ?? null,
+    metadata: input.metadata ?? null,
   });
 
   if (error) {
-    console.error("Kunne ikke logge Shopify-sync:", error);
+    console.error("Kunne ikke logge Shopify-sync", error);
   }
+}
+
+function rpcResult<T>(data: unknown, error: { message: string } | null): T {
+  if (error) throw new Error(error.message);
+  if (!data || typeof data !== "object") {
+    throw new Error("Shopify-sync fikk ugyldig svar fra databasen");
+  }
+  return data as T;
 }
 
 export async function syncShopifyProducts(options: SyncOptions = {}) {
   const shop = process.env.SHOPIFY_STORE_DOMAIN;
   const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-04";
-
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -120,193 +143,229 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
     throw new Error("Mangler env vars");
   }
 
- const supabaseAdmin = createClient(
-  supabaseUrl,
-  supabaseServiceKey
-);
-
-  const startedAt = Date.now();
-
-  await logShopifySync(supabaseAdmin, {
-    action: "shopify_sync_started",
-    title: "Shopify-sync startet",
-    actorEmail: options.actorEmail ?? null,
-    metadata: {
-      source: options.source ?? "manual",
-    },
+  const source = options.source ?? "manual";
+  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const { data: connection, error: connectionError } = await supabaseAdmin
-    .from("shopify_connections")
-    .select("shop, access_token")
-    .eq("shop", shop)
-    .single();
+  let accessToken: string | null = null;
 
-  if (connectionError || !connection?.access_token) {
-    await logShopifySync(supabaseAdmin, {
-      action: "shopify_sync_failed",
-      title: "Shopify-sync feilet",
-      description: "Shopify er ikke koblet til",
-      actorEmail: options.actorEmail ?? null,
-      metadata: {
-        source: options.source ?? "manual",
-        duration_ms: Date.now() - startedAt,
-      },
-    });
+  async function getAccessToken() {
+    if (accessToken) return accessToken;
 
-    throw new Error("Shopify er ikke koblet til");
+    const { data: connection, error } = await supabaseAdmin
+      .from("shopify_connections")
+      .select("access_token")
+      .eq("shop", shop)
+      .single();
+
+    if (error || !connection?.access_token) {
+      throw new Error("Shopify er ikke koblet til");
+    }
+
+    const token = String(connection.access_token);
+    accessToken = token;
+    return token;
   }
 
-  let cursor: string | null = null;
-  let hasNextPage = true;
+  const worker: ShopifySyncWorker<ShopifyVariantPayload> = {
+    async claim() {
+      const { data, error } = await supabaseAdmin.rpc(
+        "claim_shopify_sync_run",
+        {
+          requested_source: source,
+          requested_actor_email: options.actorEmail ?? null,
+          requested_lease_seconds: 90,
+        }
+      );
+      const claim = rpcResult<ShopifySyncClaim>(data, error);
 
-  let imported = 0;
-  let skippedNoSku = 0;
-  let collectionsLinked = 0;
-
-  while (hasNextPage) {
-    const response = await fetch(
-      `https://${shop}/admin/api/${apiVersion}/graphql.json`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Shopify-Access-Token": connection.access_token,
-        },
-        body: JSON.stringify({
-          query: SHOPIFY_QUERY,
-          variables: { cursor },
-        }),
+      if (claim.acquired) {
+        await logShopifySync(supabaseAdmin, {
+          action: claim.resumed
+            ? "shopify_sync_resumed"
+            : "shopify_sync_started",
+          title: claim.resumed
+            ? "Shopify-sync fortsetter"
+            : "Shopify-sync startet",
+          description: claim.errorMessage ?? null,
+          actorEmail: options.actorEmail ?? null,
+          metadata: {
+            run_id: claim.runId,
+            source,
+            cursor: claim.cursor,
+            processed: claim.processedCount,
+          },
+        });
       }
-    );
 
-    const json = await response.json();
+      return claim;
+    },
 
-    if (!response.ok || json.errors) {
+    async fetchPage(cursor): Promise<ShopifySyncPage<ShopifyVariantPayload>> {
+      const token = await getAccessToken();
+      const response = await fetch(
+        `https://${shop}/admin/api/${apiVersion}/graphql.json`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Shopify-Access-Token": token,
+          },
+          body: JSON.stringify({
+            query: SHOPIFY_QUERY,
+            variables: { cursor },
+          }),
+        }
+      );
+      const json = await response.json();
+
+      if (!response.ok || json.errors) {
+        console.error("Shopify GraphQL-feil", {
+          status: response.status,
+          errors: json.errors ?? null,
+        });
+        throw new Error(`Shopify API returnerte feil (${response.status})`);
+      }
+
+      const connection = json.data?.productVariants;
+      if (!connection || !Array.isArray(connection.edges)) {
+        throw new Error("Shopify returnerte ugyldig produktdata");
+      }
+
+      return {
+        variants: connection.edges.map(
+          ({ node: variant }: { node: ShopifyVariantNode }) => ({
+            sku: variant.sku?.trim() || null,
+            productName: variant.product.title,
+            variantName:
+              variant.title === "Default Title" ? null : variant.title,
+            imageUrl: variant.product.featuredImage?.url ?? null,
+            vendor: variant.product.vendor ?? null,
+            productType: variant.product.productType ?? null,
+            shopifyQuantity: variant.inventoryQuantity ?? 0,
+            shopifyProductId: variant.product.id,
+            shopifyVariantId: variant.id,
+            shopifyInventoryItemId: variant.inventoryItem?.id ?? null,
+            shopifyStatus: variant.product.status,
+            collections:
+              variant.product.collections?.edges?.map(
+                (item: { node: ShopifyCollectionNode }) => item.node
+              ) ?? [],
+          })
+        ),
+        endCursor: connection.pageInfo?.endCursor ?? null,
+        hasNextPage: Boolean(connection.pageInfo?.hasNextPage),
+      };
+    },
+
+    async applyPage({ runId, leaseToken, expectedCursor, page }) {
+      const { data, error } = await supabaseAdmin.rpc(
+        "apply_shopify_sync_page",
+        {
+          requested_run_id: runId,
+          requested_lease_token: leaseToken,
+          expected_cursor: expectedCursor,
+          next_cursor: page.endCursor,
+          page_has_next: page.hasNextPage,
+          page_variants: page.variants,
+          page_lease_seconds: 90,
+        }
+      );
+      return rpcResult<ShopifySyncProgress>(data, error);
+    },
+
+    async complete({ runId, leaseToken }) {
+      const { data, error } = await supabaseAdmin.rpc(
+        "complete_shopify_sync_run",
+        {
+          requested_run_id: runId,
+          requested_lease_token: leaseToken,
+        }
+      );
+      const completed = rpcResult<ShopifySyncCompleted>(data, error);
+
       await logShopifySync(supabaseAdmin, {
-        action: "shopify_sync_failed",
-        title: "Shopify-sync feilet",
-        description: "Shopify API returnerte feil",
+        action: "shopify_sync_completed",
+        title: "Shopify-sync fullført",
+        description: `${completed.processedCount} produkter synkronisert`,
         actorEmail: options.actorEmail ?? null,
         metadata: {
-          source: options.source ?? "manual",
-          duration_ms: Date.now() - startedAt,
-          status: response.status,
+          run_id: completed.runId,
+          source,
+          imported: completed.processedCount,
+          skipped_no_sku: completed.skippedNoSku,
+          collections_linked: completed.collectionsLinked,
+          pages_processed: completed.pagesProcessed,
+          reconciled: completed.reconciledCount,
         },
       });
 
-      throw new Error("Shopify sync feilet");
-    }
-
-    const edges = json.data.productVariants.edges as {
-      cursor: string;
-      node: ShopifyVariantNode;
-    }[];
-
-    for (const edge of edges) {
-      const variant = edge.node;
-      const sku = variant.sku?.trim();
-
-      if (variant.product.status !== "ACTIVE") continue;
-
-      if (!sku) {
-        skippedNoSku++;
-        continue;
-      }
-
-      const row = {
-        sku,
-        product_name: variant.product.title,
-        variant_name:
-          variant.title === "Default Title" ? null : variant.title,
-        active: true,
-        image_url: variant.product.featuredImage?.url ?? null,
-        vendor: variant.product.vendor ?? null,
-        product_type: variant.product.productType ?? null,
-        shopify_quantity: variant.inventoryQuantity ?? 0,
-        shopify_product_id: variant.product.id,
-        shopify_variant_id: variant.id,
-        shopify_inventory_item_id: variant.inventoryItem?.id ?? null,
-        shopify_status: variant.product.status,
-        synced_at: new Date().toISOString(),
-      };
-
-      const { data: productData, error: productError } = await supabaseAdmin
-        .from("products")
-        .upsert(row, { onConflict: "sku" })
-        .select("id")
-        .single();
-
-      if (productError || !productData?.id) {
-        console.error("Supabase product upsert feilet", {
-          productError,
-          row,
-        });
-
-        throw new Error("Kunne ikke synkronisere produkter");
-      }
-
-      const localProductId = productData.id;
-
-      await supabaseAdmin
-        .from("product_collections")
-        .delete()
-        .eq("product_id", localProductId);
-
-      const collections =
-        variant.product.collections?.edges?.map((item) => item.node) ?? [];
-
-      if (collections.length > 0) {
-        const collectionRows = collections.map((collection) => ({
-          product_id: localProductId,
-          shopify_collection_id: collection.id,
-          title: collection.title,
-          handle: collection.handle,
-        }));
-
-        const { error: collectionsError } = await supabaseAdmin
-          .from("product_collections")
-          .upsert(collectionRows, {
-            onConflict: "product_id,shopify_collection_id",
-          });
-
-        if (collectionsError) {
-          console.error("Collection upsert feilet", collectionsError);
-
-          throw new Error("Kunne ikke synkronisere collections");
-        }
-
-        collectionsLinked += collectionRows.length;
-      }
-
-      imported++;
-    }
-
-    hasNextPage = json.data.productVariants.pageInfo.hasNextPage;
-    cursor = edges.length ? edges[edges.length - 1].cursor : null;
-  }
-
-  const durationMs = Date.now() - startedAt;
-
-  await logShopifySync(supabaseAdmin, {
-    action: "shopify_sync_completed",
-    title: "Shopify-sync fullført",
-    description: `${imported} produkter synkronisert`,
-    actorEmail: options.actorEmail ?? null,
-    metadata: {
-      source: options.source ?? "manual",
-      duration_ms: durationMs,
-      imported,
-      skipped_no_sku: skippedNoSku,
-      collections_linked: collectionsLinked,
+      return completed;
     },
+
+    async pause({ runId, leaseToken, reason }) {
+      const { error } = await supabaseAdmin.rpc("pause_shopify_sync_run", {
+        requested_run_id: runId,
+        requested_lease_token: leaseToken,
+        requested_reason: reason,
+      });
+
+      if (error) throw new Error(error.message);
+
+      await logShopifySync(supabaseAdmin, {
+        action: "shopify_sync_paused",
+        title: "Shopify-sync pauset",
+        description: reason,
+        actorEmail: options.actorEmail ?? null,
+        metadata: { run_id: runId, source },
+      });
+    },
+
+    async fail({ runId, leaseToken, error: message }) {
+      const { error } = await supabaseAdmin.rpc("fail_shopify_sync_run", {
+        requested_run_id: runId,
+        requested_lease_token: leaseToken,
+        requested_error_message: message,
+      });
+
+      if (error) throw new Error(error.message);
+
+      await logShopifySync(supabaseAdmin, {
+        action: "shopify_sync_failed",
+        title: "Shopify-sync feilet",
+        description: message,
+        actorEmail: options.actorEmail ?? null,
+        metadata: { run_id: runId, source },
+      });
+    },
+  };
+
+  const result = await runPagedShopifySync(worker, {
+    maxPages: options.maxPages,
+    softDurationMs: options.softDurationMs,
   });
 
   return {
-    ok: true,
-    imported,
-    skippedNoSku,
-    collectionsLinked,
-    durationMs,
+    ok: result.status === "completed",
+    ...result,
   };
+}
+
+export async function getLatestShopifySyncRun() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Mangler env vars");
+  }
+
+  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await supabaseAdmin.rpc("get_shopify_sync_run", {
+    requested_run_id: null,
+  });
+
+  return rpcResult<Record<string, unknown>>(data, error);
 }

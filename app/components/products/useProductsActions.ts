@@ -51,7 +51,6 @@ type Args = {
 };
 
 export function useProductsActions({
-  products,
   zones,
 
   inlineZone,
@@ -113,15 +112,24 @@ export function useProductsActions({
         throw new Error(result?.error || "Shopify sync feilet");
       }
 
-      setLastShopifySync(
-        new Date().toLocaleTimeString("nb-NO", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      );
+      if (result.status === "completed") {
+        setLastShopifySync(
+          new Date().toLocaleTimeString("nb-NO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        );
 
-      showToast("Shopify sync fullført");
-      await loadData();
+        showToast("Shopify sync fullført");
+        await loadData();
+      } else if (result.acquired === false) {
+        showToast("En Shopify-sync kj\u00f8rer allerede");
+      } else {
+        showToast(
+          `Shopify-sync lagret fremdrift etter ${result.processedCount ?? 0} produkter. Start igjen for \u00e5 fortsette.`
+        );
+        await loadData();
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Ukjent feil ved Shopify sync";

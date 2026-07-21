@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
 import { requireRole } from "@/lib/auth/require-role";
-import { logActivity } from "@/lib/log-activity";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -13,100 +12,54 @@ type Body = {
   note?: string | null;
 };
 
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) return null;
-
-  return createSupabaseAdminClient(supabaseUrl, supabaseServiceKey);
-}
-
 export async function POST(request: NextRequest) {
   const auth = await requireRole(["admin", "lager"]);
-
   if (!auth.ok) return auth.response;
 
   const { user, profile } = auth;
-
-  let body: Body;
-
-  try {
-    body = (await request.json()) as Body;
-  } catch {
-    return NextResponse.json({ error: "Ugyldig JSON" }, { status: 400 });
-  }
-
+  const body = (await request.json()) as Body;
   const locationId = String(body.locationId ?? "").trim();
   const inventoryId = String(body.inventoryId ?? "").trim();
   const expectedQuantity = Number(body.expectedQuantity);
   const countedQuantity = Number(body.countedQuantity);
-  const note = String(body.note ?? "").trim();
+  const note = String(body.note ?? "").trim() || null;
 
-  if (!locationId) {
-    return NextResponse.json({ error: "Mangler lokasjon" }, { status: 400 });
+  if (!locationId || !inventoryId) {
+    return NextResponse.json(
+      { error: !locationId ? "Mangler lokasjon" : "Mangler lagerlinje" },
+      { status: 400 }
+    );
   }
-
-  if (!inventoryId) {
-    return NextResponse.json({ error: "Mangler lagerlinje" }, { status: 400 });
-  }
-
   if (
-    Number.isNaN(expectedQuantity) ||
-    Number.isNaN(countedQuantity) ||
+    !Number.isInteger(expectedQuantity) ||
+    !Number.isInteger(countedQuantity) ||
     expectedQuantity < 0 ||
     countedQuantity < 0
   ) {
     return NextResponse.json({ error: "Ugyldig antall" }, { status: 400 });
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
-
-  if (!supabaseAdmin) {
-    return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
-  }
-
-  const { data, error } = await supabaseAdmin
-    .from("location_counts")
-    .insert({
-      location_id: locationId,
-      inventory_id: inventoryId,
-      expected_quantity: expectedQuantity,
-      counted_quantity: countedQuantity,
-      note: note || null,
-      counted_by: user.id,
-      counted_by_name: profile.display_name ?? user.email ?? null,
-    })
-    .select("*")
-    .single();
+  const { data, error } = await supabaseAdmin.rpc("record_location_count", {
+    requested_location_id: locationId,
+    requested_inventory_id: inventoryId,
+    requested_expected_quantity: expectedQuantity,
+    requested_counted_quantity: countedQuantity,
+    requested_note: note,
+    requested_actor_id: user.id,
+    requested_actor_email: user.email ?? null,
+    requested_actor_name: profile.display_name ?? user.email ?? null,
+  });
 
   if (error) {
-    console.error("Location count insert feilet", error);
-
-
-    await logActivity(supabaseAdmin, {
-  entityType: "location",
-  entityId: locationId,
-  action: "location_count",
-  title: "Lokasjon telt",
-  description: `Forventet ${expectedQuantity}, telte ${countedQuantity}.`,
-  metadata: {
-    locationId,
-    inventoryId,
-    expectedQuantity,
-    countedQuantity,
-    difference: countedQuantity - expectedQuantity,
-    note: note || null,
-    countId: (data as { id?: string } | null)?.id ?? null,
-  },
-  actorId: user.id,
-  actorEmail: user.email ?? null,
-  actorName: profile.display_name ?? user.email ?? null,
-});
-
+    console.error("Atomic location count feilet", error);
+    const conflict = error.message.includes("changed before count");
     return NextResponse.json(
-      { error: "Kunne ikke lagre telling" },
-      { status: 500 }
+      {
+        error: conflict
+          ? "Beholdningen ble endret før tellingen ble lagret"
+          : "Kunne ikke lagre telling",
+      },
+      { status: conflict ? 409 : 500 }
     );
   }
 

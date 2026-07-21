@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
 import { requireRole } from "@/lib/auth/require-role";
-import { logActivity } from "@/lib/log-activity";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -13,33 +12,14 @@ type Body = {
   diffLines: number;
 };
 
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) return null;
-
-  return createSupabaseAdminClient(supabaseUrl, supabaseServiceKey);
-}
-
 export async function POST(request: NextRequest) {
   const auth = await requireRole(["admin", "lager"]);
-
   if (!auth.ok) return auth.response;
 
   const { user, profile } = auth;
-
-  let body: Body;
-
-  try {
-    body = (await request.json()) as Body;
-  } catch {
-    return NextResponse.json({ error: "Ugyldig JSON" }, { status: 400 });
-  }
-
+  const body = (await request.json()) as Body;
   const locationId = String(body.locationId ?? "").trim();
   const locationCode = String(body.locationCode ?? "").trim();
-
   const totalLines = Number(body.totalLines);
   const matchedLines = Number(body.matchedLines);
   const diffLines = Number(body.diffLines);
@@ -47,24 +27,13 @@ export async function POST(request: NextRequest) {
   if (!locationId) {
     return NextResponse.json({ error: "Mangler lokasjon" }, { status: 400 });
   }
-
-  if (
-    Number.isNaN(totalLines) ||
-    Number.isNaN(matchedLines) ||
-    Number.isNaN(diffLines)
-  ) {
+  if (![totalLines, matchedLines, diffLines].every(Number.isInteger)) {
     return NextResponse.json({ error: "Ugyldig telling" }, { status: 400 });
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
-
-  if (!supabaseAdmin) {
-    return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
-  }
-
-  await logActivity(supabaseAdmin, {
-    entityType: "location",
-    entityId: locationId,
+  const { error } = await supabaseAdmin.from("activity_log").insert({
+    entity_type: "location",
+    entity_id: locationId,
     action: "location_count_completed",
     title: "Lokasjonstelling fullført",
     description:
@@ -79,10 +48,18 @@ export async function POST(request: NextRequest) {
       diffLines,
       status: diffLines > 0 ? "diff" : "clean",
     },
-    actorId: user.id,
-    actorEmail: user.email ?? null,
-    actorName: profile.display_name ?? user.email ?? null,
+    actor_id: user.id,
+    actor_email: user.email ?? null,
+    actor_name: profile.display_name ?? user.email ?? null,
   });
+
+  if (error) {
+    console.error("Location count completion log feilet", error);
+    return NextResponse.json(
+      { error: "Kunne ikke logge fullført telling" },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

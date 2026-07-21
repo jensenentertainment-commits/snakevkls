@@ -62,14 +62,10 @@ begin
     raise exception 'Inventory quantity changed concurrently';
   end if;
 
-  effective_quantity_delta := case
-    when requested_quantity_delta < 0 then
-      greatest(requested_quantity_delta, -current_inventory.quantity)
-    else requested_quantity_delta
-  end;
-  if effective_quantity_delta = 0 then
+  if current_inventory.quantity + requested_quantity_delta < 0 then
     raise exception 'Insufficient inventory';
   end if;
+  effective_quantity_delta := requested_quantity_delta;
   next_quantity := current_inventory.quantity + effective_quantity_delta;
 
   update public.inventory

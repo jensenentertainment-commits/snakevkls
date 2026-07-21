@@ -35,7 +35,9 @@ constraint, movement eller activity ruller derfor tilbake hele operasjonen.
 
 `apply_stock_movement` støtter en forventet gammel beholdning. Ruten som setter
 et absolutt antall bruker dette som optimistisk samtidighetskontroll. Vanlige
-delta-operasjoner beregner ny beholdning under radlåsen.
+delta-operasjoner beregner ny beholdning under radlåsen. Et delta som ville gitt
+negativ beholdning avvises eksplisitt; inventory, movement og activity rulles da
+tilbake som én transaksjon.
 
 Batch-plassering behandler produkt-ID-er i stabil sorteringsrekkefølge og er én
 RPC/transaksjon. Ingen delmengde blir stående oppdatert ved feil.
@@ -80,17 +82,19 @@ På en lokal Supabase-instans eller isolert databasebranch:
    `service_role` har execute.
 2. Kall `apply_stock_movement` med gyldig delta. Inventory, movement og activity
    skal alle finnes, med korrekt `previousQuantity` og ny beholdning.
-3. Fremprovoser activity-feil i en transaksjon. Inventory og movement skal være
+3. Kall `apply_stock_movement` med et uttak større enn beholdningen. Kallet skal
+   avvises, uten endring i inventory, movement eller activity.
+4. Fremprovoser activity-feil i en transaksjon. Inventory og movement skal være
    uendret etter feilen.
-4. Start to samtidige movements mot samme inventory-rad. Begge deltaer skal
+5. Start to samtidige movements mot samme inventory-rad. Begge deltaer skal
    serialiseres uten tapt oppdatering, eller expected-quantity-kallet skal få
    en eksplisitt konflikt.
-5. Kall `record_location_count` med forventet 10 og telt 7. Lagret `difference`
+6. Kall `record_location_count` med forventet 10 og telt 7. Lagret `difference`
    og activity-metadata skal begge være `-3`.
-6. Kall count med stale expected quantity. Verken count eller success-activity
+7. Kall count med stale expected quantity. Verken count eller success-activity
    skal opprettes.
-7. Kall batch med én ugyldig produkt-ID. Ingen av produktene skal få ny sone.
-8. Oppdater profil og bekreft at `entity_type = 'user'` kan lagres.
+8. Kall batch med én ugyldig produkt-ID. Ingen av produktene skal få ny sone.
+9. Oppdater profil og bekreft at `entity_type = 'user'` kan lagres.
 
 Lokalt kjørt i dette arbeidsmiljøet:
 
@@ -100,10 +104,10 @@ Lokalt kjørt i dette arbeidsmiljøet:
 - Produktsidens eksisterende lintgjeld (`any` og funksjonsrekkefølge) er fortsatt
   rapportert og ikke ryddet, siden generell UI-opprydding er utenfor fase 3.
 - `git diff --check`: kjøres før levering.
-- Docker/PostgreSQL er ikke tilgjengelig lokalt, og `supabase db lint --local`
-  kan derfor ikke koble til en lokal database. Migrasjonen er ikke kjørt mot en
-  database i denne fasen og skal testes i en isolert database før
-  produksjonsutrulling.
+- Migrasjonen er kjørt mot en isolert lokal PostgreSQL 17.10-database med bare
+  syntetiske data. Vanlig lagerbevegelse, avvisning av negativ beholdning,
+  rollback ved activity-feil, samtidige writes mot samme inventory-rad, atomisk
+  batch og generert `location_counts.difference` er dynamisk verifisert.
 
 ## Migrasjon og utrulling
 

@@ -17,14 +17,6 @@ const modules = [
 },
 
   {
-    href: "/labs/spm",
-    eyebrow: "SPM",
-    title: "Snake Product Migrator",
-    description:
-      "Importer, berik og klargjør produkter for Shopify.",
-    status: "Pensjonert",
-  },
-  {
     href: "/labs/shopify-control",
     eyebrow: "Control",
     title: "Shopify Control",

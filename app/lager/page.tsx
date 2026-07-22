@@ -19,7 +19,6 @@ import SnakeFooter from "../components/SnakeFooter";
 import SnakeBoardPreview from "../components/SnakeBoardPreview";
 import AskBorre from "../components/AskBorre";
 import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
-import { getBorreWarehouseAssessment } from "@/lib/intelligence/borre/warehouse-assessment";
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
@@ -46,8 +45,6 @@ export default async function HomePage() {
   const issueCount =
   missingLocationCount + missingSkuCount + emptyLocationCount;
 
-
-const borreAssessment = await getBorreWarehouseAssessment();
 
 const hasIssues = issueCount > 0;
 const issueState: IssueCardState = hasIssues

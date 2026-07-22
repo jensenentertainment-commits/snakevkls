@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireRole } from "@/lib/auth/require-role";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
   if (!auth.ok) return auth.response;
 
   const { user, profile } = auth;
+  const supabaseAdmin = getSupabaseAdmin();
   const body = (await request.json()) as Body;
   const locationId = String(body.locationId ?? "").trim();
   const locationCode = String(body.locationCode ?? "").trim();

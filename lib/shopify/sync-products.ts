@@ -1,4 +1,5 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { tryGetSupabaseAdmin } from "@/lib/supabase/admin";
 import {
   runPagedShopifySync,
   type ShopifySyncClaim,
@@ -136,24 +137,21 @@ function rpcResult<T>(data: unknown, error: { message: string } | null): T {
 export async function syncShopifyProducts(options: SyncOptions = {}) {
   const shop = process.env.SHOPIFY_STORE_DOMAIN;
   const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-04";
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAdmin = tryGetSupabaseAdmin();
 
-  if (!shop || !supabaseUrl || !supabaseServiceKey) {
+  if (!shop || !supabaseAdmin) {
     throw new Error("Mangler env vars");
   }
+  const adminClient = supabaseAdmin;
 
   const source = options.source ?? "manual";
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
 
   let accessToken: string | null = null;
 
   async function getAccessToken() {
     if (accessToken) return accessToken;
 
-    const { data: connection, error } = await supabaseAdmin
+    const { data: connection, error } = await adminClient
       .from("shopify_connections")
       .select("access_token")
       .eq("shop", shop)
@@ -353,16 +351,11 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
 }
 
 export async function getLatestShopifySyncRun() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAdmin = tryGetSupabaseAdmin();
 
-  if (!supabaseUrl || !supabaseServiceKey) {
+  if (!supabaseAdmin) {
     throw new Error("Mangler env vars");
   }
-
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
   const { data, error } = await supabaseAdmin.rpc("get_shopify_sync_run", {
     requested_run_id: null,
   });

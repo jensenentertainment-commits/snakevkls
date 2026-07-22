@@ -1,8 +1,7 @@
-import { supabaseAdmin } from "@/lib/supabase/admin";
-
-const supabase = supabaseAdmin;
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function getDashboardStats() {
+  const supabase = getSupabaseAdmin();
   const [
     missingLocationRes,
     missingSkuRes,

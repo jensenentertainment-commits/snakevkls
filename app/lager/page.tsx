@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import {
   Search,
   MapPin,
@@ -29,6 +30,8 @@ type IssueCardState = {
   hover: string;
 };
 export default async function HomePage() {
+  await connection();
+
   const {
   missingLocationCount,
   missingSkuCount,
@@ -134,14 +137,6 @@ const issueState: IssueCardState = hasIssues
   quantityDiffCount,
   locationsWithoutZoneCount: locationsNoZoneCount,
   placedCount: placedProductCount,
-});
-
-console.log({
-  missingLocationCount,
-  quantityDiffCount,
-  locationsNoZoneCount,
-  placedProductCount,
-  health,
 });
 
   return (

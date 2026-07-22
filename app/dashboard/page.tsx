@@ -4,8 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import type { Role } from "@/types/auth";
 import { isRole } from "@/lib/auth/roles";
 
-import { getBorreDashboardBrief } from "@/lib/intelligence/borre/dashboard-brief";
-
 type DashboardCard = {
   title: string;
   href: string;
@@ -96,8 +94,6 @@ const firstName = fullName.split(" ")[0];
 
   const visibleCards = cards.filter((card) => card.roles.includes(role));
 
-const borre = await getBorreDashboardBrief();
-
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#062f3b] px-4 py-5 text-white sm:px-6">
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -121,7 +117,7 @@ const borre = await getBorreDashboardBrief();
           <div className="mt-4 h-px w-14 bg-gradient-to-r from-[#b58a14] to-transparent" />
 
      <p className="mt-4 max-w-2xl text-sm leading-6 text-white/60">
-  {borre.message}
+  {welcome}
 </p>
         </section>
 

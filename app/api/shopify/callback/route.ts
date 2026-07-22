@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { createClient } from "@supabase/supabase-js";
+import { tryGetSupabaseAdmin } from "@/lib/supabase/admin";
 
 function verifyHmac(params: URLSearchParams, secret: string) {
   const hmac = params.get("hmac");
@@ -32,9 +32,6 @@ export async function GET(request: NextRequest) {
   const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
   const expectedState = request.cookies.get("shopify_oauth_state")?.value;
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
   if (!code || !shop || !state) {
     return NextResponse.json({ error: "Mangler code/shop/state" }, { status: 400 });
   }
@@ -51,7 +48,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Ugyldig Shopify HMAC" }, { status: 400 });
   }
 
-  if (!supabaseUrl || !supabaseServiceKey) {
+  const supabaseAdmin = tryGetSupabaseAdmin();
+
+  if (!supabaseAdmin) {
     return NextResponse.json({ error: "Mangler Supabase service key" }, { status: 500 });
   }
 
@@ -76,8 +75,6 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
   const { error } = await supabaseAdmin.from("shopify_connections").upsert(
     {

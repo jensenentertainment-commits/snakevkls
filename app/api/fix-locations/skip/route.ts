@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
 import { requireRole } from "@/lib/auth/require-role";
 import { logActivity } from "@/lib/log-activity";
+import { tryGetSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -26,15 +26,6 @@ const validReasons: SkipReason[] = [
   "no_location",
   "other",
 ];
-
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) return null;
-
-  return createSupabaseAdminClient(supabaseUrl, supabaseServiceKey);
-}
 
 export async function POST(request: NextRequest) {
   const auth = await requireRole(["admin", "lager"]);
@@ -75,7 +66,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
+  const supabaseAdmin = tryGetSupabaseAdmin();
 
   if (!supabaseAdmin) {
     return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });

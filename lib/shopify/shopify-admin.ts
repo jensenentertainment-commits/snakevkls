@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { tryGetSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function shopifyGraphql<T = any>({
   query,
@@ -10,14 +10,11 @@ export async function shopifyGraphql<T = any>({
   const shop = process.env.SHOPIFY_STORE_DOMAIN;
   const apiVersion = process.env.SHOPIFY_API_VERSION ?? "2026-04";
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAdmin = tryGetSupabaseAdmin();
 
-  if (!shop || !supabaseUrl || !supabaseServiceKey) {
+  if (!shop || !supabaseAdmin) {
     throw new Error("Mangler env vars");
   }
-
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
   const { data: connection, error } = await supabaseAdmin
     .from("shopify_connections")

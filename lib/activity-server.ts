@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export async function logServerActivity({
   entityType,
@@ -17,6 +17,7 @@ export async function logServerActivity({
   metadata?: Record<string, unknown> | null;
   actorEmail?: string | null;
 }) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin.from("activity_log").insert({
     entity_type: entityType,
     entity_id: entityId ?? null,

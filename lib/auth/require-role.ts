@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient as createServerSupabaseClient } from "@/lib/supabase/server";
-import { isRole, type Role } from "@/lib/auth/roles";
+import { getAccessDecision, type Role } from "@/lib/auth/roles";
 
 export async function requireRole(allowedRoles: readonly Role[]) {
   const authClient = await createServerSupabaseClient();
@@ -10,7 +10,13 @@ export async function requireRole(allowedRoles: readonly Role[]) {
     error: userError,
   } = await authClient.auth.getUser();
 
-  if (userError || !user) {
+  const authenticated = !userError && Boolean(user);
+
+  if (
+    getAccessDecision({ authenticated, profile: null, allowedRoles }) ===
+      "unauthenticated" ||
+    !user
+  ) {
     return {
       ok: false as const,
       response: NextResponse.json({ error: "Ikke innlogget" }, { status: 401 }),
@@ -23,12 +29,13 @@ export async function requireRole(allowedRoles: readonly Role[]) {
     .eq("id", user.id)
     .single();
 
-  if (
-    profileError ||
-    !profile?.active ||
-    !isRole(profile.role) ||
-    !allowedRoles.includes(profile.role)
-  ) {
+  const accessDecision = getAccessDecision({
+    authenticated: true,
+    profile: profileError ? null : profile,
+    allowedRoles,
+  });
+
+  if (accessDecision !== "allowed") {
     return {
       ok: false as const,
       response: NextResponse.json({ error: "Mangler tilgang" }, { status: 403 }),

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient as createSupabaseAdminClient } from "@supabase/supabase-js";
 import { requireRole } from "@/lib/auth/require-role";
+import { tryGetSupabaseAdmin } from "@/lib/supabase/admin";
 export const dynamic = "force-dynamic";
 
 type Body = {
@@ -48,17 +48,11 @@ if (!auth.ok) return auth.response;
     return NextResponse.json({ error: "Ugyldig rolle" }, { status: 400 });
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAdmin = tryGetSupabaseAdmin();
 
-  if (!supabaseUrl || !supabaseServiceKey) {
+  if (!supabaseAdmin) {
     return NextResponse.json({ error: "Mangler env vars" }, { status: 500 });
   }
-
-  const supabaseAdmin = createSupabaseAdminClient(
-    supabaseUrl,
-    supabaseServiceKey
-  );
 
   const { data: created, error: createError } =
     await supabaseAdmin.auth.admin.createUser({

@@ -1,33 +1,238 @@
 @import "tailwindcss";
 
 :root {
-  --background: #031f26;
-  --foreground: #f4f1e8;
+  /* Snake Design System v1: canonical surfaces */
+  --snake-color-app: #062f3b;
+  --snake-color-app-elevated: #083844;
+  --snake-color-app-deep: #031f26;
+  --snake-color-hero: #05495b;
+  --snake-color-workspace: #e8eef0;
+  --snake-color-surface: #ffffff;
+  --snake-color-surface-subtle: #f6f7f8;
+  --snake-color-surface-warm: #fff7e8;
+  --snake-color-overlay: rgb(3 31 38 / 72%);
 
-  --vk-blue: #055a7d;
+  /* Snake Design System v1: text */
+  --snake-color-text-on-dark: #f4f1e8;
+  --snake-color-text-on-dark-muted: #b6c7ca;
+  --snake-color-text-primary: #0a0a0a;
+  --snake-color-text-secondary: #525252;
+  --snake-color-text-muted: #737373;
+  --snake-color-text-disabled: #a3a3a3;
+  --snake-color-text-link: #055a7d;
+
+  /* Snake Design System v1: actions and focus */
+  --snake-color-action-primary: #055a7d;
+  --snake-color-action-primary-hover: #044b68;
+  --snake-color-action-primary-pressed: #033f59;
+  --snake-color-action-primary-text: #ffffff;
+  --snake-color-focus: #2d9dcc;
+  --snake-color-focus-on-dark: #62b9dc;
+  --snake-color-focus-soft: rgb(45 157 204 / 24%);
+
+  /* Snake Design System v1: brand. Gold is not a status color. */
+  --snake-color-brand-gold: #b58a14;
+  --snake-color-brand-gold-strong: #a77e04;
+  --snake-color-brand-gold-soft: rgb(181 138 20 / 14%);
+  --snake-color-brand-gold-border: rgb(181 138 20 / 42%);
+
+  /* Snake Design System v1: semantic status colors */
+  --snake-color-success-surface: #ecfdf5;
+  --snake-color-success-border: #a7f3d0;
+  --snake-color-success-content: #14565b;
+  --snake-color-warning-surface: #fff7e8;
+  --snake-color-warning-border: #f3d38a;
+  --snake-color-warning-content: #8a6704;
+  --snake-color-danger-surface: #fff1f1;
+  --snake-color-danger-border: #fecaca;
+  --snake-color-danger-content: #9f3f3f;
+  --snake-color-info-surface: #edf7fb;
+  --snake-color-info-border: #b8dce9;
+  --snake-color-info-content: #055a7d;
+  --snake-color-neutral-surface: #f5f5f5;
+  --snake-color-neutral-border: #d4d4d4;
+  --snake-color-neutral-content: #525252;
+
+  /* Snake Design System v1: category colors */
+  --snake-color-category-labs-surface: rgb(139 92 246 / 10%);
+  --snake-color-category-labs-border: rgb(167 139 250 / 35%);
+  --snake-color-category-labs-content: #ddd6fe;
+
+  /* Snake Design System v1: borders */
+  --snake-border-subtle: rgb(10 10 10 / 10%);
+  --snake-border-default: #d4d4d4;
+  --snake-border-strong: #a3a3a3;
+  --snake-border-on-dark-subtle: rgb(255 255 255 / 8%);
+  --snake-border-on-dark-default: rgb(255 255 255 / 12%);
+  --snake-border-on-dark-strong: rgb(255 255 255 / 22%);
+  --snake-border-focus: var(--snake-color-focus);
+  --snake-border-focus-on-dark: var(--snake-color-focus-on-dark);
+  --snake-border-selected: var(--snake-color-brand-gold-border);
+
+  /* Snake Design System v1: radius */
+  --snake-radius-sm: 8px;
+  --snake-radius-control: 12px;
+  --snake-radius-action: 16px;
+  --snake-radius-card: 24px;
+  --snake-radius-panel: 28px;
+  --snake-radius-shell: 32px;
+  --snake-radius-pill: 9999px;
+  --snake-radius-legacy-card: 26px;
+  --snake-radius-legacy-control: 18px;
+
+  /* Snake Design System v1: spacing */
+  --snake-space-0: 0;
+  --snake-space-1: 4px;
+  --snake-space-2: 8px;
+  --snake-space-3: 12px;
+  --snake-space-4: 16px;
+  --snake-space-5: 20px;
+  --snake-space-6: 24px;
+  --snake-space-8: 32px;
+  --snake-space-10: 40px;
+  --snake-space-12: 48px;
+  --snake-space-16: 64px;
+  --snake-page-gutter-mobile: 16px;
+  --snake-page-gutter-tablet: 24px;
+  --snake-page-gutter-desktop: 32px;
+  --snake-shell-max-width: 1440px;
+  --snake-shell-wide-max-width: 1600px;
+
+  /* Snake Design System v1: elevation */
+  --snake-shadow-none: none;
+  --snake-shadow-card: 0 1px 2px rgb(3 31 38 / 10%);
+  --snake-shadow-panel: 0 10px 30px rgb(3 31 38 / 16%);
+  --snake-shadow-overlay: 0 24px 72px rgb(0 0 0 / 32%);
+  --snake-shadow-glass: 0 18px 60px rgb(0 0 0 / 22%);
+
+  /* Snake Design System v1: typography */
+  --snake-text-display-page-size: 42px;
+  --snake-text-display-page-line-height: 44px;
+  --snake-text-display-page-mobile-size: 32px;
+  --snake-text-display-page-mobile-line-height: 36px;
+  --snake-text-heading-section-size: 28px;
+  --snake-text-heading-section-line-height: 34px;
+  --snake-text-heading-card-size: 20px;
+  --snake-text-heading-card-line-height: 28px;
+  --snake-text-heading-compact-size: 16px;
+  --snake-text-heading-compact-line-height: 24px;
+  --snake-text-body-size: 16px;
+  --snake-text-body-line-height: 24px;
+  --snake-text-body-small-size: 14px;
+  --snake-text-body-small-line-height: 22px;
+  --snake-text-label-size: 12px;
+  --snake-text-label-line-height: 16px;
+  --snake-text-eyebrow-size: 11px;
+  --snake-text-eyebrow-line-height: 16px;
+  --snake-text-eyebrow-tracking: 0.16em;
+  --snake-text-table-size: 11px;
+  --snake-text-table-line-height: 16px;
+  --snake-text-table-tracking: 0.12em;
+  --snake-text-meta-size: 12px;
+  --snake-text-meta-line-height: 18px;
+  --snake-text-metric-size: 28px;
+  --snake-text-metric-line-height: 32px;
+  --snake-font-weight-regular: 400;
+  --snake-font-weight-medium: 500;
+  --snake-font-weight-semibold: 600;
+  --snake-font-weight-metric: 650;
+
+  /*
+   * Deprecated compatibility aliases.
+   * Keep these through the v1 pilot. New code must use canonical tokens.
+   */
+  --background: var(--snake-color-app-deep);
+  --foreground: var(--snake-color-text-on-dark);
+  --vk-blue: var(--snake-color-action-primary);
   --vk-blue-soft: #4b6c93;
-  --vk-muted-blue: #4b6c93;
+  --vk-muted-blue: var(--vk-blue-soft);
   --vk-blue-light: #7fa6cf;
-
-  --vk-gold: #a77e04;
-  --vk-gold-bright: #b58a14;
-
+  --vk-gold: var(--snake-color-brand-gold-strong);
+  --vk-gold-bright: var(--snake-color-brand-gold);
   --vk-surface: #06363a;
   --vk-surface-2: #0b4448;
-  --vk-surface-3: #14565b;
-
-  --snake-bg: #062f3b;
-  --snake-panel: #e8eef0;
-  --snake-hero: #05495b;
-  --snake-border: rgba(255, 255, 255, 0.1);
-
-  --snake-card-radius: 26px;
-  --snake-panel-radius: 28px;
-  --snake-control-radius: 18px;
+  --vk-surface-3: var(--snake-color-success-content);
+  --snake-bg: var(--snake-color-app);
+  --snake-panel: var(--snake-color-workspace);
+  --snake-hero: var(--snake-color-hero);
+  --snake-border: rgb(255 255 255 / 10%);
+  --snake-card-radius: var(--snake-radius-legacy-card);
+  --snake-panel-radius: var(--snake-radius-panel);
+  --snake-control-radius: var(--snake-radius-legacy-control);
 }
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-snake-app: var(--snake-color-app);
+  --color-snake-app-elevated: var(--snake-color-app-elevated);
+  --color-snake-app-deep: var(--snake-color-app-deep);
+  --color-snake-hero: var(--snake-color-hero);
+  --color-snake-workspace: var(--snake-color-workspace);
+  --color-snake-surface: var(--snake-color-surface);
+  --color-snake-surface-subtle: var(--snake-color-surface-subtle);
+  --color-snake-surface-warm: var(--snake-color-surface-warm);
+  --color-snake-text-on-dark: var(--snake-color-text-on-dark);
+  --color-snake-text-on-dark-muted: var(--snake-color-text-on-dark-muted);
+  --color-snake-text-primary: var(--snake-color-text-primary);
+  --color-snake-text-secondary: var(--snake-color-text-secondary);
+  --color-snake-text-muted: var(--snake-color-text-muted);
+  --color-snake-text-disabled: var(--snake-color-text-disabled);
+  --color-snake-link: var(--snake-color-text-link);
+  --color-snake-primary: var(--snake-color-action-primary);
+  --color-snake-primary-hover: var(--snake-color-action-primary-hover);
+  --color-snake-primary-pressed: var(--snake-color-action-primary-pressed);
+  --color-snake-focus: var(--snake-color-focus);
+  --color-snake-focus-on-dark: var(--snake-color-focus-on-dark);
+  --color-snake-brand: var(--snake-color-brand-gold);
+  --color-snake-brand-strong: var(--snake-color-brand-gold-strong);
+  --color-snake-brand-soft: var(--snake-color-brand-gold-soft);
+  --color-snake-brand-border: var(--snake-color-brand-gold-border);
+  --color-snake-success-surface: var(--snake-color-success-surface);
+  --color-snake-success-border: var(--snake-color-success-border);
+  --color-snake-success: var(--snake-color-success-content);
+  --color-snake-warning-surface: var(--snake-color-warning-surface);
+  --color-snake-warning-border: var(--snake-color-warning-border);
+  --color-snake-warning: var(--snake-color-warning-content);
+  --color-snake-danger-surface: var(--snake-color-danger-surface);
+  --color-snake-danger-border: var(--snake-color-danger-border);
+  --color-snake-danger: var(--snake-color-danger-content);
+  --color-snake-info-surface: var(--snake-color-info-surface);
+  --color-snake-info-border: var(--snake-color-info-border);
+  --color-snake-info: var(--snake-color-info-content);
+  --color-snake-neutral-surface: var(--snake-color-neutral-surface);
+  --color-snake-neutral-border: var(--snake-color-neutral-border);
+  --color-snake-neutral: var(--snake-color-neutral-content);
+  --color-snake-category-labs-surface: var(
+    --snake-color-category-labs-surface
+  );
+  --color-snake-category-labs-border: var(
+    --snake-color-category-labs-border
+  );
+  --color-snake-category-labs: var(--snake-color-category-labs-content);
+  --color-snake-border-subtle: var(--snake-border-subtle);
+  --color-snake-border-default: var(--snake-border-default);
+  --color-snake-border-strong: var(--snake-border-strong);
+  --color-snake-border-on-dark-subtle: var(
+    --snake-border-on-dark-subtle
+  );
+  --color-snake-border-on-dark-default: var(
+    --snake-border-on-dark-default
+  );
+  --color-snake-border-on-dark-strong: var(--snake-border-on-dark-strong);
+  --color-snake-border-selected: var(--snake-border-selected);
+  --radius-snake-sm: var(--snake-radius-sm);
+  --radius-snake-control: var(--snake-radius-control);
+  --radius-snake-action: var(--snake-radius-action);
+  --radius-snake-card: var(--snake-radius-card);
+  --radius-snake-panel: var(--snake-radius-panel);
+  --radius-snake-shell: var(--snake-radius-shell);
+  --radius-snake-pill: var(--snake-radius-pill);
+  --shadow-snake-none: var(--snake-shadow-none);
+  --shadow-snake-card: var(--snake-shadow-card);
+  --shadow-snake-panel: var(--snake-shadow-panel);
+  --shadow-snake-overlay: var(--snake-shadow-overlay);
+  --shadow-snake-glass: var(--snake-shadow-glass);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -37,12 +242,12 @@
 }
 
 html {
-  background: #062f3b;
+  background: var(--snake-color-app);
 }
 
 body {
   margin: 0;
-  background: #062f3b;
+  background: var(--snake-color-app);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Inter, Arial, Helvetica, sans-serif;
   min-height: 100vh;

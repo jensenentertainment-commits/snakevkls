@@ -38,7 +38,7 @@ export function AppNavbar({
   const visibleAdminItems = isAdmin ? adminItems : [];
 
   return (
-    <header className="border-b border-snake-border-on-dark-subtle bg-snake-app-deep text-snake-text-on-dark">
+    <header className="border-b border-snake-border-on-dark-subtle bg-snake-app-deep text-snake-text-on-dark print:hidden">
       <div className="mx-auto flex min-h-20 max-w-[var(--snake-shell-wide-max-width)] items-center gap-4 px-[var(--snake-page-gutter-mobile)] sm:px-[var(--snake-page-gutter-tablet)] lg:px-[var(--snake-page-gutter-desktop)]">
         <Link
           aria-label="Snake OS – dashboard"

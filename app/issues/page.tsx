@@ -4,11 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
-import BorrePanel from "@/app/components/BorrePanel";
 
 
 type Severity = "critical" | "warning" | "info";
@@ -254,10 +251,7 @@ const productsWithoutLocation = products.filter((product) => {
   const infoCount = issues.list.filter((i) => i.severity === "info").length;
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
+    <>
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
           <SnakeHero
   eyebrow="SNAKE / Avvik"
@@ -391,9 +385,7 @@ const productsWithoutLocation = products.filter((product) => {
           </div>
         </section>
 
-        <SnakeFooter />
-      </div>
-    </main>
+    </>
   );
 }
 

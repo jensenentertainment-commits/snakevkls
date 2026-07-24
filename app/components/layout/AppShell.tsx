@@ -26,7 +26,7 @@ export function AppShell({
       {moduleNav}
       <main
         className={cn(
-          "mx-auto w-full px-[var(--snake-page-gutter-mobile)] py-[var(--snake-space-6)] sm:px-[var(--snake-page-gutter-tablet)] lg:px-[var(--snake-page-gutter-desktop)] lg:py-[var(--snake-space-8)]",
+          "mx-auto w-full px-[var(--snake-page-gutter-mobile)] py-[var(--snake-space-6)] sm:px-[var(--snake-page-gutter-tablet)] lg:px-[var(--snake-page-gutter-desktop)] lg:py-[var(--snake-space-8)] print:max-w-none print:p-0",
           widthClassNames[width],
         )}
       >

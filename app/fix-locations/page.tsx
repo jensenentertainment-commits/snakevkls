@@ -15,9 +15,6 @@ import {
 } from "lucide-react";
 import SnakeHero from "../components/SnakeHero";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
-import BorrePanel from "../components/BorrePanel";
 
  const ASSIGN_ENDPOINT = "/api/inventory/set-location";
 
@@ -281,10 +278,7 @@ if (!res.ok) {
 }
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
+    <>
         <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
           <SnakeHero
   eyebrow="Snake / Ryddemodus"
@@ -573,9 +567,7 @@ if (!res.ok) {
     </div>
   </div>
 )}
-        <SnakeFooter />
-      </div>
-    </main>
+    </>
   );
 }
 

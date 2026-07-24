@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../../components/SnakeNav";
-import SnakeFooter from "../../components/SnakeFooter";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
 import SnakeHero from "../../components/SnakeHero";
 import EditPlacementModal from "../../components/products/EditPlacementModal";
@@ -198,29 +196,17 @@ const { data: activityData } = await supabase
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
-          <SnakeNav />
-          <div className="mt-6 rounded-3xl bg-white p-8 text-neutral-500">
-            Laster produkt...
-          </div>
-          <SnakeFooter />
-        </div>
-      </main>
+      <div className="rounded-snake-card bg-snake-surface p-8 text-snake-text-muted">
+        Laster produkt...
+      </div>
     );
   }
 
   if (!product) {
     return (
-      <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-4 py-5 sm:px-6 sm:py-8">
-          <SnakeNav />
-          <div className="mt-6 rounded-3xl bg-white p-8 text-neutral-950">
-            Produkt ikke funnet.
-          </div>
-          <SnakeFooter />
-        </div>
-      </main>
+      <div className="rounded-snake-card bg-snake-surface p-8 text-snake-text-primary">
+        Produkt ikke funnet.
+      </div>
     );
   }
 
@@ -235,10 +221,7 @@ const { data: activityData } = await supabase
 
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
+    <>
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
           <SnakeHero
   eyebrow="Snake / Produkt"
@@ -392,9 +375,7 @@ const { data: activityData } = await supabase
     onSave={handleSaveMovement}
   />
 )}
-        <SnakeFooter />
-      </div>
-    </main>
+    </>
   );
 }
 

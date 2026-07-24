@@ -122,9 +122,17 @@ test("layout code uses canonical tokens and excludes workforce concerns", () => 
 test("only route-aware and time-aware islands are client components", () => {
   assert.match(readLayout("AppClock.tsx"), /^"use client";/);
   assert.match(readLayout("AppNavLinks.tsx"), /^"use client";/);
+  assert.match(readLayout("MobileNav.tsx"), /^"use client";/);
+  assert.match(readLayout("ModuleNavMobile.tsx"), /^"use client";/);
 
   for (const file of layoutFiles.filter(
-    (file) => file !== "AppClock.tsx" && file !== "AppNavLinks.tsx",
+    (file) =>
+      ![
+        "AppClock.tsx",
+        "AppNavLinks.tsx",
+        "MobileNav.tsx",
+        "ModuleNavMobile.tsx",
+      ].includes(file),
   )) {
     assert.doesNotMatch(readLayout(file), /^"use client";/, file);
   }

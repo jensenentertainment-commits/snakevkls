@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import type { NavigationItem } from "@/app/components/navigation/types";
 
@@ -24,8 +27,10 @@ export function MobileNav({
   logoutSlot,
   roleLabel,
 }: MobileNavProps) {
+  const pathname = usePathname();
+
   return (
-    <details className="group relative lg:hidden">
+    <details className="group relative ml-auto lg:hidden" key={pathname}>
       <summary className="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-snake-control border border-snake-border-on-dark-default bg-snake-app-elevated text-snake-text-on-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark">
         <span className="sr-only">Åpne systemnavigasjon</span>
         <Menu aria-hidden="true" className="group-open:hidden" size={20} />

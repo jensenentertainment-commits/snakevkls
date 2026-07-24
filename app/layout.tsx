@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AskBorre from "./components/AskBorre";
+import { LagerRouteShell } from "./components/lager";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +34,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <LagerRouteShell>{children}</LagerRouteShell>
         <AskBorre />
       </body>
     </html>

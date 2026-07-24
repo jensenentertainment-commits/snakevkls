@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import SnakeNav from "../../components/SnakeNav";
-import SnakeFooter from "../../components/SnakeFooter";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
 import SnakeHero from "../../components/SnakeHero";
 import type { Role } from "@/lib/auth/roles";
@@ -269,10 +267,7 @@ setLoading(false);
  
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
+    <>
         <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
           <SnakeHero
   eyebrow="Snake / Lokasjon"
@@ -466,9 +461,7 @@ setLoading(false);
           )}
         </section>
 
-        <SnakeFooter />
-      </div>
-    </main>
+    </>
   );
 }
 

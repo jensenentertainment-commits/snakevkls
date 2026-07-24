@@ -4,8 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MapPin, Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import QRCode from "qrcode";
 import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
@@ -254,10 +252,7 @@ await logActivity({
 
   return (
     <>
-      <main className="min-h-screen bg-[#062f3b] text-white">
-  <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-    <SnakeNav />
-
+      <>
     <div className="overflow-hidden rounded-[32px] shadow-2xl shadow-black/30">
       <SnakeHero
   eyebrow="Snake / Lokasjoner"
@@ -512,7 +507,6 @@ await logActivity({
             </section>
 </div>
 
-          <SnakeFooter />
         <CreateLocationModal
   open={showCreateModal}
   zones={zones}
@@ -531,8 +525,7 @@ await logActivity({
   }}
   onSave={handleCreateLocation}
 />
-        </div>
-      </main>
+      </>
 
      
       {qrLocation && (

@@ -14,10 +14,7 @@ import {
 } from "lucide-react";
 import SnakeIntelligencePanel from "../components/SnakeIntelligencePanel";
 import SystemPulseBar from "../components/dashboard/SystemPulseBar";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import SnakeBoardPreview from "../components/SnakeBoardPreview";
-import AskBorre from "../components/AskBorre";
 import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
@@ -137,10 +134,7 @@ const issueState: IssueCardState = hasIssues
 });
 
   return (
-  <main className="min-h-screen bg-[#062f3b] text-white">
-    <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-      <SnakeNav />
-     
+  <>
 <SystemPulseBar
   activeProducts={activeProductCount}
   emptyLocations={0}
@@ -232,11 +226,7 @@ const issueState: IssueCardState = hasIssues
           </div>
         </div>
       </section>
-<AskBorre />
-      <SnakeFooter />
-    </div>
-   
-  </main>
+  </>
 );
 
 function getHealthColor(score: number) {

@@ -2,8 +2,6 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import SnakeDropdown from "../components/SnakeDropdown";
 import SnakeToolbar from "../components/SnakeToolbar";
 import SnakeHero from "../components/SnakeHero";
@@ -28,7 +26,6 @@ import BatchAssignModal from "../components/products/BatchAssignModal";
 import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
 import RoleGate from "../components/auth/RoleGate";
-import BorrePanel from "@/app/components/BorrePanel";
 import type { Role } from "@/lib/auth/roles";
 
 
@@ -298,11 +295,7 @@ const {
 });
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-      
-        <SnakeNav />
-
+    <>
   <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
   <SnakeHero
     eyebrow="SNAKE / Produkter"
@@ -793,8 +786,6 @@ const percent = Math.round((placed / total) * 100);
           </div>
         </section>
 
-        <SnakeFooter />
-      </div>
 
 {canWrite && selected.length > 0 && (
   <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl border border-[#b58a14]/25 bg-[#083844]/95 px-4 py-3 text-white backdrop-blur-xl shadow-2xl shadow-black/30">
@@ -878,7 +869,7 @@ const percent = Math.round((placed / total) * 100);
     onSave={handleStockMovement}
   />
 )}
-    </main>
+    </>
   );
 }
   

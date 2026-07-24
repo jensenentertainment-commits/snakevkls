@@ -133,7 +133,8 @@ const labelDimensions = {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-100 text-neutral-950 print:bg-white">
+    <>
+      <div className="min-h-screen bg-neutral-100 text-neutral-950 print:bg-white">
       <style>{`
   :root {
     --label-width: ${labelDimensions.width};
@@ -382,6 +383,7 @@ const labelDimensions = {
           </div>
         )}
       </div>
-    </main>
+      </div>
+    </>
   );
 }

@@ -37,15 +37,28 @@ test("the Lager shell composes only the frozen layout contracts", () => {
   const routeShell = readProjectFile(
     "app/components/lager/LagerRouteShell.tsx",
   );
+  const appRouteShell = readProjectFile(
+    "app/components/shell/AppRouteShell.tsx",
+  );
+  const authenticatedShell = readProjectFile(
+    "app/components/shell/AuthenticatedAppShell.tsx",
+  );
+  const routeConfig = readProjectFile(
+    "app/components/shell/route-config.ts",
+  );
   const rootLayout = readProjectFile("app/layout.tsx");
 
-  assert.match(shell, /<AppShell/);
-  assert.match(shell, /<AppNavbar/);
-  assert.match(shell, /<ModuleNav navigation=\{LAGER_MODULE_NAVIGATION\}/);
+  assert.match(shell, /<AuthenticatedAppShell/);
+  assert.match(shell, /moduleNavigation=\{LAGER_MODULE_NAVIGATION\}/);
   assert.match(shell, /width="wide"/);
-  assert.match(routeShell, /isNavigationItemActive/);
-  assert.match(routeShell, /<LagerAppShell>\{children\}<\/LagerAppShell>/);
-  assert.match(rootLayout, /<LagerRouteShell>\{children\}<\/LagerRouteShell>/);
+  assert.match(routeShell, /<AppRouteShell>\{children\}<\/AppRouteShell>/);
+  assert.match(appRouteShell, /isNavigationItemActive/);
+  assert.match(appRouteShell, /<AuthenticatedAppShell/);
+  assert.match(authenticatedShell, /<AppShell/);
+  assert.match(authenticatedShell, /<AppNavbar/);
+  assert.match(authenticatedShell, /<ModuleNav navigation=\{moduleNavigation\}/);
+  assert.match(routeConfig, /moduleNavigation: LAGER_MODULE_NAVIGATION/);
+  assert.match(rootLayout, /<AppRouteShell>\{children\}<\/AppRouteShell>/);
   assert.doesNotMatch(shell, /SnakeNav|SnakeFooter|Viper/);
   assert.doesNotMatch(
     shell,

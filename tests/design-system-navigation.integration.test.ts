@@ -154,13 +154,20 @@ test("navigation accessibility and clock contracts are explicit", () => {
   assert.doesNotMatch(clock, /aria-live/);
 });
 
-test("Commit 3 does not migrate pages or replace the existing navbar", () => {
+test("UI Refresh foundation wraps routes without page-level layout imports", () => {
   const pageSources = collectFiles(join(root, "app"))
     .filter((file) => file.endsWith("page.tsx"))
     .map((file) => readFileSync(file, "utf8"))
     .join("\n");
+  const rootLayout = readFileSync(join(root, "app", "layout.tsx"), "utf8");
+  const routeShell = readFileSync(
+    join(root, "app", "components", "shell", "AppRouteShell.tsx"),
+    "utf8",
+  );
 
   assert.doesNotMatch(pageSources, /components\/layout/);
+  assert.match(rootLayout, /<AppRouteShell>/);
+  assert.match(routeShell, /APP_ROUTE_SHELLS/);
   assert.ok(!layoutFiles.includes("SnakeNav.tsx" as never));
   assert.ok(!layoutFiles.includes("SnakeFooter.tsx" as never));
 });

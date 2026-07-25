@@ -103,3 +103,38 @@ test("the Lager shell uses canonical tokens without hardcoded colors", () => {
     /--(?:background|foreground|vk-|snake-bg|snake-panel|snake-hero)/,
   );
 });
+
+test("Commit 5 keeps all Lager content on the canonical visual API", () => {
+  const adapterFiles = [
+    "app/components/lager/LagerDropdown.tsx",
+    "app/components/lager/LagerHero.tsx",
+    "app/components/lager/LagerToolbar.tsx",
+    "app/components/lager/LagerViewTabs.tsx",
+  ];
+  const sources = [...lagerPages, ...adapterFiles]
+    .map(readProjectFile)
+    .join("\n");
+
+  assert.doesNotMatch(sources, /#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(/i);
+  assert.doesNotMatch(
+    sources,
+    /\b(?:bg|text|border|ring)-(?:white|black|neutral|red|green|emerald|amber|blue|sky|cyan)(?:[-/[\s"'`]|$)/,
+  );
+  assert.doesNotMatch(sources, /rounded-(?:xl|2xl|3xl)|rounded-\[/);
+  assert.doesNotMatch(sources, /SnakeHero|SnakeToolbar|SnakeDropdown/);
+});
+
+test("Lager view tabs expose keyboard and selection semantics", () => {
+  const tabs = readProjectFile(
+    "app/components/lager/LagerViewTabs.tsx",
+  );
+
+  assert.match(tabs, /role="tablist"/);
+  assert.match(tabs, /role="tab"/);
+  assert.match(tabs, /aria-selected=\{active\}/);
+  assert.match(tabs, /tabIndex=\{active \? 0 : -1\}/);
+
+  for (const key of ["ArrowRight", "ArrowLeft", "Home", "End"]) {
+    assert.match(tabs, new RegExp(`event\\.key === "${key}"`));
+  }
+});

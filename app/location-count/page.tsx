@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
-  ArrowLeft,
   CheckCircle2,
   ClipboardCheck,
   Loader2,
   MapPin,
   Search,
 } from "lucide-react";
-import SnakeHero from "../components/SnakeHero";
+import { LagerHero } from "../components/lager/LagerHero";
 import { supabase } from "@/lib/supabase";
 
 type InventoryLine = {
@@ -272,8 +270,8 @@ function getLocationProgress() {
 
   return (
     <>
-        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-panel bg-snake-workspace text-snake-text-primary shadow-snake-overlay">
+          <LagerHero
   eyebrow="Snake / Lokasjonstelling"
   title="Tell lokasjon"
   description="Velg en lokasjon, tell fysisk antall, og lagre avviket som kontrollhistorikk. V1 endrer ikke lagerantall automatisk."
@@ -282,39 +280,39 @@ function getLocationProgress() {
 />
 
           <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[380px_1fr]">
-            <aside className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+            <aside className="rounded-snake-card border border-snake-border-subtle bg-snake-surface p-5 shadow-snake-card">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#055a7d]/15 bg-[#055a7d]/10 text-[#055a7d]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-snake-action border border-snake-primary/15 bg-snake-primary/10 text-snake-link">
                   <MapPin className="h-5 w-5" />
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-semibold text-neutral-950">
+                  <h2 className="text-lg font-semibold text-snake-text-primary">
                     Velg lokasjon
                   </h2>
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-snake-text-muted">
                     Søk etter kode eller sone.
                   </p>
                 </div>
               </div>
 
               <div className="relative mt-5">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-snake-text-disabled" />
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Søk lokasjon..."
-                  className="w-full rounded-2xl border border-black/10 bg-neutral-50 py-3 pl-11 pr-4 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+                  className="w-full rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle py-3 pl-11 pr-4 text-sm text-snake-text-primary outline-none transition focus:border-snake-primary"
                 />
               </div>
 
               <div className="mt-4 max-h-[520px] space-y-2 overflow-y-auto pr-1">
                 {loading ? (
-                  <p className="rounded-2xl border border-dashed border-black/15 bg-neutral-50 p-4 text-sm text-neutral-500">
+                  <p className="rounded-snake-action border border-dashed border-snake-border-default bg-snake-surface-subtle p-4 text-sm text-snake-text-muted">
                     Henter lokasjoner...
                   </p>
                 ) : filteredLocations.length === 0 ? (
-                  <p className="rounded-2xl border border-dashed border-black/15 bg-neutral-50 p-4 text-sm text-neutral-500">
+                  <p className="rounded-snake-action border border-dashed border-snake-border-default bg-snake-surface-subtle p-4 text-sm text-snake-text-muted">
                     Ingen lokasjoner funnet.
                   </p>
                 ) : (
@@ -329,16 +327,16 @@ function getLocationProgress() {
                         setMessage(null);
                       }}
                       className={[
-                        "w-full rounded-2xl border px-4 py-3 text-left transition",
+                        "w-full rounded-snake-action border px-4 py-3 text-left transition",
                         selectedLocationId === location.id
-                          ? "border-[#055a7d] bg-[#055a7d]/10"
-                          : "border-black/10 bg-neutral-50 hover:border-[#055a7d]/40",
+                          ? "border-snake-primary bg-snake-primary/10"
+                          : "border-snake-border-subtle bg-snake-surface-subtle hover:border-snake-primary/40",
                       ].join(" ")}
                     >
-                      <span className="block text-sm font-semibold text-neutral-950">
+                      <span className="block text-sm font-semibold text-snake-text-primary">
                         {location.code}
                       </span>
-                      <span className="mt-0.5 block text-xs text-neutral-500">
+                      <span className="mt-0.5 block text-xs text-snake-text-muted">
                         {location.zones?.code ?? "Uten sone"}
                         {location.zones?.name ? ` — ${location.zones.name}` : ""}
                       </span>
@@ -348,7 +346,7 @@ function getLocationProgress() {
               </div>
             </aside>
 
-            <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+            <section className="rounded-snake-card border border-snake-border-subtle bg-snake-surface p-5 shadow-snake-card">
   {!selectedLocation ? (
     <EmptyState
   title="Velg en lokasjon"
@@ -370,12 +368,12 @@ function getLocationProgress() {
 
   return (
     <>
-      <div className="mb-5 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3">
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-[#b58a14]">
+      <div className="mb-5 rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle px-4 py-3">
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-snake-brand">
           Børre / Lokasjonstelling
         </p>
 
-        <p className="mt-2 text-sm leading-6 text-neutral-600">
+        <p className="mt-2 text-sm leading-6 text-snake-text-secondary">
           {remaining > 0
             ? `Børre følger tellingen. ${remaining} lagerlinjer gjenstår på ${selectedLocation.code}.`
             : `Alle linjer på ${selectedLocation.code} er telt. Børre noterer kontrollert fremgang.`}
@@ -384,21 +382,21 @@ function getLocationProgress() {
 
     return (
       <div
-        className={`rounded-3xl border px-5 py-4 ${
+        className={`rounded-snake-card border px-5 py-4 ${
           progress.complete
             ? progress.hasDiffs
-              ? "border-amber-200 bg-amber-50"
-              : "border-emerald-200 bg-emerald-50"
-            : "border-black/10 bg-neutral-50"
+              ? "border-snake-warning-border bg-snake-warning-surface"
+              : "border-snake-success-border bg-snake-success-surface"
+            : "border-snake-border-subtle bg-snake-surface-subtle"
         }`}
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-neutral-950">
+            <p className="text-sm font-semibold text-snake-text-primary">
               {progress.counted} / {progress.total} linjer telt
             </p>
 
-            <p className="mt-1 text-sm text-neutral-600">
+            <p className="mt-1 text-sm text-snake-text-secondary">
               {progress.complete
                 ? progress.hasDiffs
                   ? `${progress.diffs} avvik registrert`
@@ -411,9 +409,9 @@ function getLocationProgress() {
             className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] ${
               progress.complete
                 ? progress.hasDiffs
-                  ? "bg-amber-100 text-amber-700"
-                  : "bg-emerald-100 text-emerald-700"
-                : "bg-neutral-200 text-neutral-600"
+                  ? "bg-snake-warning-surface text-snake-warning"
+                  : "bg-snake-success-surface text-snake-success"
+                : "bg-snake-neutral-surface text-snake-text-secondary"
             }`}
           >
             {selectedLocationCompleted
@@ -429,7 +427,7 @@ function getLocationProgress() {
     type="button"
     onClick={completeLocationCount}
    disabled={completing || selectedLocationCompleted}
-    className="rounded-full bg-[#055a7d] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+    className="rounded-full bg-snake-primary px-4 py-2 text-xs font-bold text-snake-text-on-dark transition hover:bg-snake-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
   >
     {selectedLocationCompleted
   ? "Fullført"
@@ -453,36 +451,36 @@ function getLocationProgress() {
     return (
       <article
         key={line.id}
-        className={`rounded-3xl border p-4 transition ${
+        className={`rounded-snake-card border p-4 transition ${
           !status
-            ? "border-black/10 bg-neutral-50"
+            ? "border-snake-border-subtle bg-snake-surface-subtle"
             : status.diff === 0
-              ? "border-emerald-200 bg-emerald-50"
+              ? "border-snake-success-border bg-snake-success-surface"
               : Math.abs(status.diff) >= 5
-                ? "border-red-200 bg-red-50"
-                : "border-amber-200 bg-amber-50"
+                ? "border-snake-danger-border bg-snake-danger-surface"
+                : "border-snake-warning-border bg-snake-warning-surface"
         }`}
       >
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled">
               {line.products?.sku ?? "Ingen SKU"}
             </p>
 
-            <h3 className="mt-1 text-lg font-semibold text-neutral-950">
+            <h3 className="mt-1 text-lg font-semibold text-snake-text-primary">
               {line.products?.product_name ?? "Ukjent produkt"}
             </h3>
 
             {line.products?.variant_name && (
-              <p className="mt-1 text-sm text-neutral-500">
+              <p className="mt-1 text-sm text-snake-text-muted">
                 {line.products.variant_name}
               </p>
             )}
 
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-neutral-600">
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-snake-text-secondary">
               <span>
                 Forventet:{" "}
-                <span className="font-semibold text-neutral-950">
+                <span className="font-semibold text-snake-text-primary">
                   {line.quantity}
                 </span>
               </span>
@@ -491,10 +489,10 @@ function getLocationProgress() {
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
                     status.diff === 0
-                      ? "bg-emerald-100 text-emerald-700"
+                      ? "bg-snake-success-surface text-snake-success"
                       : Math.abs(status.diff) >= 5
-                        ? "bg-red-100 text-red-700"
-                        : "bg-amber-100 text-amber-700"
+                        ? "bg-snake-danger-surface text-snake-danger"
+                        : "bg-snake-warning-surface text-snake-warning"
                   }`}
                 >
                   {status.diff === 0
@@ -519,7 +517,7 @@ function getLocationProgress() {
                 }))
               }
               placeholder="Telt"
-              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+              className="rounded-snake-action border border-snake-border-subtle bg-snake-surface px-4 py-3 text-sm text-snake-text-primary outline-none transition focus:border-snake-primary"
             />
 
             <input
@@ -531,14 +529,14 @@ function getLocationProgress() {
                 }))
               }
               placeholder="Notat, valgfritt"
-              className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+              className="rounded-snake-action border border-snake-border-subtle bg-snake-surface px-4 py-3 text-sm text-snake-text-primary outline-none transition focus:border-snake-primary"
             />
 
             <button
               type="button"
               onClick={() => saveCount(line)}
               disabled={savingId === line.id}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-snake-action bg-snake-primary px-4 py-3 text-sm font-semibold text-snake-text-on-dark transition hover:bg-snake-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {savingId === line.id ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -556,7 +554,7 @@ function getLocationProgress() {
   </>
   )}
                {message && (
-    <div className="mt-4 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+    <div className="mt-4 rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle px-4 py-3 text-sm text-snake-text-secondary">
       {message}
     </div>
   )}
@@ -570,10 +568,10 @@ function getLocationProgress() {
 
 function EmptyState({ title, text }: { title: string; text: string }) {
   return (
-    <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-dashed border-black/15 bg-neutral-50 p-8 text-center">
-      <ClipboardCheck className="h-9 w-9 text-neutral-400" />
-      <h2 className="mt-4 text-xl font-semibold text-neutral-950">{title}</h2>
-      <p className="mt-2 max-w-md text-sm leading-6 text-neutral-500">
+    <div className="flex min-h-[420px] flex-col items-center justify-center rounded-snake-card border border-dashed border-snake-border-default bg-snake-surface-subtle p-8 text-center">
+      <ClipboardCheck className="h-9 w-9 text-snake-text-disabled" />
+      <h2 className="mt-4 text-xl font-semibold text-snake-text-primary">{title}</h2>
+      <p className="mt-2 max-w-md text-sm leading-6 text-snake-text-muted">
         {text}
       </p>
     </div>

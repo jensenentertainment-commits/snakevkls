@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
-import SnakeHero from "../../components/SnakeHero";
+import { LagerHero } from "../../components/lager/LagerHero";
 import EditPlacementModal from "../../components/products/EditPlacementModal";
 import StockMovementModal from "../../components/products/StockMovementModal";
 import type {
   LocationOption,
-  ProductRow,
   ZoneOption,
 } from "../../components/products/types";
 
@@ -222,8 +221,8 @@ const { data: activityData } = await supabase
 
   return (
     <>
-        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-card bg-snake-surface text-snake-text-primary shadow-snake-overlay sm:rounded-snake-shell">
+          <LagerHero
   eyebrow="Snake / Produkt"
   title={product.product_name}
   description={
@@ -238,7 +237,7 @@ const { data: activityData } = await supabase
   right={
     product.image_url ? (
       <div className="flex justify-end">
-        <div className="h-32 w-32 overflow-hidden rounded-3xl border border-white/15 bg-white/10 shadow-2xl">
+        <div className="h-32 w-32 overflow-hidden rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-elevated shadow-2xl">
           <img
             src={product.image_url}
             alt={product.product_name}
@@ -250,7 +249,7 @@ const { data: activityData } = await supabase
   }
 />
 
-          <div className="grid gap-5 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 lg:grid-cols-5">
+          <div className="grid gap-5 border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 lg:grid-cols-5">
             <InfoCard label="SKU" value={product.sku || "Mangler SKU"} />
             <InfoCard label="Lager" value={lagerQty} />
             <InfoCard label="Shopify" value={shopifyQty} />
@@ -265,14 +264,14 @@ const { data: activityData } = await supabase
               tone={inv?.locations?.code ? "ok" : "warn"}
             />
           </div>
-<div className="border-t border-neutral-200 bg-white px-5 py-5 sm:px-8">
-  <div className="flex flex-col gap-4 rounded-[24px] border border-neutral-200 bg-neutral-50/80 p-4 sm:flex-row sm:items-center sm:justify-between">
+<div className="border-t border-snake-border-default bg-snake-surface px-5 py-5 sm:px-8">
+  <div className="flex flex-col gap-4 rounded-snake-card border border-snake-border-default bg-snake-surface-subtle/80 p-4 sm:flex-row sm:items-center sm:justify-between">
     <div className="min-w-0">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-snake-text-muted">
         Handlinger
       </p>
 
-      <p className="mt-1 text-sm text-neutral-600">
+      <p className="mt-1 text-sm text-snake-text-secondary">
         Oppdater plassering eller registrer lagerbevegelse.
       </p>
     </div>
@@ -280,29 +279,29 @@ const { data: activityData } = await supabase
     <div className="flex flex-col gap-2 sm:flex-row">
       <button
         onClick={() => setShowPlacementModal(true)}
-        className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044c6a]"
+        className="rounded-snake-action bg-snake-primary px-5 py-3 text-sm font-semibold text-snake-text-on-dark shadow-snake-card transition hover:bg-snake-primary-hover"
       >
         Endre plassering
       </button>
 
       <button
         onClick={() => setShowMovementModal(true)}
-        className="rounded-2xl border border-[#b58a14]/25 bg-[#b58a14]/10 px-5 py-3 text-sm font-semibold text-[#8a6704] transition hover:bg-[#b58a14]/15"
+        className="rounded-snake-action border border-snake-brand/25 bg-snake-brand/10 px-5 py-3 text-sm font-semibold text-snake-warning transition hover:bg-snake-brand/15"
       >
         Registrer uttak
       </button>
     </div>
   </div>
 </div>
-          <div className="grid gap-5 border-t border-neutral-200 bg-neutral-50 px-5 py-6 sm:px-8 lg:grid-cols-2">
-            <section className="rounded-[24px] border border-neutral-200 bg-white p-6">
+          <div className="grid gap-5 border-t border-snake-border-default bg-snake-surface-subtle px-5 py-6 sm:px-8 lg:grid-cols-2">
+            <section className="rounded-snake-card border border-snake-border-default bg-snake-surface p-6">
               <h2 className="text-lg font-semibold tracking-tight">
                 Plassering
               </h2>
 
               <div className="mt-4 space-y-3 text-sm">
-                <div className="flex justify-between rounded-2xl bg-neutral-50 px-4 py-3">
-                  <span className="text-neutral-500">Sone</span>
+                <div className="flex justify-between rounded-snake-action bg-snake-surface-subtle px-4 py-3">
+                  <span className="text-snake-text-muted">Sone</span>
                   <span className="font-semibold">
                     {inv?.zones
                       ? `${inv.zones.code} — ${inv.zones.name}`
@@ -310,8 +309,8 @@ const { data: activityData } = await supabase
                   </span>
                 </div>
 
-                <div className="flex justify-between rounded-2xl bg-neutral-50 px-4 py-3">
-                  <span className="text-neutral-500">Lokasjon</span>
+                <div className="flex justify-between rounded-snake-action bg-snake-surface-subtle px-4 py-3">
+                  <span className="text-snake-text-muted">Lokasjon</span>
                   <span className="font-semibold">
                     {inv?.locations?.code ?? "Ikke detaljplassert"}
                   </span>
@@ -321,13 +320,13 @@ const { data: activityData } = await supabase
 
             
 
-            <section className="rounded-[24px] border border-neutral-200 bg-white p-6">
+            <section className="rounded-snake-card border border-snake-border-default bg-snake-surface p-6">
               <h2 className="text-lg font-semibold tracking-tight">
                 Siste aktivitet
               </h2>
 
               {activity.length === 0 ? (
-                <p className="mt-4 text-sm text-neutral-500">
+                <p className="mt-4 text-sm text-snake-text-muted">
                   Ingen aktivitet registrert på dette produktet.
                 </p>
               ) : (
@@ -389,13 +388,13 @@ function InfoCard({
   tone?: "neutral" | "ok" | "warn";
 }) {
   const toneClass = {
-    neutral: "border-neutral-200 bg-white text-neutral-950",
-    ok: "border-[#14565b]/25 bg-[#14565b]/8 text-[#14565b]",
-    warn: "border-[#a77e05]/20 bg-[#a77e05]/10 text-[#8a6704]",
+    neutral: "border-snake-border-default bg-snake-surface text-snake-text-primary",
+    ok: "border-snake-success/25 bg-snake-success/8 text-snake-success",
+    warn: "border-snake-brand-strong/20 bg-snake-brand-strong/10 text-snake-warning",
   }[tone];
 
   return (
-    <div className={`rounded-2xl border p-4 ${toneClass}`}>
+    <div className={`rounded-snake-action border p-4 ${toneClass}`}>
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] opacity-60">
         {label}
       </p>

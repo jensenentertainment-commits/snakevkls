@@ -134,7 +134,7 @@ const labelDimensions = {
 
   return (
     <>
-      <div className="min-h-screen bg-neutral-100 text-neutral-950 print:bg-white">
+      <div className="min-h-screen bg-snake-neutral-surface text-snake-text-primary print:bg-snake-surface">
       <style>{`
   :root {
     --label-width: ${labelDimensions.width};
@@ -214,17 +214,17 @@ const labelDimensions = {
       `}</style>
 
       <div className="mx-auto max-w-7xl px-6 py-8 print:px-0 print:py-0">
-        <header className="no-print sticky top-4 z-10 mb-8 rounded-3xl bg-white/95 p-6 shadow-sm backdrop-blur">
+        <header className="no-print sticky top-4 z-10 mb-8 rounded-snake-card bg-snake-surface/95 p-6 shadow-snake-card backdrop-blur">
           <Link
             href="/locations"
-            className="mb-5 inline-flex text-sm font-semibold text-[#055a7d] hover:underline"
+            className="mb-5 inline-flex text-sm font-semibold text-snake-link hover:underline"
           >
             ← Tilbake til lokasjoner
           </Link>
 
           <div className="grid gap-5 lg:grid-cols-[1fr_760px] lg:items-end">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-snake-link">
                 SNAKE / Labels
               </p>
 
@@ -232,11 +232,11 @@ const labelDimensions = {
                 Lokasjonsetiketter
               </h1>
 
-              <p className="mt-2 text-sm text-neutral-600">
+              <p className="mt-2 text-sm text-snake-text-secondary">
                 Velg format, lokasjoner og antall kopier før utskrift.
               </p>
 
-              <p className="mt-2 text-xs text-neutral-500">
+              <p className="mt-2 text-xs text-snake-text-muted">
                 Format: {labelDimensions.name}.{" "}
                 {selected.length === 0
                   ? `Alle ${labels.length} aktive lokasjoner printes.`
@@ -247,10 +247,10 @@ const labelDimensions = {
             <div className="flex min-h-[92px] flex-wrap content-start justify-start gap-2 lg:justify-end">
               <button
                 onClick={() => setLabelFormat("zebra")}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                className={`rounded-snake-control px-4 py-2 text-sm font-semibold ${
                   labelFormat === "zebra"
-                    ? "bg-[#055a7d] text-white"
-                    : "bg-neutral-100 text-neutral-700"
+                    ? "bg-snake-primary text-snake-text-on-dark"
+                    : "bg-snake-neutral-surface text-snake-text-secondary"
                 }`}
               >
                 Zebra 100×55
@@ -258,10 +258,10 @@ const labelDimensions = {
 
               <button
                 onClick={() => setLabelFormat("shipping")}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                className={`rounded-snake-control px-4 py-2 text-sm font-semibold ${
                   labelFormat === "shipping"
-                    ? "bg-[#055a7d] text-white"
-                    : "bg-neutral-100 text-neutral-700"
+                    ? "bg-snake-primary text-snake-text-on-dark"
+                    : "bg-snake-neutral-surface text-snake-text-secondary"
                 }`}
               >
                 Frakt 102×109
@@ -269,10 +269,10 @@ const labelDimensions = {
 
               <button
                 onClick={() => setLabelFormat("brother")}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                className={`rounded-snake-control px-4 py-2 text-sm font-semibold ${
                   labelFormat === "brother"
-                    ? "bg-[#055a7d] text-white"
-                    : "bg-neutral-100 text-neutral-700"
+                    ? "bg-snake-primary text-snake-text-on-dark"
+                    : "bg-snake-neutral-surface text-snake-text-secondary"
                 }`}
               >
                 Brother 103
@@ -280,14 +280,14 @@ const labelDimensions = {
 
               <button
                 onClick={selectAll}
-                className="rounded-xl bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700"
+                className="rounded-snake-control bg-snake-neutral-surface px-4 py-2 text-sm font-semibold text-snake-text-secondary"
               >
                 Velg alle
               </button>
 
               <button
                 onClick={clearSelection}
-                className="rounded-xl bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700"
+                className="rounded-snake-control bg-snake-neutral-surface px-4 py-2 text-sm font-semibold text-snake-text-secondary"
               >
                 Fjern valg
               </button>
@@ -297,14 +297,14 @@ const labelDimensions = {
                 min={1}
                 value={copies}
                 onChange={(e) => setCopies(Number(e.target.value))}
-                className="w-20 rounded-xl border border-neutral-300 px-3 py-2 text-sm"
+                className="w-20 rounded-snake-control border border-snake-border-strong px-3 py-2 text-sm"
                 title="Antall kopier"
               />
 
               <button
                 onClick={() => window.print()}
                 disabled={labels.length === 0}
-                className="rounded-xl bg-[#b58a14] px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                className="rounded-snake-control bg-snake-brand px-5 py-2 text-sm font-semibold text-snake-text-on-dark disabled:opacity-40"
               >
                 {selected.length === 0
                   ? `Skriv ut alle (${labels.length} × ${copies})`
@@ -315,15 +315,15 @@ const labelDimensions = {
         </header>
 
         {loading ? (
-          <div className="no-print rounded-2xl bg-white p-6 text-sm text-neutral-500">
+          <div className="no-print rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">
             Lager QR-koder...
           </div>
         ) : labels.length === 0 ? (
-          <div className="no-print rounded-2xl bg-white p-6 text-sm text-neutral-500">
+          <div className="no-print rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">
             Ingen aktive lokasjoner funnet.
           </div>
         ) : (
-          <div className="h-[620px] overflow-y-auto rounded-3xl bg-neutral-100 p-4">
+          <div className="h-[620px] overflow-y-auto rounded-snake-card bg-snake-neutral-surface p-4">
           <section className="label-grid grid min-h-[520px] grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {printableWithCopies.map((location) => {
               const isLandscape = labelDimensions.layout === "landscape";
@@ -331,7 +331,7 @@ const labelDimensions = {
               return (
                 <article
                   key={location.printKey}
-                  className="label-card relative rounded-2xl border-2 border-neutral-900 bg-white p-4 text-center shadow-sm"
+                  className="label-card relative rounded-snake-action border-2 border-snake-text-primary bg-snake-surface p-4 text-center shadow-snake-card"
                 >
                   <input
                     type="checkbox"
@@ -347,7 +347,7 @@ const labelDimensions = {
         {location.code}
       </p>
 
-      <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
+      <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-snake-text-disabled">
         SNAKE OS
       </p>
     </div>
@@ -371,7 +371,7 @@ const labelDimensions = {
     className="label-qr"
   />
 
-  <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-neutral-300">
+  <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-snake-text-disabled">
     SNAKE OS
   </p>
 </div>

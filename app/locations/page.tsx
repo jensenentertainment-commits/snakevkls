@@ -5,11 +5,12 @@ import Link from "next/link";
 import { MapPin, Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import QRCode from "qrcode";
-import SnakeDropdown from "../components/SnakeDropdown";
-import SnakeToolbar from "../components/SnakeToolbar";
-import SnakeHero from "../components/SnakeHero";
+import { LagerDropdown } from "../components/lager/LagerDropdown";
+import { LagerToolbar } from "../components/lager/LagerToolbar";
+import { LagerHero } from "../components/lager/LagerHero";
 import { logActivity } from "@/lib/activity";
 import CreateLocationModal from "../components/locations/CreateLocationModal";
+import { StatusBadge } from "../components/design-system";
 type Zone = {
   id: string;
   code: string;
@@ -253,8 +254,8 @@ await logActivity({
   return (
     <>
       <>
-    <div className="overflow-hidden rounded-[32px] shadow-2xl shadow-black/30">
-      <SnakeHero
+    <div className="overflow-hidden rounded-snake-shell shadow-snake-overlay">
+      <LagerHero
   eyebrow="Snake / Lokasjoner"
   title="Lokasjoner"
   description="Administrer soner og lokasjoner i lageret. Opprett nye plasseringer, filtrer strukturen og se hvilke lokasjoner som er i bruk."
@@ -263,40 +264,40 @@ await logActivity({
   searchPlaceholder="Søk etter kode eller sone..."
 />
 
-<SnakeToolbar
+<LagerToolbar
   left={
     <>
       <button
         onClick={() => setSelectedZone("all")}
-        className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
+        className={`rounded-snake-control border px-3 py-2 text-sm font-semibold transition ${
   selectedZone === "all"
-    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
-    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
+    ? "border-snake-brand/40 bg-snake-brand/12 text-snake-text-on-dark shadow-inner shadow-white/5"
+    : "border-snake-border-on-dark-subtle bg-snake-app-elevated text-snake-text-on-dark-muted hover:bg-snake-app-elevated/90 hover:text-snake-text-on-dark"
 }`}
       >
         Alle
       </button>
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
-        Totale <span className="ml-1 text-white/65">{locations.length}</span>
+      <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
+        Totale <span className="ml-1 text-snake-text-on-dark-muted">{locations.length}</span>
       </div>
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
-        Aktive <span className="ml-1 text-white/65">{activeCount}</span>
+      <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
+        Aktive <span className="ml-1 text-snake-text-on-dark-muted">{activeCount}</span>
       </div>
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
-        Uten sone <span className="ml-1 text-white/65">{missingZoneCount}</span>
+      <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
+        Uten sone <span className="ml-1 text-snake-text-on-dark-muted">{missingZoneCount}</span>
       </div>
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
-        Tomme <span className="ml-1 text-white/65">{emptyLocationCount}</span>
+      <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
+        Tomme <span className="ml-1 text-snake-text-on-dark-muted">{emptyLocationCount}</span>
       </div>
     </>
   }
   right={
     <>
-     <SnakeDropdown
+     <LagerDropdown
      variant="dark"
   value={selectedZone}
   onChange={(value) => {
@@ -320,7 +321,7 @@ await logActivity({
 
        <button
         onClick={() => setShowCreateModal(true)}
-        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#b58a14]/30 bg-[#b58a14]/90 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#a77e05]"
+        className="inline-flex h-10 items-center gap-2 rounded-snake-control border border-snake-brand/30 bg-snake-brand/90 px-4 text-sm font-semibold text-snake-text-on-dark shadow-snake-card transition hover:bg-snake-brand-strong"
       >
         <Plus className="h-4 w-4" />
         Ny lokasjon
@@ -328,7 +329,7 @@ await logActivity({
 
       <Link
         href="/locations/labels"
-        className="inline-flex h-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] px-4 text-sm font-semibold text-white/80 transition hover:bg-white/[0.09] hover:text-white"
+        className="inline-flex h-10 items-center justify-center rounded-snake-control border border-snake-border-on-dark-subtle bg-snake-app-elevated px-4 text-sm font-semibold text-snake-text-on-dark transition hover:bg-snake-app-elevated/90 hover:text-snake-text-on-dark"
       >
         Print labels
       </Link>
@@ -338,7 +339,7 @@ await logActivity({
 
 
 
-<section className="bg-white px-5 py-6 text-neutral-950 sm:px-8 sm:py-7">
+<section className="bg-snake-surface px-5 py-6 text-snake-text-primary sm:px-8 sm:py-7">
   <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     {(query || selectedZone !== "all") && (
       <button
@@ -346,20 +347,20 @@ await logActivity({
           setQuery("");
           setSelectedZone("all");
         }}
-        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+        className="w-full rounded-snake-action border border-snake-border-strong bg-snake-surface px-4 py-3 text-sm font-semibold text-snake-text-secondary transition hover:bg-snake-surface-subtle sm:w-auto sm:py-2"
       >
         Nullstill filter
       </button>
     )}
   </div>
 
-              <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+              <div className="overflow-hidden rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card">
+                <div className="flex items-center justify-between border-b border-snake-border-default bg-snake-surface-subtle px-6 py-5">
                   <div>
-                    <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+                    <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
                       Lokasjonsliste
                     </h2>
-                    <p className="mt-1 text-sm text-neutral-600">
+                    <p className="mt-1 text-sm text-snake-text-secondary">
   {loading
     ? "Børre henter lokasjoner."
     : emptyLocationCount > 0
@@ -371,7 +372,7 @@ await logActivity({
                   </div>
 
                <div className="flex flex-col items-start gap-2 sm:items-end">
-  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled">
     {loading
       ? "Henter lokasjoner"
       : `Viser ${filteredLocations.length} av ${locations.length}`}
@@ -379,7 +380,7 @@ await logActivity({
 
   <Link
     href="/products"
-    className="text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+    className="text-sm font-semibold text-snake-link underline-offset-4 hover:underline"
   >
     Gå til produkter
   </Link>
@@ -406,7 +407,7 @@ await logActivity({
 </div>
                 <div className="hidden overflow-x-auto lg:block">
                   <table className="min-w-full border-collapse">
-                    <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
+                    <thead className="bg-snake-surface text-left text-xs uppercase tracking-[0.14em] text-snake-text-muted">
                       <tr>
                         <th className="px-5 py-4 font-semibold">Lokasjon</th>
                         <th className="px-5 py-4 font-semibold">Sone</th>
@@ -428,14 +429,14 @@ await logActivity({
                           return (
                             <tr
                               key={location.id}
-                              className="border-t border-neutral-100 transition hover:bg-[#055a7d]/[0.025]"
+                              className="border-t border-snake-border-subtle transition hover:bg-snake-primary/[0.025]"
                             >
-                              <td className="px-5 py-5 text-sm font-semibold text-neutral-950">
+                              <td className="px-5 py-5 text-sm font-semibold text-snake-text-primary">
                                 <Link
   href={`/locations/${encodeURIComponent(location.code)}`}
-  className="inline-flex items-center gap-2 font-semibold text-neutral-950 hover:text-[#055a7d]"
+  className="inline-flex items-center gap-2 font-semibold text-snake-text-primary hover:text-snake-link"
 >
-  <MapPin className="h-4 w-4 text-[#055a7d]" />
+  <MapPin className="h-4 w-4 text-snake-link" />
   {location.code}
 </Link>
                               </td>
@@ -443,29 +444,29 @@ await logActivity({
                               <td className="px-5 py-5 text-sm">
                                 {location.zones ? (
                                   <div className="flex flex-wrap items-center gap-2">
-                                    <span className="rounded-lg border border-[#055a7d]/20 bg-[#055a7d]/5 px-2 py-1 text-xs font-semibold text-[#055a7d]">
+                                    <span className="rounded-lg border border-snake-primary/20 bg-snake-primary/5 px-2 py-1 text-xs font-semibold text-snake-link">
                                       {location.zones.code}
                                     </span>
-                                    <span className="text-neutral-500">
+                                    <span className="text-snake-text-muted">
                                       {location.zones.name}
                                     </span>
                                   </div>
                                 ) : (
-                                  <span className="font-semibold text-[#a77e05]">
+                                  <span className="font-semibold text-snake-brand-strong">
                                     Mangler sone
                                   </span>
                                 )}
                               </td>
 
-                              <td className="px-5 py-5 text-sm text-neutral-700">
+                              <td className="px-5 py-5 text-sm text-snake-text-secondary">
                                 {productCount}
                               </td>
 
                               <td className="px-5 py-5 text-sm">
                                 {location.active ? (
-                                  <StatusPill text="Aktiv" tone="ok" />
+                                  <StatusBadge label="Aktiv" tone="success" />
                                 ) : (
-                                  <StatusPill text="Inaktiv" tone="neutral" />
+                                  <StatusBadge label="Inaktiv" tone="neutral" />
                                 )}
                               </td>
 
@@ -473,7 +474,7 @@ await logActivity({
   <div className="flex gap-3">
     <button
       onClick={() => handleToggleActive(location)}
-      className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+      className="font-semibold text-snake-link underline-offset-4 hover:underline"
     >
       {location.active ? "Deaktiver" : "Aktiver"}
     </button>
@@ -484,13 +485,13 @@ await logActivity({
     setEditZoneId(location.zone_id ?? "");
     setEditActive(location.active);
   }}
-  className="font-semibold text-neutral-700 underline-offset-4 hover:underline"
+  className="font-semibold text-snake-text-secondary underline-offset-4 hover:underline"
 >
   Rediger
 </button>
     <button
       onClick={() => handleShowQr(location)}
-      className="font-semibold text-[#a77e05] underline-offset-4 hover:underline"
+      className="font-semibold text-snake-brand-strong underline-offset-4 hover:underline"
     >
       QR
     </button>
@@ -529,9 +530,9 @@ await logActivity({
 
      
       {qrLocation && (
-  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-sm sm:rounded-3xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+  <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--snake-color-overlay)] p-0 sm:items-center sm:p-4">
+    <div className="w-full rounded-t-3xl bg-snake-surface p-6 text-snake-text-primary shadow-2xl sm:max-w-sm sm:rounded-snake-card">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-snake-link">
         QR-kode
       </p>
 
@@ -539,12 +540,12 @@ await logActivity({
         {qrLocation.code}
       </h2>
 
-      <p className="mt-2 text-sm text-neutral-500">
+      <p className="mt-2 text-sm text-snake-text-muted">
         Skann for å åpne lokasjonen direkte i Snake.
       </p>
 
       {qrDataUrl && (
-        <div className="mt-6 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+        <div className="mt-6 rounded-snake-action border border-snake-border-default bg-snake-surface-subtle p-4">
           <img
             src={qrDataUrl}
             alt={`QR-kode for ${qrLocation.code}`}
@@ -559,7 +560,7 @@ await logActivity({
             setQrLocation(null);
             setQrDataUrl("");
           }}
-          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
+          className="rounded-snake-action border border-snake-border-strong px-5 py-3 text-sm font-semibold text-snake-text-secondary"
         >
           Lukk
         </button>
@@ -567,7 +568,7 @@ await logActivity({
         <a
           href={qrDataUrl}
           download={`snake-${qrLocation.code}.png`}
-          className="rounded-2xl bg-[#055a7d] px-5 py-3 text-center text-sm font-semibold text-white"
+          className="rounded-snake-action bg-snake-primary px-5 py-3 text-center text-sm font-semibold text-snake-text-on-dark"
         >
           Last ned
         </a>
@@ -578,9 +579,9 @@ await logActivity({
   
 )}
 {editingLocation && (
-  <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 sm:items-center sm:p-4">
-    <div className="w-full rounded-t-3xl bg-white p-6 text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-3xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#055a7d]">
+  <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--snake-color-overlay)] p-0 sm:items-center sm:p-4">
+    <div className="w-full rounded-t-3xl bg-snake-surface p-6 text-snake-text-primary shadow-2xl sm:max-w-md sm:rounded-snake-card">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-snake-link">
         Rediger lokasjon
       </p>
 
@@ -590,25 +591,25 @@ await logActivity({
 
       <div className="mt-6 space-y-4">
         <div>
-          <label className="mb-2 block text-sm font-medium text-neutral-700">
+          <label className="mb-2 block text-sm font-medium text-snake-text-secondary">
             Lokasjonskode
           </label>
           <input
             value={editCode}
             onChange={(e) => setEditCode(e.target.value)}
-            className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+            className="w-full rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
           />
         </div>
 
         <div>
-  <label className="mb-2 block text-sm font-medium text-neutral-700">
+  <label className="mb-2 block text-sm font-medium text-snake-text-secondary">
     Sone
   </label>
 
   <select
     value={editZoneId}
     onChange={(e) => setEditZoneId(e.target.value)}
-    className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+    className="w-full rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
   >
     <option value="">Ingen sone</option>
     {zones.map((zone) => (
@@ -619,7 +620,7 @@ await logActivity({
   </select>
 </div>
 
-        <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">
+        <label className="flex items-center gap-3 rounded-snake-action border border-snake-border-default bg-snake-surface-subtle px-4 py-3 text-sm">
           <input
             type="checkbox"
             checked={editActive}
@@ -632,14 +633,14 @@ await logActivity({
       <div className="mt-6 flex justify-end gap-2">
         <button
           onClick={() => setEditingLocation(null)}
-          className="rounded-2xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-700"
+          className="rounded-snake-action border border-snake-border-strong px-5 py-3 text-sm font-semibold text-snake-text-secondary"
         >
           Avbryt
         </button>
 
         <button
           onClick={handleSaveEditLocation}
-          className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white"
+          className="rounded-snake-action bg-snake-primary px-5 py-3 text-sm font-semibold text-snake-text-on-dark"
         >
           Lagre
         </button>
@@ -666,23 +667,23 @@ function MobileLocationCard({
     <article className="px-5 py-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="inline-flex items-center gap-2 text-base font-semibold text-neutral-950">
-            <MapPin className="h-4 w-4 text-[#055a7d]" />
+          <p className="inline-flex items-center gap-2 text-base font-semibold text-snake-text-primary">
+            <MapPin className="h-4 w-4 text-snake-link" />
             {location.code}
           </p>
 
           <div className="mt-3">
             {location.zones ? (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-lg border border-[#055a7d]/20 bg-[#055a7d]/5 px-2 py-1 text-xs font-semibold text-[#055a7d]">
+                <span className="rounded-lg border border-snake-primary/20 bg-snake-primary/5 px-2 py-1 text-xs font-semibold text-snake-link">
                   {location.zones.code}
                 </span>
-                <span className="text-sm text-neutral-500">
+                <span className="text-sm text-snake-text-muted">
                   {location.zones.name}
                 </span>
               </div>
             ) : (
-              <span className="font-semibold text-[#a77e05]">
+              <span className="font-semibold text-snake-brand-strong">
                 Mangler sone
               </span>
             )}
@@ -690,16 +691,16 @@ function MobileLocationCard({
         </div>
 
         {location.active ? (
-          <StatusPill text="Aktiv" tone="ok" />
+          <StatusBadge label="Aktiv" tone="success" />
         ) : (
-          <StatusPill text="Inaktiv" tone="neutral" />
+          <StatusBadge label="Inaktiv" tone="neutral" />
         )}
       </div>
 
-      <div className="mt-4 rounded-2xl bg-neutral-50 p-4">
+      <div className="mt-4 rounded-snake-action bg-snake-surface-subtle p-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-neutral-500">Produkter</span>
-          <span className="text-base font-semibold text-neutral-950">
+          <span className="text-sm text-snake-text-muted">Produkter</span>
+          <span className="text-base font-semibold text-snake-text-primary">
             {productCount}
           </span>
         </div>
@@ -708,14 +709,14 @@ function MobileLocationCard({
        <div className="mt-4 grid grid-cols-2 gap-2">
         <button
           onClick={onToggle}
-          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white"
+          className="rounded-snake-action bg-snake-primary px-4 py-3 text-sm font-semibold text-snake-text-on-dark"
         >
           {location.active ? "Deaktiver" : "Aktiver"}
         </button>
 
         <button
           onClick={onQr}
-          className="rounded-2xl border border-[#a77e05]/25 bg-[#a77e05]/10 px-4 py-3 text-sm font-semibold text-[#a77e05]"
+          className="rounded-snake-action border border-snake-brand-strong/25 bg-snake-brand-strong/10 px-4 py-3 text-sm font-semibold text-snake-brand-strong"
         >
           QR
         </button>
@@ -725,73 +726,14 @@ function MobileLocationCard({
 }
 
 function MobileEmpty({ text }: { text: string }) {
-  return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;
+  return <div className="px-5 py-10 text-sm text-snake-text-muted">{text}</div>;
 }
 function EmptyRow({ text }: { text: string }) {
   return (
     <tr>
-      <td colSpan={5} className="px-5 py-12 text-sm text-neutral-500">
+      <td colSpan={5} className="px-5 py-12 text-sm text-snake-text-muted">
         {text}
       </td>
     </tr>
-  );
-}
-
-function StatCard({
-  icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  tone: "blue" | "gold" | "ok" | "neutral";
-}) {
-  const styles = {
-    blue: "border-t-[#055a7d] text-[#055a7d]",
-    gold: "border-t-[#a77e05] text-[#a77e05]",
-    ok: "border-t-emerald-500 text-emerald-600",
-    neutral: "border-t-neutral-300 text-neutral-500",
-  };
-
-  return (
-    <div
-      className={`rounded-2xl border border-neutral-200 border-t-4 bg-white p-5 shadow-sm ${styles[tone]}`}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
-            {label}
-          </p>
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">
-            {value}
-          </p>
-        </div>
-
-        <div className="[&>svg]:h-6 [&>svg]:w-6">{icon}</div>
-      </div>
-    </div>
-  );
-}
-
-function StatusPill({
-  text,
-  tone,
-}: {
-  text: string;
-  tone: "ok" | "neutral";
-}) {
-  const styles = {
-    ok: "border-green-200 bg-green-50 text-green-700",
-    neutral: "border-neutral-200 bg-neutral-100 text-neutral-600",
-  };
-
-  return (
-    <span
-      className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${styles[tone]}`}
-    >
-      {text}
-    </span>
   );
 }

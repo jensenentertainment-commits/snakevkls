@@ -36,8 +36,6 @@ export default async function HomePage() {
   placedProductCount,
   activeProductCount,
   locationsNoZoneCount,
-  latestActivity,
-  latestShopifySync,
 } = await getDashboardStats();
   const issueCount =
   missingLocationCount + missingSkuCount + emptyLocationCount;
@@ -46,20 +44,20 @@ export default async function HomePage() {
 const hasIssues = issueCount > 0;
 const issueState: IssueCardState = hasIssues
   ? {
-      border: "border-red-300",
-      bg: "bg-red-50",
-      badge: "bg-red-100 text-red-700",
-      icon: "border-red-200 bg-red-100 text-red-600 ring-red-100",
-      action: "text-red-700",
-      hover: "hover:border-red-300 hover:shadow-[0_18px_45px_rgba(239,68,68,0.14)]",
+      border: "border-snake-danger-border",
+      bg: "bg-snake-danger-surface",
+      badge: "bg-snake-danger-surface text-snake-danger",
+      icon: "border-snake-danger-border bg-snake-danger-surface text-snake-danger ring-snake-danger-border",
+      action: "text-snake-danger",
+      hover: "hover:border-snake-danger-border hover:shadow-snake-panel",
     }
   : {
-      border: "border-green-300",
-      bg: "bg-green-50",
-      badge: "bg-green-100 text-green-700",
-      icon: "border-green-200 bg-green-100 text-green-600 ring-green-100",
-      action: "text-green-700",
-      hover: "hover:border-green-300 hover:shadow-[0_18px_45px_rgba(34,197,94,0.12)]",
+      border: "border-snake-success-border",
+      bg: "bg-snake-success-surface",
+      badge: "bg-snake-success-surface text-snake-success",
+      icon: "border-snake-success-border bg-snake-success-surface text-snake-success ring-snake-success-border",
+      action: "text-snake-success",
+      hover: "hover:border-snake-success-border hover:shadow-snake-panel",
     };
 
     const shouldHighlightCleanup = hasIssues && issueCount > 0;
@@ -141,9 +139,9 @@ const issueState: IssueCardState = hasIssues
   snakeHealth={health.score}
   lastSyncOk
 />
-      <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-        <div className="relative overflow-hidden bg-[#05495b] text-white">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#1D8B83]/15 blur-3xl" />
+      <section className="overflow-hidden rounded-snake-panel bg-snake-workspace text-snake-text-primary shadow-snake-overlay">
+        <div className="relative overflow-hidden bg-snake-hero text-snake-text-on-dark">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-snake-info/15 blur-3xl" />
           
 
           <div className="relative grid gap-8 px-8 py-10 sm:px-10 xl:px-12 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
@@ -164,15 +162,15 @@ const issueState: IssueCardState = hasIssues
         <div className="px-5 py-7 sm:px-8 sm:py-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-snake-link/70">
                 Moduler
               </p>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-950">
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-snake-text-primary">
                 Arbeidsflate
               </h2>
             </div>
 
-            <p className="max-w-xl text-sm leading-6 text-neutral-600">
+            <p className="max-w-xl text-sm leading-6 text-snake-text-secondary">
               Start med varesøk og avvik. Lokasjoner brukes når lageret skal
               ryddes fysisk.
             </p>
@@ -229,12 +227,6 @@ const issueState: IssueCardState = hasIssues
   </>
 );
 
-function getHealthColor(score: number) {
-  if (score >= 80) return "bg-emerald-400";
-  if (score >= 50) return "bg-amber-400";
-  return "bg-red-400";
-}
-
 
 
  
@@ -270,20 +262,20 @@ highlight?: boolean;
 
   const card = (
     <div
-      className={`group relative flex h-full min-h-[310px] flex-col overflow-hidden rounded-[24px] border p-5 shadow-sm transition duration-200 sm:p-5
+      className={`group relative flex h-full min-h-[310px] flex-col overflow-hidden rounded-snake-card border p-5 shadow-snake-card transition duration-200 sm:p-5
        ${
   issueState
     ? `${issueState.border} ${issueState.bg} ${issueState.hover}`
     : muted
-      ? "border-[#d5dee2] bg-white opacity-55 grayscale-[0.2]"
+      ? "border-snake-border-default bg-snake-surface opacity-55 grayscale-[0.2]"
       : highlight
-        ? "border-[#055a7d]/30 bg-[#f0f7fa] hover:-translate-y-1 hover:border-[#055a7d]/45 hover:shadow-xl"
-        : "border-[#d5dee2] bg-white hover:-translate-y-1 hover:border-[#055a7d]/25 hover:shadow-xl"
+        ? "border-snake-primary/30 bg-snake-info-surface hover:-translate-y-1 hover:border-snake-primary/45 hover:shadow-snake-panel"
+        : "border-snake-border-default bg-snake-surface hover:-translate-y-1 hover:border-snake-primary/25 hover:shadow-snake-panel"
 }`}
     >
       {!muted && (
         <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-          <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[#055a7d]/10 blur-2xl" />
+          <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-snake-primary/10 blur-2xl" />
         </div>
       )}
 
@@ -293,7 +285,7 @@ highlight?: boolean;
     issueState
       ? issueState.icon
   
-  : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
+  : "border-snake-primary/15 bg-snake-primary/15 text-snake-link ring-snake-primary/10"
   }`}
 >
           <span className="[&>svg]:h-7 [&>svg]:w-7">{icon}</span>
@@ -304,25 +296,25 @@ highlight?: boolean;
     issueState
       ? issueState.badge
       : muted
-        ? "bg-neutral-100 text-neutral-400"
-        : "bg-[#055a7d]/8 text-[#055a7d]"
+        ? "bg-snake-neutral-surface text-snake-text-disabled"
+        : "bg-snake-primary/8 text-snake-link"
   }`}
 >
   {label}
 </span>
       </div>
 
-      <h2 className="relative mt-6 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">
+      <h2 className="relative mt-6 text-2xl font-semibold tracking-[-0.03em] text-snake-text-primary">
         {title}
       </h2>
 
-      <p className="relative mt-3 text-base leading-6 text-neutral-700">
+      <p className="relative mt-3 text-base leading-6 text-snake-text-secondary">
         {text}
       </p>
 
-      <div className="relative my-5 h-px bg-[#d5dee2]" />
+      <div className="relative my-5 h-px bg-snake-border-default" />
 
-      <p className="relative text-sm leading-6 text-neutral-500">{body}</p>
+      <p className="relative text-sm leading-6 text-snake-text-muted">{body}</p>
 
       <div className="relative mt-auto pt-6">
         <span
@@ -330,8 +322,8 @@ highlight?: boolean;
   issueState
     ? issueState.action
     : muted
-      ? "text-neutral-400"
-      : "text-[#055a7d] group-hover:text-[#042834]"
+      ? "text-snake-text-disabled"
+      : "text-snake-link group-hover:text-snake-text-primary"
 }`}
         >
           {action ?? "Kommer snart"}
@@ -365,40 +357,40 @@ function WideCard({
 }) {
   const card = (
     <div
-      className={`group rounded-[26px] border bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-xl ${
+      className={`group rounded-snake-card border bg-snake-surface p-6 shadow-snake-card transition duration-200 hover:-translate-y-0.5 hover:shadow-snake-panel ${
         warning
-          ? "border-[#b58a14]/35 hover:border-[#b58a14]/60"
+          ? "border-snake-brand/35 hover:border-snake-brand/60"
           : variant === "live"
-  ? "border-[#7dd3fc]/25 hover:border-[#22d3ee]/45"
-  : "border-[#d5dee2] hover:border-[#055a7d]/30"
+  ? "border-snake-info-border/25 hover:border-snake-info/45"
+  : "border-snake-border-default hover:border-snake-primary/30"
       }`}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
         <div
           className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full border ring-1 ${
             warning
-              ? "border-[#b58a14]/25 bg-[#b58a14]/12 text-[#a77e04] ring-[#b58a14]/10"
-              : "border-[#055a7d]/15 bg-[#055a7d]/15 text-[#055a7d] ring-[#055a7d]/10"
+              ? "border-snake-brand/25 bg-snake-brand/12 text-snake-brand-strong ring-snake-brand/10"
+              : "border-snake-primary/15 bg-snake-primary/15 text-snake-link ring-snake-primary/10"
           }`}
         >
           <span className="[&>svg]:h-8 [&>svg]:w-8">{icon}</span>
         </div>
 
         <div>
-          <h3 className="text-xl font-semibold tracking-[-0.02em] text-neutral-950">
+          <h3 className="text-xl font-semibold tracking-[-0.02em] text-snake-text-primary">
             {title}
           </h3>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-600">
+          <p className="mt-2 max-w-xl text-sm leading-6 text-snake-text-secondary">
             {text}
           </p>
           <p
             className={`mt-3 inline-flex items-center gap-1 text-sm font-bold ${
               warning
-  ? "text-[#9a7305]"
+  ? "text-snake-brand-strong"
   : variant === "live"
-    ? "text-[#0891b2]"
-    : "text-[#055a7d]"
-            } group-hover:text-[#042834]`}
+    ? "text-snake-info"
+    : "text-snake-link"
+            } group-hover:text-snake-text-primary`}
           >
             {action}
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />

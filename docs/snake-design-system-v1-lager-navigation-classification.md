@@ -1,5 +1,9 @@
 # Lager-pilot: navigasjonsklassifisering
 
+> Status etter Commit 5: Lager-piloten er ferdigstilt. Klassifiseringen under
+> er implementert, og gjenværende unntak er dokumentert i
+> `snake-design-system-v1-completion.md`.
+
 Denne klassifiseringen låser informasjonsarkitekturen før Lager kobles til
 Snake Design System v1.
 

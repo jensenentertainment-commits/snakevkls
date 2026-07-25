@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, MapPin, Package, Plus, Trash2 } from "lucide-react";
+import { MapPin, Package, Plus, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ActivityItemCard from "../../components/activity/ActivityItemCard";
-import SnakeHero from "../../components/SnakeHero";
+import { LagerHero } from "../../components/lager/LagerHero";
 import type { Role } from "@/lib/auth/roles";
 
 type LocationDetail = {
@@ -268,8 +268,8 @@ setLoading(false);
 
   return (
     <>
-        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-card bg-snake-surface text-snake-text-primary shadow-snake-overlay sm:rounded-snake-shell">
+          <LagerHero
   eyebrow="Snake / Lokasjon"
   title={loading ? "Laster..." : location?.code ?? "Ikke funnet"}
   description="Bruk denne siden etter QR-scan for å se, justere og registrere varer på lokasjonen."
@@ -277,23 +277,23 @@ setLoading(false);
   backLabel="Tilbake til lokasjoner"
   right={
     location ? (
-      <div className="grid grid-cols-2 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
-        <div className="border-r border-white/10 px-5 py-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+      <div className="grid grid-cols-2 overflow-hidden rounded-snake-card border border-snake-border-on-dark-subtle bg-snake-app-deep/10">
+        <div className="border-r border-snake-border-on-dark-subtle px-5 py-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-snake-text-on-dark-muted">
             Status
           </p>
 
-          <p className="mt-1 text-lg font-semibold text-white">
+          <p className="mt-1 text-lg font-semibold text-snake-text-on-dark">
             {location.active ? "Aktiv" : "Inaktiv"}
           </p>
         </div>
 
         <div className="px-5 py-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-snake-text-on-dark-muted">
             Antall totalt
           </p>
 
-          <p className="mt-1 text-lg font-semibold text-white">
+          <p className="mt-1 text-lg font-semibold text-snake-text-on-dark">
             {totalQuantity}
           </p>
         </div>
@@ -302,7 +302,7 @@ setLoading(false);
   }
 />
 
-          <div className="bg-[#f6f7f8] px-5 py-5 sm:px-8 sm:py-6">
+          <div className="bg-snake-surface-subtle px-5 py-5 sm:px-8 sm:py-6">
             {loading ? (
               <InfoBox text="Laster lokasjon..." />
             ) : !location ? (
@@ -341,21 +341,21 @@ setLoading(false);
 )}
 
           {location && (
-            <div className="grid gap-6 border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="grid gap-6 border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 sm:py-7 lg:grid-cols-[0.95fr_1.05fr]">
                  {canWrite && (
-              <section className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+              <section className="rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card">
+                <div className="border-b border-snake-border-default bg-snake-surface-subtle px-6 py-5">
+                  <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
                     Legg til produkt
                   </h2>
-                  <p className="mt-1 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-snake-text-muted">
                     Søk med SKU og legg produktet på denne lokasjonen.
                   </p>
                 </div>
 
                 <div className="space-y-4 p-6">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    <label className="mb-2 block text-sm font-medium text-snake-text-secondary">
                       SKU
                     </label>
                     <input
@@ -370,12 +370,12 @@ setLoading(false);
                         }
                       }}
                       placeholder="f.eks. KEU-001"
-                      className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+                      className="w-full rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    <label className="mb-2 block text-sm font-medium text-snake-text-secondary">
                       Antall
                     </label>
                     <input
@@ -383,14 +383,14 @@ setLoading(false);
                       min="0"
                       value={quantityInput}
                       onChange={(e) => setQuantityInput(e.target.value)}
-                      className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+                      className="w-full rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
                     />
                   </div>
 
                   <button
                     onClick={handleAddProductToLocation}
                     disabled={saving}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-snake-action bg-snake-primary px-5 py-3 text-sm font-semibold text-snake-text-on-dark disabled:opacity-50"
                   >
                     <Plus className="h-4 w-4" />
                     {saving ? "Lagrer..." : "Legg til på lokasjon"}
@@ -399,18 +399,18 @@ setLoading(false);
               </section>
               )}
 
-              <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+              <section className="overflow-hidden rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card">
+                <div className="border-b border-snake-border-default bg-snake-surface-subtle px-6 py-5">
+                  <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
                     Produkter på lokasjon
                   </h2>
-                  <p className="mt-1 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-snake-text-muted">
                     {inventoryItems.length} registrerte produkter
                   </p>
                 </div>
 
                 {inventoryItems.length === 0 ? (
-                  <div className="px-6 py-10 text-sm text-neutral-500">
+                  <div className="px-6 py-10 text-sm text-snake-text-muted">
                     Ingen produkter er registrert på denne lokasjonen.
                   </div>
                 ) : (
@@ -431,19 +431,19 @@ setLoading(false);
                 
 
 {location && (
-            <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-              <section className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+            <div className="border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 sm:py-7">
+              <section className="overflow-hidden rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card">
+                <div className="border-b border-snake-border-default bg-snake-surface-subtle px-6 py-5">
+                  <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
                     Lokasjonshistorikk
                   </h2>
-                  <p className="mt-1 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-snake-text-muted">
                     Siste hendelser registrert på denne lokasjonen.
                   </p>
                 </div>
 
                 {activity.length === 0 ? (
-                  <div className="px-6 py-10 text-sm text-neutral-500">
+                  <div className="px-6 py-10 text-sm text-snake-text-muted">
                     Ingen historikk registrert på denne lokasjonen.
                   </div>
                 ) : (
@@ -473,10 +473,10 @@ function LocationBadge({
   tone: "ok" | "warn" | "blue" | "neutral";
 }) {
   const styles = {
-    ok: "border-emerald-300/30 bg-emerald-300/15 text-emerald-50",
-    warn: "border-[#b58a14]/40 bg-[#b58a14]/20 text-[#ffe1a1]",
-    blue: "border-white/20 bg-white/10 text-white",
-    neutral: "border-white/15 bg-white/8 text-white/75",
+    ok: "border-snake-success-border/30 bg-snake-success/15 text-snake-success",
+    warn: "border-snake-brand/40 bg-snake-brand/20 text-snake-text-on-dark",
+    blue: "border-snake-border-on-dark-strong bg-snake-app-elevated text-snake-text-on-dark",
+    neutral: "border-snake-border-on-dark-default bg-snake-app-elevated text-snake-text-on-dark-muted",
   };
 
   return (
@@ -504,23 +504,23 @@ function InventoryRow({
     <div className="px-6 py-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="font-semibold text-neutral-950">
+          <p className="font-semibold text-snake-text-primary">
             {item.products?.sku || "Mangler SKU"}
           </p>
 
           {item.products?.id ? (
             <Link
               href={`/products/${item.products.id}`}
-              className="mt-1 block text-sm font-semibold text-[#055a7d] underline-offset-4 hover:underline"
+              className="mt-1 block text-sm font-semibold text-snake-link underline-offset-4 hover:underline"
             >
               {item.products.product_name}
             </Link>
           ) : (
-            <p className="mt-1 text-sm text-neutral-700">Ukjent produkt</p>
+            <p className="mt-1 text-sm text-snake-text-secondary">Ukjent produkt</p>
           )}
 
           {item.products?.variant_name && (
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-snake-text-muted">
               {item.products.variant_name}
             </p>
           )}
@@ -529,7 +529,7 @@ function InventoryRow({
           {canWrite && (
         <button
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+          className="inline-flex items-center gap-2 rounded-snake-control border border-snake-danger-border bg-snake-danger-surface px-3 py-2 text-sm font-semibold text-snake-danger"
         >
           <Trash2 className="h-4 w-4" />
           Fjern
@@ -544,7 +544,7 @@ function InventoryRow({
           min="0"
           value={localQuantity}
           onChange={(e) => setLocalQuantity(e.target.value)}
-          className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
+          className="rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
         />
 
         <button
@@ -553,7 +553,7 @@ function InventoryRow({
             if (Number.isNaN(quantity) || quantity < 0) return;
             onUpdateQuantity(quantity);
           }}
-          className="rounded-2xl bg-[#b58a14] px-5 py-3 text-sm font-semibold text-white"
+          className="rounded-snake-action bg-snake-brand px-5 py-3 text-sm font-semibold text-snake-text-on-dark"
         >
           Lagre
         </button>
@@ -563,19 +563,8 @@ function InventoryRow({
   );
 }
 
-function HeroStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-white/12 px-5 py-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-white/55">
-        {label}
-      </p>
-      <p className="mt-1 text-lg font-semibold">{value}</p>
-    </div>
-  );
-}
-
 function InfoBox({ text }: { text: string }) {
-  return <div className="rounded-2xl bg-white p-6 text-sm text-neutral-500">{text}</div>;
+  return <div className="rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">{text}</div>;
 }
 
 function InfoCard({
@@ -590,21 +579,21 @@ function InfoCard({
   tone: "blue" | "gold" | "neutral";
 }) {
   const styles = {
-    blue: "border-t-[#055a7d] text-[#055a7d]",
-    gold: "border-t-[#a77e05] text-[#a77e05]",
-    neutral: "border-t-neutral-300 text-neutral-500",
+    blue: "border-t-snake-primary text-snake-link",
+    gold: "border-t-snake-brand-strong text-snake-brand-strong",
+    neutral: "border-t-neutral-300 text-snake-text-muted",
   };
 
   return (
     <div
-      className={`rounded-2xl border border-neutral-200 border-t-4 bg-white p-5 shadow-sm ${styles[tone]}`}
+      className={`rounded-snake-action border border-snake-border-default border-t-4 bg-snake-surface p-5 shadow-snake-card ${styles[tone]}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-snake-text-muted">
             {label}
           </p>
-          <p className="mt-3 text-lg font-semibold text-neutral-950">{value}</p>
+          <p className="mt-3 text-lg font-semibold text-snake-text-primary">{value}</p>
         </div>
 
         <div className="[&>svg]:h-6 [&>svg]:w-6">{icon}</div>

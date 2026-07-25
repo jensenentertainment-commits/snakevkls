@@ -2,9 +2,10 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import SnakeDropdown from "../components/SnakeDropdown";
-import SnakeToolbar from "../components/SnakeToolbar";
-import SnakeHero from "../components/SnakeHero";
+import { LagerDropdown } from "../components/lager/LagerDropdown";
+import { LagerToolbar } from "../components/lager/LagerToolbar";
+import { LagerHero } from "../components/lager/LagerHero";
+import { LagerViewTabs } from "../components/lager/LagerViewTabs";
 import SnakeToast from "../components/SnakeToast";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
@@ -27,6 +28,7 @@ import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
 import RoleGate from "../components/auth/RoleGate";
 import type { Role } from "@/lib/auth/roles";
+import { Progress } from "../components/design-system";
 
 
 
@@ -236,10 +238,6 @@ const diffCount = products.filter((product) => {
   return (product.shopify_quantity ?? 0) - meta.quantity !== 0;
 }).length;
 
-const placedCount = total - missingCount;
-const placedPercent = total > 0 ? Math.round((placedCount / total) * 100) : 0;
-
-
 const {
   handleShopifySync,
   handleBatchSave,
@@ -296,8 +294,8 @@ const {
 
   return (
     <>
-  <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-  <SnakeHero
+  <section className="overflow-hidden rounded-snake-card bg-snake-surface text-snake-text-primary shadow-snake-overlay sm:rounded-snake-shell">
+  <LagerHero
     eyebrow="SNAKE / Produkter"
     title="Varesøk"
     description="Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket."
@@ -308,42 +306,31 @@ const {
 
 
 
-<SnakeToolbar
+<LagerToolbar
   left={
-    <>
-      {[
-        { key: "all", label: "Alle" },
-        { key: "missing", label: "Mangler" },
-        { key: "zone", label: "Har sone" },
-        { key: "location", label: "Har lokasjon" },
-        { key: "diff", label: "Avvik" },
-      ].map((filter) => (
-        <button
-          key={filter.key}
-          onClick={() => {
-  const key =
-    filter.key as "all" | "missing" | "zone" | "location" | "diff";
-
-  setStatusFilter(key);
-
-  const url = new URL(window.location.href);
-  url.searchParams.set("status", key);
-  window.history.replaceState(null, "", url.toString());
-}}
-         className={`rounded-xl border px-3 py-2 text-sm font-semibold transition duration-300 ${
-  statusFilter === filter.key
-    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
-    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
-} ${
-  recentlyUpdated && filter.key === "zone"
-    ? "scale-[1.04] ring-2 ring-[#b58a14]/35"
-    : ""
-}`}
-        >
-          {filter.label}
-        </button>
-      ))}
-    </>
+    <LagerViewTabs
+      activeId={statusFilter}
+      ariaLabel="Produktvisning"
+      items={[
+        { id: "all", label: "Alle" },
+        { id: "missing", label: "Mangler" },
+        { id: "zone", label: "Har sone" },
+        { id: "location", label: "Har lokasjon" },
+        { id: "diff", label: "Avvik" },
+      ]}
+      onChange={(id) => {
+        const key = id as
+          | "all"
+          | "missing"
+          | "zone"
+          | "location"
+          | "diff";
+        setStatusFilter(key);
+        const url = new URL(window.location.href);
+        url.searchParams.set("status", key);
+        window.history.replaceState(null, "", url.toString());
+      }}
+    />
   }
   right={
     <>
@@ -352,7 +339,7 @@ const {
     
   onClick={handleShopifySync}
   disabled={syncingShopify}
-  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.1] hover:text-white disabled:opacity-50"
+  className="inline-flex items-center gap-2 rounded-snake-control border border-snake-border-on-dark-subtle bg-snake-app-elevated px-4 py-2 text-sm font-semibold text-snake-text-on-dark transition hover:bg-snake-surface/[0.1] hover:text-snake-text-on-dark disabled:opacity-50"
 >
   <RefreshCw
     className={`h-4 w-4 ${
@@ -365,13 +352,13 @@ const {
 )}
 
 {lastShopifySync && (
-  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/45">
+  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-snake-text-on-dark-muted">
   Synket {lastShopifySync}
 </span>
 )}
 
 
-      <SnakeDropdown
+      <LagerDropdown
       variant="dark"
         value={collectionFilter}
         onChange={setCollectionFilter}
@@ -385,7 +372,7 @@ const {
         ]}
       />
 
-      <SnakeDropdown
+      <LagerDropdown
       variant="dark"
         value={zoneFilter}
         onChange={setZoneFilter}
@@ -402,7 +389,7 @@ const {
   }
 />
 {filtered.length > 0 && (
-  <div className="border-t border-neutral-200 bg-neutral-50 px-5 py-4 sm:px-8">
+  <div className="border-t border-snake-border-default bg-snake-surface-subtle px-5 py-4 sm:px-8">
     {(() => {
       const missing = products.filter(
         (p) => getMeta(p).status === "missing"
@@ -420,32 +407,27 @@ const placed = products.filter(
 const percent = Math.round((placed / total) * 100);
       if (missing > 0) {
         return (
-  <div className="grid gap-4 rounded-[22px] border border-[#b58a14]/20 bg-[#fbf6e8] p-4 shadow-sm lg:grid-cols-[1fr_280px_auto] lg:items-center">
+  <div className="grid gap-4 rounded-snake-action border border-snake-brand/20 bg-snake-warning-surface p-4 shadow-snake-card lg:grid-cols-[1fr_280px_auto] lg:items-center">
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a77e05]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-snake-brand-strong">
         Neste steg
       </p>
-      <p className="mt-1 text-sm font-semibold text-neutral-950">
+      <p className="mt-1 text-sm font-semibold text-snake-text-primary">
         {missing} produkter mangler plassering
       </p>
     </div>
 
-    <div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-white">
-        <div
-          className="h-full rounded-full bg-[#b58a14] transition-all duration-500"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-      <p className="mt-2 text-xs font-medium text-neutral-600">
-        {percent}% ferdig · {placed} av {total} produkter plassert
-      </p>
-    </div>
+    <Progress
+      label={`${percent}% ferdig · ${placed} av ${total} produkter plassert`}
+      max={total}
+      tone="warning"
+      value={placed}
+    />
 
     <div className="flex flex-wrap gap-2 lg:justify-end">
       <button
         onClick={() => setStatusFilter("missing")}
-        className="rounded-xl border border-[#055a7d]/15 bg-white px-3 py-2 text-sm font-semibold text-[#055a7d]"
+        className="rounded-snake-control border border-snake-primary/15 bg-snake-surface px-3 py-2 text-sm font-semibold text-snake-link"
       >
         Vis mangler
       </button>
@@ -463,7 +445,7 @@ const percent = Math.round((placed / total) * 100);
               setTimeout(() => setBatchOpen(true), 150);
             }
           }}
-          className="rounded-xl bg-[#055a7d] px-3 py-2 text-sm font-semibold text-white shadow-sm"
+          className="rounded-snake-control bg-snake-primary px-3 py-2 text-sm font-semibold text-snake-text-on-dark shadow-snake-card"
         >
           Velg alle
         </button>
@@ -475,14 +457,14 @@ const percent = Math.round((placed / total) * 100);
 
       if (diff > 0) {
         return (
-          <div className="flex items-center justify-between rounded-2xl bg-[#a77e05]/10 px-4 py-3">
-            <span className="text-sm font-semibold text-neutral-900">
+          <div className="flex items-center justify-between rounded-snake-action bg-snake-brand-strong/10 px-4 py-3">
+            <span className="text-sm font-semibold text-snake-text-primary">
               {diff} produkter har avvik
             </span>
 
             <button
               onClick={() => setStatusFilter("diff")}
-              className="text-sm font-semibold text-[#055a7d] underline"
+              className="text-sm font-semibold text-snake-link underline"
             >
               Vis →
             </button>
@@ -491,7 +473,7 @@ const percent = Math.round((placed / total) * 100);
       }
 
       return (
-        <div className="rounded-2xl bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+        <div className="rounded-snake-action bg-snake-success-surface px-4 py-3 text-sm font-semibold text-snake-success">
           Lageret ser ryddig ut ✔
         </div>
       );
@@ -500,20 +482,20 @@ const percent = Math.round((placed / total) * 100);
 )}
   <div
   ref={tableRef}
-  className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7"
+  className="border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 sm:py-7"
 >
             <div
-  className={`overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition duration-500 ${
-    recentlyUpdated ? "ring-2 ring-[#b58a14]/35" : ""
+  className={`overflow-hidden rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card transition duration-500 ${
+    recentlyUpdated ? "ring-2 ring-snake-brand/35" : ""
   }`}
 >
-           <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+           <div className="flex flex-col gap-3 border-b border-snake-border-default bg-snake-surface-subtle px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
   <div>
-    <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+    <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
       Produktliste
     </h2>
 
-    <p className="mt-1 text-sm text-neutral-600">
+    <p className="mt-1 text-sm text-snake-text-secondary">
       {loading
         ? "Børre venter på produktdata."
         : diffCount > 0 && missingCount > 0
@@ -527,7 +509,7 @@ const percent = Math.round((placed / total) * 100);
   </div>
 
   <div className="flex flex-col gap-2 sm:items-end">
-    <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400 sm:pt-1 sm:text-right">
+    <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled sm:pt-1 sm:text-right">
       {loading
         ? "Henter produkter"
         : `Viser ${filtered.length} av ${products.length}`}
@@ -536,7 +518,7 @@ const percent = Math.round((placed / total) * 100);
     {query && (
       <button
         onClick={() => setQuery("")}
-        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+        className="w-full rounded-snake-action border border-snake-border-strong bg-snake-surface px-4 py-3 text-sm font-semibold text-snake-text-secondary transition hover:bg-snake-surface-subtle sm:w-auto sm:py-2"
       >
         Nullstill søk
       </button>
@@ -579,7 +561,7 @@ const percent = Math.round((placed / total) * 100);
 
               <div className="hidden min-h-[680px] overflow-x-auto lg:block">
                 <table className="min-w-full table-fixed border-collapse">
-                  <thead className="bg-white text-left text-xs uppercase tracking-[0.14em] text-neutral-500">
+                  <thead className="bg-snake-surface text-left text-xs uppercase tracking-[0.14em] text-snake-text-muted">
                     <tr>
   <th className="w-[48px] px-5 py-4 font-semibold">
     {canWrite && (
@@ -601,7 +583,7 @@ const percent = Math.round((placed / total) * 100);
   <th className="px-5 py-4 font-semibold">
     <button
       onClick={() => setSortMode((current) => (current === "az" ? "za" : "az"))}
-      className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-[#055a7d]"
+      className="inline-flex items-center gap-1 uppercase tracking-[0.14em] hover:text-snake-link"
     >
       Produkt {sortMode === "az" ? "A–Å" : "Å–A"}
     </button>
@@ -619,7 +601,7 @@ const percent = Math.round((placed / total) * 100);
                       <tr>
                         <td
                           colSpan={6}
-                          className="px-5 py-12 text-sm text-neutral-500"
+                          className="px-5 py-12 text-sm text-snake-text-muted"
                         >
                           Laster produkter...
                         </td>
@@ -628,7 +610,7 @@ const percent = Math.round((placed / total) * 100);
                       <tr>
                         <td
                         colSpan={6}
-                          className="px-5 py-12 text-sm text-neutral-500"
+                          className="px-5 py-12 text-sm text-snake-text-muted"
                         >
                           Ingen treff.
                         </td>
@@ -645,11 +627,11 @@ const percent = Math.round((placed / total) * 100);
 }}
   className={`h-[104px] cursor-pointer border-t transition ${
   selected.includes(product.id)
-    ? "border-l-4 border-l-[#b58a14] border-t-neutral-100 bg-white shadow-[inset_0_0_0_1px_rgba(181,138,20,0.16)]"
+    ? "border-l-4 border-l-snake-brand border-t-snake-border-subtle bg-snake-surface ring-1 ring-snake-brand-border"
     : meta.status === "missing"
-      ? "border-l-4 border-l-[#b58a14]/45 border-t-neutral-100 bg-[#fbf6e8]/38"
-      : "border-l-4 border-l-transparent border-t-neutral-100 bg-white"
-} hover:bg-[#055a7d]/[0.025]`}
+      ? "border-l-4 border-l-snake-brand/45 border-t-snake-border-subtle bg-snake-warning-surface/38"
+      : "border-l-4 border-l-transparent border-t-snake-border-subtle bg-snake-surface"
+} hover:bg-snake-primary/[0.025]`}
 >
                             <td className="px-5 py-5 align-middle text-sm">
                               {canWrite && (
@@ -666,19 +648,19 @@ const percent = Math.round((placed / total) * 100);
                               />
                               )}
                             </td>
-<td className="px-5 py-5 align-middle text-sm text-neutral-900">
+<td className="px-5 py-5 align-middle text-sm text-snake-text-primary">
   <ProductIdentity product={product} />
 </td>
 
-<td className="w-[150px] px-5 py-5 align-middle text-xs font-semibold text-neutral-600">
+<td className="w-[150px] px-5 py-5 align-middle text-xs font-semibold text-snake-text-secondary">
   {product.sku ? (
     <span className="block truncate">{product.sku}</span>
   ) : (
-    <span className="block truncate text-red-600">Mangler SKU</span>
+    <span className="block truncate text-snake-danger">Mangler SKU</span>
   )}
 </td>
 
-<td className="w-[170px] px-5 py-5 align-middle text-sm font-medium text-neutral-800">
+<td className="w-[170px] px-5 py-5 align-middle text-sm font-medium text-snake-text-primary">
   <div className="flex flex-col gap-2">
     <QuantityDiff product={product} meta={meta} />
 
@@ -688,7 +670,7 @@ const percent = Math.round((placed / total) * 100);
         e.stopPropagation();
         setMovementProduct(product);
       }}
-      className="w-fit text-xs font-semibold text-[#a77e05] underline-offset-4 hover:underline"
+      className="w-fit text-xs font-semibold text-snake-brand-strong underline-offset-4 hover:underline"
     >
       Registrer uttak
     </button>
@@ -701,7 +683,7 @@ const percent = Math.round((placed / total) * 100);
     
     <div className="flex flex-col gap-1.5">
       
-  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#a77e05]">
+  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-snake-brand-strong">
     Velg sone
   </span>
 
@@ -717,7 +699,7 @@ const percent = Math.round((placed / total) * 100);
       }))
     }
     disabled={inlineSaving === product.id}
-    className="h-8 w-[76px] rounded-lg border border-neutral-200 bg-white px-2 text-[11px] font-semibold text-neutral-800 shadow-sm outline-none transition hover:border-[#055a7d]/30 focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10 disabled:opacity-50"
+    className="h-8 w-[76px] rounded-lg border border-snake-border-default bg-snake-surface px-2 text-[11px] font-semibold text-snake-text-primary shadow-snake-card outline-none transition hover:border-snake-primary/30 focus:border-snake-primary/50 focus:ring-2 focus:ring-snake-primary/10 disabled:opacity-50"
   >
     <option value="">Sone</option>
 
@@ -735,7 +717,7 @@ const percent = Math.round((placed / total) * 100);
     }}
     onDoubleClick={(e) => e.stopPropagation()}
     disabled={!inlineZone[product.id] || inlineSaving === product.id}
-    className="h-8 w-[48px] rounded-lg bg-[#055a7d] text-[11px] font-bold text-white shadow-sm transition hover:bg-[#044c6a] disabled:bg-neutral-200 disabled:text-neutral-500"
+    className="h-8 w-[48px] rounded-lg bg-snake-primary text-[11px] font-bold text-snake-text-on-dark shadow-snake-card transition hover:bg-snake-primary-hover disabled:bg-snake-neutral-surface disabled:text-snake-text-muted"
   >
     {inlineSaving === product.id ? "..." : "Sett"}
   </button>
@@ -746,13 +728,13 @@ const percent = Math.round((placed / total) * 100);
     className={`rounded-lg border px-2 py-1 text-xs font-semibold ${
       meta.zoneCode && ZONE_STYLES[meta.zoneCode]
         ? ZONE_STYLES[meta.zoneCode]
-        : "border-[#055a7d]/20 bg-[#055a7d]/5 text-[#055a7d]"
+        : "border-snake-primary/20 bg-snake-primary/5 text-snake-link"
     }`}
   >
     {meta.zoneLabel}
   </span>
 ) : (
-  <span className="text-xs font-semibold text-neutral-400">
+  <span className="text-xs font-semibold text-snake-text-disabled">
     Ingen sone
   </span>
 )}
@@ -767,12 +749,12 @@ const percent = Math.round((placed / total) * 100);
         e.stopPropagation();
         openModal(product);
       }}
-      className="text-xs font-semibold text-[#055a7d] underline"
+      className="text-xs font-semibold text-snake-link underline"
     >
       Sett lokasjon
     </button>
   ) : (
-    <span className="text-xs text-neutral-400">Ingen lokasjon</span>
+    <span className="text-xs text-snake-text-disabled">Ingen lokasjon</span>
   )}
 </td>             
                           </tr>
@@ -788,7 +770,7 @@ const percent = Math.round((placed / total) * 100);
 
 
 {canWrite && selected.length > 0 && (
-  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-2xl border border-[#b58a14]/25 bg-[#083844]/95 px-4 py-3 text-white backdrop-blur-xl shadow-2xl shadow-black/30">
+  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-snake-action border border-snake-brand/25 bg-snake-app-elevated/95 px-4 py-3 text-snake-text-on-dark backdrop-blur-xl shadow-snake-overlay">
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm font-semibold">
         {selected.length} valgt
@@ -797,14 +779,14 @@ const percent = Math.round((placed / total) * 100);
       <div className="flex items-center gap-2">
         <button
           onClick={() => setSelected([])}
-          className="rounded-xl bg-white/15 px-4 py-2 text-sm font-semibold text-white"
+          className="rounded-snake-control bg-snake-app-elevated px-4 py-2 text-sm font-semibold text-snake-text-on-dark"
         >
           Fjern valg
         </button>
 
         <button
           onClick={() => setBatchOpen(true)}
-          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
+          className="rounded-snake-control bg-snake-surface px-4 py-2 text-sm font-semibold text-snake-text-primary"
         >
           Sett sone
         </button>
@@ -876,7 +858,7 @@ const percent = Math.round((placed / total) * 100);
 
 
 function Empty({ text }: { text: string }) {
-  return <div className="px-5 py-10 text-sm text-neutral-500">{text}</div>;
+  return <div className="px-5 py-10 text-sm text-snake-text-muted">{text}</div>;
 }
 
 export default function ProductsPage() {

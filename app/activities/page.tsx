@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import SnakeHero from "../components/SnakeHero";
-import SnakeToolbar from "../components/SnakeToolbar";
+import { LagerHero } from "../components/lager/LagerHero";
+import { LagerToolbar } from "../components/lager/LagerToolbar";
+import { LagerViewTabs } from "../components/lager/LagerViewTabs";
 import ActivityItemCard from "../components/activity/ActivityItemCard";
 import { formatAction } from "../components/activity/utils";
 
@@ -78,64 +79,47 @@ export default function ActivitiesPage() {
 
   return (
     <>
-        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-card bg-snake-surface text-snake-text-primary shadow-snake-overlay sm:rounded-snake-shell">
+          <LagerHero
             eyebrow="SNAKE / Aktivitet"
             title="Aktivitetslogg"
             description="Siste lagerhendelser i Snake. Lokasjoner, tellinger, uttak og andre operasjonelle endringer logges fortløpende."
           />
 
-          <SnakeToolbar
+          <LagerToolbar
             left={
-              <>
-                <button
-                  onClick={() => setActionFilter("all")}
-                 className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
-  actionFilter === "all"
-    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
-    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
-}`}
-                >
-                  Alle{" "}
-                  <span className="ml-1 opacity-70">
-                    {activities.length}
-                  </span>
-                </button>
-
-                {actions.map((action) => (
-                  <button
-                    key={action}
-                    onClick={() => setActionFilter(action)}
-                    className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
-  actionFilter === action
-    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
-    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
-}`}
-                  >
-                    {formatAction(action)}
-                  </button>
-                ))}
-              </>
+              <LagerViewTabs
+                activeId={actionFilter}
+                ariaLabel="Aktivitetsvisning"
+                items={[
+                  { id: "all", label: "Alle", count: activities.length },
+                  ...actions.map((action) => ({
+                    id: action,
+                    label: formatAction(action),
+                  })),
+                ]}
+                onChange={setActionFilter}
+              />
             }
             right={
               <button
                 onClick={load}
-                className="rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white/75 transition hover:bg-white/[0.09] hover:text-white"
+                className="rounded-snake-control border border-snake-border-on-dark-subtle bg-snake-app-elevated px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-snake-text-on-dark-muted transition hover:bg-snake-app-elevated/90 hover:text-snake-text-on-dark"
               >
                 Oppdater
               </button>
             }
           />
 
-          <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-            <div className="overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
-              <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:px-6">
+          <div className="border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 sm:py-7">
+            <div className="overflow-hidden rounded-snake-card border border-snake-border-default bg-snake-surface">
+              <div className="flex items-center justify-between border-b border-snake-border-default bg-snake-surface-subtle px-5 py-5 sm:px-6">
                 <div>
-                  <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+                  <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
                     Aktivitetslogg
                   </h2>
 
-                  <p className="mt-1 text-sm text-neutral-500">
+                  <p className="mt-1 text-sm text-snake-text-muted">
                     {loading
                       ? "Henter aktivitet..."
                       : `${filteredActivities.length} av ${activities.length} hendelser vises`}
@@ -151,7 +135,7 @@ export default function ActivitiesPage() {
                 <div className="divide-y divide-neutral-100">
                   {groupedActivities.map(([dateLabel, items]) => (
                     <div key={dateLabel}>
-                      <div className="bg-neutral-50/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-neutral-400 sm:px-6">
+                      <div className="bg-snake-surface-subtle/80 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-snake-text-disabled sm:px-6">
                         {dateLabel}
                       </div>
 
@@ -196,7 +180,7 @@ function getDateGroup(dateString: string) {
 
 function EmptyState({ text }: { text: string }) {
  return (
-  <div className="px-6 py-14 text-center text-sm text-neutral-500">
+  <div className="px-6 py-14 text-center text-sm text-snake-text-muted">
     {text}
   </div>
 );

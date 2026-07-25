@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import SnakeToolbar from "../components/SnakeToolbar";
-import SnakeHero from "../components/SnakeHero";
+import { LagerToolbar } from "../components/lager/LagerToolbar";
+import { LagerHero } from "../components/lager/LagerHero";
+import { LagerViewTabs } from "../components/lager/LagerViewTabs";
 
 
 type Severity = "critical" | "warning" | "info";
@@ -252,8 +253,8 @@ const productsWithoutLocation = products.filter((product) => {
 
   return (
     <>
-        <section className="overflow-hidden rounded-[26px] bg-white text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-card bg-snake-surface text-snake-text-primary shadow-snake-overlay sm:rounded-snake-shell">
+          <LagerHero
   eyebrow="SNAKE / Avvik"
   title="Avvik"
   description="Lagerdata som kan skape feil i søk, lokasjon og plukk.
@@ -263,37 +264,25 @@ const productsWithoutLocation = products.filter((product) => {
   searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
 />
 
-         <SnakeToolbar
+         <LagerToolbar
   left={
-    <>
-      {[
-        { key: "all", label: "Alle", value: totalIssues },
-        { key: "critical", label: "Kritisk", value: criticalCount },
-        { key: "warning", label: "Sjekk", value: warningCount },
-        { key: "info", label: "Info", value: infoCount },
-      ].map((filter) => (
-        <button
-          key={filter.key}
-          onClick={() => setSeverityFilter(filter.key as IssueFilter)}
-          className={`rounded-xl border px-3 py-2 text-sm font-semibold transition ${
-  severityFilter === filter.key
-    ? "border-[#b58a14]/40 bg-[#b58a14]/12 text-white shadow-inner shadow-white/5"
-    : "border-white/10 bg-white/[0.06] text-white/75 hover:bg-white/[0.09] hover:text-white"
-}`}
-        >
-          {filter.label}
-          <span className="ml-1 opacity-70">
-            {loading ? "…" : filter.value}
-          </span>
-        </button>
-      ))}
-    </>
+    <LagerViewTabs
+      activeId={severityFilter}
+      ariaLabel="Avviksvisning"
+      items={[
+        { id: "all", label: "Alle", count: loading ? "…" : totalIssues },
+        { id: "critical", label: "Kritisk", count: loading ? "…" : criticalCount },
+        { id: "warning", label: "Sjekk", count: loading ? "…" : warningCount },
+        { id: "info", label: "Info", count: loading ? "…" : infoCount },
+      ]}
+      onChange={(id) => setSeverityFilter(id as IssueFilter)}
+    />
   }
   right={
     <>
-      <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/80">
+      <div className="rounded-snake-control border border-snake-border-on-dark-subtle bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
         Produkt{" "}
-        <span className="ml-1 text-white/65">
+        <span className="ml-1 text-snake-text-on-dark-muted">
           {issues.productsWithoutZone.length +
   issues.productsWithoutLocation.length +
   issues.productsWithoutSku.length +
@@ -301,9 +290,9 @@ const productsWithoutLocation = products.filter((product) => {
         </span>
       </div>
 
-      <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+      <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
         Lokasjon{" "}
-        <span className="ml-1 text-white/65">
+        <span className="ml-1 text-snake-text-on-dark-muted">
           {issues.locationsWithoutProducts.length + issues.locationsWithoutZone.length}
         </span>
       </div>
@@ -311,15 +300,15 @@ const productsWithoutLocation = products.filter((product) => {
   }
 />
 
-          <div className="border-t border-neutral-200 bg-white px-5 py-6 sm:px-8 sm:py-7">
-            <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-             <div className="flex flex-col gap-3 border-b border-neutral-200 bg-neutral-50 px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+          <div className="border-t border-snake-border-default bg-snake-surface px-5 py-6 sm:px-8 sm:py-7">
+            <div className="overflow-hidden rounded-snake-action border border-snake-border-default bg-snake-surface shadow-snake-card">
+             <div className="flex flex-col gap-3 border-b border-snake-border-default bg-snake-surface-subtle px-5 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
   <div>
-    <h2 className="text-lg font-semibold tracking-tight text-neutral-950">
+    <h2 className="text-lg font-semibold tracking-tight text-snake-text-primary">
       Prioritert arbeidsliste
     </h2>
 
-    <p className="mt-1 text-sm text-neutral-600">
+    <p className="mt-1 text-sm text-snake-text-secondary">
       {loading
         ? "Børre henter avvik."
         : criticalCount > 0
@@ -333,7 +322,7 @@ const productsWithoutLocation = products.filter((product) => {
   </div>
 
   <div className="flex flex-col gap-2 sm:items-end">
-    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled">
       {loading
         ? "Henter avvik"
         : `Viser ${filteredIssues.length} av ${totalIssues}`}
@@ -342,7 +331,7 @@ const productsWithoutLocation = products.filter((product) => {
     {query && (
       <button
         onClick={() => setQuery("")}
-        className="w-full rounded-2xl border border-neutral-300 bg-white px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50 sm:w-auto sm:py-2"
+        className="w-full rounded-snake-action border border-snake-border-strong bg-snake-surface px-4 py-3 text-sm font-semibold text-snake-text-secondary transition hover:bg-snake-surface-subtle sm:w-auto sm:py-2"
       >
         Nullstill søk
       </button>
@@ -392,27 +381,27 @@ const productsWithoutLocation = products.filter((product) => {
 function IssueRow({ issue }: { issue: IssueItem }) {
   const severityStyles = {
     critical: {
-      icon: "bg-red-50 text-red-600 border-red-100",
-      pill: "bg-red-50 text-red-700 border-red-200",
+      icon: "bg-snake-danger-surface text-snake-danger border-snake-danger-border",
+      pill: "bg-snake-danger-surface text-snake-danger border-snake-danger-border",
       label: "Kritisk",
     },
     warning: {
-      icon: "bg-[#a77e05]/10 text-[#a77e05] border-[#a77e05]/20",
-      pill: "bg-[#a77e05]/10 text-[#a77e05] border-[#a77e05]/20",
+      icon: "bg-snake-brand-strong/10 text-snake-brand-strong border-snake-brand-strong/20",
+      pill: "bg-snake-brand-strong/10 text-snake-brand-strong border-snake-brand-strong/20",
       label: "Sjekk",
     },
     info: {
-      icon: "bg-[#055a7d]/8 text-[#055a7d] border-[#055a7d]/15",
-      pill: "bg-neutral-100 text-neutral-600 border-neutral-200",
+      icon: "bg-snake-primary/8 text-snake-link border-snake-primary/15",
+      pill: "bg-snake-neutral-surface text-snake-text-secondary border-snake-border-default",
       label: "Info",
     },
   }[issue.severity];
 
   return (
-    <div className="px-5 py-5 transition hover:bg-[#055a7d]/[0.025] sm:px-6">
+    <div className="px-5 py-5 transition hover:bg-snake-primary/[0.025] sm:px-6">
       <div className="flex gap-4">
         <div
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border sm:h-12 sm:w-12 ${severityStyles.icon}`}
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-snake-action border sm:h-12 sm:w-12 ${severityStyles.icon}`}
         >
           <AlertTriangle className="h-5 w-5" />
         </div>
@@ -425,28 +414,28 @@ function IssueRow({ issue }: { issue: IssueItem }) {
               {severityStyles.label}
             </span>
 
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled">
               {issue.type}
             </span>
           </div>
 
-          <h3 className="mt-2 text-base font-semibold leading-6 text-neutral-950">
+          <h3 className="mt-2 text-base font-semibold leading-6 text-snake-text-primary">
             {issue.title}
           </h3>
 
-          <p className="mt-1 text-sm leading-6 text-neutral-600">
+          <p className="mt-1 text-sm leading-6 text-snake-text-secondary">
             {issue.description}
           </p>
 
           {issue.meta && (
-            <p className="mt-2 text-xs font-semibold text-neutral-400">
+            <p className="mt-2 text-xs font-semibold text-snake-text-disabled">
               {issue.meta}
             </p>
           )}
 
           <Link
             href={issue.href}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#04495f] sm:w-auto sm:bg-white sm:text-[#055a7d] sm:ring-1 sm:ring-neutral-300 sm:hover:bg-neutral-50"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-snake-action bg-snake-primary px-4 py-3 text-sm font-semibold text-snake-text-on-dark transition hover:bg-snake-primary-hover sm:w-auto sm:bg-snake-surface sm:text-snake-link sm:ring-1 sm:ring-snake-border-strong sm:hover:bg-snake-surface-subtle"
           >
             {issue.action}
             <ArrowRight className="h-4 w-4" />
@@ -467,17 +456,17 @@ function MiniSection({
   items: [string, number][];
 }) {
   return (
-    <section className="rounded-[24px] border border-neutral-200 bg-neutral-50 p-6">
+    <section className="rounded-snake-card border border-snake-border-default bg-snake-surface-subtle p-6">
       <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
 
       <div className="mt-4 space-y-3">
         {items.map(([label, value]) => (
           <div
             key={label}
-            className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm"
+            className="flex items-center justify-between rounded-snake-action bg-snake-surface px-4 py-3 text-sm"
           >
-            <span className="text-neutral-600">{label}</span>
-            <span className="font-semibold text-neutral-950">{value}</span>
+            <span className="text-snake-text-secondary">{label}</span>
+            <span className="font-semibold text-snake-text-primary">{value}</span>
           </div>
         ))}
       </div>
@@ -486,5 +475,5 @@ function MiniSection({
 }
 
 function EmptyState({ text }: { text: string }) {
-  return <div className="px-6 py-10 text-sm text-neutral-500">{text}</div>;
+  return <div className="px-6 py-10 text-sm text-snake-text-muted">{text}</div>;
 }

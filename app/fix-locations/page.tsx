@@ -3,18 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Layers,
   Loader2,
   MapPin,
   RotateCcw,
   Search,
   SkipForward,
 } from "lucide-react";
-import SnakeHero from "../components/SnakeHero";
+import { LagerHero } from "../components/lager/LagerHero";
 import { supabase } from "@/lib/supabase";
+import { Progress } from "../components/design-system";
 
  const ASSIGN_ENDPOINT = "/api/inventory/set-location";
 
@@ -85,11 +84,6 @@ const [skipOpen, setSkipOpen] = useState(false);
   return matchesZone && matchesSearch;
 });
   }, [locations, search, current]);
-
-  const progress =
-    initialCount > 0
-      ? Math.round(((completedCount + skippedCount) / initialCount) * 100)
-      : 0;
 
   useEffect(() => {
     loadData();
@@ -279,43 +273,35 @@ if (!res.ok) {
 
   return (
     <>
-        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
-          <SnakeHero
+        <section className="overflow-hidden rounded-snake-panel bg-snake-workspace text-snake-text-primary shadow-snake-overlay">
+          <LagerHero
   eyebrow="Snake / Ryddemodus"
   title="Sett eksakte lokasjoner"
   description="Én vare om gangen. Velg riktig lokasjon, lagre, og gå videre. Dette er Snake sin fokuserte arbeidsflyt for produkter som har sone, men mangler fast plassering."
   backHref="/lager"
   backLabel="Tilbake"
   right={
-    <div className="grid grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+    <div className="grid grid-cols-3 overflow-hidden rounded-snake-card border border-snake-border-on-dark-subtle bg-snake-app-deep/10">
       <MiniStat label="i kø" value={products.length} />
       <MiniStat label="fikset" value={completedCount} />
       <MiniStat label="hoppet" value={skippedCount} />
     </div>
   }
 >
-  <div className="max-w-xl">
-    <div className="mb-2 flex items-center justify-between text-xs text-white/50">
-      <span>Fremdrift</span>
-
-      <span>
-        {completedCount + skippedCount} / {initialCount}
-      </span>
-    </div>
-
-    <div className="h-2 overflow-hidden rounded-full bg-white/10">
-      <div
-        className="h-full rounded-full bg-[#b58a14] transition-all duration-300"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  </div>
-</SnakeHero>
+  <Progress
+    className="max-w-xl [&>div:first-child]:text-snake-text-on-dark-muted [&_[role=progressbar]]:bg-snake-app-elevated"
+    label="Fremdrift"
+    max={initialCount}
+    showValue
+    tone="warning"
+    value={completedCount + skippedCount}
+  />
+</LagerHero>
 
 
 
           <div className="grid gap-5 px-5 py-7 sm:px-8 sm:py-8 lg:grid-cols-[1fr_420px]">
-            <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
+            <section className="rounded-snake-card border border-snake-border-subtle bg-snake-surface p-5 shadow-snake-card">
               {loading ? (
                 <EmptyState
                   icon={<Loader2 className="h-8 w-8 animate-spin" />}
@@ -324,7 +310,7 @@ if (!res.ok) {
                 />
               ) : !current ? (
                 <EmptyState
-                  icon={<CheckCircle2 className="h-8 w-8 text-emerald-600" />}
+                  icon={<CheckCircle2 className="h-8 w-8 text-snake-success" />}
                   title="Alt ser ryddig ut"
                   text="Ingen produkter med sone mangler eksakt lokasjon akkurat nå."
                 />
@@ -332,23 +318,23 @@ if (!res.ok) {
                 <>
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#055a7d]/70">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-snake-link/70">
                         Problem {completedCount + skippedCount + 1} av{" "}
                         {initialCount}
                       </p>
 
-                     <h2 className="mt-2 line-clamp-2 min-h-[72px] text-3xl font-semibold tracking-tight text-neutral-950">
+                     <h2 className="mt-2 line-clamp-2 min-h-[72px] text-3xl font-semibold tracking-tight text-snake-text-primary">
   {current.productName}
 </h2>
 
                       {current.variantName && (
-                        <p className="mt-1 text-sm text-neutral-500">
+                        <p className="mt-1 text-sm text-snake-text-muted">
                           {current.variantName}
                         </p>
                       )}
                     </div>
 
-                    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+                    <div className="rounded-snake-action border border-snake-warning-border bg-snake-warning-surface px-4 py-3 text-sm font-semibold text-snake-warning">
                       Mangler eksakt lokasjon
                     </div>
                   </div>
@@ -366,24 +352,24 @@ if (!res.ok) {
                     <InfoBox label="Antall" value={String(current.quantity)} />
                   </div>
 
-                  <div className="mt-7 rounded-3xl border border-black/10 bg-neutral-50 p-5">
-                    <label className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
+                  <div className="mt-7 rounded-snake-card border border-snake-border-subtle bg-snake-surface-subtle p-5">
+                    <label className="text-xs font-semibold uppercase tracking-[0.16em] text-snake-text-muted">
                       Finn lokasjon
                     </label>
 
                     <div className="relative mt-2">
-                      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                      <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-snake-text-disabled" />
                       <input
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
                         placeholder="Søk etter lokasjonskode..."
-                        className="w-full rounded-2xl border border-black/10 bg-white py-3 pl-11 pr-4 text-sm text-neutral-950 outline-none transition focus:border-[#055a7d]"
+                        className="w-full rounded-snake-action border border-snake-border-subtle bg-snake-surface py-3 pl-11 pr-4 text-sm text-snake-text-primary outline-none transition focus:border-snake-primary"
                       />
                     </div>
 
                     <div className="mt-4 max-h-[320px] space-y-2 overflow-y-auto pr-1">
                       {filteredLocations.length === 0 ? (
-                        <p className="rounded-2xl border border-dashed border-black/15 bg-white p-4 text-sm text-neutral-500">
+                        <p className="rounded-snake-action border border-dashed border-snake-border-default bg-snake-surface p-4 text-sm text-snake-text-muted">
                           Ingen lokasjoner matcher.
                         </p>
                       ) : (
@@ -393,17 +379,17 @@ if (!res.ok) {
                             type="button"
                             onClick={() => setSelectedLocationId(location.id)}
                             className={[
-                              "flex w-full items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition",
+                              "flex w-full items-center justify-between gap-3 rounded-snake-action border px-4 py-3 text-left transition",
                               selectedLocationId === location.id
-                                ? "border-[#055a7d] bg-[#055a7d]/10"
-                                : "border-black/10 bg-white hover:border-[#055a7d]/40",
+                                ? "border-snake-primary bg-snake-primary/10"
+                                : "border-snake-border-subtle bg-snake-surface hover:border-snake-primary/40",
                             ].join(" ")}
                           >
                             <span>
-                              <span className="block text-sm font-semibold text-neutral-950">
+                              <span className="block text-sm font-semibold text-snake-text-primary">
                                 {location.code}
                               </span>
-                              <span className="mt-0.5 block text-xs text-neutral-500">
+                              <span className="mt-0.5 block text-xs text-snake-text-muted">
                                 {location.zones?.code ?? "Uten sone"}{" "}
                                 {location.zones?.name
                                   ? `— ${location.zones.name}`
@@ -411,7 +397,7 @@ if (!res.ok) {
                               </span>
                             </span>
 
-                            <MapPin className="h-4 w-4 text-neutral-400" />
+                            <MapPin className="h-4 w-4 text-snake-text-disabled" />
                           </button>
                         ))
                       )}
@@ -419,7 +405,7 @@ if (!res.ok) {
                   </div>
 
                   {message && (
-                    <div className="mt-4 rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
+                    <div className="mt-4 rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle px-4 py-3 text-sm text-snake-text-secondary">
                       {message}
                     </div>
                   )}
@@ -429,7 +415,7 @@ if (!res.ok) {
                       type="button"
                       onClick={handleAssign}
                       disabled={!selectedLocationId || saving}
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#044b68] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-snake-action bg-snake-primary px-5 py-3 text-sm font-semibold text-snake-text-on-dark transition hover:bg-snake-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {saving ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -443,7 +429,7 @@ if (!res.ok) {
                       type="button"
                       onClick={() => setSkipOpen(true)}
                       disabled={saving || products.length <= 1}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex items-center justify-center gap-2 rounded-snake-action border border-snake-border-subtle bg-snake-surface px-5 py-3 text-sm font-semibold text-snake-text-secondary transition hover:border-snake-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <SkipForward className="h-4 w-4" />
                       Hopp over
@@ -454,33 +440,33 @@ if (!res.ok) {
             </section>
 
             <aside className="space-y-5">
-              <section className="rounded-[26px] border border-black/10 bg-white p-5 shadow-md">
-  <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
+              <section className="rounded-snake-card border border-snake-border-subtle bg-snake-surface p-5 shadow-md">
+  <p className="text-xs font-black uppercase tracking-[0.22em] text-snake-brand">
     Børre / Snake Intelligence
   </p>
 
-  <h2 className="mt-3 text-2xl font-black text-neutral-950">
+  <h2 className="mt-3 text-2xl font-black text-snake-text-primary">
     Børre følger køen
   </h2>
 
-  <p className="mt-3 text-sm leading-6 text-neutral-600">
+  <p className="mt-3 text-sm leading-6 text-snake-text-secondary">
     Denne siden viser produkter som allerede har sone, men mangler eksakt lokasjon.
   </p>
 
-  <div className="mt-5 rounded-2xl border border-black/10 bg-neutral-50 p-4">
-    <p className="text-sm font-semibold text-neutral-950">
+  <div className="mt-5 rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle p-4">
+    <p className="text-sm font-semibold text-snake-text-primary">
       Børre anbefaler:
     </p>
 
-    <p className="mt-2 text-sm leading-6 text-neutral-600">
+    <p className="mt-2 text-sm leading-6 text-snake-text-secondary">
       Velg riktig lokasjon, lagre, og gå videre. Hopp over hvis du er usikker.
       Produktet legger seg bakerst i køen.
     </p>
   </div>
 </section>
 
-              <section className="rounded-[24px] border border-black/10 bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-neutral-950">
+              <section className="rounded-snake-card border border-snake-border-subtle bg-snake-surface p-5 shadow-snake-card">
+                <h2 className="text-lg font-semibold text-snake-text-primary">
                   Hurtigvalg
                 </h2>
 
@@ -495,7 +481,7 @@ if (!res.ok) {
               <button
                 type="button"
                 onClick={loadData}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-snake-action border border-snake-border-subtle bg-snake-surface px-5 py-3 text-sm font-semibold text-snake-text-secondary transition hover:border-snake-primary/40"
               >
                 <RotateCcw className="h-4 w-4" />
                 Last kø på nytt
@@ -504,13 +490,13 @@ if (!res.ok) {
           </div>
         </section>
 {skipOpen && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4">
-    <div className="w-full max-w-md rounded-[28px] bg-white p-6 text-neutral-950 shadow-2xl">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--snake-color-overlay)] p-4">
+    <div className="w-full max-w-md rounded-snake-panel bg-snake-surface p-6 text-snake-text-primary shadow-2xl">
       <h2 className="text-2xl font-semibold tracking-tight">
         Hopp over produkt
       </h2>
 
-      <p className="mt-2 text-sm text-neutral-500">
+      <p className="mt-2 text-sm text-snake-text-muted">
         Hvorfor hoppes dette produktet over?
       </p>
 
@@ -528,10 +514,10 @@ if (!res.ok) {
             onClick={() =>
               setSkipReason(value as typeof skipReason)
             }
-            className={`w-full rounded-2xl border px-4 py-3 text-left text-sm font-medium transition ${
+            className={`w-full rounded-snake-action border px-4 py-3 text-left text-sm font-medium transition ${
               skipReason === value
-                ? "border-[#055a7d] bg-[#055a7d]/10 text-[#055a7d]"
-                : "border-black/10 hover:border-[#055a7d]/30"
+                ? "border-snake-primary bg-snake-primary/10 text-snake-link"
+                : "border-snake-border-subtle hover:border-snake-primary/30"
             }`}
           >
             {label}
@@ -543,14 +529,14 @@ if (!res.ok) {
         value={skipNote}
         onChange={(event) => setSkipNote(event.target.value)}
         placeholder="Notat, valgfritt"
-        className="mt-4 min-h-[100px] w-full rounded-2xl border border-black/10 px-4 py-3 text-sm outline-none transition focus:border-[#055a7d]"
+        className="mt-4 min-h-[100px] w-full rounded-snake-action border border-snake-border-subtle px-4 py-3 text-sm outline-none transition focus:border-snake-primary"
       />
 
       <div className="mt-6 grid grid-cols-2 gap-2">
         <button
           type="button"
           onClick={() => setSkipOpen(false)}
-          className="rounded-2xl border border-black/10 px-4 py-3 text-sm font-semibold"
+          className="rounded-snake-action border border-snake-border-subtle px-4 py-3 text-sm font-semibold"
         >
           Avbryt
         </button>
@@ -559,7 +545,7 @@ if (!res.ok) {
           type="button"
           onClick={handleSkip}
           disabled={saving}
-          className="rounded-2xl bg-[#055a7d] px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+          className="rounded-snake-action bg-snake-primary px-4 py-3 text-sm font-semibold text-snake-text-on-dark disabled:opacity-50"
         >
           {saving ? "Lagrer..." : "Hopp over"}
         </button>
@@ -573,11 +559,11 @@ if (!res.ok) {
 
 function MiniStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="border-r border-white/10 px-4 py-4 last:border-r-0">
-      <p className="text-3xl font-semibold tracking-tight text-white">
+    <div className="border-r border-snake-border-on-dark-subtle px-4 py-4 last:border-r-0">
+      <p className="text-3xl font-semibold tracking-tight text-snake-text-on-dark">
         {value}
       </p>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/45">
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-snake-text-on-dark-muted">
         {label}
       </p>
     </div>
@@ -586,11 +572,11 @@ function MiniStat({ label, value }: { label: string; value: number }) {
 
 function InfoBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">
+    <div className="rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-snake-text-disabled">
         {label}
       </p>
-      <p className="mt-1 truncate text-sm font-semibold text-neutral-950">
+      <p className="mt-1 truncate text-sm font-semibold text-snake-text-primary">
         {value}
       </p>
     </div>
@@ -601,10 +587,10 @@ function SideLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-between rounded-2xl border border-black/10 bg-neutral-50 px-4 py-3 text-sm font-semibold text-neutral-700 transition hover:border-[#055a7d]/40 hover:bg-[#055a7d]/5"
+      className="flex items-center justify-between rounded-snake-action border border-snake-border-subtle bg-snake-surface-subtle px-4 py-3 text-sm font-semibold text-snake-text-secondary transition hover:border-snake-primary/40 hover:bg-snake-primary/5"
     >
       {label}
-      <ArrowRight className="h-4 w-4 text-neutral-400" />
+      <ArrowRight className="h-4 w-4 text-snake-text-disabled" />
     </Link>
   );
 }
@@ -619,10 +605,10 @@ function EmptyState({
   text: string;
 }) {
   return (
-    <div className="flex min-h-[520px] flex-col items-center justify-center rounded-3xl border border-dashed border-black/15 bg-neutral-50 p-8 text-center">
-      <div className="text-neutral-400">{icon}</div>
-      <h2 className="mt-4 text-xl font-semibold text-neutral-950">{title}</h2>
-      <p className="mt-2 max-w-md text-sm leading-6 text-neutral-500">
+    <div className="flex min-h-[520px] flex-col items-center justify-center rounded-snake-card border border-dashed border-snake-border-default bg-snake-surface-subtle p-8 text-center">
+      <div className="text-snake-text-disabled">{icon}</div>
+      <h2 className="mt-4 text-xl font-semibold text-snake-text-primary">{title}</h2>
+      <p className="mt-2 max-w-md text-sm leading-6 text-snake-text-muted">
         {text}
       </p>
     </div>

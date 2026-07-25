@@ -15,12 +15,21 @@ export type AppRouteShellConfig = {
 const lagerNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
   (item) => item.id === "lager",
 );
+const dashboardNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
+  (item) => item.id === "dashboard",
+);
 
-if (!lagerNavigationItem) {
-  throw new Error("Global navigation must define the Lager module.");
+if (!dashboardNavigationItem || !lagerNavigationItem) {
+  throw new Error("Global navigation must define Dashboard and Lager.");
 }
 
 export const APP_ROUTE_SHELLS = [
+  {
+    id: "dashboard",
+    moduleNavigation: undefined,
+    navigationItem: dashboardNavigationItem,
+    width: "wide",
+  },
   {
     id: "lager",
     moduleNavigation: LAGER_MODULE_NAVIGATION,

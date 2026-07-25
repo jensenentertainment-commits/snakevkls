@@ -26,12 +26,12 @@ test("the UI Refresh shell is generic and route configured", () => {
   assert.match(config, /satisfies readonly AppRouteShellConfig\[\]/);
 });
 
-test("Commit 1 activates only Lager and preserves its navigation contract", () => {
+test("UI Refresh activates only migrated route shells", () => {
   const config = readProjectFile("app/components/shell/route-config.ts");
 
+  assert.match(config, /id: "dashboard"/);
   assert.match(config, /id: "lager"/);
   assert.match(config, /LAGER_MODULE_NAVIGATION/);
-  assert.doesNotMatch(config, /id: "dashboard"/);
   assert.doesNotMatch(config, /id: "viper"/);
   assert.doesNotMatch(config, /id: "labs"/);
   assert.doesNotMatch(config, /id: "settings"/);

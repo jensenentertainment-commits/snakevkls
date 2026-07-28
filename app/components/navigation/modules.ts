@@ -49,6 +49,7 @@ export const ADMIN_NAVIGATION_ITEMS = [
     icon: Settings,
     id: "settings",
     label: "Innstillinger",
+    matchPaths: ["/settings", "/zones"],
   },
   {
     href: "/labs",

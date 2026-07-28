@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import SnakeToolbar from "../components/SnakeToolbar";
 import RoleGate from "../components/auth/RoleGate";
@@ -20,7 +18,7 @@ type ZoneRow = {
 
 export default function ZonesPage() {
   return (
-    <RoleGate allowedRoles={["admin"]}>
+    <RoleGate allowedRoles={["admin"]} withinAppShell>
       <ZonesContent />
     </RoleGate>
   );
@@ -165,11 +163,7 @@ const filteredZones = useMemo(() => {
 
   return (
     <>
-      <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-          <SnakeNav />
-
-          <div className="overflow-hidden rounded-[26px] shadow-2xl shadow-black/30 sm:rounded-[32px]">
+      <div className="overflow-hidden rounded-[26px] shadow-2xl shadow-black/30 sm:rounded-[32px]">
    <SnakeHero
   eyebrow="SNAKE / SONER"
   title="Soner"
@@ -323,11 +317,7 @@ const filteredZones = useMemo(() => {
                 </div>
               </div>
             </section>
-         </div>
-
-          <SnakeFooter />
-        </div>
-      </main>
+      </div>
 
      <ZoneModal
   open={showCreateModal}

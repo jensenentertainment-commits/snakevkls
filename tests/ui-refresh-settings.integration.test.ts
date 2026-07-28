@@ -11,7 +11,11 @@ function readProjectFile(file: string) {
 
 test("Settings uses the generic shell without module navigation", () => {
   const settings = readProjectFile("app/settings/page.tsx");
+  const zones = readProjectFile("app/zones/page.tsx");
   const config = readProjectFile("app/components/shell/route-config.ts");
+  const navigation = readProjectFile(
+    "app/components/navigation/modules.ts",
+  );
 
   assert.match(config, /ADMIN_NAVIGATION_ITEMS/);
   assert.match(config, /id: "settings"/);
@@ -19,15 +23,23 @@ test("Settings uses the generic shell without module navigation", () => {
     config,
     /id: "settings",[\s\S]+?moduleNavigation: undefined,[\s\S]+?width: "wide"/,
   );
+  assert.match(
+    navigation,
+    /id: "settings",[\s\S]+?matchPaths: \["\/settings", "\/zones"\]/,
+  );
   assert.doesNotMatch(settings, /SnakeNav|SnakeFooter|ModuleNav/);
+  assert.doesNotMatch(zones, /SnakeNav|SnakeFooter|ModuleNav/);
 });
 
 test("Settings keeps admin access control inside AppShell", () => {
   const settings = readProjectFile("app/settings/page.tsx");
+  const zones = readProjectFile("app/zones/page.tsx");
   const roleGate = readProjectFile("app/components/auth/RoleGate.tsx");
 
   assert.match(settings, /allowedRoles=\{\["admin"\]\}/);
   assert.match(settings, /withinAppShell/);
+  assert.match(zones, /allowedRoles=\{\["admin"\]\}/);
+  assert.match(zones, /withinAppShell/);
   assert.match(roleGate, /withinAppShell\?: boolean/);
   assert.match(roleGate, /supabase\.auth\.getUser\(\)/);
   assert.match(roleGate, /profiles/);
@@ -44,4 +56,17 @@ test("Settings preserves zone and user management behavior", () => {
   assert.match(settings, /fetch\("\/api\/admin\/users\/update-profile"/);
   assert.match(settings, /setShowCreateModal\(true\)/);
   assert.match(settings, /setShowCreateUserModal\(true\)/);
+});
+
+test("Zones preserves its existing management behavior and dialogs", () => {
+  const zones = readProjectFile("app/zones/page.tsx");
+
+  assert.match(zones, /\.from\("zones"\)\.insert/);
+  assert.match(zones, /\.from\("zones"\)[\s\S]+?\.update/);
+  assert.match(zones, /\.from\("zones"\)[\s\S]+?\.select/);
+  assert.match(zones, /setShowCreateModal\(true\)/);
+  assert.match(zones, /open=\{showCreateModal\}/);
+  assert.match(zones, /open=\{Boolean\(editingZone\)\}/);
+  assert.match(zones, /onSave=\{handleCreateZone\}/);
+  assert.match(zones, /onSave=\{handleSaveZone\}/);
 });

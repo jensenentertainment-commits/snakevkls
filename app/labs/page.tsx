@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import SnakeHero from "../components/SnakeHero";
 import RoleGate from "../components/auth/RoleGate";
 
@@ -29,12 +27,8 @@ const modules = [
 
 export default function LabsPage() {
   return (
-    <RoleGate allowedRoles={["admin"]}>
-      <main className="min-h-screen bg-[#062f3b] text-white">
-        <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-          <SnakeNav />
-
-          <div className="mx-auto max-w-7xl px-6 py-8">
+    <RoleGate allowedRoles={["admin"]} withinAppShell>
+      <div className="mx-auto max-w-7xl px-6 py-8">
             <SnakeHero
               eyebrow="Snake OS"
               title="Operativsystemet bak Varekompaniet"
@@ -113,10 +107,7 @@ export default function LabsPage() {
               </div>
             </section>
 
-            <SnakeFooter />
-          </div>
-        </div>
-      </main>
+      </div>
     </RoleGate>
   );
 }

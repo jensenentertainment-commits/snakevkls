@@ -30,11 +30,11 @@ test("UI Refresh activates only migrated route shells", () => {
   const config = readProjectFile("app/components/shell/route-config.ts");
 
   assert.match(config, /id: "dashboard"/);
+  assert.match(config, /id: "labs"/);
   assert.match(config, /id: "lager"/);
   assert.match(config, /id: "settings"/);
   assert.match(config, /LAGER_MODULE_NAVIGATION/);
   assert.doesNotMatch(config, /id: "viper"/);
-  assert.doesNotMatch(config, /id: "labs"/);
 });
 
 test("the generic shell uses only canonical visual tokens", () => {

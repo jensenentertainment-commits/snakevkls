@@ -22,14 +22,18 @@ const dashboardNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
 const settingsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
   (item) => item.id === "settings",
 );
+const labsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
+  (item) => item.id === "labs",
+);
 
 if (
   !dashboardNavigationItem ||
+  !labsNavigationItem ||
   !lagerNavigationItem ||
   !settingsNavigationItem
 ) {
   throw new Error(
-    "Global navigation must define Dashboard, Lager, and Settings.",
+    "Global navigation must define Dashboard, Labs, Lager, and Settings.",
   );
 }
 
@@ -50,6 +54,12 @@ export const APP_ROUTE_SHELLS = [
     id: "settings",
     moduleNavigation: undefined,
     navigationItem: settingsNavigationItem,
+    width: "wide",
+  },
+  {
+    id: "labs",
+    moduleNavigation: undefined,
+    navigationItem: labsNavigationItem,
     width: "wide",
   },
 ] as const satisfies readonly AppRouteShellConfig[];

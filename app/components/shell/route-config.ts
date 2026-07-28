@@ -1,4 +1,5 @@
 import {
+  ADMIN_NAVIGATION_ITEMS,
   GLOBAL_NAVIGATION_ITEMS,
   LAGER_MODULE_NAVIGATION,
   type ModuleNavigation,
@@ -18,9 +19,18 @@ const lagerNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
 const dashboardNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
   (item) => item.id === "dashboard",
 );
+const settingsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
+  (item) => item.id === "settings",
+);
 
-if (!dashboardNavigationItem || !lagerNavigationItem) {
-  throw new Error("Global navigation must define Dashboard and Lager.");
+if (
+  !dashboardNavigationItem ||
+  !lagerNavigationItem ||
+  !settingsNavigationItem
+) {
+  throw new Error(
+    "Global navigation must define Dashboard, Lager, and Settings.",
+  );
 }
 
 export const APP_ROUTE_SHELLS = [
@@ -34,6 +44,12 @@ export const APP_ROUTE_SHELLS = [
     id: "lager",
     moduleNavigation: LAGER_MODULE_NAVIGATION,
     navigationItem: lagerNavigationItem,
+    width: "wide",
+  },
+  {
+    id: "settings",
+    moduleNavigation: undefined,
+    navigationItem: settingsNavigationItem,
     width: "wide",
   },
 ] as const satisfies readonly AppRouteShellConfig[];

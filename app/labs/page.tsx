@@ -6,7 +6,7 @@ import RoleGate from "../components/auth/RoleGate";
 
 const modules = [
 {
-  href: "/borre/pro",
+  href: "/arne",
   eyebrow: "Arne",
   title: "Arnes kontor",
   description:

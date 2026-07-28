@@ -35,9 +35,21 @@ test("Labs remains restricted to active administrators", () => {
 test("Labs keeps its existing tools and disabled-state behavior", () => {
   const labs = readProjectFile("app/labs/page.tsx");
 
+  assert.match(labs, /href: "\/arne"/);
+  assert.doesNotMatch(labs, /href: "\/borre\/pro"/);
   assert.match(labs, /title: "Arnes kontor"/);
   assert.match(labs, /title: "Shopify Control"/);
   assert.match(labs, /module\.status === "Aktiv"/);
   assert.match(labs, /href=\{isActive \? module\.href : "#"\}/);
   assert.match(labs, /Kommer senere/);
+});
+
+test("the legacy Arne office route permanently redirects to /arne", () => {
+  const legacyRoute = readProjectFile("app/borre/pro/page.tsx");
+
+  assert.match(
+    legacyRoute,
+    /import \{ permanentRedirect \} from "next\/navigation"/,
+  );
+  assert.match(legacyRoute, /permanentRedirect\("\/arne"\)/);
 });

@@ -15,6 +15,7 @@ import {
   FlaskConical,
   MapPin,
   Package,
+  PackageCheck,
   Search,
   Settings,
   TriangleAlert,
@@ -128,6 +129,7 @@ const pathname = usePathname();
 
       <nav className="hidden items-center gap-1 rounded-full border border-white/[0.08] bg-[#083844]/88 p-1 shadow-lg shadow-black/20 backdrop-blur-xl md:flex">
   <NavLink href="/lager" label="Lager" icon={<Package />} pathname={pathname} />
+  <NavLink href="/viper" label="Viper" icon={<PackageCheck />} pathname={pathname} />
   <NavLink href="/products" label="Produkter" icon={<Search />} pathname={pathname} />
   <NavLink href="/locations" label="Lokasjoner" icon={<MapPin />} pathname={pathname} />
 

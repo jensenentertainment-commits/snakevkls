@@ -6,7 +6,6 @@ import {
   AlertTriangle,
   PackageCheck,
   Boxes,
-  MessageCircleCheckIcon,
   ScanLine,
   Activity,
   ArrowRight,
@@ -14,7 +13,6 @@ import {
 } from "lucide-react";
 import SnakeIntelligencePanel from "../components/SnakeIntelligencePanel";
 import SystemPulseBar from "../components/dashboard/SystemPulseBar";
-import SnakeBoardPreview from "../components/SnakeBoardPreview";
 import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
@@ -135,31 +133,19 @@ const issueState: IssueCardState = hasIssues
   <>
 <SystemPulseBar
   activeProducts={activeProductCount}
-  emptyLocations={0}
   snakeHealth={health.score}
-  lastSyncOk
 />
       <section className="overflow-hidden rounded-snake-panel bg-snake-workspace text-snake-text-primary shadow-snake-overlay">
-        <div className="relative overflow-hidden bg-snake-hero text-snake-text-on-dark">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-snake-info/15 blur-3xl" />
-          
-
-          <div className="relative grid gap-8 px-8 py-10 sm:px-10 xl:px-12 lg:grid-cols-[minmax(0,1.35fr)_420px] lg:items-start">
-          
-  <SnakeIntelligencePanel
-  missingLocationCount={missingLocationCount}
-  quantityDiffCount={quantityDiffCount}
-  locationsWithoutZoneCount={locationsNoZoneCount}
-  placedCount={placedProductCount}
-/>
-
-        <SnakeBoardPreview />
-
-      
-          </div>
+        <div className="bg-snake-hero px-4 py-4 text-snake-text-on-dark sm:px-6 sm:py-5">
+          <SnakeIntelligencePanel
+            missingLocationCount={missingLocationCount}
+            quantityDiffCount={quantityDiffCount}
+            locationsWithoutZoneCount={locationsNoZoneCount}
+            placedCount={placedProductCount}
+          />
         </div>
  
-        <div className="px-5 py-7 sm:px-8 sm:py-8">
+        <div className="px-5 py-6 sm:px-8 sm:py-7">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-snake-link/70">
@@ -202,16 +188,6 @@ const issueState: IssueCardState = hasIssues
               text="Tell innhold på en lokasjon og registrer avvik uten å endre lager automatisk."
               action="Start Telling"
             />
-
-             <WideCard
-               variant="live"
-              href="/snakeboard"
-              icon={<MessageCircleCheckIcon />}
-              title="Snakeboard"
-              text="Beskjeder til lageret."
-              action="Åpne Snakeboard"
-            />
-
 
             <WideCard
               href="/activities"
@@ -344,7 +320,6 @@ function WideCard({
   text,
   action,
   warning,
-   variant = "default",
 }: {
   href?: string;
   icon: React.ReactNode;
@@ -352,7 +327,6 @@ function WideCard({
   text: string;
   action: string;
   warning?: boolean;
-  variant?: "default" | "live";
   
 }) {
   const card = (
@@ -360,9 +334,7 @@ function WideCard({
       className={`group rounded-snake-card border bg-snake-surface p-6 shadow-snake-card transition duration-200 hover:-translate-y-0.5 hover:shadow-snake-panel ${
         warning
           ? "border-snake-brand/35 hover:border-snake-brand/60"
-          : variant === "live"
-  ? "border-snake-info-border/25 hover:border-snake-info/45"
-  : "border-snake-border-default hover:border-snake-primary/30"
+          : "border-snake-border-default hover:border-snake-primary/30"
       }`}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
@@ -386,10 +358,8 @@ function WideCard({
           <p
             className={`mt-3 inline-flex items-center gap-1 text-sm font-bold ${
               warning
-  ? "text-snake-brand-strong"
-  : variant === "live"
-    ? "text-snake-info"
-    : "text-snake-link"
+                ? "text-snake-brand-strong"
+                : "text-snake-link"
             } group-hover:text-snake-text-primary`}
           >
             {action}

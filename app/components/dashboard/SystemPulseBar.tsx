@@ -1,8 +1,6 @@
 type Props = {
   activeProducts: number;
-  emptyLocations: number;
   snakeHealth: number;
-  lastSyncOk: boolean;
 };
 
 function PulseChip({
@@ -13,10 +11,10 @@ function PulseChip({
   ok?: boolean;
 }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-3 py-2 text-xs font-medium text-white/70">
+    <div className="inline-flex items-center gap-2 rounded-snake-pill border border-snake-border-on-dark-default bg-snake-app-elevated px-3 py-2 text-[length:var(--snake-text-meta-size)] font-[var(--snake-font-weight-medium)] text-snake-text-on-dark-muted">
       <span
         className={`h-2 w-2 rounded-full ${
-          ok ? "bg-emerald-400" : "bg-amber-400"
+          ok ? "bg-snake-success" : "bg-snake-warning"
         }`}
       />
       {children}
@@ -26,24 +24,14 @@ function PulseChip({
 
 export default function SystemPulseBar({
   activeProducts,
-  emptyLocations,
   snakeHealth,
-  lastSyncOk,
 }: Props) {
   return (
-    <div className="mb-5 flex flex-wrap items-center gap-2">
-      <PulseChip ok={lastSyncOk}>
-        Shopify-sync {lastSyncOk ? "aktiv" : "ustabil"}
-      </PulseChip>
-
-      <PulseChip>
-        {activeProducts} aktive produkter
-      </PulseChip>
-
-      <PulseChip ok={emptyLocations === 0}>
-        {emptyLocations} tomme lokasjoner
-      </PulseChip>
-
+    <div
+      className="mb-3 flex flex-wrap items-center gap-2"
+      aria-label="Operativ lagerstatus"
+    >
+      <PulseChip>{activeProducts} aktive produkter</PulseChip>
       <PulseChip ok={snakeHealth >= 70}>
         Snake Health {snakeHealth}/100
       </PulseChip>

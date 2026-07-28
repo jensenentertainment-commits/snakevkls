@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2,
-  Gauge,
-  Info,
-} from "lucide-react";
+import { AlertTriangle, ArrowRight } from "lucide-react";
 import {
   getRecommendedAction,
   getWarehouseHealth,
@@ -46,180 +40,131 @@ export default function SnakeIntelligencePanel({
 
   const action = getRecommendedAction(metrics);
   const health = getWarehouseHealth(metrics);
+  const [signals, setSignals] = useState<OperationalSignal[]>([]);
+  const signalCount = signals.reduce(
+    (sum, signal) => sum + signal.count,
+    0,
+  );
 
-  
-  
-const [signals, setSignals] = useState<OperationalSignal[]>([]);
-const signalCount = signals.reduce(
-  (sum, signal) => sum + signal.count,
-  0
-);
+  const borre = getBorreBrief({
+    diffCount: quantityDiffCount,
+    missingLocationCount,
+    missingZoneCount: locationsWithoutZoneCount,
+    warehouseHealth: health.score,
+    unresolvedIssues: signalCount,
+    pickEnabled: false,
+  });
 
-const borre = getBorreBrief({
-  diffCount: quantityDiffCount,
-  missingLocationCount,
-  missingZoneCount: locationsWithoutZoneCount,
-  warehouseHealth: health.score,
-  unresolvedIssues: signalCount,
-  pickEnabled: false,
-});
+  useEffect(() => {
+    async function loadSignals() {
+      try {
+        const res = await fetch("/api/snake-intelligence/signals", {
+          cache: "no-store",
+        });
 
-useEffect(() => {
-  async function loadSignals() {
-    try {
-      const res = await fetch("/api/snake-intelligence/signals", {
-  cache: "no-store",
-});
+        if (!res.ok) {
+          setSignals([]);
+          return;
+        }
 
-if (!res.ok) {
-  setSignals([]);
-  return;
+        const json = await res.json();
+        setSignals(json.signals ?? []);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadSignals();
+  }, []);
+
+  return (
+    <section className="rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-elevated p-5 shadow-snake-panel sm:p-6">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(260px,360px)] lg:items-center">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p className="text-[length:var(--snake-text-eyebrow-size)] font-[var(--snake-font-weight-semibold)] uppercase leading-[var(--snake-text-eyebrow-line-height)] tracking-[var(--snake-text-eyebrow-tracking)] text-snake-text-on-dark-muted">
+              Lagerstatus
+            </p>
+            <span className="text-[length:var(--snake-text-meta-size)] text-snake-text-on-dark-muted">
+              Vurdert av Børre
+            </span>
+          </div>
+
+          <h2 className="mt-2 text-[length:var(--snake-text-title-size)] font-[var(--snake-font-weight-semibold)] leading-[var(--snake-text-title-line-height)] tracking-[var(--snake-text-title-tracking)] text-snake-text-on-dark">
+            Prioritert nå
+          </h2>
+
+          <p className="mt-2 max-w-3xl text-[length:var(--snake-text-body-small-size)] leading-[var(--snake-text-body-small-line-height)] text-snake-text-on-dark-muted">
+            {borre.message}
+          </p>
+        </div>
+
+        <Link
+          href={action.href}
+          className="group flex min-h-11 items-center justify-between gap-4 rounded-snake-control border border-snake-border-on-dark-default bg-snake-brand-soft px-4 py-3 text-snake-text-on-dark transition-colors hover:border-snake-border-on-dark-strong hover:bg-snake-brand-soft/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark motion-reduce:transition-none"
+        >
+          <span>
+            <span className="block text-[length:var(--snake-text-meta-size)] font-[var(--snake-font-weight-semibold)] uppercase tracking-[var(--snake-text-eyebrow-tracking)] text-snake-text-on-dark-muted">
+              Anbefalt handling
+            </span>
+            <span className="mt-1 block text-[length:var(--snake-text-label-size)] font-[var(--snake-font-weight-semibold)]">
+              {action.title}
+            </span>
+          </span>
+          <ArrowRight
+            className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+            aria-hidden="true"
+          />
+        </Link>
+      </div>
+
+      <div className="mt-4 grid overflow-hidden rounded-snake-control border border-snake-border-on-dark-subtle sm:grid-cols-3">
+        <Metric
+          value={quantityDiffCount}
+          label="Quantity diff"
+          href="/products?status=diff"
+        />
+        <Metric
+          value={missingLocationCount}
+          label="Uten lokasjon"
+          href="/fix-locations"
+        />
+        <Metric
+          value={locationsWithoutZoneCount}
+          label="Uten sone"
+          href="/locations"
+        />
+      </div>
+    </section>
+  );
 }
 
-const json = await res.json();
-setSignals(json.signals ?? []);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  loadSignals();
-}, []);
-
- return (
-  <section className="rounded-[28px] border border-white/10 bg-black/10 p-5 shadow-lg shadow-black/20">
-    <div className="flex items-start justify-between gap-4">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
-            {borre.title} / {borre.eyebrow}
-          </p>
-          <Info className="h-4 w-4 text-emerald-300/70" />
-        </div>
-
-        <h2 className="mt-3 text-2xl font-black tracking-tight text-white">
-          Børres vurdering
-        </h2>
-
-        <p className="mt-2 text-sm leading-6 text-white/70">
-          {borre.message}
-        </p>
-
-        <div className="mt-4">
-  <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
-    <span>Snake Health</span>
-    <span>{health.score}/100</span>
-  </div>
-
-  <div className="h-2.5 w-full overflow-hidden rounded-full bg-black/30">
-    <div
-      className={`h-full rounded-full transition-all duration-700 ${
-        health.score >= 80
-          ? "bg-emerald-400"
-          : health.score >= 50
-            ? "bg-amber-400"
-            : "bg-red-400"
-      }`}
-      style={{ width: `${Math.max(health.score, 4)}%` }}
-    />
-  </div>
-</div>
-
-        {borre.pulse ? (
-          <p className="mt-2 text-xs italic text-white/45">
-            {borre.pulse}
-          </p>
-        ) : null}
-      </div>
-
-      <span
-        className={`shrink-0 rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.14em] ${
-          health.level === "stable"
-            ? "bg-emerald-400/10 text-emerald-300"
-            : health.level === "medium"
-              ? "bg-amber-400/10 text-amber-300"
-              : "bg-red-400/10 text-red-300"
-        }`}
-      >
-        {health.level}
-      </span>
-    </div>
-
-    <Link
-      href={action.href}
-      className="group mt-5 block rounded-2xl border border-white/10 bg-white/[0.045] p-4 transition hover:border-emerald-300/30 hover:bg-white/[0.07]"
-    >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-white/40">
-            Børre ville startet her
-          </p>
-
-          <h3 className="mt-2 text-xl font-black tracking-tight text-emerald-300">
-            {action.title}
-          </h3>
-
-          <p className="mt-2 text-sm leading-6 text-white/65">
-            {action.description}
-          </p>
-        </div>
-
-        <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-emerald-400/90 px-4 py-2.5 text-sm font-black text-[#052f35] transition group-hover:bg-emerald-300">
-          Start her
-          <ArrowRight className="h-4 w-4" />
-        </span>
-      </div>
-    </Link>
-
-
-    <div className="mt-3 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-black/20 sm:grid-cols-5">
-      <Metric icon={signalCount > 0 ? "warn" : "ok"} value={signalCount} label="bør sjekkes" href="/activities" />
-      <Metric icon="warn" value={missingLocationCount} label="uten lokasjon" href="/fix-locations" />
-      <Metric icon={locationsWithoutZoneCount > 0 ? "warn" : "ok"} value={locationsWithoutZoneCount} label="uten sone" href="/locations" />
-      <Metric icon="warn" value={quantityDiffCount} label="quantity diff" href="/products?status=diff" />
-      <Metric icon="ok" value={placedCount} label="plassert" href="/products" />
-    </div>
-  </section>
-);
-
-
 function Metric({
-  icon,
   value,
   label,
   href,
 }: {
-  icon: "ok" | "warn";
   value: number;
   label: string;
-  href?: string;
+  href: string;
 }) {
-
-  
-  const content = (
-    <div className="flex items-center gap-3 border-white/10 px-4 py-3 sm:border-r last:border-r-0">
-      {icon === "ok" ? (
-        <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-300" />
-      ) : (
-        <AlertTriangle className="h-5 w-5 shrink-0 text-amber-300" />
-      )}
-
-      <div>
-        <p className="text-xl font-semibold text-white">{value}</p>
-        <p className="text-xs text-white/50">{label}</p>
-      </div>
-    </div>
-  );
-
-  if (!href) return content;
-
   return (
     <Link
       href={href}
-      className="block transition hover:bg-white/[0.04]"
+      className="flex min-h-11 items-center gap-3 border-b border-snake-border-on-dark-subtle px-4 py-3 text-snake-text-on-dark transition-colors last:border-b-0 hover:bg-snake-brand-soft focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-snake-focus-on-dark sm:border-b-0 sm:border-r sm:last:border-r-0 motion-reduce:transition-none"
     >
-      {content}
+      <AlertTriangle
+        className="h-5 w-5 shrink-0 text-snake-warning"
+        aria-hidden="true"
+      />
+      <span>
+        <span className="block text-[length:var(--snake-text-title-size)] font-[var(--snake-font-weight-semibold)] leading-none">
+          {value}
+        </span>
+        <span className="mt-1 block text-[length:var(--snake-text-meta-size)] text-snake-text-on-dark-muted">
+          {label}
+        </span>
+      </span>
     </Link>
   );
-}
 }

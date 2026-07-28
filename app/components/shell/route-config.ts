@@ -1,4 +1,5 @@
 import {
+  ACCOUNT_NAVIGATION_ITEM,
   ADMIN_NAVIGATION_ITEMS,
   GLOBAL_NAVIGATION_ITEMS,
   LAGER_MODULE_NAVIGATION,
@@ -60,6 +61,12 @@ export const APP_ROUTE_SHELLS = [
     id: "labs",
     moduleNavigation: undefined,
     navigationItem: labsNavigationItem,
+    width: "wide",
+  },
+  {
+    id: "account",
+    moduleNavigation: undefined,
+    navigationItem: ACCOUNT_NAVIGATION_ITEM,
     width: "wide",
   },
 ] as const satisfies readonly AppRouteShellConfig[];

@@ -20,7 +20,7 @@ export type MobileNavProps = {
 };
 
 export function MobileNav({
-  accountHref = "/settings",
+  accountHref = "/account",
   adminItems = [],
   displayName,
   items,

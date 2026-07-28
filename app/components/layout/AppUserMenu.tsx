@@ -13,7 +13,7 @@ export type AppUserMenuProps = {
 };
 
 export function AppUserMenu({
-  accountHref = "/settings",
+  accountHref = "/account",
   adminItems = [],
   displayName,
   logoutSlot,

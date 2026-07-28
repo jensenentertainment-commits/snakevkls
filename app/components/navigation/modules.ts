@@ -13,6 +13,12 @@ import {
 
 import type { ModuleNavigation, NavigationItem } from "./types";
 
+export const ACCOUNT_NAVIGATION_ITEM = {
+  href: "/account",
+  id: "account",
+  label: "Konto",
+} as const satisfies NavigationItem;
+
 export const GLOBAL_NAVIGATION_ITEMS = [
   {
     href: "/dashboard",

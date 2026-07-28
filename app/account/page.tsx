@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
 import ChangePasswordCard from "../components/settings/ChangePasswordCard";
 import AccountProfileCard from "../components/account/AccountProfileCard";
 import { isRole } from "@/lib/auth/roles";
@@ -42,11 +40,7 @@ export default async function AccountPage() {
     .limit(8);
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
-        <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
+    <section className="overflow-hidden rounded-[28px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30">
           <div className="border-b border-black/10 bg-[#05495b] px-8 py-8 text-white sm:px-10">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
               Snake / Konto
@@ -107,10 +101,6 @@ export default async function AccountPage() {
               </div>
             </section>
           </div>
-        </section>
-
-        <SnakeFooter />
-      </div>
-    </main>
+    </section>
   );
 }

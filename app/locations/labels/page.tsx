@@ -134,7 +134,7 @@ const labelDimensions = {
 
   return (
     <>
-      <div className="min-h-screen bg-snake-neutral-surface text-snake-text-primary print:bg-snake-surface">
+      <div className="bg-snake-neutral-surface text-snake-text-primary print:bg-snake-surface">
       <style>{`
   :root {
     --label-width: ${labelDimensions.width};
@@ -213,7 +213,7 @@ const labelDimensions = {
         }
       `}</style>
 
-      <div className="mx-auto max-w-7xl px-6 py-8 print:px-0 print:py-0">
+      <div>
         <header className="no-print sticky top-4 z-10 mb-8 rounded-snake-card bg-snake-surface/95 p-6 shadow-snake-card backdrop-blur">
           <Link
             href="/locations"

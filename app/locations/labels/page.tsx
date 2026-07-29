@@ -33,24 +33,27 @@ const labelDimensions = {
     name: "Zebra 100 × 55",
     width: "100mm",
     height: "55mm",
-    qr: "24mm",
-    codeSize: "35px",
+    pageSize: "100mm 55mm",
+    qr: "28mm",
+    codeSize: "8mm",
     layout: "landscape",
   },
   shipping: {
     name: "Fraktetikett 102 × 109",
     width: "109mm",
     height: "102mm",
-    qr: "34mm",
-    codeSize: "46px",
+    pageSize: "109mm 102mm",
+    qr: "38mm",
+    codeSize: "8mm",
     layout: "portrait",
   },
   brother: {
     name: "Brother DK-22246 103 mm",
     width: "103mm",
     height: "70mm",
-    qr: "28mm",
-    codeSize: "42px",
+    pageSize: "103mm 70mm",
+    qr: "32mm",
+    codeSize: "8mm",
     layout: "portrait",
   },
 }[labelFormat];
@@ -169,7 +172,7 @@ const labelDimensions = {
 }
         @media print {
           @page {
-            size: var(--label-width) var(--label-height);
+            size: ${labelDimensions.pageSize};
             margin: 0;
           }
 
@@ -193,10 +196,14 @@ const labelDimensions = {
             height: var(--label-height) !important;
             page-break-after: always;
             break-after: page;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
             box-shadow: none !important;
             border-radius: 0 !important;
             border: none !important;
-            padding: 4mm !important;
+            padding: 3mm !important;
           }
 
           .label-qr {
@@ -206,9 +213,8 @@ const labelDimensions = {
 
           .label-code {
             font-size: var(--code-size) !important;
-            .label-zone {
-  font-size: var(--zone-size) !important;
-}
+            line-height: 0.92 !important;
+            white-space: nowrap !important;
           }
         }
       `}</style>
@@ -326,8 +332,6 @@ const labelDimensions = {
           <div className="h-[620px] overflow-y-auto rounded-snake-card bg-snake-neutral-surface p-4">
           <section className="label-grid grid min-h-[520px] grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {printableWithCopies.map((location) => {
-              const isLandscape = labelDimensions.layout === "landscape";
-
               return (
                 <article
                   key={location.printKey}
@@ -340,15 +344,10 @@ const labelDimensions = {
                     className="no-print absolute left-3 top-3 h-4 w-4"
                   />
 
-                  {isLandscape ? (
-  <div className="flex h-full items-center justify-between gap-5">
+  <div className="label-content flex h-full items-center justify-between gap-[3mm]">
     <div className="flex min-w-0 flex-1 flex-col justify-center text-left">
-      <p className="label-code whitespace-nowrap font-black leading-none tracking-tight">
+      <p className="label-code font-black leading-none tracking-tight">
         {location.code}
-      </p>
-
-      <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.24em] text-snake-text-disabled">
-        SNAKE OS
       </p>
     </div>
 
@@ -358,24 +357,6 @@ const labelDimensions = {
       className="label-qr shrink-0"
     />
   </div>
-
-                  ) : (
-       <div className="flex h-full flex-col items-center justify-between text-center">
-  <p className="label-code whitespace-nowrap font-black leading-none tracking-tight">
-    {location.code}
-  </p>
-
-  <img
-    src={location.qr}
-    alt={`QR-kode for ${location.code}`}
-    className="label-qr"
-  />
-
-  <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-snake-text-disabled">
-    SNAKE OS
-  </p>
-</div>
-                  )}
                 </article>
               );
             })}

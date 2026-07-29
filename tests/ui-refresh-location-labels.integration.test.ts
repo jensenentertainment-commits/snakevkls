@@ -26,25 +26,34 @@ test("Location labels relies on the Lager AppShell without a local shell", () =>
   assert.match(moduleNav, /print:hidden/);
 });
 
-test("Location label formats and print contract remain unchanged", () => {
+test("Location label formats use physical pages and print-only content", () => {
   const labels = readProjectFile("app/locations/labels/page.tsx");
+  const askBorre = readProjectFile("app/components/AskBorre.tsx");
 
   assert.match(
     labels,
-    /zebra:[\s\S]+?width: "100mm",[\s\S]+?height: "55mm",[\s\S]+?qr: "24mm",[\s\S]+?codeSize: "35px"/,
+    /zebra:[\s\S]+?width: "100mm",[\s\S]+?height: "55mm",[\s\S]+?pageSize: "100mm 55mm"/,
   );
   assert.match(
     labels,
-    /shipping:[\s\S]+?width: "109mm",[\s\S]+?height: "102mm",[\s\S]+?qr: "34mm",[\s\S]+?codeSize: "46px"/,
+    /shipping:[\s\S]+?width: "109mm",[\s\S]+?height: "102mm",[\s\S]+?pageSize: "109mm 102mm"/,
   );
   assert.match(
     labels,
-    /brother:[\s\S]+?width: "103mm",[\s\S]+?height: "70mm",[\s\S]+?qr: "28mm",[\s\S]+?codeSize: "42px"/,
+    /brother:[\s\S]+?width: "103mm",[\s\S]+?height: "70mm",[\s\S]+?pageSize: "103mm 70mm"/,
   );
-  assert.match(labels, /@page \{[\s\S]+?size: var\(--label-width\) var\(--label-height\);[\s\S]+?margin: 0/);
+  assert.match(labels, /@page \{[\s\S]+?size: \$\{labelDimensions\.pageSize\};[\s\S]+?margin: 0/);
+  assert.doesNotMatch(labels, /size: var\(--label-width\) var\(--label-height\)/);
   assert.match(labels, /page-break-after: always/);
   assert.match(labels, /break-after: page/);
-  assert.match(labels, /padding: 4mm !important/);
+  assert.match(labels, /page-break-inside: avoid/);
+  assert.match(labels, /break-inside: avoid/);
+  assert.match(labels, /box-sizing: border-box !important/);
+  assert.match(labels, /overflow: hidden !important/);
+  assert.match(labels, /white-space: nowrap !important/);
+  assert.equal((labels.match(/className="label-content/g) ?? []).length, 1);
+  assert.doesNotMatch(labels, />\s*SNAKE OS\s*</);
+  assert.equal((askBorre.match(/print:hidden/g) ?? []).length, 2);
   assert.match(labels, /printable\.flatMap/);
   assert.match(labels, /Array\.from\(\{ length: Math\.max\(1, copies\) \}/);
   assert.match(labels, /window\.print\(\)/);

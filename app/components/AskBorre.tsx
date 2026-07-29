@@ -238,7 +238,7 @@ const endpoint = isArne ? "/api/arne/ask" : "/api/borre/ask";
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#062f3b] px-5 py-4 text-sm font-black text-white shadow-2xl shadow-black/35 transition hover:-translate-y-0.5 hover:bg-[#05495b]"
+          className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#062f3b] px-5 py-4 text-sm font-black text-white shadow-2xl shadow-black/35 transition hover:-translate-y-0.5 hover:bg-[#05495b] print:hidden"
         >
           <MessageCircle className="h-5 w-5 text-[#b58a14]" />
           Børre
@@ -246,7 +246,7 @@ const endpoint = isArne ? "/api/arne/ask" : "/api/borre/ask";
       )}
 
       {open && (
-        <div className="fixed bottom-5 right-5 top-[110px] z-50">
+        <div className="fixed bottom-5 right-5 top-[110px] z-50 print:hidden">
           {panel}
         </div>
       )}

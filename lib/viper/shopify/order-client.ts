@@ -9,6 +9,7 @@ const ORDER_PREVIEW_QUERY = `#graphql
       legacyResourceId
       name
       createdAt
+      updatedAt
       cancelledAt
       closed
       fulfillable
@@ -40,6 +41,7 @@ export type ShopifyOrderPayload = {
   legacyResourceId: string;
   name: string;
   createdAt: string;
+  updatedAt: string;
   cancelledAt: string | null;
   closed: boolean;
   fulfillable: boolean;

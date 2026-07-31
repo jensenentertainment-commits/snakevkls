@@ -81,6 +81,7 @@ test("P4.1 Shopify query excludes customer and payment details", async () => {
   const client = await source("lib/viper/shopify/order-client.ts");
 
   assert.match(client, /lineItems\(first: 100\)/);
+  assert.match(client, /updatedAt/);
   assert.match(client, /unfulfilledQuantity/);
   assert.match(client, /requiresShipping/);
   assert.doesNotMatch(client, /\bcustomer\b|\bemail\b|\bphone\b|shippingAddress/);

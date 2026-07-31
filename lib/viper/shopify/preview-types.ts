@@ -47,6 +47,7 @@ export type ShopifyOrderPreview = {
     legacyResourceId: string;
     name: string;
     createdAt: string;
+    updatedAt: string;
     financialStatus: string | null;
     fulfillmentStatus: string | null;
   };
@@ -61,4 +62,28 @@ export type ShopifyPreviewApiResponse =
       ok: false;
       error: string;
       code?: ShopifyPreviewReasonCode | "INVALID_ORDER_ID" | "SHOPIFY_ERROR";
+    };
+
+export type ShopifyOrderImportResult = {
+  orderId: string;
+  pickJobId: string;
+  orderNumber: string;
+  orderStatus: "received" | "ready_to_pick" | "picking" | "picked" | "cancelled";
+  pickJobStatus: "ready" | "in_progress" | "completed" | "cancelled";
+  lineCount: number;
+  idempotent: boolean;
+};
+
+export type ShopifyImportApiResponse =
+  | { ok: true; result: ShopifyOrderImportResult }
+  | {
+      ok: false;
+      error: string;
+      code:
+        | ShopifyPreviewReasonCode
+        | "INVALID_ORDER_ID"
+        | "PREVIEW_STALE"
+        | "ORDER_NOT_IMPORTABLE"
+        | "SHOPIFY_ERROR"
+        | "MATERIALIZATION_FAILED";
     };

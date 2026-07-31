@@ -1,16 +1,20 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import type {
+  ShopifyImportApiResponse,
   ShopifyOrderPreview,
   ShopifyPreviewApiResponse,
 } from "@/lib/viper/shopify/preview-types";
 
 export default function ShopifyOrderPreviewForm() {
+  const router = useRouter();
   const [orderId, setOrderId] = useState("");
   const [preview, setPreview] = useState<ShopifyOrderPreview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,6 +39,36 @@ export default function ShopifyOrderPreviewForm() {
       setError("Kunne ikke kontakte serveren.");
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function importOrder() {
+    if (!preview?.importable || importing) return;
+    setImporting(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/viper/shopify/orders/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: preview.order.id,
+          previewUpdatedAt: preview.order.updatedAt,
+        }),
+      });
+      const body = (await response.json()) as ShopifyImportApiResponse;
+      if (!body.ok) {
+        setError(body.error);
+        if (body.code === "PREVIEW_STALE" || body.code === "ORDER_NOT_IMPORTABLE") {
+          setPreview(null);
+        }
+        return;
+      }
+      router.push(`/viper/orders/${body.result.orderId}`);
+      router.refresh();
+    } catch {
+      setError("Kunne ikke kontakte serveren.");
+    } finally {
+      setImporting(false);
     }
   }
 
@@ -142,6 +176,22 @@ export default function ShopifyOrderPreviewForm() {
               </article>
             ))}
           </div>
+
+          {preview.importable && (
+            <div className="sticky bottom-3 rounded-3xl border border-neutral-200 bg-white/95 p-4 shadow-xl backdrop-blur">
+              <button
+                type="button"
+                onClick={importOrder}
+                disabled={importing}
+                className="min-h-14 w-full rounded-2xl bg-emerald-700 px-5 text-base font-black text-white disabled:opacity-60"
+              >
+                {importing ? "Importerer …" : "Importer til Viper"}
+              </button>
+              <p className="mt-2 text-center text-xs text-neutral-500">
+                Ordren kontrolleres på nytt før import.
+              </p>
+            </div>
+          )}
         </section>
       )}
     </div>

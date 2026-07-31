@@ -44,6 +44,13 @@ export async function previewShopifyOrder(orderId: string): Promise<ShopifyOrder
   const order = await fetchShopifyOrderForPreview(orderId);
   if (!order) return null;
 
+  return previewFetchedShopifyOrder(order);
+}
+
+export async function previewFetchedShopifyOrder(
+  order: ShopifyOrderPayload
+): Promise<ShopifyOrderPreview> {
+
   const variantIds = [
     ...new Set(
       order.lineItems.nodes
@@ -246,6 +253,7 @@ export function evaluateOrder(
       legacyResourceId: order.legacyResourceId,
       name: order.name,
       createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
       financialStatus: order.displayFinancialStatus,
       fulfillmentStatus: order.displayFulfillmentStatus,
     },

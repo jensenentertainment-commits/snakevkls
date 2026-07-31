@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { requireViperAdminApiActor } from "@/lib/viper/auth/access";
 
 export async function GET() {
+  const auth = await requireViperAdminApiActor();
+  if (!auth.ok) return auth.response;
+
   const shop = process.env.SHOPIFY_STORE_DOMAIN;
   const clientId = process.env.SHOPIFY_CLIENT_ID;
-  const scopes = process.env.SHOPIFY_SCOPES ?? "read_products,read_inventory";
+  const configuredScopes =
+    process.env.SHOPIFY_SCOPES ??
+    "read_products,read_inventory,write_inventory,read_orders";
+  const scopes = Array.from(
+    new Set(
+      `${configuredScopes},read_locations`
+        .split(",")
+        .map((scope) => scope.trim())
+        .filter(Boolean),
+    ),
+  ).join(",");
   const redirectUri = process.env.SHOPIFY_REDIRECT_URI;
 
   if (!shop || !clientId || !redirectUri) {

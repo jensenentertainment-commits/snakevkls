@@ -10,7 +10,7 @@ import {
   type WarehouseSaleSummary,
 } from "@/lib/warehouse-sales/ui-adapter";
 
-import { formatMoney, formatSaleTime } from "./format";
+import { formatMoney, formatPaymentMethod, formatSaleTime } from "./format";
 import { ShopifySyncAdmin } from "./ShopifySyncAdmin";
 
 export function SaleHistory() {
@@ -68,7 +68,10 @@ export function SaleHistory() {
                 <h2 className="font-semibold text-snake-text-primary">
                   {sale.saleNumber}
                 </h2>
-                <StatusBadge label="Vipps" tone="info" />
+                <StatusBadge
+                  label={formatPaymentMethod(sale.paymentMethod)}
+                  tone="info"
+                />
               </div>
               <p className="mt-1 text-sm text-snake-text-secondary">
                 {formatSaleTime(sale.completedAt)} · {sale.itemCount} varer

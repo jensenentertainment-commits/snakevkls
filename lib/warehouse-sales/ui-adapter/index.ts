@@ -6,6 +6,7 @@ export type {
   ProductAvailability,
   WarehouseSaleDocument,
   WarehouseSaleProduct,
+  WarehouseSalePaymentMethod,
   WarehouseSalesUiAdapter,
   WarehouseSaleSummary,
   WarehouseSaleFailureKind,

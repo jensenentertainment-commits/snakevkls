@@ -22,9 +22,11 @@ test("phase 8 UI uses only the authenticated API adapter", () => {
   );
 });
 
-test("completion clearly requires a separate Vipps check", () => {
+test("completion clearly requires a separate payment check", () => {
   const cart = read("app/components/warehouse-sales/SaleCart.tsx");
-  assert.match(cart, /Kontroller Vipps-betalingen/);
+  assert.match(cart, /Kontroller betalingen/);
+  assert.match(cart, /mottatt på Vipps/);
+  assert.match(cart, /mottatt kontant/);
   assert.match(cart, /Snake registrerer ikke selve betalingen/);
   assert.match(cart, /Betaling kontrollert – fullfør/);
 });
@@ -57,5 +59,6 @@ test("internal document is explicitly not a customer receipt", () => {
   const document = read("app/components/warehouse-sales/SaleDocument.tsx");
   assert.match(document, /Internt salgsbilag/);
   assert.match(document, /ikke en\s+kundekvittering/);
-  assert.match(document, /Betalingsmåte: Vipps/);
+  assert.match(document, /Betalingsmåte:/);
+  assert.match(document, /formatPaymentMethod\(sale\.paymentMethod\)/);
 });

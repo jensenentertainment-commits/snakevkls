@@ -259,7 +259,7 @@ function mapSaleDocument(sale: SaleRow): WarehouseSaleDocument {
     saleNumber: sale.sale_number,
     completedAt: sale.completed_at,
     completedByName: sale.completed_by_name,
-    paymentMethod: "vipps",
+    paymentMethod: sale.payment_method === "cash" ? "cash" : "vipps",
     lines: [...sale.warehouse_sale_lines]
       .sort((a, b) => a.line_number - b.line_number)
       .map((line) => ({
@@ -283,7 +283,9 @@ export async function listWarehouseSales(
 ): Promise<WarehouseSaleSummary[]> {
   const { data, error } = await authClient
     .from("warehouse_sales")
-    .select("id,sale_number,completed_at,total_amount_minor,total_quantity")
+    .select(
+      "id,sale_number,completed_at,payment_method,total_amount_minor,total_quantity",
+    )
     .order("completed_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(100);
@@ -293,6 +295,7 @@ export async function listWarehouseSales(
     id: sale.id,
     saleNumber: sale.sale_number,
     completedAt: sale.completed_at,
+    paymentMethod: sale.payment_method === "cash" ? "cash" : "vipps",
     itemCount: sale.total_quantity,
     totalMinor: Number(sale.total_amount_minor),
   }));

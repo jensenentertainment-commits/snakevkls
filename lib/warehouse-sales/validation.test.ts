@@ -49,9 +49,14 @@ test("request hash changes when quantity or actual price changes", () => {
     ...base,
     lines: [{ ...base.lines[0], unitPriceMinor: 9000 }],
   });
+  const changedPaymentMethod = normalizeWarehouseSaleRequest({
+    ...base,
+    paymentMethod: "cash",
+  });
 
   assert.notEqual(original.requestHash, changedQuantity.requestHash);
   assert.notEqual(original.requestHash, changedPrice.requestHash);
+  assert.notEqual(original.requestHash, changedPaymentMethod.requestHash);
 });
 
 test("rejects duplicate products, invalid quantities and negative prices", () => {
@@ -86,16 +91,26 @@ test("rejects duplicate products, invalid quantities and negative prices", () =>
   }
 });
 
-test("locks V1 payment method and line-count boundaries", () => {
+test("accepts Vipps and cash but rejects other payment methods", () => {
+  const cash = normalizeWarehouseSaleRequest({
+    idempotencyKey: IDEMPOTENCY_KEY,
+    paymentMethod: "cash",
+    lines: [{ productId: PRODUCT_A, quantity: 1, unitPriceMinor: 100 }],
+  });
+  assert.equal(cash.paymentMethod, "cash");
+
   assert.throws(
     () =>
       normalizeWarehouseSaleRequest({
         idempotencyKey: IDEMPOTENCY_KEY,
-        paymentMethod: "cash",
+        paymentMethod: "card",
         lines: [{ productId: PRODUCT_A, quantity: 1, unitPriceMinor: 100 }],
       }),
     /betalingsmåte/
   );
+});
+
+test("keeps line-count boundaries", () => {
   assert.throws(
     () =>
       normalizeWarehouseSaleRequest({

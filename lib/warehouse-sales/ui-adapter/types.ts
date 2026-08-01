@@ -1,4 +1,5 @@
 export type MinorUnits = number;
+export type WarehouseSalePaymentMethod = "vipps" | "cash";
 
 export type ProductAvailability =
   | { status: "available"; availableQuantity: number }
@@ -41,7 +42,7 @@ export type CartQuote = {
 
 export type CompleteSaleInput = {
   idempotencyKey: string;
-  paymentMethod: "vipps";
+  paymentMethod: WarehouseSalePaymentMethod;
   lines: CartLineInput[];
 };
 
@@ -49,7 +50,7 @@ export type WarehouseSaleDocument = {
   id: string;
   saleNumber: string;
   completedAt: string;
-  paymentMethod: "vipps";
+  paymentMethod: WarehouseSalePaymentMethod;
   completedByName: string;
   lines: Array<{
     productName: string;
@@ -65,7 +66,12 @@ export type WarehouseSaleDocument = {
 
 export type WarehouseSaleSummary = Pick<
   WarehouseSaleDocument,
-  "id" | "saleNumber" | "completedAt" | "itemCount" | "totalMinor"
+  | "id"
+  | "saleNumber"
+  | "completedAt"
+  | "paymentMethod"
+  | "itemCount"
+  | "totalMinor"
 >;
 
 export interface WarehouseSalesUiAdapter {

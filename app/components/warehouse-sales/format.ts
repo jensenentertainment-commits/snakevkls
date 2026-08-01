@@ -13,6 +13,10 @@ export function formatSaleTime(value: string) {
   }).format(new Date(value));
 }
 
+export function formatPaymentMethod(value: "vipps" | "cash") {
+  return value === "cash" ? "Kontant" : "Vipps";
+}
+
 export function parseMoneyToMinor(value: string) {
   const normalized = value.replace(/\s/g, "").replace(",", ".");
   const number = Number(normalized);

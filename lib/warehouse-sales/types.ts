@@ -1,6 +1,10 @@
 export const WAREHOUSE_SALE_STATUS = ["completed"] as const;
 export type WarehouseSaleStatus = (typeof WAREHOUSE_SALE_STATUS)[number];
 
+export const WAREHOUSE_SALE_PAYMENT_METHODS = ["vipps", "cash"] as const;
+export type WarehouseSalePaymentMethod =
+  (typeof WAREHOUSE_SALE_PAYMENT_METHODS)[number];
+
 export const SHOPIFY_SYNC_JOB_STATUSES = [
   "pending",
   "processing",
@@ -14,7 +18,7 @@ export type WarehouseSaleRow = {
   id: string;
   saleNumber: string;
   status: WarehouseSaleStatus;
-  paymentMethod: string;
+  paymentMethod: WarehouseSalePaymentMethod;
   currency: string;
   totalAmountMinor: number;
   totalQuantity: number;
@@ -76,7 +80,7 @@ export type CompleteWarehouseSaleLineInput = {
 
 export type CompleteWarehouseSaleInput = {
   idempotencyKey: string;
-  paymentMethod: "vipps";
+  paymentMethod: WarehouseSalePaymentMethod;
   lines: CompleteWarehouseSaleLineInput[];
   requestHash: string;
 };

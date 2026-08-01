@@ -92,14 +92,15 @@ export function normalizeWarehouseSaleRequest(
     throw new WarehouseSaleValidationError("Ugyldig idempotensnøkkel");
   }
 
-  if (value.paymentMethod !== "vipps") {
+  const paymentMethod = value.paymentMethod;
+  if (paymentMethod !== "vipps" && paymentMethod !== "cash") {
     throw new WarehouseSaleValidationError("Ugyldig betalingsmåte");
   }
 
   const lines = normalizeWarehouseSaleLines(value.lines);
 
   const canonicalRequest = JSON.stringify({
-    paymentMethod: value.paymentMethod,
+    paymentMethod,
     lines,
   });
   const requestHash = createHash("sha256")
@@ -108,7 +109,7 @@ export function normalizeWarehouseSaleRequest(
 
   return {
     idempotencyKey,
-    paymentMethod: "vipps",
+    paymentMethod,
     lines,
     requestHash,
   };

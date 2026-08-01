@@ -10,7 +10,7 @@ import {
   type WarehouseSaleDocument as SaleDocumentType,
 } from "@/lib/warehouse-sales/ui-adapter";
 
-import { formatMoney, formatSaleTime } from "./format";
+import { formatMoney, formatPaymentMethod, formatSaleTime } from "./format";
 
 export function SaleDocument({ id }: { id: string }) {
   const [sale, setSale] = useState<SaleDocumentType | null | undefined>(
@@ -75,7 +75,10 @@ export function SaleDocument({ id }: { id: string }) {
             </h1>
           </div>
           <div className="sm:text-right">
-            <StatusBadge label="Betalingsmåte: Vipps" tone="info" />
+            <StatusBadge
+              label={`Betalingsmåte: ${formatPaymentMethod(sale.paymentMethod)}`}
+              tone="info"
+            />
             <p className="mt-3 text-sm text-snake-text-secondary">
               {formatSaleTime(sale.completedAt)}
             </p>

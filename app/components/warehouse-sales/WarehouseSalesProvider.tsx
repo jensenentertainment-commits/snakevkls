@@ -16,18 +16,21 @@ import {
   type CartLineInput,
   type CartQuote,
   type WarehouseSaleDocument,
+  type WarehouseSalePaymentMethod,
   type WarehouseSaleProduct,
   WarehouseSalesUiError,
 } from "@/lib/warehouse-sales/ui-adapter";
 
 type WarehouseSalesContextValue = {
   quote: CartQuote;
+  paymentMethod: WarehouseSalePaymentMethod;
   lastCompletedSale: WarehouseSaleDocument | null;
   addProduct(product: WarehouseSaleProduct): void;
   clearCart(): void;
   completeSale(): Promise<WarehouseSaleDocument>;
   removeLine(productId: string): void;
   setQuantity(productId: string, quantity: number): void;
+  setPaymentMethod(paymentMethod: WarehouseSalePaymentMethod): void;
   setUnitPrice(productId: string, unitPriceMinor: number): void;
   requote(): Promise<CartQuote>;
 };
@@ -45,6 +48,8 @@ const WarehouseSalesContext =
 export function WarehouseSalesProvider({ children }: { children: ReactNode }) {
   const [inputs, setInputs] = useState<CartLineInput[]>([]);
   const [quote, setQuote] = useState<CartQuote>(EMPTY_QUOTE);
+  const [paymentMethod, setPaymentMethodState] =
+    useState<WarehouseSalePaymentMethod>("vipps");
   const [lastCompletedSale, setLastCompletedSale] =
     useState<WarehouseSaleDocument | null>(null);
   const operationKeyRef = useRef<string | null>(null);
@@ -115,9 +120,18 @@ export function WarehouseSalesProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const setPaymentMethod = useCallback(
+    (nextPaymentMethod: WarehouseSalePaymentMethod) => {
+      operationKeyRef.current = null;
+      setPaymentMethodState(nextPaymentMethod);
+    },
+    [],
+  );
+
   const clearCart = useCallback(() => {
     setInputs([]);
     setLastCompletedSale(null);
+    setPaymentMethodState("vipps");
     operationKeyRef.current = null;
   }, []);
 
@@ -130,11 +144,12 @@ export function WarehouseSalesProvider({ children }: { children: ReactNode }) {
       .completeSale({
         idempotencyKey: operationKey,
         lines: inputs,
-        paymentMethod: "vipps",
+        paymentMethod,
       })
       .then((sale) => {
         setInputs([]);
         setLastCompletedSale(sale);
+        setPaymentMethodState("vipps");
         operationKeyRef.current = null;
         return sale;
       })
@@ -152,7 +167,7 @@ export function WarehouseSalesProvider({ children }: { children: ReactNode }) {
       });
     completionPromiseRef.current = completion;
     return completion;
-  }, [inputs]);
+  }, [inputs, paymentMethod]);
 
   const requote = useCallback(async () => {
     const latestQuote = await warehouseSalesApiAdapter.quoteCart(inputs);
@@ -163,23 +178,27 @@ export function WarehouseSalesProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       quote,
+      paymentMethod,
       lastCompletedSale,
       addProduct,
       clearCart,
       completeSale,
       removeLine,
       setQuantity,
+      setPaymentMethod,
       setUnitPrice,
       requote,
     }),
     [
       quote,
+      paymentMethod,
       lastCompletedSale,
       addProduct,
       clearCart,
       completeSale,
       removeLine,
       setQuantity,
+      setPaymentMethod,
       setUnitPrice,
       requote,
     ],

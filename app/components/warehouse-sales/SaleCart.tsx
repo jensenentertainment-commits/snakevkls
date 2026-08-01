@@ -13,10 +13,12 @@ import { WarehouseSalesUiError } from "@/lib/warehouse-sales/ui-adapter";
 export function SaleCart({ compact = false }: { compact?: boolean }) {
   const {
     quote,
+    paymentMethod,
     clearCart,
     completeSale,
     removeLine,
     setQuantity,
+    setPaymentMethod,
     setUnitPrice,
     requote,
   } = useWarehouseSales();
@@ -229,7 +231,38 @@ export function SaleCart({ compact = false }: { compact?: boolean }) {
       )}
 
       <div className="mt-5 border-t border-snake-border-default pt-5">
-        <div className="flex items-baseline justify-between gap-4">
+        <fieldset>
+          <legend className="text-sm font-semibold text-snake-text-primary">
+            Betalingsmåte
+          </legend>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {([
+              ["vipps", "Vipps"],
+              ["cash", "Kontant"],
+            ] as const).map(([value, label]) => (
+              <label
+                className={`flex min-h-11 cursor-pointer items-center justify-center rounded-snake-control border px-3 text-sm font-semibold focus-within:ring-2 focus-within:ring-snake-focus ${
+                  paymentMethod === value
+                    ? "border-snake-info bg-snake-info-surface text-snake-info"
+                    : "border-snake-border-default bg-snake-surface text-snake-text-secondary"
+                }`}
+                key={value}
+              >
+                <input
+                  checked={paymentMethod === value}
+                  className="sr-only"
+                  name="warehouse-sale-payment-method"
+                  onChange={() => setPaymentMethod(value)}
+                  type="radio"
+                  value={value}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div className="mt-5 flex items-baseline justify-between gap-4">
           <span className="text-sm text-snake-text-secondary">
             {quote.itemCount} {quote.itemCount === 1 ? "vare" : "varer"}
           </span>
@@ -244,11 +277,13 @@ export function SaleCart({ compact = false }: { compact?: boolean }) {
         {confirming ? (
           <Card className="mt-4" statusTone="warning" variant="status">
             <h3 className="font-semibold text-snake-text-primary">
-              Kontroller Vipps-betalingen
+              Kontroller betalingen
             </h3>
             <p className="mt-2 text-sm text-snake-text-secondary">
-              Bekreft at {formatMoney(quote.totalMinor)} er mottatt i Vipps før
-              du fullfører. Snake registrerer ikke selve betalingen.
+              {paymentMethod === "vipps"
+                ? "Kontroller at beløpet er mottatt på Vipps før salget fullføres."
+                : "Kontroller at beløpet er mottatt kontant før salget fullføres."}{" "}
+              Snake registrerer ikke selve betalingen.
             </p>
             <div className="mt-4 grid gap-2">
               <Button

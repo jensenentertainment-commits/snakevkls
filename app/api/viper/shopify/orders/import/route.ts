@@ -7,10 +7,22 @@ import {
   ViperShopifyImportError,
 } from "@/lib/viper/shopify/order-materialization";
 import type { ShopifyImportApiResponse } from "@/lib/viper/shopify/preview-types";
+import { isViperShopifyImportEnabled } from "@/lib/viper/shopify/import-feature";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  if (!isViperShopifyImportEnabled()) {
+    return json(
+      {
+        ok: false,
+        error: "Shopify-import til Viper er ikke aktivert.",
+        code: "FEATURE_DISABLED",
+      },
+      404,
+    );
+  }
+
   const auth = await requireViperAdminApiActor();
   if (!auth.ok) return auth.response;
 

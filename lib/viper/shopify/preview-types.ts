@@ -85,5 +85,6 @@ export type ShopifyImportApiResponse =
         | "PREVIEW_STALE"
         | "ORDER_NOT_IMPORTABLE"
         | "SHOPIFY_ERROR"
+        | "FEATURE_DISABLED"
         | "MATERIALIZATION_FAILED";
     };

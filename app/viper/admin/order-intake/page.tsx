@@ -2,11 +2,13 @@ import Link from "next/link";
 import SnakeNav from "@/app/components/SnakeNav";
 import ShopifyOrderPreviewForm from "@/app/components/viper/ShopifyOrderPreviewForm";
 import { requireViperAdminPageActor } from "@/lib/viper/auth/access";
+import { isViperShopifyImportEnabled } from "@/lib/viper/shopify/import-feature";
 
 export const dynamic = "force-dynamic";
 
 export default async function ShopifyOrderIntakePage() {
   await requireViperAdminPageActor();
+  const importEnabled = isViperShopifyImportEnabled();
 
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
@@ -27,7 +29,7 @@ export default async function ShopifyOrderIntakePage() {
             </Link>
           </div>
           <div className="mt-5">
-            <ShopifyOrderPreviewForm />
+            <ShopifyOrderPreviewForm importEnabled={importEnabled} />
           </div>
         </section>
       </div>

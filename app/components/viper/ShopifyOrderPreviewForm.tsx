@@ -8,7 +8,11 @@ import type {
   ShopifyPreviewApiResponse,
 } from "@/lib/viper/shopify/preview-types";
 
-export default function ShopifyOrderPreviewForm() {
+export default function ShopifyOrderPreviewForm({
+  importEnabled,
+}: {
+  importEnabled: boolean;
+}) {
   const router = useRouter();
   const [orderId, setOrderId] = useState("");
   const [preview, setPreview] = useState<ShopifyOrderPreview | null>(null);
@@ -108,11 +112,17 @@ export default function ShopifyOrderPreviewForm() {
         <section className="space-y-4" aria-live="polite">
           <header
             className={`rounded-3xl p-5 ${
-              preview.importable ? "bg-emerald-50 text-emerald-950" : "bg-amber-50 text-amber-950"
+              preview.importable && importEnabled
+                ? "bg-emerald-50 text-emerald-950"
+                : "bg-amber-50 text-amber-950"
             }`}
           >
             <p className="text-sm font-bold uppercase tracking-wide">
-              {preview.importable ? "Kan importeres" : "Kan ikke importeres"}
+              {preview.importable && importEnabled
+                ? "Kan importeres"
+                : preview.importable
+                  ? "Klar, men import er deaktivert"
+                  : "Kan ikke importeres"}
             </p>
             <h2 className="mt-1 text-2xl font-black">{preview.order.name}</h2>
             <p className="mt-1 text-sm">
@@ -177,7 +187,7 @@ export default function ShopifyOrderPreviewForm() {
             ))}
           </div>
 
-          {preview.importable && (
+          {preview.importable && importEnabled ? (
             <div className="sticky bottom-3 rounded-3xl border border-neutral-200 bg-white/95 p-4 shadow-xl backdrop-blur">
               <button
                 type="button"
@@ -191,7 +201,12 @@ export default function ShopifyOrderPreviewForm() {
                 Ordren kontrolleres på nytt før import.
               </p>
             </div>
-          )}
+          ) : preview.importable ? (
+            <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-950">
+              Shopify-import til Viper er deaktivert. Forhåndsvisningen er
+              fortsatt read-only.
+            </div>
+          ) : null}
         </section>
       )}
     </div>

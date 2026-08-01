@@ -71,6 +71,25 @@ test("P4.2 import refetches Shopify and delegates exactly one database mutation"
   assert.doesNotMatch(`${route}\n${service}`, /mutation\s+/i);
 });
 
+test("P4.2 is fail-closed behind the production feature flag", async () => {
+  const route = await source("app/api/viper/shopify/orders/import/route.ts");
+  const feature = await source("lib/viper/shopify/import-feature.ts");
+  const page = await source("app/viper/admin/order-intake/page.tsx");
+  const form = await source("app/components/viper/ShopifyOrderPreviewForm.tsx");
+
+  assert.match(feature, /VIPER_SHOPIFY_IMPORT_ENABLED === "true"/);
+  assert.match(route, /if \(!isViperShopifyImportEnabled\(\)\)/);
+  assert.match(route, /FEATURE_DISABLED/);
+  assert.ok(
+    route.indexOf("isViperShopifyImportEnabled()") <
+      route.indexOf("materializeFreshShopifyOrder("),
+  );
+  assert.match(page, /isViperShopifyImportEnabled\(\)/);
+  assert.match(page, /importEnabled=\{importEnabled\}/);
+  assert.match(form, /preview\.importable && importEnabled/);
+  assert.match(form, /Forhåndsvisningen er[\s\S]*fortsatt read-only/);
+});
+
 test("P4.2 UI imports only an approved preview and routes into the existing queue domain", async () => {
   const form = await source("app/components/viper/ShopifyOrderPreviewForm.tsx");
   const queue = await source("lib/viper/orders/repository.ts");

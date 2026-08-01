@@ -40,15 +40,15 @@ test("Dashboard exposes only the approved module set", () => {
   assert.doesNotMatch(dashboard, /\bArne\b|\bRoy\b/);
 });
 
-test("Lagersalg is visible, disabled and has no route", () => {
+test("Lagersalg is visible, enabled and links to the safe UI workspace", () => {
   const dashboard = readProjectFile("app/dashboard/page.tsx");
   const lagersalgBlock = dashboard.match(
-    /\{\s*description: "Salg[\s\S]+?title: "Lagersalg",\s*\},/,
+    /\{\s*description: "Rask[\s\S]+?title: "Lagersalg",\s*\},/,
   );
 
   assert.ok(lagersalgBlock);
-  assert.match(lagersalgBlock[0], /enabled: false/);
-  assert.doesNotMatch(lagersalgBlock[0], /href:/);
+  assert.match(lagersalgBlock[0], /enabled: true/);
+  assert.match(lagersalgBlock[0], /href: "\/warehouse-sales"/);
   assert.match(dashboard, /label="Kommer snart"/);
   assert.match(dashboard, /aria-disabled="true"/);
 });

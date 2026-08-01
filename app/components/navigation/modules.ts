@@ -6,8 +6,10 @@ import {
   LayoutDashboard,
   MapPin,
   PackageSearch,
+  ReceiptText,
   Settings,
   ShieldAlert,
+  ShoppingBag,
   Wrench,
 } from "lucide-react";
 
@@ -46,6 +48,13 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: Boxes,
     id: "viper",
     label: "Viper",
+  },
+  {
+    href: "/warehouse-sales",
+    icon: ShoppingBag,
+    id: "warehouse-sales",
+    label: "Lagersalg",
+    matchPaths: ["/warehouse-sales"],
   },
 ] as const satisfies readonly NavigationItem[];
 
@@ -110,6 +119,25 @@ export const LAGER_MODULE_NAVIGATION = {
       icon: Activity,
       id: "activity",
       label: "Aktivitet",
+    },
+  ],
+} as const satisfies ModuleNavigation;
+
+export const WAREHOUSE_SALES_MODULE_NAVIGATION = {
+  id: "warehouse-sales",
+  label: "Lagersalg",
+  items: [
+    {
+      href: "/warehouse-sales",
+      icon: ShoppingBag,
+      id: "new-sale",
+      label: "Nytt salg",
+    },
+    {
+      href: "/warehouse-sales/history",
+      icon: ReceiptText,
+      id: "history",
+      label: "Historikk",
     },
   ],
 } as const satisfies ModuleNavigation;

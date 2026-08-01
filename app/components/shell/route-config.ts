@@ -3,6 +3,7 @@ import {
   ADMIN_NAVIGATION_ITEMS,
   GLOBAL_NAVIGATION_ITEMS,
   LAGER_MODULE_NAVIGATION,
+  WAREHOUSE_SALES_MODULE_NAVIGATION,
   type ModuleNavigation,
   type NavigationItem,
 } from "@/app/components/navigation";
@@ -26,15 +27,19 @@ const settingsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
 const labsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
   (item) => item.id === "labs",
 );
+const warehouseSalesNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
+  (item) => item.id === "warehouse-sales",
+);
 
 if (
   !dashboardNavigationItem ||
   !labsNavigationItem ||
   !lagerNavigationItem ||
-  !settingsNavigationItem
+  !settingsNavigationItem ||
+  !warehouseSalesNavigationItem
 ) {
   throw new Error(
-    "Global navigation must define Dashboard, Labs, Lager, and Settings.",
+    "Global navigation must define Dashboard, Labs, Lager, Lagersalg, and Settings.",
   );
 }
 
@@ -49,6 +54,12 @@ export const APP_ROUTE_SHELLS = [
     id: "lager",
     moduleNavigation: LAGER_MODULE_NAVIGATION,
     navigationItem: lagerNavigationItem,
+    width: "wide",
+  },
+  {
+    id: "warehouse-sales",
+    moduleNavigation: WAREHOUSE_SALES_MODULE_NAVIGATION,
+    navigationItem: warehouseSalesNavigationItem,
     width: "wide",
   },
   {

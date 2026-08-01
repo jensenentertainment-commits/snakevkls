@@ -9,6 +9,7 @@ import {
   ScanLine,
   Activity,
   ArrowRight,
+  ShoppingBag,
   Wrench,
 } from "lucide-react";
 import SnakeIntelligencePanel from "../components/SnakeIntelligencePanel";
@@ -112,12 +113,22 @@ const issueState: IssueCardState = hasIssues
 
 
     {
+      href: "/viper",
       icon: <PackageCheck />,
-      title: "Plukk",
-      label: "Snart",
-      text: "Plukkflyt kommer senere.",
-      body: "Modulen aktiveres når lagerstruktur og produktplasseringer er stabile nok.",
-      muted: true,
+      title: "Viper",
+      label: "Operativ",
+      text: "Plukk, pakk og fullfør ordre.",
+      body: "Den operative arbeidsflaten for ordreplukk fra start til ferdig ordre.",
+      action: "Åpne Viper",
+    },
+    {
+      href: "/warehouse-sales",
+      icon: <ShoppingBag />,
+      title: "Lagersalg",
+      label: "Operativ",
+      text: "Fysiske lagersalg fra lageret.",
+      body: "Finn varer, bygg handlekurv og registrer salg med Vipps som betalingsmåte.",
+      action: "Start lagersalg",
     },
   ];
 
@@ -162,7 +173,7 @@ const issueState: IssueCardState = hasIssues
             </p>
           </div>
 
-          <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {modules.map((module) => (
               <ModuleCard
                 key={module.title}

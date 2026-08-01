@@ -7,6 +7,7 @@ export async function getDashboardStats() {
     missingSkuRes,
     emptyLocationRes,
     productsRes,
+    reconciliationRes,
     locationsNoZoneRes,
     latestActivityRes,
     latestShopifySyncRes,
@@ -25,7 +26,7 @@ export async function getDashboardStats() {
       .from("locations")
       .select("id, inventory(id)", { count: "exact", head: true })
       .eq("active", true)
-      .eq("inventory.id", null),
+      .is("inventory.id", null),
 
     supabase
       .from("products")
@@ -39,6 +40,10 @@ export async function getDashboardStats() {
         )
       `)
       .eq("active", true),
+
+    supabase
+      .from("warehouse_sale_shopify_reconciliation")
+      .select("product_id, reconciliation_status"),
 
     supabase
       .from("locations")
@@ -60,21 +65,40 @@ export async function getDashboardStats() {
       .limit(1),
   ]);
 
+  const failedQuery = ([
+    ["missingLocation", missingLocationRes],
+    ["missingSku", missingSkuRes],
+    ["emptyLocation", emptyLocationRes],
+    ["products", productsRes],
+    ["shopifyReconciliation", reconciliationRes],
+    ["locationsNoZone", locationsNoZoneRes],
+    ["latestActivity", latestActivityRes],
+    ["latestShopifySync", latestShopifySyncRes],
+  ] as const).find(([, result]) => result.error);
+
+  if (failedQuery) {
+    const [queryName, result] = failedQuery;
+    const error = result.error!;
+    console.error(`Dashboard query failed: ${queryName}`, {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code,
+    });
+    throw new Error(
+      `Dashboard data query failed (${queryName}): ${error.message}`
+    );
+  }
+
   const products = productsRes.data ?? [];
 
   const placedProductCount = products.filter((product) =>
     product.inventory?.some((item) => item.location_id)
   ).length;
 
-  const quantityDiffCount = products.filter((product) => {
-    const snakeQuantity =
-      product.inventory?.reduce(
-        (sum, item) => sum + (item.quantity ?? 0),
-        0
-      ) ?? 0;
-
-    return (product.shopify_quantity ?? 0) - snakeQuantity !== 0;
-  }).length;
+  const quantityDiffCount = (reconciliationRes.data ?? []).filter(
+    (product) => product.reconciliation_status === "unexplained_difference"
+  ).length;
 
   return {
     missingLocationCount: missingLocationRes.count ?? 0,

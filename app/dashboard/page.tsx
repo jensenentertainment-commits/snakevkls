@@ -36,8 +36,9 @@ const modules: readonly DashboardModule[] = [
     title: "Lager",
   },
   {
-    description: "Salg og ordre som håndteres direkte fra lageret.",
-    enabled: false,
+    description: "Rask registrering av fysiske salg fra lageret.",
+    enabled: true,
+    href: "/warehouse-sales",
     icon: ShoppingBag,
     id: "lagersalg",
     roles: ["admin", "lager"],

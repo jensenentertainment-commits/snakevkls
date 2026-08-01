@@ -8,91 +8,13 @@ import {
   type ShopifySyncProgress,
   type ShopifySyncWorker,
 } from "@/lib/shopify/sync-engine";
-
-const SHOPIFY_QUERY = `
-  query ProductVariants($cursor: String) {
-    productVariants(
-      first: 100
-      after: $cursor
-      query: "product_status:active"
-      sortKey: ID
-    ) {
-      edges {
-        cursor
-        node {
-          id
-          sku
-          title
-          inventoryQuantity
-          inventoryItem {
-            id
-          }
-          product {
-            id
-            title
-            status
-            vendor
-            productType
-            featuredImage {
-              url
-            }
-            collections(first: 20) {
-              edges {
-                node {
-                  id
-                  title
-                  handle
-                }
-              }
-            }
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
-
-type ShopifyCollectionNode = {
-  id: string;
-  title: string;
-  handle: string | null;
-};
-
-type ShopifyVariantNode = {
-  id: string;
-  sku: string | null;
-  title: string;
-  inventoryQuantity: number;
-  inventoryItem: { id: string } | null;
-  product: {
-    id: string;
-    title: string;
-    status: string;
-    vendor: string | null;
-    productType: string | null;
-    featuredImage: { url: string } | null;
-    collections: { edges: { node: ShopifyCollectionNode }[] };
-  };
-};
-
-type ShopifyVariantPayload = {
-  sku: string | null;
-  productName: string;
-  variantName: string | null;
-  imageUrl: string | null;
-  vendor: string | null;
-  productType: string | null;
-  shopifyQuantity: number;
-  shopifyProductId: string;
-  shopifyVariantId: string;
-  shopifyInventoryItemId: string | null;
-  shopifyStatus: string;
-  collections: ShopifyCollectionNode[];
-};
+import {
+  mapShopifyVariant,
+  SHOPIFY_CATALOG_QUERY,
+  validateShopifyLocation,
+  type ShopifyVariantNode,
+  type ShopifyVariantPayload,
+} from "@/lib/shopify/catalog-sync";
 
 type SyncOptions = {
   actorEmail?: string | null;
@@ -146,14 +68,19 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
 
   const source = options.source ?? "manual";
 
-  let accessToken: string | null = null;
+  let connectionConfig:
+    | {
+        accessToken: string;
+        inventoryLocationId: string;
+      }
+    | null = null;
 
-  async function getAccessToken() {
-    if (accessToken) return accessToken;
+  async function getConnectionConfig() {
+    if (connectionConfig) return connectionConfig;
 
     const { data: connection, error } = await adminClient
       .from("shopify_connections")
-      .select("access_token")
+      .select("access_token, inventory_location_id")
       .eq("shop", shop)
       .single();
 
@@ -161,9 +88,21 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
       throw new Error("Shopify er ikke koblet til");
     }
 
-    const token = String(connection.access_token);
-    accessToken = token;
-    return token;
+    const inventoryLocationId = String(
+      connection.inventory_location_id ?? ""
+    ).trim();
+
+    if (!inventoryLocationId) {
+      throw new Error(
+        "Shopify-lokasjon for Snake-lageret er ikke konfigurert"
+      );
+    }
+
+    connectionConfig = {
+      accessToken: String(connection.access_token),
+      inventoryLocationId,
+    };
+    return connectionConfig;
   }
 
   const worker: ShopifySyncWorker<ShopifyVariantPayload> = {
@@ -201,18 +140,21 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
     },
 
     async fetchPage(cursor): Promise<ShopifySyncPage<ShopifyVariantPayload>> {
-      const token = await getAccessToken();
+      const config = await getConnectionConfig();
       const response = await fetch(
         `https://${shop}/admin/api/${apiVersion}/graphql.json`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Shopify-Access-Token": token,
+            "X-Shopify-Access-Token": config.accessToken,
           },
           body: JSON.stringify({
-            query: SHOPIFY_QUERY,
-            variables: { cursor },
+            query: SHOPIFY_CATALOG_QUERY,
+            variables: {
+              cursor,
+              locationId: config.inventoryLocationId,
+            },
           }),
         }
       );
@@ -227,30 +169,22 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
       }
 
       const connection = json.data?.productVariants;
+      const currencyCode = String(json.data?.shop?.currencyCode ?? "");
+      validateShopifyLocation(
+        json.data?.location,
+        config.inventoryLocationId
+      );
       if (!connection || !Array.isArray(connection.edges)) {
         throw new Error("Shopify returnerte ugyldig produktdata");
       }
 
       return {
         variants: connection.edges.map(
-          ({ node: variant }: { node: ShopifyVariantNode }) => ({
-            sku: variant.sku?.trim() || null,
-            productName: variant.product.title,
-            variantName:
-              variant.title === "Default Title" ? null : variant.title,
-            imageUrl: variant.product.featuredImage?.url ?? null,
-            vendor: variant.product.vendor ?? null,
-            productType: variant.product.productType ?? null,
-            shopifyQuantity: variant.inventoryQuantity ?? 0,
-            shopifyProductId: variant.product.id,
-            shopifyVariantId: variant.id,
-            shopifyInventoryItemId: variant.inventoryItem?.id ?? null,
-            shopifyStatus: variant.product.status,
-            collections:
-              variant.product.collections?.edges?.map(
-                (item: { node: ShopifyCollectionNode }) => item.node
-              ) ?? [],
-          })
+          ({ node: variant }: { node: ShopifyVariantNode }) =>
+            mapShopifyVariant(variant, {
+              currencyCode,
+              locationId: config.inventoryLocationId,
+            })
         ),
         endCursor: connection.pageInfo?.endCursor ?? null,
         hasNextPage: Boolean(connection.pageInfo?.hasNextPage),

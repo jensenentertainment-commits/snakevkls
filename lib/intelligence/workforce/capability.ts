@@ -1,7 +1,11 @@
-export type CapabilityId = "warehouse.read_summary";
+export type CapabilityId =
+  | "warehouse.read_summary"
+  | "snake.assess_development";
 
 export type DataSourceId =
   | "snake.knowledge"
+  | "snake.development_context"
+  | "snake.latest_activity"
   | "warehouse.dashboard_stats"
   | "warehouse.missing_location_products";
 

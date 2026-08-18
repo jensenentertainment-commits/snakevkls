@@ -39,15 +39,19 @@ export type WorkforceAuthorizationResult =
       readonly reason: WorkforceAuthorizationDenialReason;
     };
 
-const workforcePolicy = {
+const workforcePolicy: Record<
+  EmployeeId,
+  Record<Role, readonly CapabilityId[]>
+> = {
   borre: {
     admin: ["warehouse.read_summary"],
     lager: ["warehouse.read_summary"],
   },
-} as const satisfies Record<
-  EmployeeId,
-  Record<Role, readonly CapabilityId[]>
->;
+  arne: {
+    admin: ["snake.assess_development"],
+    lager: [],
+  },
+};
 
 export function evaluateWorkforceAuthorization(
   request: WorkforceAuthorizationRequest,

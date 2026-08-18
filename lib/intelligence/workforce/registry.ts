@@ -5,9 +5,11 @@ import type {
   EmployeeId,
 } from "./employee-definition";
 import { borreDefinition } from "./employees/borre";
+import { arneDefinition } from "./employees/arne";
 
 const employeeRegistry = {
   borre: borreDefinition,
+  arne: arneDefinition,
 } as const satisfies Record<EmployeeId, EmployeeDefinition>;
 
 export function getEmployeeDefinition(

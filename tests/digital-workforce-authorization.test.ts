@@ -13,6 +13,15 @@ const borreDefinition = {
   getSystemPrompt: () => "unchanged test prompt",
 } as const satisfies EmployeeDefinition;
 
+const arneDefinition = {
+  id: "arne",
+  displayName: "Arne",
+  role: "Snake-ekspert og admins rådgiver for Snake OS",
+  capabilityIds: ["snake.assess_development"],
+  model: { id: "gpt-5-mini" },
+  getSystemPrompt: () => "unchanged Arne test prompt",
+} as const satisfies EmployeeDefinition;
+
 function request(userRole: string, employeeId = "borre", capabilityId = "warehouse.read_summary") {
   return {
     userId: "user-1",
@@ -35,6 +44,29 @@ test("explicit admin and lager policy entries allow Borre read summary", () => {
       }
     );
   }
+});
+
+test("only admin policy allows Arne development assessment", () => {
+  assert.deepEqual(
+    evaluateWorkforceAuthorization(
+      request("admin", "arne", "snake.assess_development"),
+      arneDefinition
+    ),
+    {
+      allowed: true,
+      userId: "user-1",
+      userRole: "admin",
+      employeeId: "arne",
+      capabilityId: "snake.assess_development",
+    }
+  );
+  assert.deepEqual(
+    evaluateWorkforceAuthorization(
+      request("lager", "arne", "snake.assess_development"),
+      arneDefinition
+    ),
+    { allowed: false, reason: "policy_denied" }
+  );
 });
 
 test("an unknown employee fails closed", () => {

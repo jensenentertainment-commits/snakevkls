@@ -6,14 +6,47 @@ async function source(path: string) {
   return readFile(new URL(`../${path}`, import.meta.url), "utf8");
 }
 
-test("the dormant employee registry contains only Borre", async () => {
+test("the employee registry contains only Borre and dormant Arne", async () => {
   const registry = await source("lib/intelligence/workforce/registry.ts");
 
   assert.match(registry, /import "server-only"/);
   assert.match(registry, /borre:\s*borreDefinition/);
+  assert.match(registry, /arne:\s*arneDefinition/);
   assert.match(registry, /Object\.hasOwn\(employeeRegistry, employeeId\)/);
   assert.match(registry, /return null/);
-  assert.doesNotMatch(registry, /\barne\b|\broy\b|\bpeder\b|\bpernille\b/i);
+  assert.doesNotMatch(registry, /\broy\b|\bpeder\b|\bpernille\b/i);
+});
+
+test("Arne declares the active prompt, model, and one read capability", async () => {
+  const [employee, capability] = await Promise.all([
+    source("lib/intelligence/workforce/employees/arne.ts"),
+    source(
+      "lib/intelligence/workforce/capabilities/snake-assess-development.ts"
+    ),
+  ]);
+
+  assert.match(employee, /id:\s*"arne"/);
+  assert.match(employee, /getSystemPrompt:\s*getArneSystemPrompt/);
+  assert.match(employee, /id:\s*CHAT_MODEL/);
+  assert.match(
+    employee,
+    /capabilityIds:\s*\[snakeAssessDevelopmentCapability\.id\]/
+  );
+  assert.match(capability, /id:\s*"snake\.assess_development"/);
+  assert.match(capability, /effect:\s*"read"/);
+  for (const sourceId of [
+    "snake.knowledge",
+    "snake.development_context",
+    "warehouse.dashboard_stats",
+    "warehouse.missing_location_products",
+    "snake.latest_activity",
+  ]) {
+    assert.match(capability, new RegExp(`"${sourceId.replace(".", "\\.")}"`));
+  }
+  assert.doesNotMatch(
+    capability,
+    /\bexecute\b|\bwrite\b|\btool\b|\bhandoff\b|\bmemory\b/i
+  );
 });
 
 test("Borre declares the existing prompt, model policy, and one capability", async () => {

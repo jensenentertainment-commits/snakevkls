@@ -14,7 +14,7 @@ export type WorkforceRunMetadata = {
   readonly employeeId: EmployeeId;
   readonly capabilityId: CapabilityId;
   readonly userId: string;
-  readonly userRole: Role;
+  readonly userRole: Role | "unknown";
   readonly startedAt: string;
   readonly completedAt?: string;
   readonly outcome: WorkforceRunOutcome;

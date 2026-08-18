@@ -28,6 +28,8 @@ test("explicit admin and lager policy entries allow Borre read summary", () => {
       evaluateWorkforceAuthorization(request(role), borreDefinition),
       {
         allowed: true,
+        userId: "user-1",
+        userRole: role,
         employeeId: "borre",
         capabilityId: "warehouse.read_summary",
       }

@@ -29,6 +29,8 @@ export type WorkforceAuthorizationDenialReason =
 export type WorkforceAuthorizationResult =
   | {
       readonly allowed: true;
+      readonly userId: string;
+      readonly userRole: Role;
       readonly employeeId: EmployeeId;
       readonly capabilityId: CapabilityId;
     }
@@ -77,6 +79,8 @@ export function evaluateWorkforceAuthorization(
 
   return {
     allowed: true,
+    userId: request.userId,
+    userRole: request.userRole,
     employeeId: employeeDefinition.id,
     capabilityId: declaredCapability,
   };

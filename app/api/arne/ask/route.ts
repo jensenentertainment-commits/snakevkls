@@ -1,17 +1,12 @@
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth/require-role";
-import { getArneDevelopmentContext } from "@/lib/intelligence/arne/development-context";
-import { getArneSystemPrompt } from "@/lib/intelligence/arne/system";
-import { buildSnakeKnowledgePrompt } from "@/lib/intelligence/shared/build-snake-knowledge";
 import { validateChatInput } from "@/lib/intelligence/shared/chat-input";
 import {
-  CHAT_MODEL,
   chatInputError,
   chatServerError,
-  getChatOpenAIClient,
   logChatServerError,
 } from "@/lib/intelligence/shared/chat-server";
-import { getSnakeOperationalContext } from "@/lib/intelligence/shared/operational-context";
+import { runReadOnlyEmployeeRequest } from "@/lib/intelligence/workforce/runtime";
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +14,6 @@ export async function POST(req: Request) {
     if (!auth.ok) return auth.response;
 
     let body: unknown;
-
     try {
       body = await req.json();
     } catch {
@@ -29,74 +23,33 @@ export async function POST(req: Request) {
     const input = validateChatInput(body);
     if (!input.ok) return chatInputError(input.error);
 
-    const { question, page, history } = input.value;
-    const conversation = history.map((message) => ({
-      role: message.role,
-      content: message.text,
-    }));
+    const result = await runReadOnlyEmployeeRequest({
+      userId: auth.user.id,
+      userRole: auth.profile.role,
+      employeeId: "arne",
+      capabilityId: "snake.assess_development",
+      request: input.value,
+    });
 
-    let snakeKnowledge: string;
-    let snakeContext: Awaited<ReturnType<typeof getSnakeOperationalContext>>;
-    let developmentContext: ReturnType<typeof getArneDevelopmentContext>;
-
-    try {
-      snakeKnowledge = buildSnakeKnowledgePrompt();
-      snakeContext = await getSnakeOperationalContext();
-      developmentContext = getArneDevelopmentContext();
-    } catch (error) {
-      logChatServerError("arne", "context", error);
-      return chatServerError();
+    if (!result.ok) {
+      logChatServerError(
+        "arne",
+        result.outcome === "context_failed"
+          ? "context"
+          : result.outcome === "model_failed"
+            ? "openai"
+            : "unexpected",
+        new Error(`Workforce run ${result.runId} failed: ${result.outcome}`)
+      );
+      const response = chatServerError();
+      response.headers.set("x-workforce-run-id", result.runId);
+      return response;
     }
 
-    try {
-      const response = await getChatOpenAIClient().responses.create({
-        model: CHAT_MODEL,
-        input: [
-          {
-            role: "system",
-            content: getArneSystemPrompt(),
-          },
-          {
-            role: "user",
-            content: `
-Dette er bakgrunnsinformasjon om Snake.
-Den skal bare brukes når den er relevant for admins spørsmål.
-Ikke analyser eller foreslå tiltak utelukkende fordi informasjonen finnes her.
-
-=== Snake Knowledge ===
-
-${snakeKnowledge}
-
-=== Development Context ===
-
-${JSON.stringify(developmentContext, null, 2)}
-
-=== Operational Context ===
-
-${JSON.stringify(snakeContext, null, 2)}
-
-=== Current Page ===
-
-${page ?? "ukjent"}
-`,
-          },
-          ...conversation,
-          {
-            role: "user",
-            content: question,
-          },
-        ],
-      });
-
-      return NextResponse.json({
-        answer:
-          response.output_text ||
-          "Arne fikk ikke svart. Det er irriterende, men teknisk mulig.",
-      });
-    } catch (error) {
-      logChatServerError("arne", "openai", error);
-      return chatServerError();
-    }
+    return NextResponse.json(
+      { answer: result.answer },
+      { headers: { "x-workforce-run-id": result.runId } }
+    );
   } catch (error) {
     logChatServerError("arne", "unexpected", error);
     return chatServerError();

@@ -7,17 +7,19 @@ async function source(path: string) {
 }
 
 test("visible Arne entry points use the active /arne route and prompt", async () => {
-  const [labs, route] = await Promise.all([
+  const [labs, route, employee] = await Promise.all([
     source("app/labs/page.tsx"),
     source("app/api/arne/ask/route.ts"),
+    source("lib/intelligence/workforce/employees/arne.ts"),
   ]);
 
   assert.match(labs, /href:\s*"\/arne"/);
   assert.doesNotMatch(labs, /\/borre\/pro/);
   assert.match(
-    route,
+    employee,
     /@\/lib\/intelligence\/arne\/system/
   );
+  assert.match(route, /intelligence\/workforce\/runtime/);
 });
 
 test("/lager relies on the single floating chat from the root layout", async () => {

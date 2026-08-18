@@ -76,7 +76,7 @@ test("the first capability is closed and read-only", async () => {
   );
 });
 
-test("only Borre's active route imports the workforce runtime", async () => {
+test("only Borre and Arne active routes import the workforce runtime", async () => {
   const [borreRoute, arneRoute] = await Promise.all([
     source("app/api/borre/ask/route.ts"),
     source("app/api/arne/ask/route.ts"),
@@ -86,5 +86,5 @@ test("only Borre's active route imports the workforce runtime", async () => {
     borreRoute,
     /intelligence\/workforce\/runtime/
   );
-  assert.doesNotMatch(arneRoute, /intelligence\/workforce/);
+  assert.match(arneRoute, /intelligence\/workforce\/runtime/);
 });

@@ -8,8 +8,10 @@ async function source(path: string) {
 }
 
 test("Arne keeps the active admin-only HTTP and model contract", async () => {
-  const [route, chatServer, ui, page] = await Promise.all([
+  const [route, runtime, employee, chatServer, ui, page] = await Promise.all([
     source("app/api/arne/ask/route.ts"),
+    source("lib/intelligence/workforce/runtime.ts"),
+    source("lib/intelligence/workforce/employees/arne.ts"),
     source("lib/intelligence/shared/chat-server.ts"),
     source("app/components/AskBorre.tsx"),
     source("app/arne/page.tsx"),
@@ -18,35 +20,36 @@ test("Arne keeps the active admin-only HTTP and model contract", async () => {
   assert.match(route, /export async function POST\(req: Request\)/);
   assert.match(route, /requireRole\(\["admin"\]\)/);
   assert.match(route, /validateChatInput\(body\)/);
-  assert.match(route, /model: CHAT_MODEL/);
-  assert.match(route, /content: getArneSystemPrompt\(\)/);
-  assert.match(route, /return NextResponse\.json\(\{[\s\S]*answer:/);
-  assert.match(route, /Arne fikk ikke svart\. Det er irriterende, men teknisk mulig\./);
+  assert.match(route, /runReadOnlyEmployeeRequest\(\{/);
+  assert.match(route, /employeeId: "arne"/);
+  assert.match(route, /capabilityId: "snake\.assess_development"/);
+  assert.match(route, /return NextResponse\.json\([\s\S]*\{ answer: result\.answer \}/);
   assert.match(chatServer, /CHAT_MODEL = "gpt-5-mini"/);
+  assert.match(employee, /id:\s*CHAT_MODEL/);
+  assert.match(employee, /getSystemPrompt:\s*getArneSystemPrompt/);
+  assert.match(runtime, /Arne fikk ikke svart\. Det er irriterende, men teknisk mulig\./);
   assert.match(ui, /const endpoint = isArne \? "\/api\/arne\/ask"/);
   assert.match(page, /profile\.role !== "admin"/);
   assert.doesNotMatch(route, /\btools\s*:|\btool_choice\s*:|\bfunction_call\s*:/);
 });
 
 test("Arne keeps the exact context blocks and model message order", async () => {
-  const route = await source("app/api/arne/ask/route.ts");
-  const systemIndex = route.indexOf("getArneSystemPrompt()");
-  const knowledgeIndex = route.indexOf("=== Snake Knowledge ===");
-  const developmentIndex = route.indexOf("=== Development Context ===");
-  const operationalIndex = route.indexOf("=== Operational Context ===");
-  const pageIndex = route.indexOf("=== Current Page ===");
-  const historyIndex = route.indexOf("...conversation");
-  const questionIndex = route.indexOf("content: question");
+  const builder = await source("lib/intelligence/arne/chat-input-builder.ts");
+  const knowledgeIndex = builder.indexOf("=== Snake Knowledge ===");
+  const developmentIndex = builder.indexOf("=== Development Context ===");
+  const operationalIndex = builder.indexOf("=== Operational Context ===");
+  const pageIndex = builder.indexOf("=== Current Page ===");
 
-  assert.ok(systemIndex >= 0);
-  assert.ok(knowledgeIndex > systemIndex);
+  assert.ok(knowledgeIndex >= 0);
   assert.ok(developmentIndex > knowledgeIndex);
   assert.ok(operationalIndex > developmentIndex);
   assert.ok(pageIndex > operationalIndex);
-  assert.ok(historyIndex > pageIndex);
-  assert.ok(questionIndex > historyIndex);
-  assert.equal((route.match(/JSON\.stringify\([^)]*, null, 2\)/g) ?? []).length, 2);
-  assert.match(route, /page \?\? "ukjent"/);
+  assert.match(
+    builder,
+    /role: "system"[\s\S]*formatArneBackgroundContext\(input\.context\)[\s\S]*\.\.\.input\.history\.map[\s\S]*content: input\.question/
+  );
+  assert.equal((builder.match(/JSON\.stringify\([^)]*, null, 2\)/g) ?? []).length, 2);
+  assert.match(builder, /context\.page \?\? "ukjent"/);
 });
 
 test("Arne keeps the existing development context unchanged", () => {

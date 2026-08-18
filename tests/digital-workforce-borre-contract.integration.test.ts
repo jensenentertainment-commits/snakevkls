@@ -7,8 +7,10 @@ async function source(path: string) {
 }
 
 test("Borre keeps the existing authenticated API and model contract", async () => {
-  const [route, chatServer, chatUi] = await Promise.all([
+  const [route, runtime, employee, chatServer, chatUi] = await Promise.all([
     source("app/api/borre/ask/route.ts"),
+    source("lib/intelligence/workforce/runtime.ts"),
+    source("lib/intelligence/workforce/employees/borre.ts"),
     source("lib/intelligence/shared/chat-server.ts"),
     source("app/components/AskBorre.tsx"),
   ]);
@@ -16,20 +18,29 @@ test("Borre keeps the existing authenticated API and model contract", async () =
   assert.match(route, /export async function POST\(req: Request\)/);
   assert.match(route, /requireRole\(\["admin", "lager"\]\)/);
   assert.match(route, /validateChatInput\(body\)/);
-  assert.match(route, /model: CHAT_MODEL/);
-  assert.match(route, /getBorreChatSystemPrompt\(\)/);
-  assert.match(route, /return NextResponse\.json\(\{[\s\S]*answer:/);
+  assert.match(route, /runReadOnlyEmployeeRequest\(\{/);
+  assert.match(route, /employeeId: "borre"/);
+  assert.match(route, /capabilityId: "warehouse\.read_summary"/);
+  assert.match(route, /return NextResponse\.json\([\s\S]*\{ answer: result\.answer \}/);
   assert.match(chatServer, /CHAT_MODEL = "gpt-5-mini"/);
+  assert.match(employee, /id:\s*CHAT_MODEL/);
+  assert.match(employee, /getSystemPrompt:\s*getBorreChatSystemPrompt/);
+  assert.match(runtime, /getChatOpenAIClient\(\)\.responses\.create\(request\)/);
   assert.match(chatUi, /"\/api\/borre\/ask"/);
-  assert.doesNotMatch(route, /\btools\s*:|\btool_choice\s*:|\bfunction_call\s*:/);
+  assert.doesNotMatch(
+    `${route}\n${runtime}`,
+    /\btools\s*:|\btool_choice\s*:|\bfunction_call\s*:/
+  );
 });
 
 test("Borre preserves the existing model message order", async () => {
-  const route = await source("app/api/borre/ask/route.ts");
-  const systemIndex = route.indexOf("getBorreChatSystemPrompt()");
-  const knowledgeIndex = route.indexOf("=== Snake Knowledge ===");
-  const historyIndex = route.indexOf("...history.map");
-  const questionIndex = route.indexOf("content: question");
+  const builder = await source(
+    "lib/intelligence/borre/chat-input-builder.ts"
+  );
+  const systemIndex = builder.indexOf('role: "system"');
+  const knowledgeIndex = builder.indexOf("=== Snake Knowledge ===");
+  const historyIndex = builder.indexOf("...input.history.map");
+  const questionIndex = builder.indexOf("content: input.question");
 
   assert.ok(systemIndex >= 0);
   assert.ok(knowledgeIndex > systemIndex);
@@ -38,7 +49,13 @@ test("Borre preserves the existing model message order", async () => {
 });
 
 test("Borre preserves the current read-only warehouse context", async () => {
-  const route = await source("app/api/borre/ask/route.ts");
+  const [provider, context] = await Promise.all([
+    source(
+      "lib/intelligence/workforce/contexts/warehouse-summary-provider.ts"
+    ),
+    source("lib/intelligence/workforce/contexts/warehouse-summary.ts"),
+  ]);
+  const implementation = `${provider}\n${context}`;
 
   for (const field of [
     "missingLocationCount",
@@ -50,26 +67,29 @@ test("Borre preserves the current read-only warehouse context", async () => {
     "locationsNoZoneCount",
     "latestShopifySync",
   ]) {
-    assert.match(route, new RegExp(`\\b${field}\\b`));
+    assert.match(implementation, new RegExp(`\\b${field}\\b`));
   }
 
-  assert.match(route, /\.from\("inventory"\)/);
-  assert.match(route, /\.select\("id, product_id, quantity"\)/);
-  assert.match(route, /\.is\("location_id", null\)/);
-  assert.match(route, /\.limit\(10\)/);
-  assert.match(route, /\.from\("products"\)/);
-  assert.match(route, /\.select\("id, product_name, sku"\)/);
+  assert.match(provider, /\.from\("inventory"\)/);
+  assert.match(provider, /\.select\("id, product_id, quantity"\)/);
+  assert.match(provider, /\.is\("location_id", null\)/);
+  assert.match(provider, /\.limit\(10\)/);
+  assert.match(provider, /\.from\("products"\)/);
+  assert.match(provider, /\.select\("id, product_name, sku"\)/);
 
-  const quantityDiffPriority = route.indexOf("quantityDiffCount > 0");
-  const missingLocationPriority = route.indexOf("missingLocationCount > 0");
-  const missingZonePriority = route.indexOf("locationsNoZoneCount > 0");
-  const missingSkuPriority = route.indexOf("missingSkuCount > 0");
-  const emptyLocationPriority = route.indexOf("emptyLocationCount > 0");
+  const quantityDiffPriority = context.indexOf("quantityDiffCount > 0");
+  const missingLocationPriority = context.indexOf("missingLocationCount > 0");
+  const missingZonePriority = context.indexOf("locationsNoZoneCount > 0");
+  const missingSkuPriority = context.indexOf("missingSkuCount > 0");
+  const emptyLocationPriority = context.indexOf("emptyLocationCount > 0");
 
   assert.ok(quantityDiffPriority >= 0);
   assert.ok(missingLocationPriority > quantityDiffPriority);
   assert.ok(missingZonePriority > missingLocationPriority);
   assert.ok(missingSkuPriority > missingZonePriority);
   assert.ok(emptyLocationPriority > missingSkuPriority);
-  assert.doesNotMatch(route, /\.insert\(|\.update\(|\.upsert\(|\.delete\(|\.rpc\(/);
+  assert.doesNotMatch(
+    implementation,
+    /\.insert\(|\.update\(|\.upsert\(|\.delete\(|\.rpc\(/
+  );
 });

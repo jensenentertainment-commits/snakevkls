@@ -43,12 +43,15 @@ test("the first capability is closed and read-only", async () => {
   );
 });
 
-test("no active route imports the dormant foundation", async () => {
+test("only Borre's active route imports the workforce runtime", async () => {
   const [borreRoute, arneRoute] = await Promise.all([
     source("app/api/borre/ask/route.ts"),
     source("app/api/arne/ask/route.ts"),
   ]);
 
-  assert.doesNotMatch(borreRoute, /intelligence\/workforce/);
+  assert.match(
+    borreRoute,
+    /intelligence\/workforce\/runtime/
+  );
   assert.doesNotMatch(arneRoute, /intelligence\/workforce/);
 });

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Info } from "lucide-react";
-import { getBorreWarehouseAssessment } from "@/lib/intelligence/borre/warehouse-assessment";
 
 type BorrePanelVariant = "hero" | "panel" | "note";
 
@@ -14,8 +13,6 @@ type Props = {
   actionLabel?: string;
   variant?: BorrePanelVariant;
 };
-
-const borreAssessment = await getBorreWarehouseAssessment();
 
 export default function BorrePanel({
   title = "Børre",
@@ -48,7 +45,7 @@ export default function BorrePanel({
           </div>
 
           <p className="mt-3 text-base font-semibold leading-6 text-white">
-            {borreAssessment.message}
+            {message}
           </p>
 
           {observation ? (

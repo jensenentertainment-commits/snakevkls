@@ -1,4 +1,4 @@
-export function getBorreDevelopmentContext() {
+export function getArneDevelopmentContext() {
   return {
     project: "Snake OS",
     purpose:

@@ -1,69 +1,64 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
 import { requireRole } from "@/lib/auth/require-role";
-import { getBorreContext } from "@/lib/intelligence/borre/shared-context";
-import { getBorreDevelopmentContext } from "@/lib/intelligence/borre/development-context";
+import { getArneDevelopmentContext } from "@/lib/intelligence/arne/development-context";
 import { getArneSystemPrompt } from "@/lib/intelligence/arne/system";
 import { buildSnakeKnowledgePrompt } from "@/lib/intelligence/shared/build-snake-knowledge";
-
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-type ChatMessage = {
-  role: "user" | "assistant";
-  text: string;
-};
+import { validateChatInput } from "@/lib/intelligence/shared/chat-input";
+import {
+  CHAT_MODEL,
+  chatInputError,
+  chatServerError,
+  getChatOpenAIClient,
+  logChatServerError,
+} from "@/lib/intelligence/shared/chat-server";
+import { getSnakeOperationalContext } from "@/lib/intelligence/shared/operational-context";
 
 export async function POST(req: Request) {
-  const auth = await requireRole(["admin"]);
-  if (!auth.ok) return auth.response;
+  try {
+    const auth = await requireRole(["admin"]);
+    if (!auth.ok) return auth.response;
 
-  const body = await req.json();
-  const { question, page, history = [] } = body;
+    let body: unknown;
 
-  if (!question || typeof question !== "string") {
-    return NextResponse.json(
-      { error: "Mangler spørsmål" },
-      { status: 400 }
-    );
-  }
+    try {
+      body = await req.json();
+    } catch {
+      return chatInputError("Forespørselen må inneholde gyldig JSON.");
+    }
 
+    const input = validateChatInput(body);
+    if (!input.ok) return chatInputError(input.error);
 
+    const { question, page, history } = input.value;
+    const conversation = history.map((message) => ({
+      role: message.role,
+      content: message.text,
+    }));
 
-  const conversation = Array.isArray(history)
-    ? history
-        .slice(-8)
-        .filter(
-          (message): message is ChatMessage =>
-            message !== null &&
-            typeof message === "object" &&
-            (message.role === "user" ||
-              message.role === "assistant") &&
-            typeof message.text === "string"
-        )
-        .map((message) => ({
-          role: message.role,
-          content: message.text,
-        }))
-    : [];
+    let snakeKnowledge: string;
+    let snakeContext: Awaited<ReturnType<typeof getSnakeOperationalContext>>;
+    let developmentContext: ReturnType<typeof getArneDevelopmentContext>;
 
-  const snakeKnowledge = buildSnakeKnowledgePrompt();
-const snakeContext = await getBorreContext();
-const developmentContext = getBorreDevelopmentContext();
-const system = getArneSystemPrompt();
+    try {
+      snakeKnowledge = buildSnakeKnowledgePrompt();
+      snakeContext = await getSnakeOperationalContext();
+      developmentContext = getArneDevelopmentContext();
+    } catch (error) {
+      logChatServerError("arne", "context", error);
+      return chatServerError();
+    }
 
-const response = await openai.responses.create({
-  model: "gpt-5-mini",
-  input: [
-    {
-      role: "system",
-      content: system,
-    },
-    {
-      role: "user",
-      content: `
+    try {
+      const response = await getChatOpenAIClient().responses.create({
+        model: CHAT_MODEL,
+        input: [
+          {
+            role: "system",
+            content: getArneSystemPrompt(),
+          },
+          {
+            role: "user",
+            content: `
 Dette er bakgrunnsinformasjon om Snake.
 Den skal bare brukes når den er relevant for admins spørsmål.
 Ikke analyser eller foreslå tiltak utelukkende fordi informasjonen finnes her.
@@ -84,18 +79,26 @@ ${JSON.stringify(snakeContext, null, 2)}
 
 ${page ?? "ukjent"}
 `,
-    },
-    ...conversation,
-    {
-      role: "user",
-      content: question,
-    },
-  ],
-});
+          },
+          ...conversation,
+          {
+            role: "user",
+            content: question,
+          },
+        ],
+      });
 
-return NextResponse.json({
-  answer:
-    response.output_text ||
-    "Arne fikk ikke svart. Det er irriterende, men teknisk mulig.",
-});
+      return NextResponse.json({
+        answer:
+          response.output_text ||
+          "Arne fikk ikke svart. Det er irriterende, men teknisk mulig.",
+      });
+    } catch (error) {
+      logChatServerError("arne", "openai", error);
+      return chatServerError();
+    }
+  } catch (error) {
+    logChatServerError("arne", "unexpected", error);
+    return chatServerError();
+  }
 }

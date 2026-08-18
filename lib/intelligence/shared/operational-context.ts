@@ -32,9 +32,8 @@ export async function getSnakeOperationalContext() {
     .limit(10);
 
   if (inventoryError) {
-    console.error(
-      "Kunne ikke hente produkter uten lokasjon:",
-      inventoryError
+    throw new Error(
+      `Operational inventory query failed: ${inventoryError.message}`
     );
   }
 
@@ -55,7 +54,9 @@ export async function getSnakeOperationalContext() {
       : { data: [], error: null };
 
   if (productsError) {
-    console.error("Kunne ikke hente produktdata:", productsError);
+    throw new Error(
+      `Operational product query failed: ${productsError.message}`
+    );
   }
 
   const missingLocationProducts =

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import type { WorkforceRunMetadata } from "../lib/intelligence/workforce/workforce-run-metadata.ts";
 import { executeReadOnlyWorkforceRequest } from "../lib/intelligence/workforce/read-only-execution.ts";
+import type { ReadOnlyExecutionDependencies } from "../lib/intelligence/workforce/read-only-execution.ts";
 import { createWarehouseSummaryContext } from "../lib/intelligence/workforce/contexts/warehouse-summary.ts";
 
 const employee = {
@@ -56,7 +57,10 @@ const allowed = {
   capabilityId: "warehouse.read_summary",
 } as const;
 
-function createDependencies(events: string[], runs: WorkforceRunMetadata[]) {
+function createDependencies(
+  events: string[],
+  runs: WorkforceRunMetadata[]
+): ReadOnlyExecutionDependencies<typeof warehouseContext> {
   let currentTime = Date.parse("2026-08-18T10:00:00.000Z");
 
   return {
@@ -70,6 +74,16 @@ function createDependencies(events: string[], runs: WorkforceRunMetadata[]) {
         currentTime += 5;
         return warehouseContext;
       },
+    },
+    buildModelInput({ systemPrompt, history, question }) {
+      return [
+        { role: "system" as const, content: systemPrompt },
+        ...history.map((message) => ({
+          role: message.role,
+          content: message.text,
+        })),
+        { role: "user" as const, content: question },
+      ];
     },
     async createModelResponse() {
       events.push("model");
@@ -146,6 +160,74 @@ test("an allowed run executes provider before model and logs completion", async 
   assert.equal(runs[0].modelDurationMs, 7);
 });
 
+test("Arne uses the same single-provider read-only execution contract", async () => {
+  const events: string[] = [];
+  const runs: WorkforceRunMetadata[] = [];
+  const result = await executeReadOnlyWorkforceRequest({
+    runId: "run-arne",
+    request: {
+      employeeId: "arne",
+      capabilityId: "snake.assess_development",
+      input: { question: "Hva bør prioriteres?", page: "/arne", history: [] },
+    },
+    principal,
+    authorization: {
+      allowed: true,
+      userId: "user-1",
+      userRole: "admin",
+      employeeId: "arne",
+      capabilityId: "snake.assess_development",
+    },
+    dependencies: {
+      employee: {
+        id: "arne",
+        displayName: "Arne",
+        role: "Snake-ekspert",
+        capabilityIds: ["snake.assess_development"],
+        model: { id: "gpt-5-mini" },
+        getSystemPrompt: () => "Arne prompt fixture",
+      },
+      capability: {
+        id: "snake.assess_development",
+        effect: "read",
+        dataSourceIds: ["snake.development_context"],
+      },
+      provider: {
+        id: "arne.advisory_context",
+        capabilityId: "snake.assess_development",
+        async provide() {
+          events.push("provider");
+          return { fixture: "context" };
+        },
+      },
+      buildModelInput({ systemPrompt, question }) {
+        return [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: question },
+        ];
+      },
+      async createModelResponse() {
+        events.push("model");
+        return "Arne response";
+      },
+      logRun(metadata) {
+        events.push("log");
+        runs.push(metadata);
+      },
+      now: Date.now,
+    },
+  });
+
+  assert.deepEqual(result, {
+    ok: true,
+    runId: "run-arne",
+    answer: "Arne response",
+  });
+  assert.deepEqual(events, ["provider", "model", "log"]);
+  assert.equal(runs[0].employeeId, "arne");
+  assert.equal(runs[0].capabilityId, "snake.assess_development");
+});
+
 test("run metadata excludes conversation, prompt, context, and response", async () => {
   const events: string[] = [];
   const runs: WorkforceRunMetadata[] = [];
@@ -191,10 +273,12 @@ test("provider and model failures remain separate read-only outcomes", async () 
 
   const modelEvents: string[] = [];
   const modelRuns: WorkforceRunMetadata[] = [];
-  const modelDependencies = createDependencies(modelEvents, modelRuns);
-  modelDependencies.createModelResponse = async () => {
-    modelEvents.push("model");
-    throw new Error("model failed");
+  const modelDependencies = {
+    ...createDependencies(modelEvents, modelRuns),
+    async createModelResponse() {
+      modelEvents.push("model");
+      throw new Error("model failed");
+    },
   };
   const modelResult = await executeReadOnlyWorkforceRequest({
     runId: "run-model-failed",
@@ -223,4 +307,8 @@ test("server runtime authorizes before execution and defines no tools or routing
     runtime,
     /\btools\s*:|\btool_choice\s*:|\bfunction_call\s*:|\bhandoff\b|\brouteEmployee\b/i
   );
+  assert.match(runtime, /provider: warehouseSummaryProvider/);
+  assert.match(runtime, /provider: arneAdvisoryContextProvider/);
+  assert.match(runtime, /buildModelInput: buildBorreModelInput/);
+  assert.match(runtime, /buildModelInput: buildArneModelInput/);
 });

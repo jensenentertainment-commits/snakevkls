@@ -1,9 +1,7 @@
 import { isRole } from "../../auth/roles.ts";
-import { buildBorreModelInput } from "../borre/chat-input-builder.ts";
 import type { ValidChatInput } from "../shared/chat-input";
 import type { ReadCapabilityDefinition } from "./capability";
 import type { ContextProvider } from "./context-provider";
-import type { WarehouseSummaryContext } from "./contexts/warehouse-summary";
 import type { EmployeeDefinition } from "./employee-definition";
 import type {
   AuthorizedWorkforceContext,
@@ -14,19 +12,36 @@ import type {
   WorkforceRunOutcome,
 } from "./workforce-run-metadata";
 
-type ReadOnlyWorkforceRequest = {
-  readonly employeeId: "borre";
-  readonly capabilityId: "warehouse.read_summary";
-  readonly input: ValidChatInput;
+export type ReadOnlyWorkforceRequest =
+  | {
+      readonly employeeId: "borre";
+      readonly capabilityId: "warehouse.read_summary";
+      readonly input: ValidChatInput;
+    }
+  | {
+      readonly employeeId: "arne";
+      readonly capabilityId: "snake.assess_development";
+      readonly input: ValidChatInput;
+    };
+
+type WorkforceModelMessage = {
+  readonly role: "system" | "user" | "assistant";
+  readonly content: string;
 };
 
-export type ReadOnlyExecutionDependencies = {
+export type ReadOnlyExecutionDependencies<TContext> = {
   readonly employee: EmployeeDefinition | null;
   readonly capability: ReadCapabilityDefinition;
-  readonly provider: ContextProvider<WarehouseSummaryContext>;
+  readonly provider: ContextProvider<TContext>;
+  readonly buildModelInput: (input: {
+    readonly systemPrompt: string;
+    readonly context: TContext;
+    readonly history: ValidChatInput["history"];
+    readonly question: string;
+  }) => WorkforceModelMessage[];
   readonly createModelResponse: (request: {
     readonly model: string;
-    readonly input: ReturnType<typeof buildBorreModelInput>;
+    readonly input: WorkforceModelMessage[];
   }) => Promise<string>;
   readonly logRun: (metadata: WorkforceRunMetadata) => void;
   readonly now: () => number;
@@ -40,12 +55,12 @@ export type ReadOnlyWorkforceRunResult =
       readonly outcome: Exclude<WorkforceRunOutcome, "completed">;
     };
 
-export async function executeReadOnlyWorkforceRequest(input: {
+export async function executeReadOnlyWorkforceRequest<TContext>(input: {
   readonly runId: string;
   readonly request: ReadOnlyWorkforceRequest;
   readonly principal: { readonly userId: string; readonly userRole: string };
   readonly authorization: WorkforceAuthorizationResult;
-  readonly dependencies: ReadOnlyExecutionDependencies;
+  readonly dependencies: ReadOnlyExecutionDependencies<TContext>;
 }): Promise<ReadOnlyWorkforceRunResult> {
   const { authorization, dependencies, principal, request, runId } = input;
   const startedAtMs = dependencies.now();
@@ -99,7 +114,7 @@ export async function executeReadOnlyWorkforceRequest(input: {
     page: request.input.page,
   };
   const contextStartedAtMs = dependencies.now();
-  let context: WarehouseSummaryContext;
+  let context: TContext;
 
   try {
     context = await dependencies.provider.provide(authorizedContext);
@@ -115,7 +130,7 @@ export async function executeReadOnlyWorkforceRequest(input: {
   try {
     const answer = await dependencies.createModelResponse({
       model: employee.model.id,
-      input: buildBorreModelInput({
+      input: dependencies.buildModelInput({
         systemPrompt: employee.getSystemPrompt(),
         context,
         history: request.input.history,

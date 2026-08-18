@@ -1,7 +1,6 @@
 import {
   Activity,
   Boxes,
-  ClipboardCheck,
   FlaskConical,
   LayoutDashboard,
   MapPin,
@@ -11,6 +10,8 @@ import {
   ShieldAlert,
   ShoppingBag,
   Wrench,
+  PackageCheck,
+  ListChecks,
 } from "lucide-react";
 
 import type { ModuleNavigation, NavigationItem } from "./types";
@@ -45,7 +46,7 @@ export const GLOBAL_NAVIGATION_ITEMS = [
   },
   {
     href: "/viper",
-    icon: Boxes,
+    icon: ListChecks,
     id: "viper",
     label: "Viper",
   },
@@ -110,7 +111,7 @@ export const LAGER_MODULE_NAVIGATION = {
     },
     {
       href: "/location-count",
-      icon: ClipboardCheck,
+      icon: PackageCheck,
       id: "count",
       label: "Telling",
     },

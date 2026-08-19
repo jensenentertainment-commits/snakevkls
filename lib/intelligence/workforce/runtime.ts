@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import { buildArneModelInput } from "@/lib/intelligence/arne/chat-input-builder";
 import { buildBorreModelInput } from "@/lib/intelligence/borre/chat-input-builder";
 import { buildRoyModelInput } from "@/lib/intelligence/roy/chat-input-builder";
+import { enforceRoyContentContract } from "@/lib/intelligence/roy/content-contract";
+import type { ShopifyCatalogContext } from "./contexts/shopify-catalog";
 import type { ValidChatInput } from "@/lib/intelligence/shared/chat-input";
 import { getChatOpenAIClient } from "@/lib/intelligence/shared/chat-server";
 import { authorizeWorkforceRequest } from "./authorize-workforce-request";
@@ -101,7 +103,7 @@ export async function runReadOnlyEmployeeRequest(
         capability: shopifyReadCatalogCapability,
         provider: shopifyCatalogProvider,
         buildModelInput: buildRoyModelInput,
-        createModelResponse: createModelResponse(
+        createModelResponse: createRoyModelResponse(
           "Roy fikk ikke svart. Katalogen er ikke endret."
         ),
         logRun: logWorkforceRun,
@@ -133,8 +135,32 @@ function createModelResponse(fallback: string) {
       readonly role: "system" | "user" | "assistant";
       readonly content: string;
     }>;
+    readonly context: unknown;
   }) => {
-    const response = await getChatOpenAIClient().responses.create(request);
+    const response = await getChatOpenAIClient().responses.create({
+      model: request.model,
+      input: request.input,
+    });
     return response.output_text || fallback;
+  };
+}
+
+function createRoyModelResponse(fallback: string) {
+  return async (request: {
+    readonly model: string;
+    readonly input: Array<{
+      readonly role: "system" | "user" | "assistant";
+      readonly content: string;
+    }>;
+    readonly context: ShopifyCatalogContext;
+  }) => {
+    const response = await getChatOpenAIClient().responses.create({
+      model: request.model,
+      input: request.input,
+    });
+    return enforceRoyContentContract(
+      response.output_text || fallback,
+      request.context,
+    );
   };
 }

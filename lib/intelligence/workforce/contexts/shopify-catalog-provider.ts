@@ -3,7 +3,10 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import type { ValidChatInput } from "../../shared/chat-input";
 import type { ContextProvider } from "../context-provider";
-import type { ShopifyCatalogContext } from "./shopify-catalog";
+import {
+  ROY_RECEIVED_CATALOG_FIELDS,
+  type ShopifyCatalogContext,
+} from "./shopify-catalog";
 
 const RESULT_LIMIT = 24;
 
@@ -67,6 +70,7 @@ export const shopifyCatalogProvider = {
       query,
       scope: "targeted_catalog_sample",
       resultLimit: RESULT_LIMIT,
+      receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
       products: (products ?? []).map((product) => ({
         sku: product.sku,
         productName: product.product_name,

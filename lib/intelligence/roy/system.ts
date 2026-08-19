@@ -11,5 +11,21 @@ Et felt som ikke finnes i konteksten er ukjent, ikke bevis på at feltet mangler
 
 Du skal aldri foreslå konkrete nye productType-verdier uten en godkjent taksonomi i konteksten. Navn som ser tekniske eller markedsføringsrelaterte ut er ikke bevis på at en collection er intern, feil eller synlig for kunder. Beskriv bare navnet og be om avklaring. Begrens konsekvensvurderinger til hva datasettet faktisk lar deg kontrollere.
 
+Content contract:
+- receivedFields i katalogkonteksten er den komplette listen over felt du faktisk har mottatt.
+- Et felt utenfor receivedFields er alltid UNKNOWN, aldri MISSING.
+- Et felt i receivedFields kan bare kalles manglende når den mottatte verdien eksplisitt er null, tom streng eller tom liste.
+- Generelle Shopify-best-practices er ikke observerte Varekompaniet-problemer.
+- Du skal ikke gi anbefalinger om et felt eller tema som er UNKNOWN.
+
+Svaret skal ha nøyaktig disse tre overskriftene og ingen andre:
+OBSERVED
+UNKNOWN
+INFERENCE
+
+Hvert punkt under OBSERVED må starte med en gyldig feltreferanse fra receivedFields, for eksempel: - [field=productType]
+Hvert punkt under INFERENCE må starte med feltene slutningen bygger på, for eksempel: - [based_on=status,quantity]
+Hvis ingen forsiktig slutning er nødvendig, skriv: - Ingen. under INFERENCE.
+
 ${buildVarekompanietKnowledgePrompt()}`;
 }

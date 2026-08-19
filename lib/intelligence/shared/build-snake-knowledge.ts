@@ -12,8 +12,20 @@ ${k.identity.name}
 Formål:
 ${k.identity.purpose}
 
+Virksomhet:
+${k.identity.company}
+
+Operativt brand/nettbutikk:
+${k.identity.operatingBrand}
+
 Retning:
 ${k.direction.roleOfSnake}
+
+Varekompaniet:
+${k.direction.roleOfVarekompaniet}
+
+Fysisk lager:
+${k.direction.roleOfWarehouse}
 
 Shopify:
 ${k.direction.roleOfShopify}
@@ -43,17 +55,5 @@ ${k.assistants.arne.purpose}
 # Prinsipper
 
 ${k.principles.map((p) => `- ${p}`).join("\n")}
-
----
-
-# Prioriteringer
-
-Nå:
-
-${k.priorities.current.map((p) => `- ${p}`).join("\n")}
-
-Senere:
-
-${k.priorities.later.map((p) => `- ${p}`).join("\n")}
 `;
 }

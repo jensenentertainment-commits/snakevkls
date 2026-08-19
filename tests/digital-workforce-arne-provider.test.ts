@@ -12,12 +12,8 @@ const context: ArneAdvisoryContext = {
   developmentContext: {
     project: "Snake OS",
     purpose: "Purpose fixture",
-    currentStatus: { phase: "Phase", users: "Users", mainFocus: "Focus" },
     currentModules: ["Dashboard"],
-    plannedModules: ["Arne"],
     principles: ["Small steps"],
-    currentSprint: ["Current work"],
-    nextLikelyWork: ["Next work"],
   },
   operationalContext: {
     stats: {

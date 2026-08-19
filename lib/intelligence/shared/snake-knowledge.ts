@@ -1,19 +1,24 @@
 export const snakeKnowledge = {
   identity: {
     name: "Snake OS",
-    company: "Varekompaniet",
+    company: "Outlet Service AS",
+    operatingBrand: "Varekompaniet",
     type: "Internt arbeids- og driftssystem",
     purpose:
-      "Snake OS skal samle Varekompaniets interne arbeidsflyt i ett system og gjøre lager, drift og administrasjon enklere, ryddigere og mer oversiktlig.",
+      "Snake OS er Outlet Service AS sin interne arbeidsplattform. Dagens operative bruk gjelder i hovedsak Varekompaniet.",
   },
 
   direction: {
     origin:
-      "Snake startet som et lagerprogram, men utvikles gradvis til Varekompaniets interne arbeidsplattform.",
+      "Snake startet som et lagerprogram, men utvikles gradvis til Outlet Service AS sin interne arbeidsplattform.",
+    roleOfVarekompaniet:
+      "Varekompaniet er dagens operative brand og nettbutikk under Outlet Service AS.",
+    roleOfWarehouse:
+      "Det fysiske lageret er en virksomhetsressurs for Outlet Service AS og tilhører ikke prinsipielt én bestemt nettbutikk.",
     roleOfShopify:
-      "Shopify er fortsatt nettbutikken og skal ikke erstattes av Snake.",
+      "Shopify er dagens nettbutikk og salgskanal for Varekompaniet og skal ikke erstattes av Snake.",
     roleOfSnake:
-      "Snake skal samle og forbedre arbeidsflyten rundt lager, produkter, ordre, kundeservice og andre interne oppgaver.",
+      "Snake skal samle og forbedre Outlet Service AS sine faktiske interne arbeidsflyter.",
     principle:
       "Snake skal ikke erstatte fungerende systemer uten tydelig grunn. Det skal samle, forenkle og gi bedre oversikt.",
   },
@@ -224,24 +229,6 @@ export const snakeKnowledge = {
     "Teknologi skal støtte arbeidsflyten, ikke styre den.",
   ],
 
-  priorities: {
-    current: [
-      "Gjøre Børre ferdig som lagerassistent.",
-      "Etablere Arne som Snake-ekspert for admin.",
-      "Rydde felles AI-kunnskap og kontekst.",
-      "Utvikle ordre- og plukkflyt i Viper.",
-    ],
-
-    later: [
-      "Kundeservice i Snake",
-      "E-post i Snake",
-      "Nettbutikk-chat koblet til Snake",
-      "Mulige integrasjoner mot økonomi- og driftssystemer",
-    ],
-
-    rule:
-      "Senere idéer skal ikke prioriteres foran kjerneflyten uten at behovet eller forutsetningene har endret seg.",
-  },
 } as const;
 
 export function getSnakeKnowledge() {

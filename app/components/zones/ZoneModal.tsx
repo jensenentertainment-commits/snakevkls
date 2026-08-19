@@ -10,6 +10,9 @@ type Props = {
   name: string;
   setName: (value: string) => void;
 
+  pickPriority: string;
+  setPickPriority: (value: string) => void;
+
   active: boolean;
   setActive: (value: boolean) => void;
 
@@ -28,6 +31,8 @@ export default function ZoneModal({
   setCode,
   name,
   setName,
+  pickPriority,
+  setPickPriority,
   active,
   setActive,
   saving = false,
@@ -78,6 +83,24 @@ export default function ZoneModal({
             className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
           />
 
+          <label className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
+            Plukkprioritet
+          </label>
+
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={pickPriority}
+            onChange={(e) => setPickPriority(e.target.value)}
+            placeholder="1"
+            className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
+          />
+
+          <p className="mt-2 text-xs text-neutral-500">
+            Lavere tall plukkes først. Lokasjonskoden påvirkes ikke.
+          </p>
+
           <label className="mt-5 flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
             <input
               type="checkbox"
@@ -108,7 +131,7 @@ export default function ZoneModal({
 
           <button
             onClick={onSave}
-            disabled={!code || !name || saving}
+            disabled={!code || !name || !pickPriority || saving}
             className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044c6a] disabled:cursor-not-allowed disabled:opacity-45"
           >
             {saving ? "Lagrer..." : saveLabel}

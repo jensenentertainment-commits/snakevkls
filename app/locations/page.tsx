@@ -23,6 +23,7 @@ type LocationRow = {
   code: string;
   active: boolean;
   zone_id: string | null;
+  pick_sequence: number | null;
   zones: {
     id: string;
     code: string;
@@ -42,12 +43,14 @@ export default function LocationsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newCode, setNewCode] = useState("");
   const [newZoneId, setNewZoneId] = useState("");
+  const [newPickSequence, setNewPickSequence] = useState("");
   const [newActive, setNewActive] = useState(true);
 const [qrLocation, setQrLocation] = useState<LocationRow | null>(null);
 const [qrDataUrl, setQrDataUrl] = useState("");
 const [editingLocation, setEditingLocation] = useState<LocationRow | null>(null);
 const [editCode, setEditCode] = useState("");
 const [editZoneId, setEditZoneId] = useState("");
+const [editPickSequence, setEditPickSequence] = useState("");
 const [editActive, setEditActive] = useState(true);
 
   useEffect(() => {
@@ -70,6 +73,7 @@ const [editActive, setEditActive] = useState(true);
           code,
           active,
           zone_id,
+          pick_sequence,
           zones (
             id,
             code,
@@ -92,12 +96,21 @@ const [editActive, setEditActive] = useState(true);
 
   async function handleCreateLocation() {
     const code = newCode.trim().toUpperCase();
+    const pickSequence = newPickSequence ? Number(newPickSequence) : null;
     if (!code) return;
+    if (
+      pickSequence !== null &&
+      (!newZoneId || !Number.isInteger(pickSequence) || pickSequence <= 0)
+    ) {
+      alert("Fysisk plukknummer krever en sone og et positivt heltall");
+      return;
+    }
 
     const { error } = await supabase.from("locations").insert({
       code,
       zone_id: newZoneId || null,
       active: newActive,
+      pick_sequence: pickSequence,
     });
 
     
@@ -116,12 +129,14 @@ await logActivity({
   metadata: {
     location_code: code,
     zone_id: newZoneId || null,
+    pick_sequence: pickSequence,
     active: newActive,
   },
 });
     
     setNewCode("");
     setNewZoneId("");
+    setNewPickSequence("");
     setNewActive(true);
     setShowCreateModal(false);
     loadAll();
@@ -144,9 +159,17 @@ async function handleSaveEditLocation() {
   if (!editingLocation) return;
 
   const code = editCode.trim().toUpperCase();
+  const pickSequence = editPickSequence ? Number(editPickSequence) : null;
 
   if (!code) {
     alert("Lokasjonskode mangler");
+    return;
+  }
+  if (
+    pickSequence !== null &&
+    (!editZoneId || !Number.isInteger(pickSequence) || pickSequence <= 0)
+  ) {
+    alert("Fysisk plukknummer krever en sone og et positivt heltall");
     return;
   }
 
@@ -158,9 +181,10 @@ async function handleSaveEditLocation() {
       code,
       zone_id: editZoneId || null,
       active: editActive,
+      pick_sequence: pickSequence,
     })
     .eq("id", editingLocation.id)
-    .select("id, code, zone_id, active");
+    .select("id, code, zone_id, pick_sequence, active");
 
   if (error) {
     alert(`Kunne ikke lagre: ${error.message}`);
@@ -186,6 +210,8 @@ async function handleSaveEditLocation() {
     new_code: code,
     old_zone_id: editingLocation.zone_id,
     new_zone_id: editZoneId || null,
+    old_pick_sequence: editingLocation.pick_sequence,
+    new_pick_sequence: pickSequence,
     old_active: editingLocation.active,
     new_active: editActive,
   },
@@ -194,6 +220,7 @@ async function handleSaveEditLocation() {
   setEditingLocation(null);
   setEditCode("");
   setEditZoneId("");
+  setEditPickSequence("");
   setEditActive(true);
 
   await loadAll();
@@ -411,6 +438,7 @@ await logActivity({
                       <tr>
                         <th className="px-5 py-4 font-semibold">Lokasjon</th>
                         <th className="px-5 py-4 font-semibold">Sone</th>
+                        <th className="px-5 py-4 font-semibold">Plukknr.</th>
                         <th className="px-5 py-4 font-semibold">Produkter</th>
                         <th className="px-5 py-4 font-semibold">Status</th>
                         <th className="px-5 py-4 font-semibold">Handling</th>
@@ -459,6 +487,10 @@ await logActivity({
                               </td>
 
                               <td className="px-5 py-5 text-sm text-snake-text-secondary">
+                                {location.pick_sequence ?? "Ikke satt"}
+                              </td>
+
+                              <td className="px-5 py-5 text-sm text-snake-text-secondary">
                                 {productCount}
                               </td>
 
@@ -483,6 +515,9 @@ await logActivity({
     setEditingLocation(location);
     setEditCode(location.code);
     setEditZoneId(location.zone_id ?? "");
+    setEditPickSequence(
+      location.pick_sequence === null ? "" : String(location.pick_sequence)
+    );
     setEditActive(location.active);
   }}
   className="font-semibold text-snake-text-secondary underline-offset-4 hover:underline"
@@ -515,6 +550,8 @@ await logActivity({
   setNewCode={setNewCode}
   newZoneId={newZoneId}
   setNewZoneId={setNewZoneId}
+  newPickSequence={newPickSequence}
+  setNewPickSequence={setNewPickSequence}
   newActive={newActive}
   setNewActive={setNewActive}
   createSaving={false}
@@ -522,6 +559,7 @@ await logActivity({
     setShowCreateModal(false);
     setNewCode("");
     setNewZoneId("");
+    setNewPickSequence("");
     setNewActive(true);
   }}
   onSave={handleCreateLocation}
@@ -619,6 +657,24 @@ await logActivity({
     ))}
   </select>
 </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-snake-text-secondary">
+            Fysisk plukknummer
+          </label>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={editPickSequence}
+            onChange={(e) => setEditPickSequence(e.target.value)}
+            placeholder="Ikke satt"
+            className="w-full rounded-snake-action border border-snake-border-strong px-4 py-3 text-sm outline-none focus:border-snake-primary"
+          />
+          <p className="mt-2 text-xs text-snake-text-muted">
+            Unikt innen sonen og uavhengig av lokasjonskoden.
+          </p>
+        </div>
 
         <label className="flex items-center gap-3 rounded-snake-action border border-snake-border-default bg-snake-surface-subtle px-4 py-3 text-sm">
           <input
@@ -731,7 +787,7 @@ function MobileEmpty({ text }: { text: string }) {
 function EmptyRow({ text }: { text: string }) {
   return (
     <tr>
-      <td colSpan={5} className="px-5 py-12 text-sm text-snake-text-muted">
+      <td colSpan={6} className="px-5 py-12 text-sm text-snake-text-muted">
         {text}
       </td>
     </tr>

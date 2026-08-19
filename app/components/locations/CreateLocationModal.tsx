@@ -13,6 +13,9 @@ type Props = {
   newZoneId: string;
   setNewZoneId: (value: string) => void;
 
+  newPickSequence: string;
+  setNewPickSequence: (value: string) => void;
+
   newActive: boolean;
   setNewActive: (value: boolean) => void;
 
@@ -29,6 +32,8 @@ export default function CreateLocationModal({
   setNewCode,
   newZoneId,
 setNewZoneId,
+  newPickSequence,
+  setNewPickSequence,
   newActive,
   setNewActive,
   createSaving,
@@ -84,6 +89,24 @@ onChange={(e) => setNewZoneId(e.target.value)}
               </option>
             ))}
           </select>
+
+          <label className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
+            Fysisk plukknummer
+          </label>
+
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={newPickSequence}
+            onChange={(e) => setNewPickSequence(e.target.value)}
+            placeholder="Kan settes når fysisk rekkefølge er avklart"
+            className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
+          />
+
+          <p className="mt-2 text-xs text-neutral-500">
+            Unikt innen sonen. Koden er fortsatt lokasjonens identitet.
+          </p>
 
           <label className="mt-5 flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
             <input

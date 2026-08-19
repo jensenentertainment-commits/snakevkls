@@ -13,6 +13,7 @@ type ZoneRow = {
   code: string;
   name: string;
   active: boolean;
+  pick_priority: number;
   locations: { id: string }[];
 };
 
@@ -31,11 +32,13 @@ function ZonesContent() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newCode, setNewCode] = useState("");
   const [newName, setNewName] = useState("");
+  const [newPickPriority, setNewPickPriority] = useState("");
   const [newActive, setNewActive] = useState(true);
 
   const [editingZone, setEditingZone] = useState<ZoneRow | null>(null);
   const [editCode, setEditCode] = useState("");
   const [editName, setEditName] = useState("");
+  const [editPickPriority, setEditPickPriority] = useState("");
   const [editActive, setEditActive] = useState(true);
 
   const [query, setQuery] = useState("");
@@ -55,6 +58,7 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
         code,
         name,
         active,
+        pick_priority,
         locations (
           id
         )
@@ -74,9 +78,10 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
   async function handleCreateZone() {
     const code = newCode.trim().toUpperCase();
     const name = newName.trim();
+    const pickPriority = Number(newPickPriority);
 
-    if (!code || !name) {
-      alert("Sonekode og navn må fylles ut");
+    if (!code || !name || !Number.isInteger(pickPriority) || pickPriority <= 0) {
+      alert("Sonekode, navn og gyldig plukkprioritet må fylles ut");
       return;
     }
 
@@ -84,6 +89,7 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
       code,
       name,
       active: newActive,
+      pick_priority: pickPriority,
     });
 
     if (error) {
@@ -94,6 +100,7 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
     setShowCreateModal(false);
     setNewCode("");
     setNewName("");
+    setNewPickPriority("");
     setNewActive(true);
 
     await loadZones();
@@ -104,9 +111,10 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
 
     const code = editCode.trim().toUpperCase();
     const name = editName.trim();
+    const pickPriority = Number(editPickPriority);
 
-    if (!code || !name) {
-      alert("Sonekode og navn må fylles ut");
+    if (!code || !name || !Number.isInteger(pickPriority) || pickPriority <= 0) {
+      alert("Sonekode, navn og gyldig plukkprioritet må fylles ut");
       return;
     }
 
@@ -116,6 +124,7 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
         code,
         name,
         active: editActive,
+        pick_priority: pickPriority,
       })
       .eq("id", editingZone.id);
 
@@ -127,6 +136,7 @@ const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(
     setEditingZone(null);
     setEditCode("");
     setEditName("");
+    setEditPickPriority("");
     setEditActive(true);
 
     await loadZones();
@@ -242,6 +252,7 @@ const filteredZones = useMemo(() => {
                           setEditingZone(zone);
                           setEditCode(zone.code);
                           setEditName(zone.name);
+                          setEditPickPriority(String(zone.pick_priority));
                           setEditActive(zone.active);
                         }}
                       />
@@ -255,6 +266,7 @@ const filteredZones = useMemo(() => {
                       <tr>
                         <th className="px-5 py-4 font-semibold">Kode</th>
                         <th className="px-5 py-4 font-semibold">Navn</th>
+                        <th className="px-5 py-4 font-semibold">Plukkprioritet</th>
                         <th className="px-5 py-4 font-semibold">Lokasjoner</th>
                         <th className="px-5 py-4 font-semibold">Status</th>
                         <th className="px-5 py-4 font-semibold">Handling</th>
@@ -264,13 +276,13 @@ const filteredZones = useMemo(() => {
                     <tbody>
                       {loading ? (
                         <tr>
-                          <td colSpan={5} className="px-5 py-12 text-sm text-neutral-500">
+                          <td colSpan={6} className="px-5 py-12 text-sm text-neutral-500">
                             Laster soner...
                           </td>
                         </tr>
                       ) : filteredZones.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="px-5 py-12 text-sm text-neutral-500">
+                          <td colSpan={6} className="px-5 py-12 text-sm text-neutral-500">
                             Ingen soner opprettet.
                           </td>
                         </tr>
@@ -285,6 +297,9 @@ const filteredZones = useMemo(() => {
                             </td>
                             <td className="px-5 py-5 text-sm text-neutral-700">
                               {zone.name}
+                            </td>
+                            <td className="px-5 py-5 text-sm text-neutral-700">
+                              {zone.pick_priority}
                             </td>
                             <td className="px-5 py-5 text-sm text-neutral-700">
                               {zone.locations?.length ?? 0}
@@ -302,6 +317,7 @@ const filteredZones = useMemo(() => {
                                   setEditingZone(zone);
                                   setEditCode(zone.code);
                                   setEditName(zone.name);
+                                  setEditPickPriority(String(zone.pick_priority));
                                   setEditActive(zone.active);
                                 }}
                                 className="font-semibold text-[#055a7d] underline-offset-4 hover:underline"
@@ -324,14 +340,17 @@ const filteredZones = useMemo(() => {
   title="Ny sone"
   code={newCode}
   name={newName}
+  pickPriority={newPickPriority}
   active={newActive}
   setCode={setNewCode}
   setName={setNewName}
+  setPickPriority={setNewPickPriority}
   setActive={setNewActive}
   onClose={() => {
     setShowCreateModal(false);
     setNewCode("");
     setNewName("");
+    setNewPickPriority("");
     setNewActive(true);
   }}
   onSave={handleCreateZone}
@@ -343,14 +362,17 @@ const filteredZones = useMemo(() => {
   title={`Rediger ${editingZone?.code ?? "sone"}`}
   code={editCode}
   name={editName}
+  pickPriority={editPickPriority}
   active={editActive}
   setCode={setEditCode}
   setName={setEditName}
+  setPickPriority={setEditPickPriority}
   setActive={setEditActive}
   onClose={() => {
     setEditingZone(null);
     setEditCode("");
     setEditName("");
+    setEditPickPriority("");
     setEditActive(true);
   }}
   onSave={handleSaveZone}
@@ -373,6 +395,9 @@ function ZoneMobileCard({
         <div>
           <p className="text-base font-semibold text-neutral-950">{zone.code}</p>
           <p className="mt-1 text-sm text-neutral-600">{zone.name}</p>
+          <p className="mt-1 text-xs text-neutral-500">
+            Plukkprioritet {zone.pick_priority}
+          </p>
         </div>
 
         {zone.active ? (

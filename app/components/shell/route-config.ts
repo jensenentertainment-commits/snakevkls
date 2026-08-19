@@ -30,16 +30,20 @@ const labsNavigationItem = ADMIN_NAVIGATION_ITEMS.find(
 const warehouseSalesNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
   (item) => item.id === "warehouse-sales",
 );
+const shopifyNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
+  (item) => item.id === "shopify",
+);
 
 if (
   !dashboardNavigationItem ||
   !labsNavigationItem ||
   !lagerNavigationItem ||
   !settingsNavigationItem ||
-  !warehouseSalesNavigationItem
+  !warehouseSalesNavigationItem ||
+  !shopifyNavigationItem
 ) {
   throw new Error(
-    "Global navigation must define Dashboard, Labs, Lager, Lagersalg, and Settings.",
+    "Global navigation must define Dashboard, Labs, Lager, Shopify, Lagersalg, and Settings.",
   );
 }
 
@@ -54,6 +58,12 @@ export const APP_ROUTE_SHELLS = [
     id: "lager",
     moduleNavigation: LAGER_MODULE_NAVIGATION,
     navigationItem: lagerNavigationItem,
+    width: "wide",
+  },
+  {
+    id: "shopify",
+    moduleNavigation: undefined,
+    navigationItem: shopifyNavigationItem,
     width: "wide",
   },
   {

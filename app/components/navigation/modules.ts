@@ -9,6 +9,7 @@ import {
   Settings,
   ShieldAlert,
   ShoppingBag,
+  Store,
   Wrench,
   PackageCheck,
   ListChecks,
@@ -52,6 +53,13 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     id: "viper",
     label: "Viper",
     roles: ["admin", "user", "warehouse"],
+  },
+  {
+    href: "/shopify",
+    icon: Store,
+    id: "shopify",
+    label: "Shopify",
+    roles: ["admin", "user"],
   },
   {
     href: "/warehouse-sales",

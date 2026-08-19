@@ -6,15 +6,16 @@ async function source(path: string) {
   return readFile(new URL(`../${path}`, import.meta.url), "utf8");
 }
 
-test("the employee registry contains only Borre and dormant Arne", async () => {
+test("the employee registry contains Borre, Arne, and Roy", async () => {
   const registry = await source("lib/intelligence/workforce/registry.ts");
 
   assert.match(registry, /import "server-only"/);
   assert.match(registry, /borre:\s*borreDefinition/);
   assert.match(registry, /arne:\s*arneDefinition/);
+  assert.match(registry, /roy:\s*royDefinition/);
   assert.match(registry, /Object\.hasOwn\(employeeRegistry, employeeId\)/);
   assert.match(registry, /return null/);
-  assert.doesNotMatch(registry, /\broy\b|\bpeder\b|\bpernille\b/i);
+  assert.doesNotMatch(registry, /\bpeder\b|\bpernille\b/i);
 });
 
 test("Arne declares the active prompt, model, and one read capability", async () => {
@@ -76,10 +77,11 @@ test("the first capability is closed and read-only", async () => {
   );
 });
 
-test("only Borre and Arne active routes import the workforce runtime", async () => {
-  const [borreRoute, arneRoute] = await Promise.all([
+test("Borre, Arne, and Roy routes import the workforce runtime", async () => {
+  const [borreRoute, arneRoute, royRoute] = await Promise.all([
     source("app/api/borre/ask/route.ts"),
     source("app/api/arne/ask/route.ts"),
+    source("app/api/roy/ask/route.ts"),
   ]);
 
   assert.match(
@@ -87,4 +89,5 @@ test("only Borre and Arne active routes import the workforce runtime", async () 
     /intelligence\/workforce\/runtime/
   );
   assert.match(arneRoute, /intelligence\/workforce\/runtime/);
+  assert.match(royRoute, /intelligence\/workforce\/runtime/);
 });

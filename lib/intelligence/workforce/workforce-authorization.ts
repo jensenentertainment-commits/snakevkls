@@ -53,6 +53,11 @@ const workforcePolicy: Record<
     user: [],
     warehouse: [],
   },
+  roy: {
+    admin: ["shopify.read_catalog"],
+    user: ["shopify.read_catalog"],
+    warehouse: [],
+  },
 };
 
 export function evaluateWorkforceAuthorization(

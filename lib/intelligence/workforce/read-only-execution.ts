@@ -22,6 +22,11 @@ export type ReadOnlyWorkforceRequest =
       readonly employeeId: "arne";
       readonly capabilityId: "snake.assess_development";
       readonly input: ValidChatInput;
+    }
+  | {
+      readonly employeeId: "roy";
+      readonly capabilityId: "shopify.read_catalog";
+      readonly input: ValidChatInput;
     };
 
 type WorkforceModelMessage = {
@@ -117,7 +122,10 @@ export async function executeReadOnlyWorkforceRequest<TContext>(input: {
   let context: TContext;
 
   try {
-    context = await dependencies.provider.provide(authorizedContext);
+    context = await dependencies.provider.provide(
+      authorizedContext,
+      request.input,
+    );
   } catch {
     finish("context_failed", {
       contextDurationMs: dependencies.now() - contextStartedAtMs,

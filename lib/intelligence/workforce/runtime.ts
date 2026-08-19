@@ -3,13 +3,16 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { buildArneModelInput } from "@/lib/intelligence/arne/chat-input-builder";
 import { buildBorreModelInput } from "@/lib/intelligence/borre/chat-input-builder";
+import { buildRoyModelInput } from "@/lib/intelligence/roy/chat-input-builder";
 import type { ValidChatInput } from "@/lib/intelligence/shared/chat-input";
 import { getChatOpenAIClient } from "@/lib/intelligence/shared/chat-server";
 import { authorizeWorkforceRequest } from "./authorize-workforce-request";
 import { snakeAssessDevelopmentCapability } from "./capabilities/snake-assess-development";
 import { warehouseReadSummaryCapability } from "./capabilities/warehouse-read-summary";
+import { shopifyReadCatalogCapability } from "./capabilities/shopify-read-catalog";
 import { arneAdvisoryContextProvider } from "./contexts/arne-advisory-context-provider";
 import { warehouseSummaryProvider } from "./contexts/warehouse-summary-provider";
+import { shopifyCatalogProvider } from "./contexts/shopify-catalog-provider";
 import { getEmployeeDefinition } from "./registry";
 import {
   executeReadOnlyWorkforceRequest,
@@ -26,6 +29,10 @@ type RuntimeRequest = (
   | {
       readonly employeeId: "arne";
       readonly capabilityId: "snake.assess_development";
+    }
+  | {
+      readonly employeeId: "roy";
+      readonly capabilityId: "shopify.read_catalog";
     }
 ) & {
   readonly userId: string;
@@ -51,11 +58,17 @@ export async function runReadOnlyEmployeeRequest(
           capabilityId: input.capabilityId,
           input: input.request,
         }
-      : {
-          employeeId: input.employeeId,
-          capabilityId: input.capabilityId,
-          input: input.request,
-        };
+      : input.employeeId === "arne"
+        ? {
+            employeeId: input.employeeId,
+            capabilityId: input.capabilityId,
+            input: input.request,
+          }
+        : {
+            employeeId: input.employeeId,
+            capabilityId: input.capabilityId,
+            input: input.request,
+          };
   const shared = {
     runId,
     request,
@@ -73,6 +86,23 @@ export async function runReadOnlyEmployeeRequest(
         buildModelInput: buildBorreModelInput,
         createModelResponse: createModelResponse(
           "Børre fikk ikke svart. Det er sjeldent, men tydeligvis mulig."
+        ),
+        logRun: logWorkforceRun,
+        now: Date.now,
+      },
+    });
+  }
+
+  if (input.employeeId === "roy") {
+    return executeReadOnlyWorkforceRequest({
+      ...shared,
+      dependencies: {
+        employee,
+        capability: shopifyReadCatalogCapability,
+        provider: shopifyCatalogProvider,
+        buildModelInput: buildRoyModelInput,
+        createModelResponse: createModelResponse(
+          "Roy fikk ikke svart. Katalogen er ikke endret."
         ),
         logRun: logWorkforceRun,
         now: Date.now,

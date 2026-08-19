@@ -1,6 +1,6 @@
 import type { CapabilityId } from "./capability";
 
-export type EmployeeId = "borre" | "arne";
+export type EmployeeId = "borre" | "arne" | "roy";
 
 export type EmployeeDefinition = {
   readonly id: EmployeeId;

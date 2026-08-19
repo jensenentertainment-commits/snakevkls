@@ -22,6 +22,15 @@ const arneDefinition = {
   getSystemPrompt: () => "unchanged Arne test prompt",
 } as const satisfies EmployeeDefinition;
 
+const royDefinition = {
+  id: "roy",
+  displayName: "Roy",
+  role: "Varekompaniets Shopify- og produktspesialist",
+  capabilityIds: ["shopify.read_catalog"],
+  model: { id: "gpt-5-mini" },
+  getSystemPrompt: () => "read-only catalog",
+} as const satisfies EmployeeDefinition;
+
 function request(userRole: string, employeeId = "borre", capabilityId = "warehouse.read_summary") {
   return {
     userId: "user-1",
@@ -77,6 +86,25 @@ test("only admin policy allows Arne development assessment", () => {
       { allowed: false, reason: "policy_denied" },
     );
   }
+});
+
+test("admin and user can use Roy while warehouse is denied", () => {
+  for (const role of ["admin", "user"]) {
+    assert.equal(
+      evaluateWorkforceAuthorization(
+        request(role, "roy", "shopify.read_catalog"),
+        royDefinition,
+      ).allowed,
+      true,
+    );
+  }
+  assert.deepEqual(
+    evaluateWorkforceAuthorization(
+      request("warehouse", "roy", "shopify.read_catalog"),
+      royDefinition,
+    ),
+    { allowed: false, reason: "policy_denied" },
+  );
 });
 
 test("an unknown employee fails closed", () => {

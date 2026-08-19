@@ -40,7 +40,7 @@ export function chatServerError() {
 }
 
 export function logChatServerError(
-  assistant: "borre" | "arne",
+  assistant: "borre" | "arne" | "roy",
   stage: "request" | "context" | "openai" | "unexpected",
   error: unknown
 ) {

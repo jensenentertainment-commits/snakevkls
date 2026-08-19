@@ -56,6 +56,10 @@ test("Settings preserves zone and user management behavior", () => {
   assert.match(settings, /fetch\("\/api\/admin\/users\/update-profile"/);
   assert.match(settings, /setShowCreateModal\(true\)/);
   assert.match(settings, /setShowCreateUserModal\(true\)/);
+  assert.match(settings, /<option value="user">Bruker<\/option>/);
+  assert.match(settings, /<option value="warehouse">Lager<\/option>/);
+  assert.match(settings, /Lager \(legacy\)/);
+  assert.match(settings, /useState<Role>\("user"\)/);
 });
 
 test("Zones preserves its existing management behavior and dialogs", () => {

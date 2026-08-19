@@ -4,7 +4,7 @@ import { requireRole } from "@/lib/auth/require-role";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "warehouse", "lager"]);
 
   if (!auth.ok) return auth.response;
 

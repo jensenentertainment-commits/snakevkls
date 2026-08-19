@@ -146,7 +146,7 @@ test("completion API authorizes, normalizes and delegates exactly once", async (
   const route = await source("app/api/warehouse-sales/complete/route.ts");
   const completion = await source("lib/warehouse-sales/completion.ts");
 
-  assert.match(route, /requireRole\(\["admin", "lager"\]\)/);
+  assert.match(route, /requireRole\(\["admin", "user", "lager"\]\)/);
   assert.match(route, /normalizeWarehouseSaleRequest/);
   assert.match(route, /completeWarehouseSale/);
   assert.match(completion, /\.rpc\(\s*"complete_warehouse_sale"/);

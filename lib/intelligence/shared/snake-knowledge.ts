@@ -30,10 +30,16 @@ export const snakeKnowledge = {
         "Har tilgang til hele Snake, inkludert utviklingsområder, Snake Labs og Arne.",
     },
 
+    user: {
+      role: "Ordinær Snake OS-bruker",
+      access:
+        "Har dagens operative virksomhetstilgang, inkludert Lager, Viper, Lagersalg og relevante digitale ansatte.",
+    },
+
     warehouse: {
       role: "Lagermedarbeider",
       access:
-        "Har tilgang til relevante lagerfunksjoner og Børre, men ikke administrative utviklingsområder.",
+        "Har begrenset tilgang til Lager, Viper, nødvendig lager- og plukkarbeid og Børre, men ikke Lagersalg eller administrative utviklingsområder.",
     },
 
     futureUsers: {

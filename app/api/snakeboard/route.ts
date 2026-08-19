@@ -15,7 +15,7 @@ type Body = {
 const allowedTypes: MessageType[] = ["info", "important", "issue"];
 
 export async function GET(request: NextRequest) {
-  const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "lager"]);
 const { searchParams } = new URL(request.url);
 
 const limit = Number(searchParams.get("limit") ?? 50);
@@ -49,7 +49,7 @@ const safeLimit = Math.min(Math.max(limit, 1), 50);
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "lager"]);
 
   if (!auth.ok) return auth.response;
 

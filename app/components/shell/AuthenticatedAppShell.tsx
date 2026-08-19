@@ -22,10 +22,11 @@ export type AuthenticatedAppShellProps = {
   width?: "default" | "wide";
 };
 
-const fallbackProfile: AppProfile = {
-  active: true,
-  display_name: "Bruker",
-  role: "lager",
+const ROLE_LABELS: Record<Role, string> = {
+  admin: "Administrator",
+  user: "Bruker",
+  warehouse: "Lager",
+  lager: "Lager (legacy)",
 };
 
 export function AuthenticatedAppShell({
@@ -33,7 +34,7 @@ export function AuthenticatedAppShell({
   moduleNavigation,
   width = "default",
 }: AuthenticatedAppShellProps) {
-  const [profile, setProfile] = useState<AppProfile>(fallbackProfile);
+  const [profile, setProfile] = useState<AppProfile | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -72,11 +73,12 @@ export function AuthenticatedAppShell({
       }
       navbar={
         <AppNavbar
-          isAdmin={profile.role === "admin"}
+          isAdmin={profile?.role === "admin"}
           logoutSlot={<AppLogoutButton />}
+          role={profile?.role}
           user={{
-            displayName: profile.display_name ?? "Bruker",
-            roleLabel: profile.role === "admin" ? "Administrator" : "Lager",
+            displayName: profile?.display_name ?? "Bruker",
+            roleLabel: profile ? ROLE_LABELS[profile.role] : undefined,
           }}
         />
       }

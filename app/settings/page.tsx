@@ -63,7 +63,7 @@ const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserDisplayName, setNewUserDisplayName] = useState("");
 
-  const [newUserRole, setNewUserRole] = useState<Role>("lager");
+  const [newUserRole, setNewUserRole] = useState<Role>("user");
 
   const [newUserActive, setNewUserActive] = useState(true);
 
@@ -200,7 +200,7 @@ async function loadCurrentUser() {
     setNewUserEmail("");
     setNewUserPassword("");
     setNewUserDisplayName("");
-    setNewUserRole("lager");
+    setNewUserRole("user");
     setNewUserActive(true);
 
     await loadUsers();
@@ -541,7 +541,11 @@ const filteredZones = useMemo(() => {
           className="rounded-2xl border border-neutral-300 px-4 py-3 text-sm"
         >
           <option value="admin">Admin</option>
-          <option value="lager">Lager</option>
+          <option value="user">Bruker</option>
+          <option value="warehouse">Lager</option>
+          {user.role === "lager" ? (
+            <option disabled value="lager">Lager (legacy)</option>
+          ) : null}
         </select>
 
         <div
@@ -601,7 +605,7 @@ const filteredZones = useMemo(() => {
       setNewUserEmail("");
       setNewUserPassword("");
       setNewUserDisplayName("");
-      setNewUserRole("lager");
+      setNewUserRole("user");
       setNewUserActive(true);
     }}
     onSave={handleCreateUser}
@@ -728,7 +732,8 @@ function CreateUserModal({
             className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm outline-none focus:border-[#055a7d]"
           >
             <option value="admin">Admin</option>
-            <option value="lager">Lager</option>
+            <option value="user">Bruker</option>
+            <option value="warehouse">Lager</option>
           </select>
 
           <label className="flex items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm">

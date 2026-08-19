@@ -12,7 +12,7 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "lager"]);
   if (!auth.ok) return auth.response;
 
   const { id } = await params;

@@ -32,7 +32,7 @@ const modules: readonly DashboardModule[] = [
     href: "/lager",
     icon: Boxes,
     id: "lager",
-    roles: ["admin", "lager"],
+    roles: ["admin", "user", "warehouse", "lager"],
     title: "Lager",
   },
   {
@@ -41,7 +41,7 @@ const modules: readonly DashboardModule[] = [
     href: "/warehouse-sales",
     icon: ShoppingBag,
     id: "lagersalg",
-    roles: ["admin", "lager"],
+    roles: ["admin", "user", "lager"],
     title: "Lagersalg",
   },
   {
@@ -50,7 +50,7 @@ const modules: readonly DashboardModule[] = [
     href: "/viper",
     icon: PackageCheck,
     id: "viper",
-    roles: ["admin", "lager"],
+    roles: ["admin", "user", "warehouse", "lager"],
     title: "Viper",
   },
   {

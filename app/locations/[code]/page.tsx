@@ -43,7 +43,11 @@ export default function LocationDetailPage() {
   
 
 const [role, setRole] = useState<Role | null>(null);
-const canWrite = role === "admin" || role === "lager";
+const canWrite =
+  role === "admin" ||
+  role === "user" ||
+  role === "warehouse" ||
+  role === "lager";
 const [activity, setActivity] = useState<any[]>([]);
   const inventoryItems = location?.inventory ?? [];
 

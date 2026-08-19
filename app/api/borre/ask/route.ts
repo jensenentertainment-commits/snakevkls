@@ -10,7 +10,7 @@ import { runReadOnlyEmployeeRequest } from "@/lib/intelligence/workforce/runtime
 
 export async function POST(req: Request) {
   try {
-    const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "warehouse", "lager"]);
     if (!auth.ok) return auth.response;
 
     let body: unknown;

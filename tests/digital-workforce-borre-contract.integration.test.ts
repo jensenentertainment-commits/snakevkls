@@ -16,7 +16,10 @@ test("Borre keeps the existing authenticated API and model contract", async () =
   ]);
 
   assert.match(route, /export async function POST\(req: Request\)/);
-  assert.match(route, /requireRole\(\["admin", "lager"\]\)/);
+  assert.match(
+    route,
+    /requireRole\(\["admin", "user", "warehouse", "lager"\]\)/,
+  );
   assert.match(route, /validateChatInput\(body\)/);
   assert.match(route, /runReadOnlyEmployeeRequest\(\{/);
   assert.match(route, /employeeId: "borre"/);

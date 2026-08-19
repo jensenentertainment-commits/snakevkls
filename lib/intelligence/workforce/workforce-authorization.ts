@@ -45,10 +45,14 @@ const workforcePolicy: Record<
 > = {
   borre: {
     admin: ["warehouse.read_summary"],
+    user: ["warehouse.read_summary"],
+    warehouse: ["warehouse.read_summary"],
     lager: ["warehouse.read_summary"],
   },
   arne: {
     admin: ["snake.assess_development"],
+    user: [],
+    warehouse: [],
     lager: [],
   },
 };

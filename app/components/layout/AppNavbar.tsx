@@ -7,6 +7,7 @@ import {
   GLOBAL_NAVIGATION_ITEMS,
 } from "@/app/components/navigation/modules";
 import type { NavigationItem } from "@/app/components/navigation/types";
+import type { Role } from "@/lib/auth/roles";
 
 import { AppClock } from "./AppClock";
 import { AppNavLinks } from "./AppNavLinks";
@@ -24,6 +25,7 @@ export type AppNavbarProps = {
   isAdmin?: boolean;
   items?: readonly NavigationItem[];
   logoutSlot?: ReactNode;
+  role?: Role;
   user: AppNavbarUser;
 };
 
@@ -33,9 +35,17 @@ export function AppNavbar({
   isAdmin = false,
   items = GLOBAL_NAVIGATION_ITEMS,
   logoutSlot,
+  role,
   user,
 }: AppNavbarProps) {
-  const visibleAdminItems = isAdmin ? adminItems : [];
+  const visibleItems = role
+    ? items.filter((item) => !item.roles || item.roles.includes(role))
+    : [];
+  const visibleAdminItems = isAdmin
+    ? adminItems.filter(
+        (item) => !item.roles || Boolean(role && item.roles.includes(role)),
+      )
+    : [];
 
   return (
     <header className="border-b border-snake-border-on-dark-subtle bg-snake-app-deep text-snake-text-on-dark print:hidden">
@@ -59,7 +69,7 @@ export function AppNavbar({
         </Link>
 
         <nav aria-label="Systemnavigasjon" className="hidden lg:block">
-          <AppNavLinks items={items} />
+          <AppNavLinks items={visibleItems} />
         </nav>
 
         <div className="ml-auto hidden xl:block text-[length:var(--snake-text-meta-size)] leading-[var(--snake-text-meta-line-height)]">
@@ -76,7 +86,7 @@ export function AppNavbar({
         <MobileNav
           adminItems={visibleAdminItems}
           displayName={user.displayName}
-          items={items}
+          items={visibleItems}
           logoutSlot={logoutSlot}
           roleLabel={user.roleLabel}
         />

@@ -16,7 +16,7 @@ type OperationalSignal = {
 };
 
 export async function GET() {
-  const auth = await requireRole(["admin", "lager"]);
+  const auth = await requireRole(["admin", "user", "warehouse", "lager"]);
 
   if (!auth.ok) return auth.response;
 

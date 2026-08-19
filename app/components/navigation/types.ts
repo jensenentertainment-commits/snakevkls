@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import type { Role } from "@/lib/auth/roles";
 
 export type NavigationIcon = ComponentType<{
   "aria-hidden"?: boolean | "true" | "false";
@@ -13,6 +14,7 @@ export type NavigationItem = {
   id: string;
   label: string;
   matchPaths?: readonly string[];
+  roles?: readonly Role[];
 };
 
 export type ModuleNavigation = {

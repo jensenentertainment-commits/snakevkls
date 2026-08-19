@@ -87,7 +87,11 @@ async function loadRole() {
   setRole(data?.active ? (data.role as Role) : null);
 }
 
-const canWrite = role === "admin" || role === "lager";
+const canWrite =
+  role === "admin" ||
+  role === "user" ||
+  role === "warehouse" ||
+  role === "lager";
 
 
 
@@ -863,7 +867,7 @@ function Empty({ text }: { text: string }) {
 
 export default function ProductsPage() {
   return (
-    <RoleGate allowedRoles={["admin", "lager"]}>
+    <RoleGate allowedRoles={["admin", "user", "warehouse", "lager"]}>
       <Suspense fallback={null}>
         <ProductsPageContent />
       </Suspense>

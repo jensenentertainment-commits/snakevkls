@@ -28,12 +28,14 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: LayoutDashboard,
     id: "dashboard",
     label: "Dashboard",
+    roles: ["admin", "user", "warehouse", "lager"],
   },
   {
     href: "/lager",
     icon: Boxes,
     id: "lager",
     label: "Lager",
+    roles: ["admin", "user", "warehouse", "lager"],
     matchPaths: [
       "/lager",
       "/products",
@@ -49,12 +51,14 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: ListChecks,
     id: "viper",
     label: "Viper",
+    roles: ["admin", "user", "warehouse", "lager"],
   },
   {
     href: "/warehouse-sales",
     icon: ShoppingBag,
     id: "warehouse-sales",
     label: "Lagersalg",
+    roles: ["admin", "user", "lager"],
     matchPaths: ["/warehouse-sales"],
   },
 ] as const satisfies readonly NavigationItem[];
@@ -65,6 +69,7 @@ export const ADMIN_NAVIGATION_ITEMS = [
     icon: Settings,
     id: "settings",
     label: "Innstillinger",
+    roles: ["admin"],
     matchPaths: ["/settings", "/zones"],
   },
   {
@@ -72,6 +77,7 @@ export const ADMIN_NAVIGATION_ITEMS = [
     icon: FlaskConical,
     id: "labs",
     label: "Labs",
+    roles: ["admin"],
   },
 ] as const satisfies readonly NavigationItem[];
 

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 type Body = {
   userId: string;
   displayName?: string | null;
-  role?: "admin" | "lager";
+  role?: "admin" | "user" | "warehouse";
   active?: boolean;
 };
 
@@ -29,7 +29,7 @@ if (!auth.ok) return auth.response;
   }
 
   if (typeof body.role !== "undefined") {
-    const validRoles = ["admin", "lager"];
+    const validRoles = ["admin", "user", "warehouse"];
 
     if (!validRoles.includes(body.role)) {
       return NextResponse.json({ error: "Ugyldig rolle" }, { status: 400 });

@@ -58,7 +58,7 @@ test("Settings preserves zone and user management behavior", () => {
   assert.match(settings, /setShowCreateUserModal\(true\)/);
   assert.match(settings, /<option value="user">Bruker<\/option>/);
   assert.match(settings, /<option value="warehouse">Lager<\/option>/);
-  assert.match(settings, /Lager \(legacy\)/);
+  assert.doesNotMatch(settings, /Lager \(legacy\)|value="lager"/);
   assert.match(settings, /useState<Role>\("user"\)/);
 });
 

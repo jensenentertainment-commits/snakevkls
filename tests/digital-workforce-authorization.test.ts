@@ -31,8 +31,8 @@ function request(userRole: string, employeeId = "borre", capabilityId = "warehou
   };
 }
 
-test("all operative roles and legacy lager can use Borre", () => {
-  for (const role of ["admin", "user", "warehouse", "lager"]) {
+test("all three target roles can use Borre", () => {
+  for (const role of ["admin", "user", "warehouse"]) {
     assert.deepEqual(
       evaluateWorkforceAuthorization(request(role), borreDefinition),
       {
@@ -68,7 +68,7 @@ test("only admin policy allows Arne development assessment", () => {
     { allowed: false, reason: "policy_denied" }
   );
 
-  for (const role of ["warehouse", "lager"]) {
+  for (const role of ["warehouse"]) {
     assert.deepEqual(
       evaluateWorkforceAuthorization(
         request(role, "arne", "snake.assess_development"),
@@ -103,6 +103,10 @@ test("a capability not declared by the employee fails closed", () => {
 test("an unknown human role fails closed", () => {
   assert.deepEqual(
     evaluateWorkforceAuthorization(request("viewer"), borreDefinition),
+    { allowed: false, reason: "policy_denied" }
+  );
+  assert.deepEqual(
+    evaluateWorkforceAuthorization(request("lager"), borreDefinition),
     { allowed: false, reason: "policy_denied" }
   );
 });

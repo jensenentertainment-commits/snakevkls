@@ -26,7 +26,6 @@ const ROLE_LABELS: Record<Role, string> = {
   admin: "Administrator",
   user: "Bruker",
   warehouse: "Lager",
-  lager: "Lager (legacy)",
 };
 
 export function AuthenticatedAppShell({

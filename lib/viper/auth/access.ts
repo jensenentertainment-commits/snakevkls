@@ -7,11 +7,11 @@ export type ViperActor = {
   id: string;
   email: string | null;
   displayName: string | null;
-  role: "admin" | "user" | "warehouse" | "lager";
+  role: "admin" | "user" | "warehouse";
 };
 
 export async function requireViperApiActor() {
-  const auth = await requireRole(["admin", "user", "warehouse", "lager"]);
+  const auth = await requireRole(["admin", "user", "warehouse"]);
 
   if (!auth.ok) return auth;
 

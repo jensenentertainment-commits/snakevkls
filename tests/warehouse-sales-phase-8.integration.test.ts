@@ -15,7 +15,7 @@ test("phase 8 exposes authenticated search, quote, completion and history routes
     "app/api/warehouse-sales/history/[id]/route.ts",
   ]) {
     const source = read(file);
-    assert.match(source, /requireRole\(\["admin", "user", "lager"\]\)/);
+    assert.match(source, /requireRole\(\["admin", "user"\]\)/);
     assert.match(source, /private, no-store|completeWarehouseSale/);
     assert.doesNotMatch(source, /SUPABASE_SERVICE_ROLE_KEY/);
   }

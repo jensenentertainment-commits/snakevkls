@@ -6,12 +6,12 @@ async function source(path: string) {
   return readFile(new URL(`../${path}`, import.meta.url), "utf8");
 }
 
-test("the application exposes three target roles with temporary legacy compatibility", async () => {
+test("the application contracts to exactly three target roles", async () => {
   const roles = await source("lib/auth/roles.ts");
 
   assert.match(roles, /TARGET_ROLES = \["admin", "user", "warehouse"\]/);
-  assert.match(roles, /LEGACY_ROLES = \["lager"\]/);
-  assert.match(roles, /ROLES = \[\.\.\.TARGET_ROLES, \.\.\.LEGACY_ROLES\]/);
+  assert.match(roles, /ROLES = TARGET_ROLES/);
+  assert.doesNotMatch(roles, /LEGACY_ROLES/);
 });
 
 test("navigation separates ordinary users from warehouse-only scope", async () => {
@@ -22,15 +22,15 @@ test("navigation separates ordinary users from warehouse-only scope", async () =
 
   assert.match(
     dashboard,
-    /id: "lager",[\s\S]*roles: \["admin", "user", "warehouse", "lager"\]/,
+    /id: "lager",[\s\S]*roles: \["admin", "user", "warehouse"\]/,
   );
   assert.match(
     dashboard,
-    /id: "lagersalg",[\s\S]*roles: \["admin", "user", "lager"\]/,
+    /id: "lagersalg",[\s\S]*roles: \["admin", "user"\]/,
   );
   assert.match(
     dashboard,
-    /id: "viper",[\s\S]*roles: \["admin", "user", "warehouse", "lager"\]/,
+    /id: "viper",[\s\S]*roles: \["admin", "user", "warehouse"\]/,
   );
   assert.doesNotMatch(shell, /fallbackProfile/);
   assert.match(shell, /warehouse: "Lager"/);
@@ -44,15 +44,15 @@ test("route authorization keeps warehouse out of Lagersalg", async () => {
     source("app/api/arne/ask/route.ts"),
   ]);
 
-  assert.match(sale, /requireRole\(\["admin", "user", "lager"\]\)/);
+  assert.match(sale, /requireRole\(\["admin", "user"\]\)/);
   assert.doesNotMatch(sale, /"warehouse"/);
   assert.match(
     viper,
-    /requireRole\(\["admin", "user", "warehouse", "lager"\]\)/,
+    /requireRole\(\["admin", "user", "warehouse"\]\)/,
   );
   assert.match(
     borre,
-    /requireRole\(\["admin", "user", "warehouse", "lager"\]\)/,
+    /requireRole\(\["admin", "user", "warehouse"\]\)/,
   );
   assert.match(arne, /requireRole\(\["admin"\]\)/);
 });
@@ -87,4 +87,3 @@ test("expand migration hardens catalog RLS and preserves a controlled transition
   );
   assert.doesNotMatch(migration, /update\s+public\.profiles/i);
 });
-

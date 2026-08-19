@@ -46,8 +46,7 @@ const [role, setRole] = useState<Role | null>(null);
 const canWrite =
   role === "admin" ||
   role === "user" ||
-  role === "warehouse" ||
-  role === "lager";
+  role === "warehouse";
 const [activity, setActivity] = useState<any[]>([]);
   const inventoryItems = location?.inventory ?? [];
 

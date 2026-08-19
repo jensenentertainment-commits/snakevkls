@@ -543,9 +543,6 @@ const filteredZones = useMemo(() => {
           <option value="admin">Admin</option>
           <option value="user">Bruker</option>
           <option value="warehouse">Lager</option>
-          {user.role === "lager" ? (
-            <option disabled value="lager">Lager (legacy)</option>
-          ) : null}
         </select>
 
         <div

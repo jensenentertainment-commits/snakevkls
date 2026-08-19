@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 type Body = { inventoryId: string };
 
 export async function POST(request: NextRequest) {
-  const auth = await requireRole(["admin", "user", "warehouse", "lager"]);
+  const auth = await requireRole(["admin", "user", "warehouse"]);
   if (!auth.ok) return auth.response;
 
   const { user, profile } = auth;

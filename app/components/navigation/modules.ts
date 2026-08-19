@@ -28,14 +28,14 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: LayoutDashboard,
     id: "dashboard",
     label: "Dashboard",
-    roles: ["admin", "user", "warehouse", "lager"],
+    roles: ["admin", "user", "warehouse"],
   },
   {
     href: "/lager",
     icon: Boxes,
     id: "lager",
     label: "Lager",
-    roles: ["admin", "user", "warehouse", "lager"],
+    roles: ["admin", "user", "warehouse"],
     matchPaths: [
       "/lager",
       "/products",
@@ -51,14 +51,14 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: ListChecks,
     id: "viper",
     label: "Viper",
-    roles: ["admin", "user", "warehouse", "lager"],
+    roles: ["admin", "user", "warehouse"],
   },
   {
     href: "/warehouse-sales",
     icon: ShoppingBag,
     id: "warehouse-sales",
     label: "Lagersalg",
-    roles: ["admin", "user", "lager"],
+    roles: ["admin", "user"],
     matchPaths: ["/warehouse-sales"],
   },
 ] as const satisfies readonly NavigationItem[];

@@ -16,7 +16,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const auth = await requireRole(["admin", "user", "lager"]);
+  const auth = await requireRole(["admin", "user"]);
   if (!auth.ok) return auth.response;
 
   const shop = process.env.SHOPIFY_STORE_DOMAIN?.trim();

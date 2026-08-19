@@ -9,7 +9,7 @@ export default async function WarehouseSalesLayout({
 }: {
   children: ReactNode;
 }) {
-  const auth = await requireRole(["admin", "user", "lager"]);
+  const auth = await requireRole(["admin", "user"]);
   if (!auth.ok) {
     redirect(auth.response.status === 401 ? "/login" : "/dashboard");
   }

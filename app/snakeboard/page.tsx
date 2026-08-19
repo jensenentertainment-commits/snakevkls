@@ -24,7 +24,7 @@ type SnakeboardMessage = {
   type: MessageType;
   status: "active" | "archived";
   created_by_name: string | null;
-  created_by_role?: "admin" | "user" | "warehouse" | "lager" | null;
+  created_by_role?: "admin" | "user" | "warehouse" | null;
   created_at: string;
 };
 

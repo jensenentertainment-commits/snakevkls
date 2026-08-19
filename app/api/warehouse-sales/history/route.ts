@@ -6,7 +6,7 @@ import { listWarehouseSales } from "@/lib/warehouse-sales/repository";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const auth = await requireRole(["admin", "user", "lager"]);
+  const auth = await requireRole(["admin", "user"]);
   if (!auth.ok) return auth.response;
 
   try {

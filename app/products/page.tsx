@@ -90,8 +90,7 @@ async function loadRole() {
 const canWrite =
   role === "admin" ||
   role === "user" ||
-  role === "warehouse" ||
-  role === "lager";
+  role === "warehouse";
 
 
 
@@ -867,7 +866,7 @@ function Empty({ text }: { text: string }) {
 
 export default function ProductsPage() {
   return (
-    <RoleGate allowedRoles={["admin", "user", "warehouse", "lager"]}>
+    <RoleGate allowedRoles={["admin", "user", "warehouse"]}>
       <Suspense fallback={null}>
         <ProductsPageContent />
       </Suspense>

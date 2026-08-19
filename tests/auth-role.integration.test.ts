@@ -24,7 +24,7 @@ test("role control rejects missing, inactive, and invalid profiles", () => {
       getAccessDecision({
         authenticated: true,
         profile,
-        allowedRoles: ["admin", "user", "warehouse", "lager"],
+        allowedRoles: ["admin", "user", "warehouse"],
       }),
       "forbidden"
     );
@@ -62,5 +62,5 @@ test("role control permits only explicitly allowed active roles", () => {
   assert.equal(isRole("admin"), true);
   assert.equal(isRole("user"), true);
   assert.equal(isRole("warehouse"), true);
-  assert.equal(isRole("lager"), true);
+  assert.equal(isRole("lager"), false);
 });

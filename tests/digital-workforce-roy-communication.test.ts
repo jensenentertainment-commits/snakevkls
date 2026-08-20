@@ -90,7 +90,7 @@ test("an explicitly empty received product type may be called missing", () => {
 });
 
 test("unreceived description, images, and SEO remain unknown without advice", () => {
-  const result = respond("Mangler produktet bilder, beskrivelse eller SEO, og hva bør vi gjøre?");
+  const result = respond("Mangler produktet bilder, produktbeskrivelse eller SEO, og hva bør vi gjøre?");
   assert.match(result, /har ikke data om bilder, produktbeskrivelse og SEO/iu);
   assert.match(result, /kan jeg ikke vurdere eller anbefale tiltak/iu);
   assert.doesNotMatch(result, /mangler bilder|mangler produktbeskrivelse|SEO bør/iu);

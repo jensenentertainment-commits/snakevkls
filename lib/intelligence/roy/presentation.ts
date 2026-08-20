@@ -7,7 +7,7 @@ import { enforceRoyContentContract } from "./content-contract.ts";
 
 const UNKNOWN_TOPICS = [
   { pattern: /\b(bilde|bilder|bildegalleri)\b/iu, label: "bilder" },
-  { pattern: /\b(beskrivelse|produkttekst)\b/iu, label: "produktbeskrivelse" },
+  { pattern: /\b(beskrivelse|produktbeskrivelse|produkttekst)\b/iu, label: "produktbeskrivelse" },
   { pattern: /\bseo|metatittel|metabeskrivelse\b/iu, label: "SEO" },
 ] as const;
 

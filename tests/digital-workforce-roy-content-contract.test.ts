@@ -10,6 +10,7 @@ import {
 } from "../lib/intelligence/workforce/contexts/shopify-catalog.ts";
 
 const context: ShopifyCatalogContext = {
+  intent: { kind: "product", sku: "SKU-1", reference: "explicit" },
   query: "VK-1",
   scope: "targeted_catalog_sample",
   resultLimit: 24,

@@ -7,6 +7,7 @@ import {
 } from "../lib/intelligence/workforce/contexts/shopify-catalog.ts";
 
 const context: ShopifyCatalogContext = {
+  intent: { kind: "product", sku: "VK-SCOOT-COOL-500W", reference: "explicit" },
   query: "VK-SCOOT-COOL-500W",
   scope: "targeted_catalog_sample",
   resultLimit: 24,

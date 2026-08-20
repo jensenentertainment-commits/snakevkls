@@ -7,6 +7,7 @@ import {
   ROY_RECEIVED_CATALOG_FIELDS,
   type ShopifyCatalogContext,
 } from "./shopify-catalog";
+import { resolveRoyQueryIntent } from "../../roy/query-intent";
 
 const RESULT_LIMIT = 24;
 
@@ -30,8 +31,28 @@ export const shopifyCatalogProvider = {
   id: "shopify.catalog",
   capabilityId: "shopify.read_catalog",
   async provide(_context, input) {
+    const intent = resolveRoyQueryIntent(input);
+    if (intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference") {
+      return contextWithoutProducts(intent);
+    }
+
     const supabase = await createClient();
-    const query = searchTerm(input);
+    const query = intent.kind === "product" ? intent.sku : searchTerm(input);
+    let collectionProductIds: string[] | null = null;
+
+    if (intent.kind === "catalog_filter" && intent.filter.type === "collection") {
+      let collectionQuery = supabase
+        .from("product_collections")
+        .select("product_id")
+        .limit(RESULT_LIMIT);
+      if (intent.filter.value) {
+        collectionQuery = collectionQuery.ilike("title", `%${intent.filter.value}%`);
+      }
+      const { data, error } = await collectionQuery;
+      if (error) throw new Error(`Collection filter failed: ${error.message}`);
+      collectionProductIds = [...new Set((data ?? []).map(({ product_id }) => product_id))];
+    }
+
     let productsQuery = supabase
       .from("products")
       .select("id, sku, product_name, vendor, product_type, shopify_status, shopify_price_minor, shopify_price_currency, shopify_quantity, synced_at")
@@ -40,7 +61,19 @@ export const shopifyCatalogProvider = {
       .order("synced_at", { ascending: false })
       .limit(RESULT_LIMIT);
 
-    if (query) {
+    if (intent.kind === "product") {
+      productsQuery = productsQuery.eq("sku", intent.sku);
+    } else if (
+      intent.kind === "catalog_filter" &&
+      intent.filter.type === "missing_product_type"
+    ) {
+      productsQuery = productsQuery.is("product_type", null);
+    } else if (collectionProductIds) {
+      if (collectionProductIds.length === 0) {
+        return createContext(intent, "", [], []);
+      }
+      productsQuery = productsQuery.in("id", collectionProductIds);
+    } else if (query) {
       const filters = query.split(/\s+/).flatMap((term) => {
         const pattern = `%${term}%`;
         return [
@@ -66,12 +99,7 @@ export const shopifyCatalogProvider = {
       : { data: [], error: null };
     if (collectionsError) throw new Error(`Collection query failed: ${collectionsError.message}`);
 
-    return {
-      query,
-      scope: "targeted_catalog_sample",
-      resultLimit: RESULT_LIMIT,
-      receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
-      products: (products ?? []).map((product) => ({
+    const catalogProducts = (products ?? []).map((product) => ({
         sku: product.sku,
         productName: product.product_name,
         vendor: product.vendor,
@@ -83,13 +111,41 @@ export const shopifyCatalogProvider = {
         collections: (collections ?? [])
           .filter((collection) => collection.product_id === product.id)
           .map(({ title, handle }) => ({ title, handle })),
-      })),
-      limitations: [
-        `Maksimalt ${RESULT_LIMIT} synkroniserte, aktive varianter er med per forespørsel.`,
-        "Snake-katalogen inneholder ikke produktbeskrivelse, SEO-felt eller full bildegalleri i v1.",
-        "Resultatet er en observasjon av sist synkroniserte data, ikke live Shopify-data.",
-        "Et felt som ikke inngår i utvalget kan ikke behandles som manglende i Shopify.",
-      ],
-    } satisfies ShopifyCatalogContext;
+      }));
+    return createContext(intent, query, catalogProducts, []);
   },
 } satisfies ContextProvider<ShopifyCatalogContext>;
+
+function contextWithoutProducts(
+  intent: ShopifyCatalogContext["intent"],
+): ShopifyCatalogContext {
+  return createContext(intent, "", [], []);
+}
+
+function createContext(
+  intent: ShopifyCatalogContext["intent"],
+  query: string,
+  products: ShopifyCatalogContext["products"],
+  extraLimitations: readonly string[],
+): ShopifyCatalogContext {
+  return {
+    intent,
+    query,
+    scope:
+      intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference"
+        ? "knowledge_gap"
+        : intent.kind === "catalog_filter"
+          ? "catalog_filter"
+          : "targeted_catalog_sample",
+    resultLimit: RESULT_LIMIT,
+    receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
+    products,
+    limitations: [
+      `Maksimalt ${RESULT_LIMIT} synkroniserte, aktive varianter er med per forespørsel.`,
+      "Snake-katalogen inneholder ikke produktbeskrivelse, SEO-felt eller full bildegalleri i v1.",
+      "Resultatet er en observasjon av sist synkroniserte data, ikke live Shopify-data.",
+      "Et felt som ikke inngår i utvalget kan ikke behandles som manglende i Shopify.",
+      ...extraLimitations,
+    ],
+  };
+}

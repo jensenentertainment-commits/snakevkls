@@ -114,9 +114,11 @@ test("Roy does not invent a product type taxonomy", () => {
 });
 
 test("AVADA collection names are reported without claiming they are wrong or customer-visible", () => {
-  const result = respond("Hvilke collections ligger produktet i?");
+  const result = respond("AVADA-collections: er de feil, interne eller kundesynlige, og bør de fjernes?");
   assert.match(result, /AVADA Email Marketing - Best Sellers/u);
-  assert.doesNotMatch(result, /intern|feil|kundesynlig|skjul|fjern/iu);
+  assert.match(result, /navnene alene dokumenterer ikke om de er interne, feil eller synlige for kunder/iu);
+  assert.match(result, /kan jeg ikke anbefale å fjerne dem uten et direkte datagrunnlag/iu);
+  assert.doesNotMatch(result, /(?:^|\n)De er (?:interne|feil|kundesynlige)|bør fjernes/iu);
 });
 
 test("a product type analysis explains the evidence limitation naturally", () => {

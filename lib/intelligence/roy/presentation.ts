@@ -68,6 +68,12 @@ function presentSingleProduct(
   if (general || /\b(collection|collections|kolleksjon)\b/iu.test(question)) {
     const collections = presentCollections(product, context.receivedFields);
     if (collections) lines.push(collections);
+    if (
+      /\bavada\b/iu.test(question) &&
+      /\b(feil|intern|kundesynlig|fjerne|fjernes|skjule|skjules)\b/iu.test(question)
+    ) {
+      lines.push("Collection-navnene alene dokumenterer ikke om de er interne, feil eller synlige for kunder. Derfor kan jeg ikke anbefale å fjerne dem uten et direkte datagrunnlag for det.");
+    }
   }
   if (general || /\b(product\s*type|produkttype|kategori|kategorisert)\b/iu.test(question)) {
     lines.push(presentProductType(product, context.receivedFields, question));

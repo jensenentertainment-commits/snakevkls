@@ -19,6 +19,9 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
   assert.match(contextProvider, /input:\s*ValidChatInput/);
   assert.match(provider, /\.from\("products"\)/);
   assert.match(provider, /\.from\("product_collections"\)/);
+  assert.match(provider, /\.is\("product_type", null\)/);
+  assert.match(provider, /\.eq\("sku", intent\.sku\)/);
+  assert.match(provider, /resolveRoyQueryIntent/);
   assert.match(provider, /\.limit\(RESULT_LIMIT\)/);
   assert.doesNotMatch(provider, /variant_name|image_url/);
   assert.doesNotMatch(provider, /\.(insert|update|delete|upsert|rpc)\(/);
@@ -28,6 +31,14 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
   assert.match(prompt, /Ikke oppfinn taksonomi/);
   assert.match(prompt, /aldri foreslå konkrete nye productType-verdier/);
   assert.match(prompt, /ikke bevis på at en collection er intern/);
+});
+
+test("Roy workspace preserves bounded history instead of sending an empty conversation", async () => {
+  const workspace = await source("app/shopify/RoyCatalogWorkspace.tsx");
+  assert.match(workspace, /useState<ChatMessage\[\]>/);
+  assert.match(workspace, /history\s*\}/);
+  assert.match(workspace, /CHAT_LIMITS\.historyMessages/);
+  assert.doesNotMatch(workspace, /history:\s*\[\]/);
 });
 
 test("Roy route and workspace enforce admin-user scope", async () => {

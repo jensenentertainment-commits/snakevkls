@@ -23,13 +23,37 @@ export function createRoyUserResponse(input: {
 }
 
 function presentContext(context: ShopifyCatalogContext, question: string) {
+  if (context.intent.kind === "knowledge_gap") {
+    return presentKnowledgeGap(context.intent.topics);
+  }
+  if (context.intent.kind === "unresolved_reference") {
+    return "Jeg klarer ikke å avgjøre hvilket produkt du viser til. Oppgi SKU-en, så undersøker jeg riktig produkt uten å gjette.";
+  }
   if (context.products.length === 0) {
+    if (
+      context.intent.kind === "catalog_filter" &&
+      context.intent.filter.type === "missing_product_type"
+    ) {
+      return "Jeg fant ingen aktive, synkroniserte produkter med eksplisitt manglende produkttype i dette søket.";
+    }
+    if (
+      context.intent.kind === "catalog_filter" &&
+      context.intent.filter.type === "collection"
+    ) {
+      const collection = context.intent.filter.value;
+      return collection
+        ? `Jeg fant ingen aktive, synkroniserte produkter i collections som matcher «${collection}».`
+        : "Jeg fant ingen aktive, synkroniserte produkter med registrerte collections i dette søket.";
+    }
     return context.query
       ? `Jeg fant ingen produkter i det avgrensede katalogutvalget for «${context.query}». Jeg kan derfor ikke vurdere spørsmålet ut fra dataene jeg har.`
       : "Jeg fant ingen produkter i det avgrensede katalogutvalget og kan derfor ikke vurdere spørsmålet ut fra dataene jeg har.";
   }
 
   const products = context.products.slice(0, 8);
+  if (context.intent.kind === "catalog_overview" && context.intent.objective === "prioritize") {
+    return presentPriorities(products, context).join("\n\n");
+  }
   const detailed = products.length === 1;
   const lines = detailed
     ? presentSingleProduct(products[0], context, question)
@@ -49,6 +73,7 @@ function presentSingleProduct(
 ) {
   const lines = [`Jeg fant ${productLabel(product)}.`];
   const general = /\b(hva kan|fortell|oversikt|oppsummer|vurder produkt)\b/iu.test(question);
+  const auditsProblems = /\b(problem|problemer|mangler|mangel|avvik)\b/iu.test(question);
   const facts: string[] = [];
 
   if (general || /\bpris|kost(?:er|nad)\b/iu.test(question)) {
@@ -75,10 +100,35 @@ function presentSingleProduct(
       lines.push("Collection-navnene alene dokumenterer ikke om de er interne, feil eller synlige for kunder. Derfor kan jeg ikke anbefale å fjerne dem uten et direkte datagrunnlag for det.");
     }
   }
-  if (general || /\b(product\s*type|produkttype|kategori|kategorisert)\b/iu.test(question)) {
+  if (auditsProblems) {
+    lines.push(presentObservedProblems(product, context.receivedFields));
+  } else if (general || /\b(product\s*type|produkttype|kategori|kategorisert)\b/iu.test(question)) {
     lines.push(presentProductType(product, context.receivedFields, question));
   }
   return lines;
+}
+
+function presentObservedProblems(
+  product: ShopifyCatalogProduct,
+  receivedFields: readonly RoyReceivedCatalogField[],
+) {
+  const missing: string[] = [];
+  if (receivedFields.includes("sku") && isExplicitlyEmpty(product.sku)) missing.push("SKU");
+  if (receivedFields.includes("vendor") && isExplicitlyEmpty(product.vendor)) missing.push("leverandør");
+  if (receivedFields.includes("productType") && isExplicitlyEmpty(product.productType)) missing.push("produkttype");
+  if (
+    receivedFields.includes("priceMinor") &&
+    receivedFields.includes("currency") &&
+    (product.priceMinor === null || isExplicitlyEmpty(product.currency))
+  ) missing.push("pris");
+  if (receivedFields.includes("quantity") && product.quantity === null) missing.push("lagerantall");
+  if (receivedFields.includes("status") && isExplicitlyEmpty(product.status)) missing.push("produktstatus");
+  if (receivedFields.includes("collections") && product.collections.length === 0) missing.push("collections");
+
+  if (missing.length) {
+    return `Jeg kan bekrefte at ${naturalList(missing)} ikke er registrert i den mottatte katalogkonteksten.`;
+  }
+  return "Jeg fant ingen eksplisitt tomme verdier i katalogfeltene jeg mottok. Det dokumenterer ikke at produktet er problemfritt på områder jeg ikke har data om.";
 }
 
 function presentProductSet(
@@ -86,6 +136,18 @@ function presentProductSet(
   context: ShopifyCatalogContext,
   question: string,
 ) {
+  if (context.intent.kind === "catalog_overview" && context.intent.objective === "prioritize") {
+    return presentPriorities(products, context);
+  }
+  if (context.intent.kind === "catalog_filter") {
+    if (context.intent.filter.type === "missing_product_type") {
+      return [
+        `Jeg fant ${products.length} produkter med eksplisitt manglende produkttype i det avgrensede resultatet:`,
+        ...products.map((product) => `- ${productLabel(product)}.`),
+      ];
+    }
+    return presentCollectionProducts(products, context.intent.filter.value);
+  }
   const asksProductType = /\b(product\s*type|produkttype|kategori|kategorisert)\b/iu.test(question);
   const lines = [`Jeg fant ${products.length} produkter i det avgrensede utvalget.`];
   if (asksProductType) {
@@ -111,6 +173,67 @@ function presentProductSet(
     }),
   );
   return lines;
+}
+
+function presentKnowledgeGap(topics: readonly string[]) {
+  if (topics.includes("capabilities")) {
+    return "Jeg kan arbeide med produktnavn, SKU, leverandør, produkttype, pris, lagerantall, produktstatus og collections i den synkroniserte Snake-katalogen. Jeg mangler beskrivelse, SEO-data og bildedata, og kan derfor ikke vurdere eller anbefale tiltak innen disse områdene. Jeg har heller ikke live Shopify-data eller en godkjent produkttaksonomi.";
+  }
+  const labels = topics.map((topic) => ({
+    images: "bilder",
+    description: "produktbeskrivelse",
+    seo: "SEO",
+  })[topic] ?? topic);
+  return `Jeg har ikke data om ${naturalList(labels)} i Roy v1. Derfor kan jeg ikke avgjøre hvilke produkter som mangler dette, vurdere kvaliteten eller anbefale tiltak ut fra dagens datagrunnlag.`;
+}
+
+function presentCollectionProducts(
+  products: readonly ShopifyCatalogProduct[],
+  collectionValue: string | null,
+) {
+  const lines = [
+    collectionValue
+      ? `Jeg fant ${products.length} produkter i collections som matcher «${collectionValue}».`
+      : `Jeg fant ${products.length} produkter med registrerte collections i det avgrensede resultatet.`,
+  ];
+  lines.push(
+    ...products.map((product) => {
+      const collections = product.collections.map(({ title }) => title);
+      return `- ${productLabel(product)}${collections.length ? `: ${naturalList(collections)}` : ""}.`;
+    }),
+  );
+  if (collectionValue?.toLowerCase() === "avada") {
+    lines.push("Collection-navnene alene dokumenterer ikke om de er interne, feil eller synlige for kunder. Derfor kan jeg ikke anbefale å fjerne dem uten et direkte datagrunnlag for det.");
+  }
+  return lines;
+}
+
+function presentPriorities(
+  products: readonly ShopifyCatalogProduct[],
+  context: ShopifyCatalogContext,
+) {
+  const missingProductType = products.filter((product) => isExplicitlyEmpty(product.productType));
+  const missingVendor = products.filter((product) => isExplicitlyEmpty(product.vendor));
+  const withoutCollections = products.filter((product) => product.collections.length === 0);
+  const priorities = [
+    missingProductType.length
+      ? `${productCount(missingProductType.length)} mangler produkttype`
+      : "ingen produkter mangler produkttype",
+    missingVendor.length
+      ? `${productCount(missingVendor.length)} mangler leverandør`
+      : "ingen produkter mangler leverandør",
+    withoutCollections.length
+      ? `${productCount(withoutCollections.length)} har ingen registrerte collections`
+      : "alle produktene har minst én registrert collection",
+  ];
+  return [
+    `I det avgrensede utvalget på ${products.length} produkter ville jeg startet med bekreftede datamangler: ${priorities.join(", ")}.`,
+    `Dette er en datakvalitetsprioritering innen de ${context.receivedFields.length} feltene jeg har mottatt, ikke en kommersiell prioritering av hele katalogen.`,
+  ];
+}
+
+function productCount(count: number) {
+  return `${count} ${count === 1 ? "produkt" : "produkter"}`;
 }
 
 function presentUnknownTopics(

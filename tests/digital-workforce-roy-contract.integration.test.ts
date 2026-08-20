@@ -42,3 +42,16 @@ test("Roy route and workspace enforce admin-user scope", async () => {
   assert.match(navigation, /id:\s*"shopify"[\s\S]*roles:\s*\["admin", "user"\]/);
   assert.doesNotMatch(route, /warehouse/);
 });
+
+test("Roy keeps strict evidence internal and follows the shared colleague communication principle", async () => {
+  const [runtime, presentation, communication] = await Promise.all([
+    source("lib/intelligence/workforce/runtime.ts"),
+    source("lib/intelligence/roy/presentation.ts"),
+    source("lib/intelligence/shared/digital-workforce-communication.ts"),
+  ]);
+
+  assert.match(runtime, /createRoyUserResponse/);
+  assert.match(presentation, /enforceRoyContentContract\(input\.internalAnswer/);
+  assert.match(communication, /Digitale ansatte kommuniserer som fagkollegaer/);
+  assert.match(communication, /Skjul normalt providerstruktur, rå feltnavn, evidensmarkører/);
+});

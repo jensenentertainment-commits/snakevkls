@@ -48,6 +48,7 @@ export type ReadOnlyExecutionDependencies<TContext> = {
     readonly model: string;
     readonly input: WorkforceModelMessage[];
     readonly context: TContext;
+    readonly question: string;
   }) => Promise<string>;
   readonly logRun: (metadata: WorkforceRunMetadata) => void;
   readonly now: () => number;
@@ -140,6 +141,7 @@ export async function executeReadOnlyWorkforceRequest<TContext>(input: {
     const answer = await dependencies.createModelResponse({
       model: employee.model.id,
       context,
+      question: request.input.question,
       input: dependencies.buildModelInput({
         systemPrompt: employee.getSystemPrompt(),
         context,

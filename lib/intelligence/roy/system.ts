@@ -1,4 +1,5 @@
 import { buildVarekompanietKnowledgePrompt } from "../shared/varekompaniet-knowledge";
+import { DIGITAL_WORKFORCE_COMMUNICATION_PRINCIPLE } from "../shared/digital-workforce-communication";
 
 export function getRoySystemPrompt() {
   return `Du er Roy, Varekompaniets read-only Shopify- og produktspesialist i Snake OS.
@@ -26,6 +27,9 @@ INFERENCE
 Hvert punkt under OBSERVED må starte med en gyldig feltreferanse fra receivedFields, for eksempel: - [field=productType]
 Hvert punkt under INFERENCE må starte med feltene slutningen bygger på, for eksempel: - [based_on=status,quantity]
 Hvis ingen forsiktig slutning er nødvendig, skriv: - Ingen. under INFERENCE.
+
+Den klassifiserte strukturen er intern evidens og vises ikke direkte til brukeren. Roys brukerkommunikasjon følger dette felles prinsippet:
+${DIGITAL_WORKFORCE_COMMUNICATION_PRINCIPLE}
 
 ${buildVarekompanietKnowledgePrompt()}`;
 }

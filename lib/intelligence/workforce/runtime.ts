@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { buildArneModelInput } from "@/lib/intelligence/arne/chat-input-builder";
 import { buildBorreModelInput } from "@/lib/intelligence/borre/chat-input-builder";
 import { buildRoyModelInput } from "@/lib/intelligence/roy/chat-input-builder";
-import { enforceRoyContentContract } from "@/lib/intelligence/roy/content-contract";
+import { createRoyUserResponse } from "@/lib/intelligence/roy/presentation";
 import type { ShopifyCatalogContext } from "./contexts/shopify-catalog";
 import type { ValidChatInput } from "@/lib/intelligence/shared/chat-input";
 import { getChatOpenAIClient } from "@/lib/intelligence/shared/chat-server";
@@ -129,18 +129,17 @@ export async function runReadOnlyEmployeeRequest(
 }
 
 function createModelResponse(fallback: string) {
-  return async (request: {
+  return async ({ model, input }: {
     readonly model: string;
     readonly input: Array<{
       readonly role: "system" | "user" | "assistant";
       readonly content: string;
     }>;
     readonly context: unknown;
+    readonly question: string;
   }) => {
-    const response = await getChatOpenAIClient().responses.create({
-      model: request.model,
-      input: request.input,
-    });
+    const request = { model, input };
+    const response = await getChatOpenAIClient().responses.create(request);
     return response.output_text || fallback;
   };
 }
@@ -153,14 +152,16 @@ function createRoyModelResponse(fallback: string) {
       readonly content: string;
     }>;
     readonly context: ShopifyCatalogContext;
+    readonly question: string;
   }) => {
     const response = await getChatOpenAIClient().responses.create({
       model: request.model,
       input: request.input,
     });
-    return enforceRoyContentContract(
-      response.output_text || fallback,
-      request.context,
-    );
+    return createRoyUserResponse({
+      internalAnswer: response.output_text || fallback,
+      context: request.context,
+      question: request.question,
+    });
   };
 }

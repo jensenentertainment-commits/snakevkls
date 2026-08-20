@@ -5,6 +5,10 @@ import { Search, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/app/components/design-system/Button";
 import { Card } from "@/app/components/design-system/Card";
 import { Surface } from "@/app/components/design-system/Surface";
+import {
+  CHAT_LIMITS,
+  type ChatMessage,
+} from "@/lib/intelligence/shared/chat-input";
 
 const prompts = [
   "Finn katalogproblemer blant produkter fra Helly Hansen",
@@ -15,6 +19,7 @@ const prompts = [
 export function RoyCatalogWorkspace() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
+  const [history, setHistory] = useState<ChatMessage[]>([]);
   const [busy, setBusy] = useState(false);
 
   async function analyze(value = question) {
@@ -26,10 +31,17 @@ export function RoyCatalogWorkspace() {
       const response = await fetch("/api/roy/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: value, page: "/shopify", history: [] }),
+        body: JSON.stringify({ question: value, page: "/shopify", history }),
       });
-      const data = await response.json();
-      setAnswer(data.answer ?? "Roy kunne ikke analysere dette utvalget.");
+      const data = await response.json() as { answer?: unknown };
+      const nextAnswer = typeof data.answer === "string"
+        ? data.answer
+        : "Roy kunne ikke analysere dette utvalget.";
+      setAnswer(nextAnswer);
+      setHistory((current) => current.concat(
+        { role: "user", text: value } satisfies ChatMessage,
+        { role: "assistant", text: nextAnswer } satisfies ChatMessage,
+      ).slice(-CHAT_LIMITS.historyMessages));
     } catch {
       setAnswer("Roy mistet kontakten. Ingen katalogdata er endret.");
     } finally {

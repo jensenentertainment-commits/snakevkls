@@ -56,7 +56,8 @@ export function RoyCatalogWorkspace() {
     setQuestion(value);
     setBusy(true);
     setAnswer(null);
-    const requestHistory = historyRef.current;
+    const persistedHistory = readWorkspaceHistory();
+    const requestHistory = persistedHistory.length ? persistedHistory : historyRef.current;
     historyRef.current = requestHistory.concat(
       { role: "user", text: value } satisfies ChatMessage,
     ).slice(-CHAT_LIMITS.historyMessages);

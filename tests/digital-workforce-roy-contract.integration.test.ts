@@ -43,7 +43,8 @@ test("Roy workspace preserves bounded history instead of sending an empty conver
   assert.match(workspace, /HISTORY_STORAGE_KEY/);
   assert.match(workspace, /window\.sessionStorage\.getItem/);
   assert.match(workspace, /useRef<ChatMessage\[\]>\(readWorkspaceHistory\(\)\)/);
-  assert.match(workspace, /const requestHistory\s*=\s*historyRef\.current/);
+  assert.match(workspace, /const persistedHistory\s*=\s*readWorkspaceHistory\(\)/);
+  assert.match(workspace, /const requestHistory\s*=\s*persistedHistory\.length\s*\?\s*persistedHistory\s*:\s*historyRef\.current/);
   assert.match(workspace, /history:\s*requestHistory/);
   assert.match(workspace, /historyRef\.current\s*=\s*requestHistory\.concat/);
   assert.match(workspace, /writeWorkspaceHistory\(historyRef\.current\)/);

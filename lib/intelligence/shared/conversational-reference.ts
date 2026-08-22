@@ -13,14 +13,17 @@ export function resolveMostRecentConversationReference<T>(input: {
   readonly extract: (text: string) => readonly T[];
   readonly key: (value: T) => string;
 }): ConversationReferenceResolution<T> {
-  for (const message of [...input.history].reverse()) {
-    const unique = new Map(
-      input.extract(message.text).map((value) => [input.key(value), value]),
-    );
-    if (unique.size === 1) {
-      return { status: "resolved", value: [...unique.values()][0] };
+  for (const role of ["user", "assistant"] as const) {
+    for (const message of [...input.history].reverse()) {
+      if (message.role !== role) continue;
+      const unique = new Map(
+        input.extract(message.text).map((value) => [input.key(value), value]),
+      );
+      if (unique.size === 1) {
+        return { status: "resolved", value: [...unique.values()][0] };
+      }
+      if (unique.size > 1) return { status: "ambiguous" };
     }
-    if (unique.size > 1) return { status: "ambiguous" };
   }
   return { status: "missing" };
 }

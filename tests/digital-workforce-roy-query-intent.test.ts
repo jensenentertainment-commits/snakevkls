@@ -65,6 +65,83 @@ test("follow-up resolves the concrete SKU from conversation history", () => {
   });
 });
 
+test("a numeric range in Roy's answer does not override the user's explicit SKU", () => {
+  const intent = resolveRoyQueryIntent({
+    question: "Ser du noen problemer med dette produktet?",
+    page: "/shopify",
+    history: [
+      { role: "user", text: "Fortell om SKU H-SYNT-L-BL-200." },
+      {
+        role: "assistant",
+        text: "Jeg fant Syntex Engangshansker 200-2000 stk (SKU H-SYNT-L-BL-200).",
+      },
+    ],
+  });
+
+  assert.deepEqual(intent, {
+    kind: "product",
+    sku: "H-SYNT-L-BL-200",
+    reference: "conversation",
+  });
+});
+
+test("multiple variant SKUs in Roy's answer do not override the user's explicit SKU", () => {
+  const intent = resolveRoyQueryIntent({
+    question: "Ser du noen problemer med dette produktet?",
+    page: "/shopify",
+    history: [
+      { role: "user", text: "Hva kan du fortelle meg om SKU VK-MOBSPIR-50?" },
+      {
+        role: "assistant",
+        text: "Produktet har variantene VK-MOBSPIR-50 og VK-MOBSPIR-60.",
+      },
+    ],
+  });
+
+  assert.deepEqual(intent, {
+    kind: "product",
+    sku: "VK-MOBSPIR-50",
+    reference: "conversation",
+  });
+});
+
+test("a main SKU and another SKU-like value in Roy's answer retain the user's SKU", () => {
+  const intent = resolveRoyQueryIntent({
+    question: "Hva med dette produktet?",
+    page: "/shopify",
+    history: [
+      { role: "user", text: "Undersøk SKU VK-MOBSPIR-50." },
+      {
+        role: "assistant",
+        text: "Hovedvarianten er VK-MOBSPIR-50; referansen BATCH-2026-08 finnes også i teksten.",
+      },
+    ],
+  });
+
+  assert.deepEqual(intent, {
+    kind: "product",
+    sku: "VK-MOBSPIR-50",
+    reference: "conversation",
+  });
+});
+
+test("normal explicit SKU then this product follow-up remains on the same SKU", () => {
+  const intent = resolveRoyQueryIntent({
+    question: "Ser du noen problemer med dette produktet?",
+    page: "/shopify",
+    history: [
+      { role: "user", text: "Hva kan du fortelle meg om denne SKU-en VK-MOBSPIR-50?" },
+      { role: "assistant", text: "Jeg fant produktet." },
+    ],
+  });
+
+  assert.deepEqual(intent, {
+    kind: "product",
+    sku: "VK-MOBSPIR-50",
+    reference: "conversation",
+  });
+});
+
 test("catalog priority questions select a prioritization overview", () => {
   assert.deepEqual(
     resolveRoyQueryIntent({

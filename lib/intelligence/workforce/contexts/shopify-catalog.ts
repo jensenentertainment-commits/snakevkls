@@ -49,6 +49,8 @@ export type RoyCatalogAuditFinding = {
   evidence: readonly string[];
 };
 
+export type RoyCatalogAuditCode = RoyCatalogAuditFinding["code"];
+
 export type RoyCatalogAudit = {
   productCount: number;
   variantCount: number;
@@ -86,6 +88,8 @@ export type ShopifyCatalogContext = {
   receivedFields: readonly RoyReceivedCatalogField[];
   products: readonly ShopifyCatalogProduct[];
   audit: RoyCatalogAudit | null;
+  /** The deterministic finding requested by a focused audit question. */
+  auditSelection: RoyCatalogAuditCode | null;
   limitations: readonly string[];
 };
 import type { RoyQueryIntent } from "../../roy/query-intent.ts";

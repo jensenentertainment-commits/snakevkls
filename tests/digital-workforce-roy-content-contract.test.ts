@@ -39,6 +39,7 @@ const context: ShopifyCatalogContext = {
   ],
   entityScope: "variant",
   audit: null,
+  auditSelection: null,
   limitations: [],
 };
 

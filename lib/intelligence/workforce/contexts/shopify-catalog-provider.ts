@@ -19,13 +19,19 @@ export const shopifyCatalogProvider = {
     const supabase = await createClient();
 
     if (intent.kind === "catalog_overview" || (intent.kind === "catalog_filter" && intent.filter.type === "missing_product_type")) {
-      const rows = await readAuditRows(supabase, intent.kind === "catalog_filter");
+      const rows = await readAuditRows(supabase);
       const allProducts = groupCatalogVariants(rows, new Map());
       const audit = buildCatalogAudit(allProducts);
       const products = intent.kind === "catalog_filter"
         ? allProducts.filter((product) => product.productType === null).slice(0, RESULT_LIMIT)
         : auditEvidence(allProducts, audit).slice(0, RESULT_LIMIT);
-      return createContext(intent, "", products, audit);
+      return createContext(
+        intent,
+        "",
+        products,
+        audit,
+        intent.kind === "catalog_filter" ? "missing_product_type" : null,
+      );
     }
 
     let rowIds: string[] | null = null;
@@ -56,11 +62,10 @@ export const shopifyCatalogProvider = {
   },
 } satisfies ContextProvider<ShopifyCatalogContext>;
 
-async function readAuditRows(supabase: Awaited<ReturnType<typeof createClient>>, missingTypeOnly: boolean) {
+async function readAuditRows(supabase: Awaited<ReturnType<typeof createClient>>) {
   const rows: CatalogVariantRow[] = [];
   for (let from = 0; ; from += AUDIT_PAGE_SIZE) {
-    let query = supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).not("shopify_product_id", "is", null).order("id").range(from, from + AUDIT_PAGE_SIZE - 1);
-    if (missingTypeOnly) query = query.is("product_type", null);
+    const query = supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).not("shopify_product_id", "is", null).order("id").range(from, from + AUDIT_PAGE_SIZE - 1);
     const { data, error } = await query;
     if (error) throw new Error(`Catalog audit failed: ${error.message}`);
     const page = (data ?? []) as CatalogVariantRow[];
@@ -84,12 +89,18 @@ function auditEvidence(products: readonly ShopifyCatalogContext["products"][numb
   return products.filter((product) => labels.has(product.sku ? `${product.productName} (SKU ${product.sku})` : product.productName));
 }
 
-function createContext(intent: ShopifyCatalogContext["intent"], query: string, products: ShopifyCatalogContext["products"], audit: ShopifyCatalogContext["audit"]): ShopifyCatalogContext {
+function createContext(
+  intent: ShopifyCatalogContext["intent"],
+  query: string,
+  products: ShopifyCatalogContext["products"],
+  audit: ShopifyCatalogContext["audit"],
+  auditSelection: ShopifyCatalogContext["auditSelection"] = null,
+): ShopifyCatalogContext {
   return {
     intent, query,
     scope: intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference" ? "knowledge_gap" : intent.kind === "catalog_filter" ? "catalog_filter" : "targeted_catalog_sample",
     entityScope: intent.kind === "product" ? "variant" : "catalog",
-    resultLimit: RESULT_LIMIT, receivedFields: ROY_RECEIVED_CATALOG_FIELDS, products, audit,
+    resultLimit: RESULT_LIMIT, receivedFields: ROY_RECEIVED_CATALOG_FIELDS, products, audit, auditSelection,
     limitations: [
       "Produktresultater grupperes på stabil Shopify-produktidentitet; varianter beholdes separat under produktet.",
       "Snake har kun en featured-image-referanse, ikke bildegalleri eller evidens for bildekvalitet.",

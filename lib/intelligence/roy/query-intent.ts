@@ -92,9 +92,14 @@ function knowledgeTopics(question: string): RoyKnowledgeTopic[] {
   }
 
   const topics: RoyKnowledgeTopic[] = [];
+  const hasConcreteTarget =
+    extractSkus(question).length === 1 ||
+    /\b(dette|det|denne|den|produktet|varen)\b/iu.test(question);
+  const asksImageReference =
+    /\b(?:bildereferanse|featured-image(?:-referanse)?|image\s*reference|har\s+[\s\S]{0,80}\bbilde)\b/iu.test(question);
   if (
-    /\b(bilde|bilder|bildegalleri)\b/iu.test(question) &&
-    /\b(hvilke|kvalitet|god|gode|dårlig|dårlige|vurder|forbedre|bildegalleri)\b/iu.test(question)
+    /\b(?:bilde\w*|featured-image(?:-referanse)?|image\s*reference)\b/iu.test(question) &&
+    !(hasConcreteTarget && asksImageReference)
   ) topics.push("images");
   if (/\b(beskrivelse|produktbeskrivelse|produkttekst)\b/iu.test(question)) topics.push("description");
   if (/\bseo|metatittel|metabeskrivelse\b/iu.test(question)) topics.push("seo");

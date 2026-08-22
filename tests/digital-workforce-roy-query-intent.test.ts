@@ -41,6 +41,7 @@ function context(
     receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
     products,
     audit: null,
+    auditSelection: null,
     limitations: [],
   };
 }
@@ -106,6 +107,46 @@ test("image questions select an unavailable-data response without products", () 
     }),
     { kind: "knowledge_gap", topics: ["images"] },
   );
+});
+
+test("combined image reference and quality question keeps the answerable SKU target", () => {
+  assert.deepEqual(
+    resolveRoyQueryIntent({
+      question: "Har SKU H-SYNT-L-BL-200 en featured-image-referanse, og kan du vurdere bildekvaliteten?",
+      page: "/shopify",
+      history: [],
+    }),
+    { kind: "product", sku: "H-SYNT-L-BL-200", reference: "explicit" },
+  );
+});
+
+test("combined image follow-up preserves conversational product reference", () => {
+  assert.deepEqual(
+    resolveRoyQueryIntent({
+      question: "Har dette produktet en bildereferanse, og er bildekvaliteten god?",
+      page: "/shopify",
+      history: [
+        { role: "user", text: "Fortell om SKU INV-PRESTIGE-X-44-BLK-GLD" },
+        { role: "assistant", text: "Jeg fant SKU INV-PRESTIGE-X-44-BLK-GLD." },
+      ],
+    }),
+    { kind: "product", sku: "INV-PRESTIGE-X-44-BLK-GLD", reference: "conversation" },
+  );
+});
+
+test("combined image answer reports reference presence and refuses quality assessment", () => {
+  const imageContext = context(
+    { kind: "product", sku: product.sku, reference: "explicit" },
+    [{ ...product, imageReference: "https://example.invalid/featured.jpg" }],
+  );
+  const answer = createRoyUserResponse({
+    internalAnswer: groundedInternalAnswer,
+    context: imageContext,
+    question: "Har SKU INV-PRESTIGE-X-44-BLK-GLD en featured-image-referanse, og kan du vurdere bildekvaliteten?",
+  });
+  assert.match(answer, /har en featured-image-referanse/iu);
+  assert.match(answer, /sier ikke noe om bildekvaliteten/iu);
+  assert.doesNotMatch(answer, /god bildekvalitet|dårlig bildekvalitet/iu);
 });
 
 test("SEO questions select an unavailable-data response without products", () => {

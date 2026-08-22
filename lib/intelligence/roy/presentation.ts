@@ -32,6 +32,9 @@ function presentContext(context: ShopifyCatalogContext, question: string) {
   if (context.intent.kind === "catalog_overview" && context.audit) {
     return presentAudit(context.audit, context.intent.objective);
   }
+  if (context.audit && context.auditSelection) {
+    return presentSelectedAudit(context);
+  }
   if (context.products.length === 0) {
     if (
       context.intent.kind === "catalog_filter" &&
@@ -99,7 +102,7 @@ function presentSingleProduct(
   if (/\b(synk\w*|oppdatert|fersk|freshness)\b/iu.test(question) && product.syncedAt) {
     lines.push(`Snake observerte katalogdataene sist ${formatTimestamp(product.syncedAt)}.`);
   }
-  if (/\b(bilde|bildereferanse)\b/iu.test(question)) {
+  if (/\b(?:bilde\w*|bildereferanse|featured-image(?:-referanse)?|image\s*reference)\b/iu.test(question)) {
     lines.push(product.imageReference
       ? "Snake har en featured-image-referanse for produktet. Det sier ikke noe om bildekvaliteten."
       : "Featured-image-referansen er eksplisitt tom i den mottatte Snake-konteksten. Det sier ikke noe om andre bilder eller bildekvalitet.");
@@ -121,6 +124,29 @@ function presentSingleProduct(
     lines.push(presentProductType(product, context.receivedFields, question));
   }
   return lines;
+}
+
+function presentSelectedAudit(context: ShopifyCatalogContext) {
+  const audit = context.audit!;
+  const finding = audit.findings.find(({ code }) => code === context.auditSelection);
+  const count = finding?.count ?? 0;
+  const scope = finding?.scope ?? "product";
+  const total = scope === "variant" ? audit.variantCount : audit.productCount;
+  const labels: Record<NonNullable<ShopifyCatalogContext["auditSelection"]>, string> = {
+    missing_product_type: "mangler produkttype",
+    missing_vendor: "mangler leverandør",
+    missing_featured_image_reference: "mangler featured-image-referanse i Snake",
+    missing_sku: "mangler SKU",
+    inconsistent_product_fields: "har inkonsistente produktfelt på tvers av varianter",
+    exact_duplicate_product_name: "er eksakte duplikatkandidater basert på produktnavn",
+  };
+  const entity = scope === "variant" ? "varianter" : "produkter";
+  const lines = [`Den produktbaserte auditen viser at ${count} av ${total} ${entity} ${labels[context.auditSelection!]}.`];
+  if (context.products.length) {
+    lines.push("Et begrenset evidensutvalg:", ...context.products.slice(0, 8).map((product) => `- ${productLabel(product)}.`));
+  }
+  lines.push("Utvalget over er evidens, ikke totalresultatet.");
+  return lines.join("\n");
 }
 
 function presentObservedProblems(

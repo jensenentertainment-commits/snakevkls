@@ -19,7 +19,7 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
   assert.match(contextProvider, /input:\s*ValidChatInput/);
   assert.match(provider, /\.from\("products"\)/);
   assert.match(provider, /\.from\("product_collections"\)/);
-  assert.match(provider, /\.is\("product_type", null\)/);
+  assert.match(provider, /auditSelection/);
   assert.match(provider, /\.eq\("sku", intent\.sku\)/);
   assert.match(provider, /resolveRoyQueryIntent/);
   assert.match(provider, /\.limit\(RESULT_LIMIT\)/);

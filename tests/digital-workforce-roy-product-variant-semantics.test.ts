@@ -18,7 +18,7 @@ function context(products = groupCatalogVariants(rows, new Map(), "SKU-BLUE")): 
   return {
     intent: { kind: "product", sku: "SKU-BLUE", reference: "explicit" }, query: "SKU-BLUE",
     scope: "targeted_catalog_sample", entityScope: "variant", resultLimit: 24,
-    receivedFields: ROY_RECEIVED_CATALOG_FIELDS, products, audit: null, limitations: [],
+    receivedFields: ROY_RECEIVED_CATALOG_FIELDS, products, audit: null, auditSelection: null, limitations: [],
   };
 }
 
@@ -72,4 +72,34 @@ test("exact duplicate names and parent-field conflicts are deterministic candida
   assert.equal(audit.findings.find((finding) => finding.code === "exact_duplicate_product_name")?.count, 2);
   assert.equal(audit.findings.find((finding) => finding.code === "inconsistent_product_fields")?.count, 1);
   assert.match(audit.deferred.join(" "), /Collection-dekning|Stale sync/u);
+});
+
+test("focused catalog audit presents authoritative aggregate before bounded evidence", () => {
+  const products = Array.from({ length: 24 }, (_, index) => ({
+    ...context().products[0],
+    shopifyProductId: `product-${index}`,
+    sku: `SKU-${index}`,
+  }));
+  const auditContext: ShopifyCatalogContext = {
+    ...context(products),
+    intent: { kind: "catalog_filter", filter: { type: "missing_product_type" } },
+    entityScope: "catalog",
+    auditSelection: "missing_product_type",
+    audit: {
+      productCount: 846,
+      variantCount: 927,
+      findings: [{ code: "missing_product_type", scope: "product", count: 368, evidence: [] }],
+      freshness: { oldestSyncedAt: null, newestSyncedAt: null },
+      deferred: [],
+    },
+  };
+  const answer = createRoyUserResponse({
+    internalAnswer: "OBSERVED\n- [field=productType] Produkttype mangler.\nUNKNOWN\n- Ingen.\nINFERENCE\n- Ingen.",
+    context: auditContext,
+    question: "Hvilke produkter mangler produkttype?",
+  });
+  assert.match(answer, /368 av 846 produkter/iu);
+  assert.match(answer, /begrenset evidensutvalg/iu);
+  assert.match(answer, /evidens, ikke totalresultatet/iu);
+  assert.doesNotMatch(answer, /første 8 av 24|24 produkter med/iu);
 });

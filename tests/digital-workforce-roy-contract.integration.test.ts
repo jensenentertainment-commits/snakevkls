@@ -41,8 +41,9 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
 test("Roy workspace preserves bounded history instead of sending an empty conversation", async () => {
   const workspace = await source("app/shopify/RoyCatalogWorkspace.tsx");
   assert.match(workspace, /useRef<ChatMessage\[\]>/);
-  assert.match(workspace, /history:\s*historyRef\.current/);
-  assert.match(workspace, /historyRef\.current\s*=\s*nextHistory/);
+  assert.match(workspace, /const requestHistory\s*=\s*historyRef\.current/);
+  assert.match(workspace, /history:\s*requestHistory/);
+  assert.match(workspace, /historyRef\.current\s*=\s*requestHistory\.concat/);
   assert.match(workspace, /CHAT_LIMITS\.historyMessages/);
   assert.doesNotMatch(workspace, /history:\s*\[\]/);
 });

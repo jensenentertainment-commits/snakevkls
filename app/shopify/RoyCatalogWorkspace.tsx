@@ -27,6 +27,10 @@ export function RoyCatalogWorkspace() {
     setQuestion(value);
     setBusy(true);
     setAnswer(null);
+    const requestHistory = historyRef.current;
+    historyRef.current = requestHistory.concat(
+      { role: "user", text: value } satisfies ChatMessage,
+    ).slice(-CHAT_LIMITS.historyMessages);
     try {
       const response = await fetch("/api/roy/ask", {
         method: "POST",
@@ -34,7 +38,7 @@ export function RoyCatalogWorkspace() {
         body: JSON.stringify({
           question: value,
           page: "/shopify",
-          history: historyRef.current,
+          history: requestHistory,
         }),
       });
       const data = await response.json() as { answer?: unknown };
@@ -42,11 +46,9 @@ export function RoyCatalogWorkspace() {
         ? data.answer
         : "Roy kunne ikke analysere dette utvalget.";
       setAnswer(nextAnswer);
-      const nextHistory = historyRef.current.concat(
-        { role: "user", text: value } satisfies ChatMessage,
+      historyRef.current = historyRef.current.concat(
         { role: "assistant", text: nextAnswer } satisfies ChatMessage,
       ).slice(-CHAT_LIMITS.historyMessages);
-      historyRef.current = nextHistory;
     } catch {
       setAnswer("Roy mistet kontakten. Ingen katalogdata er endret.");
     } finally {

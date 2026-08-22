@@ -16,10 +16,12 @@ const prompts = [
   "Hvilke produkter mangler leverandør, produkttype eller kolleksjon?",
 ];
 
+let workspaceHistory: ChatMessage[] = [];
+
 export function RoyCatalogWorkspace() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
-  const historyRef = useRef<ChatMessage[]>([]);
+  const historyRef = useRef<ChatMessage[]>(workspaceHistory);
   const [busy, setBusy] = useState(false);
 
   async function analyze(value = question) {
@@ -31,6 +33,7 @@ export function RoyCatalogWorkspace() {
     historyRef.current = requestHistory.concat(
       { role: "user", text: value } satisfies ChatMessage,
     ).slice(-CHAT_LIMITS.historyMessages);
+    workspaceHistory = historyRef.current;
     try {
       const response = await fetch("/api/roy/ask", {
         method: "POST",
@@ -49,6 +52,7 @@ export function RoyCatalogWorkspace() {
       historyRef.current = historyRef.current.concat(
         { role: "assistant", text: nextAnswer } satisfies ChatMessage,
       ).slice(-CHAT_LIMITS.historyMessages);
+      workspaceHistory = historyRef.current;
     } catch {
       setAnswer("Roy mistet kontakten. Ingen katalogdata er endret.");
     } finally {

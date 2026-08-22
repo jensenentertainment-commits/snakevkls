@@ -16,12 +16,39 @@ const prompts = [
   "Hvilke produkter mangler leverandør, produkttype eller kolleksjon?",
 ];
 
-let workspaceHistory: ChatMessage[] = [];
+const HISTORY_STORAGE_KEY = "snake.roy.catalog-history.v1";
+
+function readWorkspaceHistory() {
+  if (typeof window === "undefined") return [];
+  try {
+    const value: unknown = JSON.parse(window.sessionStorage.getItem(HISTORY_STORAGE_KEY) ?? "[]");
+    if (!Array.isArray(value)) return [];
+    return value.filter((message): message is ChatMessage => (
+      typeof message === "object" &&
+      message !== null &&
+      (message as ChatMessage).role !== undefined &&
+      ((message as ChatMessage).role === "user" || (message as ChatMessage).role === "assistant") &&
+      typeof (message as ChatMessage).text === "string" &&
+      (message as ChatMessage).text.length > 0 &&
+      (message as ChatMessage).text.length <= CHAT_LIMITS.historyMessageCharacters
+    )).slice(-CHAT_LIMITS.historyMessages);
+  } catch {
+    return [];
+  }
+}
+
+function writeWorkspaceHistory(history: ChatMessage[]) {
+  try {
+    window.sessionStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  } catch {
+    // The in-memory ref remains authoritative when session storage is unavailable.
+  }
+}
 
 export function RoyCatalogWorkspace() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
-  const historyRef = useRef<ChatMessage[]>(workspaceHistory);
+  const historyRef = useRef<ChatMessage[]>(readWorkspaceHistory());
   const [busy, setBusy] = useState(false);
 
   async function analyze(value = question) {
@@ -33,7 +60,7 @@ export function RoyCatalogWorkspace() {
     historyRef.current = requestHistory.concat(
       { role: "user", text: value } satisfies ChatMessage,
     ).slice(-CHAT_LIMITS.historyMessages);
-    workspaceHistory = historyRef.current;
+    writeWorkspaceHistory(historyRef.current);
     try {
       const response = await fetch("/api/roy/ask", {
         method: "POST",
@@ -52,7 +79,7 @@ export function RoyCatalogWorkspace() {
       historyRef.current = historyRef.current.concat(
         { role: "assistant", text: nextAnswer } satisfies ChatMessage,
       ).slice(-CHAT_LIMITS.historyMessages);
-      workspaceHistory = historyRef.current;
+      writeWorkspaceHistory(historyRef.current);
     } catch {
       setAnswer("Roy mistet kontakten. Ingen katalogdata er endret.");
     } finally {

@@ -8,6 +8,9 @@ import {
 } from "../lib/intelligence/workforce/contexts/shopify-catalog.ts";
 
 const product = {
+  shopifyProductId: "product-1",
+  shopifyVariantId: "variant-1",
+  variantName: null,
   productName: "Prestige X 44 Black Gold",
   sku: "INV-PRESTIGE-X-44-BLK-GLD",
   vendor: "Varekompaniet",
@@ -15,8 +18,14 @@ const product = {
   priceMinor: 499900,
   currency: "NOK",
   quantity: 2,
+  imageReference: null,
+  syncedAt: "2026-08-20T10:00:00Z",
+  inventoryTracked: true,
+  inventoryObservedAt: "2026-08-20T10:00:00Z",
   status: "ACTIVE",
   collections: [{ title: "Prestige", handle: "prestige" }],
+  variants: [],
+  hasProductFieldConflicts: false,
 };
 
 function context(
@@ -27,9 +36,11 @@ function context(
     intent,
     query: intent.kind === "product" ? intent.sku : "",
     scope: intent.kind === "knowledge_gap" ? "knowledge_gap" : "targeted_catalog_sample",
+    entityScope: intent.kind === "product" ? "variant" : "catalog",
     resultLimit: 24,
     receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
     products,
+    audit: null,
     limitations: [],
   };
 }

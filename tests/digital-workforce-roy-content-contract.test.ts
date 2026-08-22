@@ -17,6 +17,9 @@ const context: ShopifyCatalogContext = {
   receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
   products: [
     {
+      shopifyProductId: "product-1",
+      shopifyVariantId: "variant-1",
+      variantName: null,
       productName: "Testprodukt",
       sku: "VK-1",
       vendor: "Varekompaniet",
@@ -24,10 +27,18 @@ const context: ShopifyCatalogContext = {
       priceMinor: 9900,
       currency: "NOK",
       quantity: 2,
+      imageReference: null,
+      syncedAt: "2026-08-20T10:00:00Z",
+      inventoryTracked: true,
+      inventoryObservedAt: "2026-08-20T10:00:00Z",
       status: "ACTIVE",
       collections: [{ title: "Alle Produkter", handle: "alle-produkter" }],
+      variants: [],
+      hasProductFieldConflicts: false,
     },
   ],
+  entityScope: "variant",
+  audit: null,
   limitations: [],
 };
 

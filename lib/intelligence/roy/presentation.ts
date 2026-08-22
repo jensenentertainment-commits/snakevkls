@@ -29,6 +29,9 @@ function presentContext(context: ShopifyCatalogContext, question: string) {
   if (context.intent.kind === "unresolved_reference") {
     return "Jeg klarer ikke å avgjøre hvilket produkt du viser til. Oppgi SKU-en, så undersøker jeg riktig produkt uten å gjette.";
   }
+  if (context.intent.kind === "catalog_overview" && context.audit) {
+    return presentAudit(context.audit, context.intent.objective);
+  }
   if (context.products.length === 0) {
     if (
       context.intent.kind === "catalog_filter" &&
@@ -76,6 +79,10 @@ function presentSingleProduct(
   const auditsProblems = /\b(problem|problemer|mangler|mangel|avvik)\b/iu.test(question);
   const facts: string[] = [];
 
+  if (/\b(variant|variantnavn)\b/iu.test(question) && product.variantName) {
+    lines.push(`SKU-en viser til varianten «${product.variantName}» av produktet.`);
+  }
+
   if (general || /\bpris|kost(?:er|nad)\b/iu.test(question)) {
     const price = presentPrice(product, context.receivedFields);
     if (price) facts.push(`koster ${price}`);
@@ -89,6 +96,14 @@ function presentSingleProduct(
     if (status) facts.push(status);
   }
   if (facts.length) lines.push(sentenceFromFacts(facts));
+  if (/\b(synk\w*|oppdatert|fersk|freshness)\b/iu.test(question) && product.syncedAt) {
+    lines.push(`Snake observerte katalogdataene sist ${formatTimestamp(product.syncedAt)}.`);
+  }
+  if (/\b(bilde|bildereferanse)\b/iu.test(question)) {
+    lines.push(product.imageReference
+      ? "Snake har en featured-image-referanse for produktet. Det sier ikke noe om bildekvaliteten."
+      : "Featured-image-referansen er eksplisitt tom i den mottatte Snake-konteksten. Det sier ikke noe om andre bilder eller bildekvalitet.");
+  }
 
   if (general || /\b(collection|collections|kolleksjon)\b/iu.test(question)) {
     const collections = presentCollections(product, context.receivedFields);
@@ -177,7 +192,7 @@ function presentProductSet(
 
 function presentKnowledgeGap(topics: readonly string[]) {
   if (topics.includes("capabilities")) {
-    return "Jeg kan arbeide med produktnavn, SKU, leverandør, produkttype, pris, lagerantall, produktstatus og collections i den synkroniserte Snake-katalogen. Jeg mangler beskrivelse, SEO-data og bildedata, og kan derfor ikke vurdere eller anbefale tiltak innen disse områdene. Jeg har heller ikke live Shopify-data eller en godkjent produkttaksonomi.";
+    return "Jeg kan arbeide med produkter, varianter, SKU, leverandør, produkttype, pris, lagerantall, produktstatus, collections, synkroniseringstid og om Snake har en featured-image-referanse. Bildereferansen gir ikke grunnlag for å vurdere bildekvalitet. Jeg mangler beskrivelse og SEO-data, og har heller ikke live Shopify-data eller en godkjent produkttaksonomi.";
   }
   const labels = topics.map((topic) => ({
     images: "bilder",
@@ -230,6 +245,30 @@ function presentPriorities(
     `I det avgrensede utvalget på ${products.length} produkter ville jeg startet med bekreftede datamangler: ${priorities.join(", ")}.`,
     `Dette er en datakvalitetsprioritering innen de ${context.receivedFields.length} feltene jeg har mottatt, ikke en kommersiell prioritering av hele katalogen.`,
   ];
+}
+
+function presentAudit(audit: NonNullable<ShopifyCatalogContext["audit"]>, objective: "overview" | "prioritize") {
+  const labels: Record<string, string> = {
+    missing_product_type: "mangler produkttype",
+    missing_vendor: "mangler leverandør",
+    missing_featured_image_reference: "mangler featured-image-referanse i Snake",
+    missing_sku: "mangler SKU",
+    inconsistent_product_fields: "har inkonsistente produktfelt på tvers av varianter",
+    exact_duplicate_product_name: "er eksakte duplikatkandidater basert på produktnavn",
+  };
+  const findings = audit.findings.map((finding) => `- ${finding.count} ${finding.scope === "variant" ? "varianter" : "produkter"} ${labels[finding.code]}.`).join("\n");
+  const intro = objective === "prioritize"
+    ? `Jeg ville startet med de deterministisk dokumenterte datamanglene i katalogen. Auditen omfatter ${audit.productCount} produkter og ${audit.variantCount} varianter.`
+    : `Den deterministiske auditen omfatter ${audit.productCount} produkter og ${audit.variantCount} varianter.`;
+  const freshness = audit.freshness.oldestSyncedAt && audit.freshness.newestSyncedAt
+    ? `Synkroniseringene i utvalget går fra ${formatTimestamp(audit.freshness.oldestSyncedAt)} til ${formatTimestamp(audit.freshness.newestSyncedAt)}. Jeg klassifiserer ikke noe som foreldet uten en godkjent terskel.`
+    : "Jeg har ikke nok synkroniseringstidspunkter til å beskrive ferskheten.";
+  return [intro, findings || "Jeg fant ingen av de implementerte deterministiske avvikene.", freshness, "Dette er datakvalitetsfunn, ikke en kommersiell prioritering eller faglig produkttaksonomi."].join("\n\n");
+}
+
+function formatTimestamp(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf()) ? value : new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Oslo" }).format(date);
 }
 
 function productCount(count: number) {

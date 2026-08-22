@@ -1,151 +1,101 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import type { ValidChatInput } from "../../shared/chat-input";
-import type { ContextProvider } from "../context-provider";
-import {
-  ROY_RECEIVED_CATALOG_FIELDS,
-  type ShopifyCatalogContext,
-} from "./shopify-catalog";
+import { buildCatalogAudit, groupCatalogVariants, type CatalogVariantRow } from "../../roy/catalog-semantics";
 import { resolveRoyQueryIntent } from "../../roy/query-intent";
+import type { ContextProvider } from "../context-provider";
+import { ROY_RECEIVED_CATALOG_FIELDS, type ShopifyCatalogContext } from "./shopify-catalog";
 
 const RESULT_LIMIT = 24;
-
-function searchTerm(input: ValidChatInput) {
-  const quoted = /["“]([^"”]{2,80})["”]/u.exec(input.question)?.[1];
-  if (quoted) return quoted.trim();
-
-  const sku = /\b[A-Z0-9]+(?:-[A-Z0-9]+)+\b/u.exec(input.question)?.[0];
-  if (sku) return sku;
-
-  const vendor = /\bfra\s+([\p{L}\p{N}-]+(?:\s+[\p{L}\p{N}-]+)?)/iu.exec(
-    input.question,
-  )?.[1];
-  if (vendor) return vendor.trim();
-
-  const words = input.question.match(/[\p{L}\p{N}-]+/gu) ?? [];
-  return words.length <= 4 ? words.join(" ") : "";
-}
+const AUDIT_PAGE_SIZE = 500;
+const PRODUCT_COLUMNS = "id, shopify_product_id, shopify_variant_id, sku, product_name, variant_name, vendor, product_type, shopify_status, shopify_price_minor, shopify_price_currency, shopify_quantity, image_url, synced_at, shopify_inventory_tracked, shopify_inventory_observed_at";
 
 export const shopifyCatalogProvider = {
   id: "shopify.catalog",
   capabilityId: "shopify.read_catalog",
   async provide(_context, input) {
     const intent = resolveRoyQueryIntent(input);
-    if (intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference") {
-      return contextWithoutProducts(intent);
+    if (intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference") return createContext(intent, "", [], null);
+    const supabase = await createClient();
+
+    if (intent.kind === "catalog_overview" || (intent.kind === "catalog_filter" && intent.filter.type === "missing_product_type")) {
+      const rows = await readAuditRows(supabase, intent.kind === "catalog_filter");
+      const allProducts = groupCatalogVariants(rows, new Map());
+      const audit = buildCatalogAudit(allProducts);
+      const products = intent.kind === "catalog_filter"
+        ? allProducts.filter((product) => product.productType === null).slice(0, RESULT_LIMIT)
+        : auditEvidence(allProducts, audit).slice(0, RESULT_LIMIT);
+      return createContext(intent, "", products, audit);
     }
 
-    const supabase = await createClient();
-    const query = intent.kind === "product" ? intent.sku : searchTerm(input);
-    let collectionProductIds: string[] | null = null;
-
+    let rowIds: string[] | null = null;
     if (intent.kind === "catalog_filter" && intent.filter.type === "collection") {
-      let collectionQuery = supabase
-        .from("product_collections")
-        .select("product_id")
-        .limit(RESULT_LIMIT);
-      if (intent.filter.value) {
-        collectionQuery = collectionQuery.ilike("title", `%${intent.filter.value}%`);
-      }
+      let collectionQuery = supabase.from("product_collections").select("product_id").limit(RESULT_LIMIT);
+      if (intent.filter.value) collectionQuery = collectionQuery.ilike("title", `%${intent.filter.value}%`);
       const { data, error } = await collectionQuery;
       if (error) throw new Error(`Collection filter failed: ${error.message}`);
-      collectionProductIds = [...new Set((data ?? []).map(({ product_id }) => product_id))];
+      rowIds = [...new Set((data ?? []).map(({ product_id }) => product_id))];
+      if (!rowIds.length) return createContext(intent, "", [], null);
     }
 
-    let productsQuery = supabase
-      .from("products")
-      .select("id, sku, product_name, vendor, product_type, shopify_status, shopify_price_minor, shopify_price_currency, shopify_quantity, synced_at")
-      .eq("active", true)
-      .not("shopify_product_id", "is", null)
-      .order("synced_at", { ascending: false })
-      .limit(RESULT_LIMIT);
+    let query = supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).not("shopify_product_id", "is", null).order("synced_at", { ascending: false }).limit(RESULT_LIMIT);
+    if (intent.kind === "product") query = query.eq("sku", intent.sku);
+    else if (rowIds) query = query.in("id", rowIds);
+    const { data: initialRows, error } = await query;
+    if (error) throw new Error(`Catalog query failed: ${error.message}`);
+    let rows = (initialRows ?? []) as CatalogVariantRow[];
 
-    if (intent.kind === "product") {
-      productsQuery = productsQuery.eq("sku", intent.sku);
-    } else if (
-      intent.kind === "catalog_filter" &&
-      intent.filter.type === "missing_product_type"
-    ) {
-      productsQuery = productsQuery.is("product_type", null);
-    } else if (collectionProductIds) {
-      if (collectionProductIds.length === 0) {
-        return createContext(intent, "", [], []);
-      }
-      productsQuery = productsQuery.in("id", collectionProductIds);
-    } else if (query) {
-      const filters = query.split(/\s+/).flatMap((term) => {
-        const pattern = `%${term}%`;
-        return [
-          `product_name.ilike.${pattern}`,
-          `sku.ilike.${pattern}`,
-          `vendor.ilike.${pattern}`,
-          `product_type.ilike.${pattern}`,
-        ];
-      });
-      productsQuery = productsQuery.or(filters.join(","));
+    if (intent.kind === "product" && rows[0]?.shopify_product_id) {
+      const { data: siblings, error: siblingsError } = await supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).eq("shopify_product_id", rows[0].shopify_product_id).order("sku");
+      if (siblingsError) throw new Error(`Variant context failed: ${siblingsError.message}`);
+      rows = (siblings ?? []) as CatalogVariantRow[];
     }
-
-    const { data: products, error: productsError } = await productsQuery;
-    if (productsError) throw new Error(`Catalog query failed: ${productsError.message}`);
-
-    const ids = (products ?? []).map((product) => product.id);
-    const { data: collections, error: collectionsError } = ids.length
-      ? await supabase
-          .from("product_collections")
-          .select("product_id, title, handle")
-          .in("product_id", ids)
-          .order("title")
-      : { data: [], error: null };
-    if (collectionsError) throw new Error(`Collection query failed: ${collectionsError.message}`);
-
-    const catalogProducts = (products ?? []).map((product) => ({
-        sku: product.sku,
-        productName: product.product_name,
-        vendor: product.vendor,
-        productType: product.product_type,
-        status: product.shopify_status,
-        priceMinor: product.shopify_price_minor,
-        currency: product.shopify_price_currency,
-        quantity: product.shopify_quantity,
-        collections: (collections ?? [])
-          .filter((collection) => collection.product_id === product.id)
-          .map(({ title, handle }) => ({ title, handle })),
-      }));
-    return createContext(intent, query, catalogProducts, []);
+    const collections = await readCollections(supabase, rows.map((row) => row.id));
+    const products = groupCatalogVariants(rows, collections, intent.kind === "product" ? intent.sku : null);
+    return createContext(intent, intent.kind === "product" ? intent.sku : "", products, null);
   },
 } satisfies ContextProvider<ShopifyCatalogContext>;
 
-function contextWithoutProducts(
-  intent: ShopifyCatalogContext["intent"],
-): ShopifyCatalogContext {
-  return createContext(intent, "", [], []);
+async function readAuditRows(supabase: Awaited<ReturnType<typeof createClient>>, missingTypeOnly: boolean) {
+  const rows: CatalogVariantRow[] = [];
+  for (let from = 0; ; from += AUDIT_PAGE_SIZE) {
+    let query = supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).not("shopify_product_id", "is", null).order("id").range(from, from + AUDIT_PAGE_SIZE - 1);
+    if (missingTypeOnly) query = query.is("product_type", null);
+    const { data, error } = await query;
+    if (error) throw new Error(`Catalog audit failed: ${error.message}`);
+    const page = (data ?? []) as CatalogVariantRow[];
+    rows.push(...page);
+    if (page.length < AUDIT_PAGE_SIZE) break;
+  }
+  return rows;
 }
 
-function createContext(
-  intent: ShopifyCatalogContext["intent"],
-  query: string,
-  products: ShopifyCatalogContext["products"],
-  extraLimitations: readonly string[],
-): ShopifyCatalogContext {
+async function readCollections(supabase: Awaited<ReturnType<typeof createClient>>, ids: readonly string[]) {
+  const result = new Map<string, { title: string; handle: string | null }[]>();
+  if (!ids.length) return result;
+  const { data, error } = await supabase.from("product_collections").select("product_id, title, handle").in("product_id", [...ids]).order("title");
+  if (error) throw new Error(`Collection query failed: ${error.message}`);
+  for (const row of data ?? []) result.set(row.product_id, [...(result.get(row.product_id) ?? []), { title: row.title, handle: row.handle }]);
+  return result;
+}
+
+function auditEvidence(products: readonly ShopifyCatalogContext["products"][number][], audit: NonNullable<ShopifyCatalogContext["audit"]>) {
+  const labels = new Set(audit.findings.flatMap((finding) => finding.evidence));
+  return products.filter((product) => labels.has(product.sku ? `${product.productName} (SKU ${product.sku})` : product.productName));
+}
+
+function createContext(intent: ShopifyCatalogContext["intent"], query: string, products: ShopifyCatalogContext["products"], audit: ShopifyCatalogContext["audit"]): ShopifyCatalogContext {
   return {
-    intent,
-    query,
-    scope:
-      intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference"
-        ? "knowledge_gap"
-        : intent.kind === "catalog_filter"
-          ? "catalog_filter"
-          : "targeted_catalog_sample",
-    resultLimit: RESULT_LIMIT,
-    receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
-    products,
+    intent, query,
+    scope: intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference" ? "knowledge_gap" : intent.kind === "catalog_filter" ? "catalog_filter" : "targeted_catalog_sample",
+    entityScope: intent.kind === "product" ? "variant" : "catalog",
+    resultLimit: RESULT_LIMIT, receivedFields: ROY_RECEIVED_CATALOG_FIELDS, products, audit,
     limitations: [
-      `Maksimalt ${RESULT_LIMIT} synkroniserte, aktive varianter er med per forespørsel.`,
-      "Snake-katalogen inneholder ikke produktbeskrivelse, SEO-felt eller full bildegalleri i v1.",
-      "Resultatet er en observasjon av sist synkroniserte data, ikke live Shopify-data.",
-      "Et felt som ikke inngår i utvalget kan ikke behandles som manglende i Shopify.",
-      ...extraLimitations,
+      "Produktresultater grupperes på stabil Shopify-produktidentitet; varianter beholdes separat under produktet.",
+      "Snake har kun en featured-image-referanse, ikke bildegalleri eller evidens for bildekvalitet.",
+      "Synkroniseringstid er en observasjon; ingen terskel for hva som er foreldet er godkjent.",
+      "Snake-katalogen inneholder ikke produktbeskrivelse eller SEO-felt i denne konteksten.",
+      "Resultatet er sist synkroniserte data, ikke live Shopify-data.",
     ],
   };
 }

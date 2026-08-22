@@ -23,7 +23,12 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
   assert.match(provider, /\.eq\("sku", intent\.sku\)/);
   assert.match(provider, /resolveRoyQueryIntent/);
   assert.match(provider, /\.limit\(RESULT_LIMIT\)/);
-  assert.doesNotMatch(provider, /variant_name|image_url/);
+  assert.match(provider, /variant_name/);
+  assert.match(provider, /image_url/);
+  assert.match(provider, /shopify_product_id/);
+  assert.match(provider, /shopify_variant_id/);
+  assert.match(provider, /shopify_inventory_tracked/);
+  assert.match(provider, /shopify_inventory_observed_at/);
   assert.doesNotMatch(provider, /\.(insert|update|delete|upsert|rpc)\(/);
   assert.match(prompt, /kan ikke skrive til Shopify eller Snake/);
   assert.match(prompt, /Ikke fyll hull med antakelser/);

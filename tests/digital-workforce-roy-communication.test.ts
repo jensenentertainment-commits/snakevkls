@@ -14,6 +14,9 @@ const context: ShopifyCatalogContext = {
   receivedFields: ROY_RECEIVED_CATALOG_FIELDS,
   products: [
     {
+      shopifyProductId: "product-1",
+      shopifyVariantId: "variant-1",
+      variantName: null,
       productName: "Elektrisk scooter med kjøleboks – 500W",
       sku: "VK-SCOOT-COOL-500W",
       vendor: "Varekompaniet",
@@ -21,13 +24,21 @@ const context: ShopifyCatalogContext = {
       priceMinor: 250000,
       currency: "NOK",
       quantity: 1,
+      imageReference: null,
+      syncedAt: "2026-08-20T10:00:00Z",
+      inventoryTracked: true,
+      inventoryObservedAt: "2026-08-20T10:00:00Z",
       status: "ACTIVE",
       collections: [
         { title: "Hjem & Fritid", handle: "hjem-fritid" },
         { title: "AVADA Email Marketing - Best Sellers", handle: "avada-best" },
       ],
+      variants: [],
+      hasProductFieldConflicts: false,
     },
   ],
+  entityScope: "variant",
+  audit: null,
   limitations: [],
 };
 

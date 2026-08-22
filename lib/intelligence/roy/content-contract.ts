@@ -10,6 +10,7 @@ const FIELD_REFERENCE = /^- \[field=([^\]]+)\]/u;
 const INFERENCE_REFERENCE = /^- \[based_on=([^\]]+)\]/u;
 const GENERAL_ADVICE_OR_OUTCOME =
   /\b(bør|anbefal|best practice|publiseringsklar|konvertering|salgbar|synlighet|google shopping|produktfeed|shopify-problem)\b/iu;
+const UNSUPPORTED_IMAGE_QUALITY = /\b(bildekvalitet|godt bilde|dårlig bilde|skarpt|uskarpt|oppløsning|komposisjon)\b/iu;
 
 const UNAVAILABLE_FIELD_TERMS: ReadonlyArray<{
   field: string;
@@ -48,6 +49,7 @@ export function isRoyAnswerValid(
     }
     if (
       mentionsUnavailableField(line, context) ||
+      UNSUPPORTED_IMAGE_QUALITY.test(line) ||
       GENERAL_ADVICE_OR_OUTCOME.test(line)
     ) {
       return false;
@@ -63,6 +65,7 @@ export function isRoyAnswerValid(
       fields.length === 0 ||
       fields.some((field) => !isReceivedField(field, context)) ||
       mentionsUnavailableField(line, context) ||
+      UNSUPPORTED_IMAGE_QUALITY.test(line) ||
       GENERAL_ADVICE_OR_OUTCOME.test(line)
     ) {
       return false;
@@ -114,6 +117,9 @@ function isExplicitlyEmpty(
   field: RoyReceivedCatalogField,
   products: readonly ShopifyCatalogProduct[],
 ) {
+  // Shopify's synthetic "Default Title" is normalized to null. That means a
+  // single/default variant, not a missing business value.
+  if (field === "variantName") return false;
   return products.some((product) => {
     const value = product[field];
     return (

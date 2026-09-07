@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   mapShopifyVariant,
+  mapShopifyProductContent,
   parseShopifyMoneyToMinor,
   SHOPIFY_CATALOG_QUERY,
   validateShopifyLocation,
@@ -30,6 +31,16 @@ function variant(
       status: "ACTIVE",
       vendor: "VK",
       productType: "Genser",
+      description: "Varm ullgenser",
+      seo: {
+        title: "Ullgenser",
+        description: "Varm ullgenser for kalde dager",
+      },
+      handle: "ullgenser",
+      category: {
+        id: "gid://shopify/TaxonomyCategory/aa-1",
+        fullName: "Klær > Overdeler > Gensere",
+      },
       featuredImage: { url: "https://cdn.example/product.jpg" },
       collections: { edges: [] },
     },
@@ -63,6 +74,75 @@ test("maps price and available quantity at the configured location", () => {
     result.shopifyInventoryLevelId,
     "gid://shopify/InventoryLevel/3"
   );
+});
+
+test("catalog query requests the Phase 2A product-content source fields", () => {
+  assert.match(SHOPIFY_CATALOG_QUERY, /\bdescription\b/);
+  assert.match(
+    SHOPIFY_CATALOG_QUERY,
+    /seo\s*{[\s\S]*?title[\s\S]*?description[\s\S]*?}/,
+  );
+  assert.match(SHOPIFY_CATALOG_QUERY, /\bhandle\b/);
+  assert.match(
+    SHOPIFY_CATALOG_QUERY,
+    /category\s*{[\s\S]*?id[\s\S]*?fullName[\s\S]*?}/,
+  );
+});
+
+test("maps populated Shopify product content without mixing category and product type", () => {
+  const result = mapShopifyProductContent(variant().product);
+
+  assert.deepEqual(result, {
+    shopifyProductId: "gid://shopify/Product/4",
+    productName: "Ullgenser",
+    description: "Varm ullgenser",
+    seoTitle: "Ullgenser",
+    seoDescription: "Varm ullgenser for kalde dager",
+    productHandle: "ullgenser",
+    productType: "Genser",
+    shopifyCategory: {
+      id: "gid://shopify/TaxonomyCategory/aa-1",
+      fullName: "Klær > Overdeler > Gensere",
+    },
+    vendor: "VK",
+    status: "ACTIVE",
+    imageReference: "https://cdn.example/product.jpg",
+  });
+  assert.notEqual(result.productType, result.shopifyCategory?.fullName);
+});
+
+test("preserves nullable and explicitly empty Shopify product-content values", () => {
+  const result = mapShopifyProductContent({
+    ...variant().product,
+    description: "",
+    seo: { title: null, description: "" },
+    category: null,
+    productType: null,
+    vendor: null,
+    featuredImage: null,
+  });
+
+  assert.equal(result.description, "");
+  assert.equal(result.seoTitle, null);
+  assert.equal(result.seoDescription, "");
+  assert.equal(result.shopifyCategory, null);
+  assert.equal(result.productType, null);
+  assert.equal(result.vendor, null);
+  assert.equal(result.imageReference, null);
+});
+
+test("variant payload carries mapped content without changing variant semantics", () => {
+  const result = mapShopifyVariant(variant(), {
+    currencyCode: "NOK",
+    locationId: "gid://shopify/Location/5",
+  });
+
+  assert.equal(result.shopifyVariantId, "gid://shopify/ProductVariant/1");
+  assert.equal(result.sku, "VK-1");
+  assert.equal(result.shopifyPriceMinor, 19990);
+  assert.equal(result.shopifyQuantity, 7);
+  assert.equal(result.productContent.shopifyProductId, result.shopifyProductId);
+  assert.equal(result.productContent.description, "Varm ullgenser");
 });
 
 test("keeps a missing inventory level distinct from zero available", () => {

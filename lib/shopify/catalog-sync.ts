@@ -38,6 +38,16 @@ export const SHOPIFY_CATALOG_QUERY = `
             status
             vendor
             productType
+            description
+            seo {
+              title
+              description
+            }
+            handle
+            category {
+              id
+              fullName
+            }
             featuredImage {
               url
             }
@@ -67,6 +77,23 @@ export type ShopifyCollectionNode = {
   handle: string | null;
 };
 
+export type ShopifyProductContentPayload = {
+  shopifyProductId: string;
+  productName: string;
+  description: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  productHandle: string;
+  productType: string | null;
+  shopifyCategory: {
+    id: string;
+    fullName: string;
+  } | null;
+  vendor: string | null;
+  status: string;
+  imageReference: string | null;
+};
+
 export type ShopifyVariantNode = {
   id: string;
   sku: string | null;
@@ -86,6 +113,16 @@ export type ShopifyVariantNode = {
     status: string;
     vendor: string | null;
     productType: string | null;
+    description: string;
+    seo: {
+      title: string | null;
+      description: string | null;
+    };
+    handle: string;
+    category: {
+      id: string;
+      fullName: string;
+    } | null;
     featuredImage: { url: string } | null;
     collections: { edges: { node: ShopifyCollectionNode }[] };
   };
@@ -109,7 +146,28 @@ export type ShopifyVariantPayload = {
   shopifyInventoryItemId: string;
   shopifyStatus: string;
   collections: ShopifyCollectionNode[];
+  productContent: ShopifyProductContentPayload;
 };
+
+export function mapShopifyProductContent(
+  product: ShopifyVariantNode["product"]
+): ShopifyProductContentPayload {
+  return {
+    shopifyProductId: product.id,
+    productName: product.title,
+    description: product.description,
+    seoTitle: product.seo.title,
+    seoDescription: product.seo.description,
+    productHandle: product.handle,
+    productType: product.productType,
+    shopifyCategory: product.category
+      ? { id: product.category.id, fullName: product.category.fullName }
+      : null,
+    vendor: product.vendor,
+    status: product.status,
+    imageReference: product.featuredImage?.url ?? null,
+  };
+}
 
 export function validateShopifyLocation(
   location: { id: string; name: string; isActive: boolean } | null | undefined,
@@ -179,5 +237,6 @@ export function mapShopifyVariant(
     shopifyStatus: variant.product.status,
     collections:
       variant.product.collections?.edges?.map((item) => item.node) ?? [],
+    productContent: mapShopifyProductContent(variant.product),
   };
 }

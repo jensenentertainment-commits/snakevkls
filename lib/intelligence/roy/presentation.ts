@@ -134,7 +134,6 @@ function presentSelectedAudit(context: ShopifyCatalogContext) {
   const total = scope === "variant" ? audit.variantCount : audit.productCount;
   const labels: Record<NonNullable<ShopifyCatalogContext["auditSelection"]>, string> = {
     missing_product_type: "mangler produkttype",
-    missing_vendor: "mangler leverandør",
     missing_featured_image_reference: "mangler featured-image-referanse i Snake",
     missing_sku: "mangler SKU",
     inconsistent_product_fields: "har inkonsistente produktfelt på tvers av varianter",
@@ -155,7 +154,6 @@ function presentObservedProblems(
 ) {
   const missing: string[] = [];
   if (receivedFields.includes("sku") && isExplicitlyEmpty(product.sku)) missing.push("SKU");
-  if (receivedFields.includes("vendor") && isExplicitlyEmpty(product.vendor)) missing.push("leverandør");
   if (receivedFields.includes("productType") && isExplicitlyEmpty(product.productType)) missing.push("produkttype");
   if (
     receivedFields.includes("priceMinor") &&
@@ -254,15 +252,11 @@ function presentPriorities(
   context: ShopifyCatalogContext,
 ) {
   const missingProductType = products.filter((product) => isExplicitlyEmpty(product.productType));
-  const missingVendor = products.filter((product) => isExplicitlyEmpty(product.vendor));
   const withoutCollections = products.filter((product) => product.collections.length === 0);
   const priorities = [
     missingProductType.length
       ? `${productCount(missingProductType.length)} mangler produkttype`
       : "ingen produkter mangler produkttype",
-    missingVendor.length
-      ? `${productCount(missingVendor.length)} mangler leverandør`
-      : "ingen produkter mangler leverandør",
     withoutCollections.length
       ? `${productCount(withoutCollections.length)} har ingen registrerte collections`
       : "alle produktene har minst én registrert collection",
@@ -276,7 +270,6 @@ function presentPriorities(
 function presentAudit(audit: NonNullable<ShopifyCatalogContext["audit"]>, objective: "overview" | "prioritize") {
   const labels: Record<string, string> = {
     missing_product_type: "mangler produkttype",
-    missing_vendor: "mangler leverandør",
     missing_featured_image_reference: "mangler featured-image-referanse i Snake",
     missing_sku: "mangler SKU",
     inconsistent_product_fields: "har inkonsistente produktfelt på tvers av varianter",

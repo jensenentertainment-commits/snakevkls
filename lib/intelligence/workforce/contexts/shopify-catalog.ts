@@ -39,7 +39,6 @@ export type RoyCatalogEntityScope = "product" | "variant" | "catalog";
 export type RoyCatalogAuditFinding = {
   code:
     | "missing_product_type"
-    | "missing_vendor"
     | "missing_featured_image_reference"
     | "missing_sku"
     | "inconsistent_product_fields"

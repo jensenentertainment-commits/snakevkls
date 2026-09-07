@@ -72,7 +72,6 @@ export function buildCatalogAudit(products: readonly ShopifyCatalogProduct[]): R
     labels: readonly string[],
   ) => ({ code, scope, count: labels.length, evidence: labels.slice(0, 8) });
   const missingType = products.filter((p) => explicitEmpty(p.productType)).map(productLabel);
-  const missingVendor = products.filter((p) => explicitEmpty(p.vendor)).map(productLabel);
   const missingImage = products.filter((p) => explicitEmpty(p.imageReference)).map(productLabel);
   const missingSku = products.flatMap((p) => p.variants.filter((v) => explicitEmpty(v.sku)).map(() => p.productName));
   const inconsistent = products.filter((product) => product.hasProductFieldConflicts).map(productLabel);
@@ -88,7 +87,6 @@ export function buildCatalogAudit(products: readonly ShopifyCatalogProduct[]): R
     variantCount: variants.length,
     findings: [
       finding("missing_product_type", "product", missingType),
-      finding("missing_vendor", "product", missingVendor),
       finding("missing_featured_image_reference", "product", missingImage),
       finding("missing_sku", "variant", missingSku),
       finding("inconsistent_product_fields", "product", inconsistent),

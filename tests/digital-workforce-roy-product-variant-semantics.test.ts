@@ -74,6 +74,19 @@ test("exact duplicate names and parent-field conflicts are deterministic candida
   assert.match(audit.deferred.join(" "), /Collection-dekning|Stale sync/u);
 });
 
+test("missing vendor does not produce a generic Roy audit finding", () => {
+  const products = groupCatalogVariants(
+    [{ ...base, vendor: null }],
+    new Map(),
+  );
+  const audit = buildCatalogAudit(products);
+
+  assert.equal(
+    audit.findings.some(({ code }) => String(code) === "missing_vendor"),
+    false,
+  );
+});
+
 test("focused catalog audit presents authoritative aggregate before bounded evidence", () => {
   const products = Array.from({ length: 24 }, (_, index) => ({
     ...context().products[0],

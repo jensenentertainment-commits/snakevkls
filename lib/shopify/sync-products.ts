@@ -13,6 +13,11 @@ import {
   createCatalogRequest,
   fetchShopifyCatalogPage,
 } from "@/lib/shopify/catalog-source";
+import {
+  parseStoredSyncRun,
+  prepareShopifyPersistencePage,
+  syncWriteResult,
+} from "@/lib/shopify/sync-persistence";
 
 type SyncOptions = {
   actorEmail?: string | null;
@@ -105,6 +110,13 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
   }
 
   const worker: ShopifySyncWorker<ShopifyVariantPayload> = {
+    async readRun(runId) {
+      const { data, error } = await supabaseAdmin.rpc("get_shopify_sync_run", {
+        requested_run_id: runId,
+      });
+      if (error) throw new Error(error.message);
+      return parseStoredSyncRun(data, runId);
+    },
     async claim() {
       const { data, error } = await supabaseAdmin.rpc(
         "claim_shopify_sync_run",
@@ -158,20 +170,23 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
       });
     },
 
-    async applyPage({ runId, leaseToken, expectedCursor, page }) {
+    async applyPage({ runId, leaseToken, expectedCursor, expectedPagesProcessed, page }) {
+      const payload = prepareShopifyPersistencePage(page.variants);
       const { data, error } = await supabaseAdmin.rpc(
-        "apply_shopify_sync_page",
+        "apply_shopify_sync_page_v2",
         {
           requested_run_id: runId,
           requested_lease_token: leaseToken,
           expected_cursor: expectedCursor,
+          expected_pages_processed: expectedPagesProcessed,
           next_cursor: page.endCursor,
           page_has_next: page.hasNextPage,
-          page_variants: page.variants,
+          page_variants: payload.variants,
+          page_products: payload.products,
           page_lease_seconds: 90,
         }
       );
-      const progress = rpcResult<ShopifySyncProgress>(data, error);
+      const progress = syncWriteResult<ShopifySyncProgress>(data, error);
       leaseExpiresAt = progress.leaseExpiresAt;
       return progress;
     },
@@ -184,7 +199,7 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
           requested_lease_token: leaseToken,
         }
       );
-      const completed = rpcResult<ShopifySyncCompleted>(data, error);
+      const completed = syncWriteResult<ShopifySyncCompleted>(data, error);
 
       await logShopifySync(supabaseAdmin, {
         action: "shopify_sync_completed",

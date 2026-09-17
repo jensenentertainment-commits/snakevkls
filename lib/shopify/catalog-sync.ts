@@ -38,6 +38,7 @@ export const SHOPIFY_CATALOG_QUERY = `
           }
           product {
             id
+            updatedAt
             title
             status
             vendor
@@ -92,6 +93,8 @@ export type ShopifyCollectionConnection = {
 
 export type ShopifyProductContentPayload = {
   shopifyProductId: string;
+  shopifyUpdatedAt: string;
+  contentObservedAt: string;
   productName: string;
   description: string;
   seoTitle: string | null;
@@ -122,6 +125,7 @@ export type ShopifyVariantNode = {
   };
   product: {
     id: string;
+    updatedAt: string;
     title: string;
     status: string;
     vendor: string | null;
@@ -164,10 +168,29 @@ export type ShopifyVariantPayload = {
 };
 
 export function mapShopifyProductContent(
-  product: ShopifyVariantNode["product"]
+  product: ShopifyVariantNode["product"],
+  contentObservedAt: string,
 ): ShopifyProductContentPayload {
+  // Missing source keys are UNKNOWN, not an observed null/empty value.
+  const nullableString = (value: unknown) => value === null || typeof value === "string";
+  if (!product || [product.id, product.title, product.status, product.description, product.handle]
+    .some((value) => typeof value !== "string") ||
+    !nullableString(product.vendor) || !nullableString(product.productType) ||
+    !product.seo || !nullableString(product.seo.title) || !nullableString(product.seo.description) ||
+    (product.category !== null && (!product.category ||
+      typeof product.category.id !== "string" || typeof product.category.fullName !== "string")) ||
+    (product.featuredImage !== null && (!product.featuredImage || typeof product.featuredImage.url !== "string"))) {
+    throw new Error("Shopify product content observation is missing source fields");
+  }
+  for (const timestamp of [product.updatedAt, contentObservedAt]) {
+    if (typeof timestamp !== "string" || !Number.isFinite(Date.parse(timestamp))) {
+      throw new Error("Shopify product content requires valid source and observation timestamps");
+    }
+  }
   return {
     shopifyProductId: product.id,
+    shopifyUpdatedAt: product.updatedAt,
+    contentObservedAt,
     productName: product.title,
     description: product.description,
     seoTitle: product.seo.title,
@@ -220,6 +243,7 @@ export function mapShopifyVariant(
   input: {
     currencyCode: string;
     locationId: string;
+    contentObservedAt: string;
     collectionObservation: Extract<ProductCollectionObservation, { state: "complete" }>;
   }
 ): ShopifyVariantPayload {
@@ -259,6 +283,6 @@ export function mapShopifyVariant(
     shopifyStatus: variant.product.status,
     collections: [...input.collectionObservation.collections],
     collectionObservation: input.collectionObservation,
-    productContent: mapShopifyProductContent(variant.product),
+    productContent: mapShopifyProductContent(variant.product, input.contentObservedAt),
   };
 }

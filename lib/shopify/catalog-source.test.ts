@@ -20,6 +20,7 @@ function variant(id = 1, productId = 1, collections = connection([])): ShopifyVa
       inventoryLevel: { id: `gid://shopify/InventoryLevel/${id}`, quantities: [{ name: "available", quantity: 7 }] },
     },
     product: {
+      updatedAt: "2026-09-16T10:00:00Z",
       id: `gid://shopify/Product/${productId}`, title: "Product", status: "ACTIVE", vendor: "Vendor",
       productType: "Type", description: "Description", seo: { title: null, description: "" },
       handle: "product", category: null, featuredImage: null, collections,
@@ -50,6 +51,7 @@ test("multiple variants share one full product traversal and preserve legacy var
   const requests: Record<string, string | null>[] = [];
   const result = await fetchShopifyCatalogPage({
     cursor: null, locationId,
+    observedNow: () => "2026-09-17T12:00:00Z",
     request: async (query, variables) => {
       if (query === SHOPIFY_CATALOG_QUERY) return catalog(variants);
       assert.equal(query, SHOPIFY_COLLECTIONS_QUERY);
@@ -76,6 +78,8 @@ test("multiple variants share one full product traversal and preserve legacy var
     assert.equal(mapped.shopifyInventoryLevelId, variants[i].inventoryItem.inventoryLevel!.id);
     assert.equal(mapped.shopifyInventoryLocationId, locationId);
     assert.equal(mapped.productContent.description, "Description");
+    assert.equal(mapped.productContent.shopifyUpdatedAt, "2026-09-16T10:00:00Z");
+    assert.equal(mapped.productContent.contentObservedAt, "2026-09-17T12:00:00Z");
     assert.equal(mapped.collectionObservation.state, "complete");
   }
 });
@@ -105,6 +109,7 @@ test("mapper rejects unknown/incomplete observations even if bypassing the TypeS
   for (const state of ["unknown", "incomplete"]) {
     assert.throws(() => mapShopifyVariant(variant(), {
       currencyCode: "NOK", locationId,
+      contentObservedAt: "2026-09-17T12:00:00Z",
       collectionObservation: { state, observedAt: null, collections: [] } as unknown as ShopifyVariantPayload["collectionObservation"],
     }), /not complete/);
   }
@@ -130,8 +135,9 @@ test("a collection failure leaves the applied checkpoint and legacy relations in
     return { product: { id: variables.productId, collections: connection([3]) } };
   };
   const worker: ShopifySyncWorker<ShopifyVariantPayload> = {
+    async readRun() { throw new Error("Unexpected recovery read"); },
     async claim() {
-      return { acquired: true, resumed: pagesProcessed > 0, runId: "run", status: "running", cursor: storedCursor, processedCount: pagesProcessed, pagesProcessed, leaseToken: "lease" };
+      return { acquired: true, hasNextPage: pagesProcessed < 2, resumed: pagesProcessed > 0, runId: "run", status: "running", cursor: storedCursor, processedCount: pagesProcessed, pagesProcessed, leaseToken: "lease" };
     },
     fetchPage: (cursor) => fetchShopifyCatalogPage({ cursor, locationId, request }),
     async applyPage({ page, expectedCursor }) {
@@ -146,7 +152,7 @@ test("a collection failure leaves the applied checkpoint and legacy relations in
     },
     async complete() {
       completions += 1;
-      return { runId: "run", status: "completed", startedAt: "start", completedAt: "end", processedCount: 2, skippedNoSku: 0, collectionsLinked: 3, pagesProcessed, reconciledCount: 0 };
+      return { runId: "run", status: "completed", startedAt: "2026-09-17T12:00:00Z", completedAt: "2026-09-17T12:01:00Z", processedCount: 2, skippedNoSku: 0, collectionsLinked: 3, pagesProcessed, reconciledCount: 0 };
     },
     async pause() { assert.fail("unexpected pause"); },
     async fail() { failures += 1; },

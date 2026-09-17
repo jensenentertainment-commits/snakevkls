@@ -27,10 +27,12 @@ test("completes only after the final page is applied", async () => {
   ];
 
   const worker: ShopifySyncWorker<string> = {
+    async readRun() { throw new Error("Unexpected recovery read"); },
     async claim() {
       events.push("claim");
       return {
         acquired: true,
+        hasNextPage: true,
         runId: "run-1",
         status: "running",
         cursor: null,
@@ -90,9 +92,11 @@ test("persists a cursor and resumes an interrupted sync", async () => {
 
   function createWorker(resumed: boolean): ShopifySyncWorker<string> {
     return {
+      async readRun() { throw new Error("Unexpected recovery read"); },
       async claim() {
         return {
           acquired: true,
+          hasNextPage: true,
           resumed,
           runId: "run-1",
           status: "running",
@@ -159,9 +163,11 @@ test("persists a cursor and resumes an interrupted sync", async () => {
 test("marks a claimed run failed when a page throws", async () => {
   let failure: string | null = null;
   const worker: ShopifySyncWorker<string> = {
+    async readRun() { throw new Error("Unexpected recovery read"); },
     async claim() {
       return {
         acquired: true,
+        hasNextPage: true,
         runId: "run-1",
         status: "running",
         cursor: null,
@@ -193,9 +199,11 @@ test("marks a claimed run failed when a page throws", async () => {
 
 test("does not start work when another worker owns the run", async () => {
   const worker: ShopifySyncWorker<string> = {
+    async readRun() { throw new Error("Unexpected recovery read"); },
     async claim() {
       return {
         acquired: false,
+        hasNextPage: true,
         runId: "run-1",
         status: "running",
         cursor: "cursor-1",

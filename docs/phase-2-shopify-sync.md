@@ -1,5 +1,10 @@
 # Fase 2: robust Shopify-sync
 
+> Current Phase 2A persistence and recovery behavior is documented in
+> [Roy Phase 2A Commit 5](roy-phase-2a-transactional-sync-persistence.md).
+> The historical page sizes and validation results below describe the original
+> Phase 2 implementation; the current source fetches 20 variants per page.
+
 ## Avgrensning
 
 Fase 2 endrer kun Shopify-produkt-sync, tilhørende statusrespons og nødvendig

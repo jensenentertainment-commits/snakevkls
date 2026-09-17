@@ -143,11 +143,15 @@ export async function fetchShopifyCatalogPage(input: {
   cursor: string | null;
   locationId: string;
   request: CatalogRequest;
+  observedNow?: () => string;
 }): Promise<ShopifySyncPage<ShopifyVariantPayload>> {
   const data = object(await input.request(SHOPIFY_CATALOG_QUERY, {
     cursor: input.cursor,
     locationId: input.locationId,
   }));
+  // Receipt of the content response, independent of later collection traversal
+  // and of both Shopify updatedAt and the eventual database write time.
+  const contentObservedAt = (input.observedNow ?? (() => new Date().toISOString()))();
   validateShopifyLocation(
     data.location as Parameters<typeof validateShopifyLocation>[0],
     input.locationId,
@@ -197,6 +201,7 @@ export async function fetchShopifyCatalogPage(input: {
   return {
     variants: variants.map((variant) => mapShopifyVariant(variant, {
       currencyCode,
+      contentObservedAt,
       locationId: input.locationId,
       collectionObservation: snapshots.get(variant.product.id)!,
     })),

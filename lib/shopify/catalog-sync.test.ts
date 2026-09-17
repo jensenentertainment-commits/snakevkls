@@ -14,6 +14,7 @@ const completeEmpty = {
   observedAt: "2026-09-17T12:00:00Z",
   collections: [],
 };
+const observedAt = "2026-09-17T12:00:00Z";
 
 function variant(
   overrides: Partial<ShopifyVariantNode> = {}
@@ -33,6 +34,7 @@ function variant(
     },
     product: {
       id: "gid://shopify/Product/4",
+      updatedAt: "2026-09-16T10:00:00Z",
       title: "Ullgenser",
       status: "ACTIVE",
       vendor: "VK",
@@ -66,6 +68,7 @@ test("maps price and available quantity at the configured location", () => {
   const result = mapShopifyVariant(variant(), {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    contentObservedAt: "2026-09-17T12:00:00Z",
     collectionObservation: completeEmpty,
   });
 
@@ -84,6 +87,7 @@ test("maps price and available quantity at the configured location", () => {
 });
 
 test("catalog query requests the Phase 2A product-content source fields", () => {
+  assert.match(SHOPIFY_CATALOG_QUERY, /product\s*{\s*id\s*updatedAt/);
   assert.match(SHOPIFY_CATALOG_QUERY, /\bdescription\b/);
   assert.match(
     SHOPIFY_CATALOG_QUERY,
@@ -96,11 +100,31 @@ test("catalog query requests the Phase 2A product-content source fields", () => 
   );
 });
 
+test("content timestamps never substitute observation time for source time", () => {
+  const content = mapShopifyProductContent(variant().product, observedAt);
+  assert.equal(content.shopifyUpdatedAt, "2026-09-16T10:00:00Z");
+  assert.equal(content.contentObservedAt, observedAt);
+  for (const updatedAt of [undefined, null, "", "not-a-date"]) {
+    assert.throws(() => mapShopifyProductContent({ ...variant().product, updatedAt } as ShopifyVariantNode["product"], observedAt), /timestamps/);
+  }
+  assert.throws(() => mapShopifyProductContent(variant().product, "invalid"), /timestamps/);
+});
+
+test("absent source fields cannot become observed missing values", () => {
+  for (const key of ["description", "seo", "category", "vendor", "productType", "featuredImage"]) {
+    const product = { ...variant().product } as unknown as Record<string, unknown>;
+    delete product[key];
+    assert.throws(() => mapShopifyProductContent(product as ShopifyVariantNode["product"], observedAt), /missing source fields/);
+  }
+});
+
 test("maps populated Shopify product content without mixing category and product type", () => {
-  const result = mapShopifyProductContent(variant().product);
+  const result = mapShopifyProductContent(variant().product, observedAt);
 
   assert.deepEqual(result, {
     shopifyProductId: "gid://shopify/Product/4",
+    shopifyUpdatedAt: "2026-09-16T10:00:00Z",
+    contentObservedAt: observedAt,
     productName: "Ullgenser",
     description: "Varm ullgenser",
     seoTitle: "Ullgenser",
@@ -127,7 +151,7 @@ test("preserves nullable and explicitly empty Shopify product-content values", (
     productType: null,
     vendor: null,
     featuredImage: null,
-  });
+  }, observedAt);
 
   assert.equal(result.description, "");
   assert.equal(result.seoTitle, null);
@@ -142,6 +166,7 @@ test("variant payload carries mapped content without changing variant semantics"
   const result = mapShopifyVariant(variant(), {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    contentObservedAt: "2026-09-17T12:00:00Z",
     collectionObservation: completeEmpty,
   });
 
@@ -165,6 +190,7 @@ test("keeps a missing inventory level distinct from zero available", () => {
   const result = mapShopifyVariant(input, {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    contentObservedAt: "2026-09-17T12:00:00Z",
     collectionObservation: completeEmpty,
   });
 
@@ -178,6 +204,7 @@ test("rejects a non-NOK shop for warehouse sales V1", () => {
       mapShopifyVariant(variant(), {
         currencyCode: "SEK",
         locationId: "gid://shopify/Location/5",
+        contentObservedAt: "2026-09-17T12:00:00Z",
         collectionObservation: completeEmpty,
       }),
     /krever NOK/

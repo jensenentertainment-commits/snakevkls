@@ -1,3 +1,7 @@
+import type { ProductCollectionObservation } from "../intelligence/roy/product-content-contract.ts";
+
+// Bound the nested connection cost: 20 variants x 20 initial collections.
+// Remaining membership is fetched once per unique product by catalog-source.
 export const SHOPIFY_CATALOG_QUERY = `
   query ProductVariants($cursor: String, $locationId: ID!) {
     shop {
@@ -9,7 +13,7 @@ export const SHOPIFY_CATALOG_QUERY = `
       isActive
     }
     productVariants(
-      first: 100
+      first: 20
       after: $cursor
       query: "product_status:active"
       sortKey: ID
@@ -51,13 +55,17 @@ export const SHOPIFY_CATALOG_QUERY = `
             featuredImage {
               url
             }
-            collections(first: 20) {
+            collections(first: 20, sortKey: ID) {
               edges {
                 node {
                   id
                   title
                   handle
                 }
+              }
+              pageInfo {
+                hasNextPage
+                endCursor
               }
             }
           }
@@ -75,6 +83,11 @@ export type ShopifyCollectionNode = {
   id: string;
   title: string;
   handle: string | null;
+};
+
+export type ShopifyCollectionConnection = {
+  edges: { node: ShopifyCollectionNode }[];
+  pageInfo: { hasNextPage: boolean; endCursor: string | null };
 };
 
 export type ShopifyProductContentPayload = {
@@ -124,7 +137,7 @@ export type ShopifyVariantNode = {
       fullName: string;
     } | null;
     featuredImage: { url: string } | null;
-    collections: { edges: { node: ShopifyCollectionNode }[] };
+    collections: ShopifyCollectionConnection;
   };
 };
 
@@ -146,6 +159,7 @@ export type ShopifyVariantPayload = {
   shopifyInventoryItemId: string;
   shopifyStatus: string;
   collections: ShopifyCollectionNode[];
+  collectionObservation: Extract<ProductCollectionObservation, { state: "complete" }>;
   productContent: ShopifyProductContentPayload;
 };
 
@@ -203,8 +217,16 @@ export function parseShopifyMoneyToMinor(amount: string): number {
 
 export function mapShopifyVariant(
   variant: ShopifyVariantNode,
-  input: { currencyCode: string; locationId: string }
+  input: {
+    currencyCode: string;
+    locationId: string;
+    collectionObservation: Extract<ProductCollectionObservation, { state: "complete" }>;
+  }
 ): ShopifyVariantPayload {
+  // The legacy relation writer replaces membership. Never hand it partial data.
+  if (input.collectionObservation.state !== "complete") {
+    throw new Error("Shopify collection membership is not complete");
+  }
   const currencyCode = input.currencyCode.trim().toUpperCase();
 
   if (currencyCode !== "NOK") {
@@ -235,8 +257,8 @@ export function mapShopifyVariant(
     shopifyVariantId: variant.id,
     shopifyInventoryItemId: variant.inventoryItem.id,
     shopifyStatus: variant.product.status,
-    collections:
-      variant.product.collections?.edges?.map((item) => item.node) ?? [],
+    collections: [...input.collectionObservation.collections],
+    collectionObservation: input.collectionObservation,
     productContent: mapShopifyProductContent(variant.product),
   };
 }

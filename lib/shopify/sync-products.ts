@@ -8,13 +8,11 @@ import {
   type ShopifySyncProgress,
   type ShopifySyncWorker,
 } from "@/lib/shopify/sync-engine";
+import type { ShopifyVariantPayload } from "@/lib/shopify/catalog-sync";
 import {
-  mapShopifyVariant,
-  SHOPIFY_CATALOG_QUERY,
-  validateShopifyLocation,
-  type ShopifyVariantNode,
-  type ShopifyVariantPayload,
-} from "@/lib/shopify/catalog-sync";
+  createCatalogRequest,
+  fetchShopifyCatalogPage,
+} from "@/lib/shopify/catalog-source";
 
 type SyncOptions = {
   actorEmail?: string | null;
@@ -67,6 +65,7 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
   const adminClient = supabaseAdmin;
 
   const source = options.source ?? "manual";
+  let leaseExpiresAt: string | undefined;
 
   let connectionConfig:
     | {
@@ -116,6 +115,7 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
         }
       );
       const claim = rpcResult<ShopifySyncClaim>(data, error);
+      leaseExpiresAt = claim.leaseExpiresAt;
 
       if (claim.acquired) {
         await logShopifySync(supabaseAdmin, {
@@ -140,55 +140,22 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
     },
 
     async fetchPage(cursor): Promise<ShopifySyncPage<ShopifyVariantPayload>> {
+      // Leave time to atomically apply the page before the existing 90s lease.
+      const leaseDeadline = leaseExpiresAt
+        ? Date.parse(leaseExpiresAt) - 10_000
+        : Infinity;
+      const deadlineMs = Math.min(Date.now() + 60_000, leaseDeadline);
       const config = await getConnectionConfig();
-      const response = await fetch(
-        `https://${shop}/admin/api/${apiVersion}/graphql.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Access-Token": config.accessToken,
-          },
-          body: JSON.stringify({
-            query: SHOPIFY_CATALOG_QUERY,
-            variables: {
-              cursor,
-              locationId: config.inventoryLocationId,
-            },
-          }),
-        }
-      );
-      const json = await response.json();
-
-      if (!response.ok || json.errors) {
-        console.error("Shopify GraphQL-feil", {
-          status: response.status,
-          errors: json.errors ?? null,
-        });
-        throw new Error(`Shopify API returnerte feil (${response.status})`);
-      }
-
-      const connection = json.data?.productVariants;
-      const currencyCode = String(json.data?.shop?.currencyCode ?? "");
-      validateShopifyLocation(
-        json.data?.location,
-        config.inventoryLocationId
-      );
-      if (!connection || !Array.isArray(connection.edges)) {
-        throw new Error("Shopify returnerte ugyldig produktdata");
-      }
-
-      return {
-        variants: connection.edges.map(
-          ({ node: variant }: { node: ShopifyVariantNode }) =>
-            mapShopifyVariant(variant, {
-              currencyCode,
-              locationId: config.inventoryLocationId,
-            })
-        ),
-        endCursor: connection.pageInfo?.endCursor ?? null,
-        hasNextPage: Boolean(connection.pageInfo?.hasNextPage),
-      };
+      return fetchShopifyCatalogPage({
+        cursor,
+        locationId: config.inventoryLocationId,
+        request: createCatalogRequest({
+          shop,
+          apiVersion,
+          accessToken: config.accessToken,
+          deadlineMs,
+        }),
+      });
     },
 
     async applyPage({ runId, leaseToken, expectedCursor, page }) {
@@ -204,7 +171,9 @@ export async function syncShopifyProducts(options: SyncOptions = {}) {
           page_lease_seconds: 90,
         }
       );
-      return rpcResult<ShopifySyncProgress>(data, error);
+      const progress = rpcResult<ShopifySyncProgress>(data, error);
+      leaseExpiresAt = progress.leaseExpiresAt;
+      return progress;
     },
 
     async complete({ runId, leaseToken }) {

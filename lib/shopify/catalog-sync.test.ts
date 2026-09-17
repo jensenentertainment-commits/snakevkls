@@ -9,6 +9,12 @@ import {
   type ShopifyVariantNode,
 } from "./catalog-sync.ts";
 
+const completeEmpty = {
+  state: "complete" as const,
+  observedAt: "2026-09-17T12:00:00Z",
+  collections: [],
+};
+
 function variant(
   overrides: Partial<ShopifyVariantNode> = {}
 ): ShopifyVariantNode {
@@ -42,7 +48,7 @@ function variant(
         fullName: "Klær > Overdeler > Gensere",
       },
       featuredImage: { url: "https://cdn.example/product.jpg" },
-      collections: { edges: [] },
+      collections: { edges: [], pageInfo: { hasNextPage: false, endCursor: null } },
     },
     ...overrides,
   };
@@ -60,6 +66,7 @@ test("maps price and available quantity at the configured location", () => {
   const result = mapShopifyVariant(variant(), {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    collectionObservation: completeEmpty,
   });
 
   assert.equal(result.sku, "VK-1");
@@ -135,6 +142,7 @@ test("variant payload carries mapped content without changing variant semantics"
   const result = mapShopifyVariant(variant(), {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    collectionObservation: completeEmpty,
   });
 
   assert.equal(result.shopifyVariantId, "gid://shopify/ProductVariant/1");
@@ -157,6 +165,7 @@ test("keeps a missing inventory level distinct from zero available", () => {
   const result = mapShopifyVariant(input, {
     currencyCode: "NOK",
     locationId: "gid://shopify/Location/5",
+    collectionObservation: completeEmpty,
   });
 
   assert.equal(result.shopifyQuantity, null);
@@ -169,6 +178,7 @@ test("rejects a non-NOK shop for warehouse sales V1", () => {
       mapShopifyVariant(variant(), {
         currencyCode: "SEK",
         locationId: "gid://shopify/Location/5",
+        collectionObservation: completeEmpty,
       }),
     /krever NOK/
   );

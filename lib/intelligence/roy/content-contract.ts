@@ -3,6 +3,7 @@ import type {
   ShopifyCatalogContext,
   ShopifyCatalogProduct,
 } from "../workforce/contexts/shopify-catalog";
+import { presentPhase2a } from "./phase2a-presentation.ts";
 
 const HEADINGS = ["OBSERVED", "UNKNOWN", "INFERENCE"] as const;
 const MISSING_WORDS = /\b(mangler|manglende|tomt|tom|blank|null)\b/iu;
@@ -28,6 +29,9 @@ export function enforceRoyContentContract(
   answer: string,
   context: ShopifyCatalogContext,
 ): string {
+  // New factual path has no free-form model claims: validation and deterministic
+  // rendering use the exact same observation contract as the model input.
+  if (context.phase2a) return presentPhase2a(context.phase2a, "");
   return isRoyAnswerValid(answer, context)
     ? answer
     : buildSafeRoyFallback(context);
@@ -37,6 +41,7 @@ export function isRoyAnswerValid(
   answer: string,
   context: ShopifyCatalogContext,
 ): boolean {
+  if (context.phase2a) return answer === presentPhase2a(context.phase2a, "");
   const sections = parseSections(answer);
   if (!sections) return false;
 

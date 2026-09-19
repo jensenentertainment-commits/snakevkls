@@ -10,6 +10,9 @@ export type DataSourceId =
   | "varekompaniet.knowledge"
   | "shopify.catalog_products"
   | "shopify.product_collections"
+  | "shopify.canonical_product_content"
+  | "shopify.canonical_product_collections"
+  | "shopify.catalog_foundation_v1"
   | "warehouse.dashboard_stats"
   | "warehouse.missing_location_products";
 

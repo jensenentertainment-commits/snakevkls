@@ -29,7 +29,9 @@ test("Roy is read-only, input-aware, and limited to synced catalog sources", asy
   assert.match(provider, /shopify_variant_id/);
   assert.match(provider, /shopify_inventory_tracked/);
   assert.match(provider, /shopify_inventory_observed_at/);
-  assert.doesNotMatch(provider, /\.(insert|update|delete|upsert|rpc)\(/);
+  assert.doesNotMatch(provider, /\.(insert|update|delete|upsert)\(/);
+  assert.match(provider, /if \(royPhase2aEnabled\(\)\)/);
+  assert.match(provider, /readPhase2aContext/);
   assert.match(prompt, /kan ikke skrive til Shopify eller Snake/);
   assert.match(prompt, /Ikke fyll hull med antakelser/);
   assert.match(prompt, /ukjent, ikke bevis/);

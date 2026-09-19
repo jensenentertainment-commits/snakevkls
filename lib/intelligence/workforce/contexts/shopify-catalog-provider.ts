@@ -5,6 +5,8 @@ import { buildCatalogAudit, groupCatalogVariants, type CatalogVariantRow } from 
 import { resolveRoyQueryIntent } from "../../roy/query-intent";
 import type { ContextProvider } from "../context-provider";
 import { ROY_RECEIVED_CATALOG_FIELDS, type ShopifyCatalogContext } from "./shopify-catalog";
+import { royPhase2aEnabled } from "../../roy/phase2a-gate";
+import { readPhase2aContext, resolvePhase2aRoute } from "../../roy/phase2a-context";
 
 const RESULT_LIMIT = 24;
 const AUDIT_PAGE_SIZE = 500;
@@ -14,8 +16,30 @@ export const shopifyCatalogProvider = {
   id: "shopify.catalog",
   capabilityId: "shopify.read_catalog",
   async provide(_context, input) {
+    let markLegacyProvenance = false;
+    if (royPhase2aEnabled()) {
+      const route = resolvePhase2aRoute(input);
+      if (route.kind !== "legacy") {
+        // Authenticated cookie client only. RPC/contract errors propagate to the
+        // workforce context_failed path; no legacy fallback or invented empties.
+        const phase2a = await readPhase2aContext(route, async (name, args) => {
+          const client = await createClient();
+          return await client.rpc(name, args);
+        });
+        return {
+          ...createContext({ kind: "knowledge_gap", topics: [] }, "", [], null),
+          receivedFields: [], phase2a,
+        };
+      }
+      markLegacyProvenance = true;
+    }
+    const legacyContext = (...args: Parameters<typeof createContext>) => {
+      const context = createContext(...args);
+      if (markLegacyProvenance) context.legacyProvenance = "roy_legacy_catalog_v1";
+      return context;
+    };
     const intent = resolveRoyQueryIntent(input);
-    if (intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference") return createContext(intent, "", [], null);
+    if (intent.kind === "knowledge_gap" || intent.kind === "unresolved_reference") return legacyContext(intent, "", [], null);
     const supabase = await createClient();
 
     if (intent.kind === "catalog_overview" || (intent.kind === "catalog_filter" && intent.filter.type === "missing_product_type")) {
@@ -25,7 +49,7 @@ export const shopifyCatalogProvider = {
       const products = intent.kind === "catalog_filter"
         ? allProducts.filter((product) => product.productType === null).slice(0, RESULT_LIMIT)
         : auditEvidence(allProducts, audit).slice(0, RESULT_LIMIT);
-      return createContext(
+      return legacyContext(
         intent,
         "",
         products,
@@ -41,7 +65,7 @@ export const shopifyCatalogProvider = {
       const { data, error } = await collectionQuery;
       if (error) throw new Error(`Collection filter failed: ${error.message}`);
       rowIds = [...new Set((data ?? []).map(({ product_id }) => product_id))];
-      if (!rowIds.length) return createContext(intent, "", [], null);
+      if (!rowIds.length) return legacyContext(intent, "", [], null);
     }
 
     let query = supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).not("shopify_product_id", "is", null).order("synced_at", { ascending: false }).limit(RESULT_LIMIT);
@@ -58,7 +82,7 @@ export const shopifyCatalogProvider = {
     }
     const collections = await readCollections(supabase, rows.map((row) => row.id));
     const products = groupCatalogVariants(rows, collections, intent.kind === "product" ? intent.sku : null);
-    return createContext(intent, intent.kind === "product" ? intent.sku : "", products, null);
+    return legacyContext(intent, intent.kind === "product" ? intent.sku : "", products, null);
   },
 } satisfies ContextProvider<ShopifyCatalogContext>;
 

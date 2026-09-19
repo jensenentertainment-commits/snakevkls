@@ -11,7 +11,8 @@ import { getChatOpenAIClient } from "@/lib/intelligence/shared/chat-server";
 import { authorizeWorkforceRequest } from "./authorize-workforce-request";
 import { snakeAssessDevelopmentCapability } from "./capabilities/snake-assess-development";
 import { warehouseReadSummaryCapability } from "./capabilities/warehouse-read-summary";
-import { shopifyReadCatalogCapability } from "./capabilities/shopify-read-catalog";
+import { shopifyReadCatalogCapability, shopifyPhase2aReadCatalogCapability } from "./capabilities/shopify-read-catalog";
+import { royPhase2aEnabled } from "../roy/phase2a-gate";
 import { arneAdvisoryContextProvider } from "./contexts/arne-advisory-context-provider";
 import { warehouseSummaryProvider } from "./contexts/warehouse-summary-provider";
 import { shopifyCatalogProvider } from "./contexts/shopify-catalog-provider";
@@ -100,7 +101,7 @@ export async function runReadOnlyEmployeeRequest(
       ...shared,
       dependencies: {
         employee,
-        capability: shopifyReadCatalogCapability,
+        capability: royPhase2aEnabled() ? shopifyPhase2aReadCatalogCapability : shopifyReadCatalogCapability,
         provider: shopifyCatalogProvider,
         buildModelInput: buildRoyModelInput,
         createModelResponse: createRoyModelResponse(

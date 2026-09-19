@@ -79,6 +79,10 @@ export type RoyReceivedCatalogField =
   (typeof ROY_RECEIVED_CATALOG_FIELDS)[number];
 
 export type ShopifyCatalogContext = {
+  /** Separate versioned path; legacy fields below are never canonical fallbacks. */
+  phase2a?: import("../../roy/phase2a-context.ts").Phase2aContext;
+  /** Added only on gated legacy routes, without changing any finding code. */
+  legacyProvenance?: "roy_legacy_catalog_v1";
   intent: RoyQueryIntent;
   query: string;
   scope: "targeted_catalog_sample" | "catalog_filter" | "knowledge_gap";

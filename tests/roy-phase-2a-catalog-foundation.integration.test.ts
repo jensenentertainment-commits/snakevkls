@@ -74,10 +74,12 @@ test("evidence is deterministically bounded before JSON construction and byte tr
   for (const limitation of ROY_CATALOG_FOUNDATION_LIMITATIONS) assert.ok(sql.includes(limitation.replaceAll("'", "''")));
 });
 
-test("new foundation remains disconnected from Roy provider, prompt, context and presentation", async () => {
-  for (const path of ["lib/intelligence/workforce/contexts/shopify-catalog-provider.ts", "lib/intelligence/workforce/contexts/shopify-catalog.ts",
-    "lib/intelligence/workforce/runtime.ts", "lib/intelligence/roy/chat-input-builder.ts", "lib/intelligence/roy/system.ts",
-    "lib/intelligence/roy/content-contract.ts", "lib/intelligence/roy/presentation.ts"]) {
-    assert.doesNotMatch(await read(path), /get_roy_catalog_foundation|catalog-foundation-contract/);
-  }
+test("foundation integration is separately gated and remains disabled by default", async () => {
+  const gate = await read("lib/intelligence/roy/phase2a-gate.ts");
+  assert.match(gate, /import "server-only"/);
+  assert.match(gate, /process.env.ROY_PHASE2A_ENABLED === "true"/);
+  const provider = await read("lib/intelligence/workforce/contexts/shopify-catalog-provider.ts");
+  assert.ok(provider.indexOf("if (royPhase2aEnabled())") < provider.indexOf("readPhase2aContext(route"));
+  assert.match(provider, /const intent = resolveRoyQueryIntent\(input\)/);
+  assert.doesNotMatch(await read("lib/intelligence/roy/system.ts"), /get_roy_catalog_foundation|catalog-foundation-contract/);
 });

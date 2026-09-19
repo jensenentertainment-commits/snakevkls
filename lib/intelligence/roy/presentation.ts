@@ -4,6 +4,7 @@ import type {
   ShopifyCatalogProduct,
 } from "../workforce/contexts/shopify-catalog";
 import { enforceRoyContentContract } from "./content-contract.ts";
+import { presentPhase2a } from "./phase2a-presentation.ts";
 
 const UNKNOWN_TOPICS = [
   { pattern: /\b(bilde|bilder|bildegalleri)\b/iu, label: "bilder" },
@@ -16,6 +17,7 @@ export function createRoyUserResponse(input: {
   context: ShopifyCatalogContext;
   question: string;
 }) {
+  if (input.context.phase2a) return presentPhase2a(input.context.phase2a, input.question);
   // The strict evidence contract always runs before presentation. The public
   // response is then built only from the same authoritative received context.
   enforceRoyContentContract(input.internalAnswer, input.context);

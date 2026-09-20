@@ -52,6 +52,19 @@ test("a reclaimed final page completes without fetching, replaying or fabricatin
   assert.deepEqual(events, ["complete"]);
 });
 
+test("protected completion hold pauses a reclaimed final page without fetching or reconciling",async()=>{
+  const {worker,events}=scenario(12,false);
+  assert.equal((await runPagedShopifySync(worker,{deferCompletion:true})).status,"completion_hold");
+  assert.deepEqual(events,["pause"]);
+});
+
+test("protected final-page pause failure does not invoke completion",async()=>{
+  const {worker,events}=scenario(12,false);
+  worker.pause=async()=>{events.push("pause");throw new Error("pause transport");};
+  await assert.rejects(runPagedShopifySync(worker,{deferCompletion:true}));
+  assert.ok(!events.includes("complete"));
+});
+
 test("a lost final-page acknowledgement uses stored state; reclaim only completes the run", async () => {
   const { worker, events } = scenario(4);
   const apply = worker.applyPage;

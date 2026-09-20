@@ -144,6 +144,7 @@ export async function fetchShopifyCatalogPage(input: {
   locationId: string;
   request: CatalogRequest;
   observedNow?: () => string;
+  onCollectionPage?: (productId: string, evidence: { cursor: string | null; hasNextPage: boolean; membershipCount: number; observedAt: string }) => void;
 }): Promise<ShopifySyncPage<ShopifyVariantPayload>> {
   const data = object(await input.request(SHOPIFY_CATALOG_QUERY, {
     cursor: input.cursor,
@@ -184,6 +185,7 @@ export async function fetchShopifyCatalogPage(input: {
     const snapshot = await paginateProductCollections({
       productId: product.id,
       firstPage: product.collections,
+      onPage: input.onCollectionPage ? evidence => input.onCollectionPage!(product.id, evidence) : undefined,
       async fetchPage(productId, cursor) {
         const result = object(await input.request(
           SHOPIFY_COLLECTIONS_QUERY, { productId, cursor },

@@ -9,6 +9,13 @@ import {
 const productId = "gid://shopify/Product/1";
 const observedAt = "2026-09-17T12:00:00Z";
 
+test("complete observation time is final traversal completion, not first-page receipt", async () => {
+  let time = observedAt;
+  const result = await paginateProductCollections({ productId, firstPage: page([1], true), now: () => time,
+    fetchPage: async () => { time = "2026-09-17T12:01:00Z"; return page([2]); } });
+  assert.equal(result.observedAt, "2026-09-17T12:01:00Z");
+});
+
 function page(ids: number[], hasNextPage = false, endCursor: string | null = ids.length ? `c-${ids.at(-1)}` : null) {
   return {
     edges: ids.map((id) => ({ node: { id: `gid://shopify/Collection/${id}`, title: `Collection ${id}`, handle: `collection-${id}` } })),

@@ -44,6 +44,7 @@ export type ShopifySyncCompleted = {
 
 export type ShopifySyncResult =
   | ShopifySyncCompleted
+  | { runId: string; status: "completion_hold"; pagesProcessed: number; cursor: string | null; hasNextPage: false }
   | (Omit<ShopifySyncProgress, "status"> & {
       status: "paused";
       paused: true;
@@ -105,6 +106,8 @@ export type ShopifySyncWorker<TVariant> = {
 };
 
 type RunOptions = {
+  /** Protected operator runs only; ordinary sync continues completing normally. */
+  deferCompletion?: boolean;
   maxPages?: number;
   softDurationMs?: number;
   now?: () => number;
@@ -117,6 +120,9 @@ export async function runPagedShopifySync<TVariant>(
   const claim = await worker.claim();
 
   if (!claim.acquired) {
+    if (options.deferCompletion && claim.hasNextPage === false && claim.pagesProcessed > 0 && claim.status !== "completed") {
+      return { runId: claim.runId, status: "completion_hold", pagesProcessed: claim.pagesProcessed, cursor: claim.cursor, hasNextPage: false };
+    }
     return {
       runId: claim.runId,
       status: "running",
@@ -151,6 +157,10 @@ export async function runPagedShopifySync<TVariant>(
     }
 
     async function completeRun() {
+      if (options.deferCompletion) {
+        await worker.pause({ runId: claim.runId, leaseToken: claim.leaseToken!, reason: "Protected final-page completion hold" });
+        return { runId: claim.runId, status: "completion_hold" as const, pagesProcessed, cursor, hasNextPage: false as const };
+      }
       pendingWrite = true;
       const completed = await worker.complete({
         runId: claim.runId,

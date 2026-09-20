@@ -75,6 +75,7 @@ export async function paginateProductCollections(input: {
   firstPage: unknown;
   fetchPage: (productId: string, cursor: string) => Promise<unknown>;
   now?: () => string;
+  onPage?: (evidence: { cursor: string | null; hasNextPage: boolean; membershipCount: number; observedAt: string }) => void;
 }): Promise<Extract<ProductCollectionObservation, { state: "complete" }>> {
   const collections = new Map<string, ShopifyCollectionNode>();
   const cursors = new Set<string>();
@@ -101,8 +102,10 @@ export async function paginateProductCollections(input: {
         // First occurrence wins, independent of duplicate relations across pages.
         if (!collections.has(collection.id)) collections.set(collection.id, collection);
       }
+      const pageObservedAt = now();
+      input.onPage?.({ cursor: page.endCursor as string | null, hasNextPage: page.hasNextPage, membershipCount: collections.size, observedAt: pageObservedAt });
       if (page.hasNextPage === false) {
-        return { state: "complete", observedAt, collections: [...collections.values()] };
+        return { state: "complete", observedAt: pageObservedAt, collections: [...collections.values()] };
       }
       pageValue = await input.fetchPage(input.productId, page.endCursor!);
     }

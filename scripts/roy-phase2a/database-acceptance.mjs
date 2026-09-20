@@ -91,9 +91,19 @@ export async function execute(config) {
     await checked(['-1', '-f', guard, '-f', `${db}supabase-local-bootstrap.sql`]);
     const migrations = readdirSync(resolve(root, 'supabase/migrations')).filter(n => n.endsWith('.sql')).sort();
     const manifest = [];
+    const preparations = [];
     for (const name of migrations) {
       const path = `supabase/migrations/${name}`;
       manifest.push({ name, sha256: createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex') });
+      if (name === '20260819182058_future_foundation_physical_pick_order.sql') {
+        const fixture = `${db}roy-phase-2a-historical-baseline.sql`;
+        const evidence = { fixture, sha256: createHash('sha256').update(readFileSync(resolve(root, fixture))).digest('hex'),
+          matrix: config.matrix, beforeMigration: name, migrationPosition: manifest.length };
+        await file('roy-phase-2a-historical-baseline');
+        preparations.push(evidence);
+        // Retain completed preparation evidence even if a later migration fails.
+        console.error(JSON.stringify({ event: 'acceptance-preparation-completed', ...evidence }));
+      }
       if (config.matrix === 'upgrade' && name === '20260919093000_phase_2a_protected_backfill.sql') {
         const rejected = await psql(['-1', '-f', guard, '-f', path]);
         if (rejected.code === 0 || !/23514/.test(rejected.stderr) || !/shopify_product_content_category_valid/.test(rejected.stderr)) throw new Error('Expected exact category upgrade constraint rejection');
@@ -123,7 +133,7 @@ export async function execute(config) {
     const exported = await checked(['-f', guard, '-v', 'operation=99000000-0000-4000-8000-000000000001',
       '-v', 'profile=96000000-0000-4000-8000-000000000001', '-f', 'scripts/roy-phase2a/proof-snapshot.sql']);
     const proof = acceptanceResult(JSON.parse(exported));
-    return { matrix: config.matrix, database: config.database, manifest, proof, status: 'PASS' };
+    return { matrix: config.matrix, database: config.database, manifest, preparations, proof, status: 'PASS' };
   } finally {
     for (const child of children) child.kill();
   }

@@ -1,11 +1,64 @@
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import test from 'node:test';
 import { options, acceptanceResult } from '../scripts/roy-phase2a/database-acceptance.mjs';
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const args = ['--execute', '--matrix', 'fresh', '--database', 'snake_phase2a_test_fresh', '--confirm', 'EXECUTE ISOLATED fresh snake_phase2a_test_fresh'];
 const env = { PGHOST: '127.0.0.1', PGPORT: '5432', PGDATABASE: 'snake_phase2a_test_fresh', PGUSER: 'isolated_owner' };
+
+test('approved historical migration chain remains byte-equivalent apart from checkout line endings', () => {
+  const hash = createHash('sha256');
+  const names = readdirSync(new URL('../supabase/migrations/', import.meta.url))
+    .filter(n => n.endsWith('.sql') && n <= '20260920120000_phase_2a_protected_claim_lock_order.sql').sort();
+  assert.equal(names.length, 29);
+  for (const name of names) {
+    hash.update(name + '\n');
+    hash.update(read(`supabase/migrations/${name}`).replace(/\r\n/g, '\n'));
+  }
+  // Approved revision 63df47477be8fa6b272a17d4f4b1c836d6541e27.
+  assert.equal(hash.digest('hex'), '38e62c5f73ef72fa9536b5d0436b82145a59c68b7d9c38af5e1737f838b3b7d3');
+});
+
+test('historical baseline is guarded, atomic, empty-only and exactly three synthetic zones', () => {
+  const sql = read('tests/database/roy-phase-2a-historical-baseline.sql');
+  assert.ok(sql.startsWith('\\ir roy-phase-2a-acceptance.guard.sql'));
+  assert.match(sql, /begin;[\s\S]*lock table public.zones in exclusive mode;[\s\S]*if exists \(select 1 from public.zones\) then[\s\S]*raise exception/);
+  assert.ok(sql.indexOf('raise exception') < sql.indexOf('insert into'));
+  assert.match(sql, /insert into public.zones \(code, name, active\) values/);
+  assert.deepEqual([...sql.matchAll(/\('([^']+)', '([^']+)', true\)/g)].map(m => [m[1], m[2]]),
+    [['HL', 'Acceptance fixture HL'], ['ML', 'Acceptance fixture ML'], ['SL', 'Acceptance fixture SL']]);
+  assert.equal((sql.match(/insert into/gi) ?? []).length, 1);
+  assert.doesNotMatch(sql, /on conflict|pick_priority|public.locations|update public|delete from|alter table|exception when/i);
+  assert.match(sql, /commit;\s*$/);
+});
+
+test('both matrices prepare baseline immediately before priority migration and retain evidence', () => {
+  const source = read('scripts/roy-phase2a/database-acceptance.mjs');
+  const start = source.indexOf("if (name === '20260819182058_future_foundation_physical_pick_order.sql')");
+  const end = source.indexOf("if (config.matrix === 'upgrade'", start);
+  assert.ok(start > source.indexOf('for (const name of migrations)'));
+  assert.ok(end > start);
+  const block = source.slice(start, end);
+  assert.match(block, /await file\('roy-phase-2a-historical-baseline'\)/);
+  assert.doesNotMatch(block, /config.matrix ===/);
+  assert.match(block, /sha256: createHash\('sha256'\)/);
+  assert.match(block, /beforeMigration: name, migrationPosition: manifest.length/);
+  assert.match(block, /console.error\(JSON.stringify/);
+  assert.match(source, /manifest, preparations, proof/);
+  for (const matrix of ['fresh', 'upgrade']) {
+    assert.equal(options(args.map(a => a.replaceAll('fresh', matrix)), { ...env, PGDATABASE: `snake_phase2a_test_${matrix}` }).matrix, matrix);
+  }
+  assert.ok(end < source.indexOf("await checked(['-1', '-f', guard, '-f', path]);", end));
+});
+
+test('persistence synthetic zone supplies its own unused positive priority', () => {
+  assert.match(read('tests/database/roy-phase-2a-sync-persistence.dynamic.sql'),
+    /insert into public.zones \(id, code, name, pick_priority\) values \('91000000-0000-4000-8000-000000000010', 'P2A', 'Fixture', 100\)/);
+  const historical = read('supabase/migrations/20260819182058_future_foundation_physical_pick_order.sql');
+  assert.deepEqual([...historical.matchAll(/when '[A-Z]+' then (\d+)/g)].map(m => Number(m[1])), [1, 2, 3, 4]);
+});
 
 test('acceptance default is offline even with invalid database environment', () => {
   assert.equal(options([], {}), null);

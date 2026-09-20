@@ -55,7 +55,7 @@ begin
     and content_observed_at = '2026-09-16T10:00:00Z'::timestamptz and synced_at <> shopify_updated_at
     and collections_complete) from public.shopify_product_content), 'three separate timestamps and complete membership');
   select id into local_id from public.products where shopify_variant_id = 'gid://shopify/ProductVariant/91001';
-  insert into public.zones (id, code, name) values ('91000000-0000-4000-8000-000000000010', 'P2A', 'Fixture');
+  insert into public.zones (id, code, name, pick_priority) values ('91000000-0000-4000-8000-000000000010', 'P2A', 'Fixture', 100);
   insert into public.locations (id, code, zone_id) values ('91000000-0000-4000-8000-000000000011', 'P2A-1', '91000000-0000-4000-8000-000000000010');
   insert into public.inventory (id, product_id, location_id, zone_id, quantity, is_primary) values (
     '91000000-0000-4000-8000-000000000012', local_id, '91000000-0000-4000-8000-000000000011',

@@ -22,6 +22,44 @@ rolls back both the data and DDL; the test asserts the constraint is restored.
 
 ## Prepared acceptance matrix
 
+### Historical warehouse baseline preparation
+
+The first isolated fresh execution at revision `63df474` stopped at the location
+import: operational zones HL/ML/SL were absent. No Phase 2A migration or dynamic
+suite was reached. This acceptance-only correction has not been executed against
+PostgreSQL; the failed database and original evidence must remain preserved.
+
+Both matrices now run `tests/database/roy-phase-2a-historical-baseline.sql`
+immediately before `20260819182058_future_foundation_physical_pick_order.sql`.
+The guarded, transactional fixture locks and requires an empty zone population,
+then inserts exactly active HL/ML/SL with clearly synthetic names and default
+UUIDs/timestamps. It assigns no priorities and seeds no locations. The historical
+migrations assign priorities and import/verify their own 390 locations unchanged.
+This is an empty-target replay with explicit operational baseline preparation,
+not migration-only installation. The generic auth bootstrap remains unchanged.
+
+Preparation SHA-256, matrix, following migration and one-based migration position
+are emitted to stderr after preparation commits and included in successful JSON
+under `preparations`. Retain both output streams, including on failure. The
+persistence fixture separately supplies priority 100 for its P2A zone, avoiding
+the historical priorities 1–4 without relaxing the schema.
+
+A retry requires separate approval and an independently verified empty disposable
+target for each matrix, the approved isolated cluster identity and test-only
+credentials, and the corrected code revision. Do not reuse/reset the failed
+fresh target. Remaining independent-session suites also require their documented
+clean migrated targets with this same baseline preparation. No retry, database
+creation or environment change is authorized merely by this correction.
+
+Non-database validation for this correction: all 429 application/static tests
+passed, including 13 focused forward-fix tests; TypeScript passed with incremental
+output disabled. Lint passed with zero errors and 29 existing warnings; changed
+JavaScript files lint cleanly. Production build passed (27 static pages) after a
+network-enabled retry for the existing Google Fonts dependency. SQL guard/seed/
+placement checks and the approved 29-migration fingerprint passed; diff checks
+passed. PostgreSQL acceptance was not rerun. The previous fresh-matrix failure
+remains the latest executable result until a separately approved clean-target run.
+
 `scripts/roy-phase2a/database-acceptance.mjs` defaults to offline plan output.
 Importing it or running application tests never opens a database connection.
 Later execution requires an already approved, empty disposable database, existing

@@ -98,7 +98,7 @@ end;
 $$;
 
 do $$
-declare rejected boolean; actor text; db_role text;
+declare rejected boolean; actor text; db_role text; rejected_constraint text; malformed jsonb;
 begin
   foreach actor in array array['96000000-0000-4000-8000-000000000003', '96000000-0000-4000-8000-000000000004',
     '96000000-0000-4000-8000-000000000099', ''] loop
@@ -119,16 +119,33 @@ begin
     perform phase2a_test.check(rejected, 'no RPC grant to ' || db_role);
   end loop;
 
-  -- Foundation CHECK constraints can allow a half-null category through SQL's
-  -- three-valued logic. The read RPC must still reject it, never publish PRESENT.
+  -- Final schema: both half-null directions must fail at the named constraint.
+  for malformed in select value from jsonb_array_elements(
+    '[{"id":null,"name":"Malformed category"},{"id":"gid://shopify/TaxonomyCategory/aa-1","name":null}]') loop
+    rejected := false;
+    begin
+      update public.shopify_product_content set shopify_category_id=malformed->>'id',
+        shopify_category_full_name=malformed->>'name' where shopify_product_id='gid://shopify/Product/96001';
+    exception when check_violation then
+      get stacked diagnostics rejected_constraint = constraint_name;
+      perform phase2a_test.check(rejected_constraint='shopify_product_content_category_valid', 'specific category CHECK rejected pair');
+      rejected := true;
+    end;
+    perform phase2a_test.check(rejected, 'half-null category rejected with 23514');
+  end loop;
+  -- Defensive reader test only: subtransaction rollback restores the constraint
+  -- and original data on the exact expected reader error. No persisted weakening.
   rejected := false;
   begin
-    update public.shopify_product_content set shopify_category_id = null, shopify_category_full_name = 'Malformed category'
-      where shopify_product_id = 'gid://shopify/Product/96001';
+    alter table public.shopify_product_content drop constraint shopify_product_content_category_valid;
+    update public.shopify_product_content set shopify_category_id=null, shopify_category_full_name='Malformed category'
+      where shopify_product_id='gid://shopify/Product/96001';
     perform phase2a_test.read_foundation();
   exception when sqlstate '22000' then rejected := true;
   end;
-  perform phase2a_test.check(rejected, 'malformed category fails closed');
+  perform phase2a_test.check(rejected, 'reader defensively rejects malformed category with 22000');
+  perform phase2a_test.check(exists(select 1 from pg_constraint where conrelid='public.shopify_product_content'::regclass
+    and conname='shopify_product_content_category_valid'), 'reader isolation restored category constraint');
   rejected := false;
   begin
     update public.shopify_product_content set content_observed_at = 'infinity' where shopify_product_id = 'gid://shopify/Product/96001';

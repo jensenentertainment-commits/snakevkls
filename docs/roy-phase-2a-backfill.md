@@ -240,6 +240,11 @@ warehouse catalog migrations, not a standalone bootstrap:
 4. `20260919090000_phase_2a_roy_targeted_reader.sql` (Commit 7).
 5. `20260919093000_phase_2a_protected_backfill.sql` (Commit 8 control/correction).
 6. `20260919094000_phase_2a_backfill_proof.sql` (Commit 8 oracle).
+7. `20260920120000_phase_2a_protected_claim_lock_order.sql` (completion-review forward fix).
+
+The completion-review correction and prepared fresh/upgrade acceptance matrices
+are documented in [roy-phase-2a-forward-fix.md](roy-phase-2a-forward-fix.md).
+Use the corrected final-schema fixtures; executable status remains NOT RUN.
 
 The later rollout requires separate approval at each production boundary:
 

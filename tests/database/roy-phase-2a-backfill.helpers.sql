@@ -1,8 +1,9 @@
 \set ON_ERROR_STOP on
 \ir roy-phase-2a-targeted.helpers.sql
 select phase2a_test.check(not exists(select 1 from private.sync_runs),'empty isolated run state required');
-insert into public.shopify_connections(shop,access_token,inventory_location_id)
-values('fixture.myshopify.com','offline-fixture-not-a-token','gid://shopify/Location/91001');
+insert into public.shopify_connections(shop,access_token,inventory_location_id,inventory_location_name,inventory_location_configured_at)
+values('fixture.myshopify.com','offline-fixture-not-a-token','gid://shopify/Location/91001',
+ 'Acceptance fixture location',TIMESTAMPTZ '2026-09-01 00:00:00+00');
 create function phase2a_test.backfill_identity() returns jsonb language sql as $$
  select jsonb_build_object('projectRef','abcdefghijklmnopqrst','supabaseUrl','https://abcdefghijklmnopqrst.supabase.co',
  'shop','fixture.myshopify.com','locationId','gid://shopify/Location/91001','codeRevision',repeat('a',40),'contractVersion','phase2a_backfill_v1','runtimeGateDisabled',true);

@@ -22,6 +22,30 @@ rolls back both the data and DDL; the test asserts the constraint is restored.
 
 ## Prepared acceptance matrix
 
+### Protected connection fixture correction
+
+The retry at revision `698bba3` completed all 29 migrations and the persistence,
+aggregate and targeted dynamic suites. Protected-backfill setup then failed in
+`roy-phase-2a-backfill.helpers.sql`: its synthetic Shopify connection supplied a
+location ID without the name and configuration timestamp required by
+`shopify_connections_inventory_location_valid`. This is a fixture-data defect.
+
+The shared helper now preserves the synthetic shop, token and location ID and
+supplies `Acceptance fixture location` and
+`TIMESTAMPTZ '2026-09-01 00:00:00+00'`. The isolation include chain is unchanged.
+No production defaults, constraints, migrations, runtime or runner are changed.
+These are acceptance prerequisites, not additional Roy responsibilities.
+
+**PostgreSQL acceptance: NOT RERUN.** Preserve both failed targets
+(`snake_phase2a_test_fresh` and `snake_phase2a_test_retryfresh`) and their evidence.
+A later retry requires separate approval of the corrected revision and independently
+verified empty disposable matrix targets in the approved isolated cluster, with
+test-only credentials. Independent concurrency suites require their documented
+separate clean migrated targets, baseline preparation, role privileges and timely
+worker starts within fixture leases. Retain both output streams and stop at the
+first failure. This correction does not authorize provisioning, resetting targets
+or executing acceptance.
+
 ### Historical warehouse baseline preparation
 
 The first isolated fresh execution at revision `63df474` stopped at the location

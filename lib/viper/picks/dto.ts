@@ -19,6 +19,7 @@ export type ViperPickLineDto = {
 
 export type ViperActivePickDto = {
   pickJobId: string;
+  version: number;
   orderId: string;
   orderNumber: string;
   status: "in_progress" | "completed";
@@ -29,6 +30,8 @@ export type ViperActivePickDto = {
 };
 
 export type ViperOpenExceptionDto = {
+  pickJobId: string;
+  version: number;
   id: string;
   exceptionType: ViperPickExceptionType;
   note: string | null;

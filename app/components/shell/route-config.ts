@@ -3,6 +3,7 @@ import {
   ADMIN_NAVIGATION_ITEMS,
   GLOBAL_NAVIGATION_ITEMS,
   LAGER_MODULE_NAVIGATION,
+  VIPER_MODULE_NAVIGATION,
   WAREHOUSE_SALES_MODULE_NAVIGATION,
   type ModuleNavigation,
   type NavigationItem,
@@ -15,6 +16,9 @@ export type AppRouteShellConfig = {
   width: "default" | "wide";
 };
 
+const viperNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
+  (item) => item.id === "viper",
+);
 const lagerNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
   (item) => item.id === "lager",
 );
@@ -35,6 +39,7 @@ const shopifyNavigationItem = GLOBAL_NAVIGATION_ITEMS.find(
 );
 
 if (
+  !viperNavigationItem ||
   !dashboardNavigationItem ||
   !labsNavigationItem ||
   !lagerNavigationItem ||
@@ -43,11 +48,17 @@ if (
   !shopifyNavigationItem
 ) {
   throw new Error(
-    "Global navigation must define Dashboard, Labs, Lager, Shopify, Lagersalg, and Settings.",
+    "Global navigation must define Dashboard, Labs, Lager, Viper, Shopify, Lagersalg, and Settings.",
   );
 }
 
 export const APP_ROUTE_SHELLS = [
+  {
+    id: "viper",
+    moduleNavigation: VIPER_MODULE_NAVIGATION,
+    navigationItem: viperNavigationItem,
+    width: "wide",
+  },
   {
     id: "dashboard",
     moduleNavigation: undefined,

@@ -156,3 +156,38 @@ export const WAREHOUSE_SALES_MODULE_NAVIGATION = {
     },
   ],
 } as const satisfies ModuleNavigation;
+
+export const VIPER_MODULE_NAVIGATION = {
+  id: "viper",
+  label: "Viper",
+  items: [
+    {
+      href: "/viper",
+      id: "queue",
+      label: "Arbeidskø",
+      icon: ListChecks,
+      exact: true,
+    },
+    {
+      href: "/viper/admin/order-intake",
+      id: "order-intake",
+      label: "Ordreimport",
+      icon: Store,
+      roles: ["admin"],
+    },
+    {
+      href: "/viper/admin/exceptions",
+      id: "pick-exceptions",
+      label: "Plukkavvik",
+      icon: ShieldAlert,
+      roles: ["admin"],
+    },
+    {
+      href: "/viper/admin/recovery",
+      id: "recovery",
+      label: "Gjenoppretting",
+      icon: Wrench,
+      roles: ["admin"],
+    },
+  ],
+} as const satisfies ModuleNavigation;

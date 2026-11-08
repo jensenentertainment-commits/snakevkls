@@ -6,6 +6,8 @@ const ORDER_PREVIEW_QUERY = `#graphql
   query ViperOrderPreview($id: ID!) {
     order(id: $id) {
       id
+      sourceName
+      app { id }
       legacyResourceId
       name
       createdAt
@@ -39,6 +41,8 @@ const ORDER_PREVIEW_QUERY = `#graphql
 export type ShopifyOrderPayload = {
   id: string;
   legacyResourceId: string;
+  sourceName: string | null;
+  app: { id: string } | null;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -113,6 +117,7 @@ export async function fetchShopifyOrderForPreview(orderId: string) {
         variables: { id: orderId },
       }),
       cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
     }
   );
   const payload = (await response.json()) as ShopifyGraphqlResponse;

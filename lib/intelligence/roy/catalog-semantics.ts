@@ -23,11 +23,18 @@ export type CatalogVariantRow = {
   shopify_inventory_observed_at: string | null;
 };
 
+/** SKU is a search term, never a unique product/variant identity. */
+export function uniqueCatalogSkuMatch(rows: readonly CatalogVariantRow[], sku: string) {
+  const matches = rows.filter((row) => row.sku === sku);
+  return matches.length === 1 ? matches[0] : null;
+}
+
 export function groupCatalogVariants(
   rows: readonly CatalogVariantRow[],
   collectionsByRowId: ReadonlyMap<string, readonly { title: string; handle: string | null }[]>,
   selectedSku?: string | null,
 ): ShopifyCatalogProduct[] {
+  if (selectedSku != null && !uniqueCatalogSkuMatch(rows, selectedSku)) return [];
   const groups = new Map<string, CatalogVariantRow[]>();
   for (const row of rows) {
     const variants = groups.get(row.shopify_product_id) ?? [];

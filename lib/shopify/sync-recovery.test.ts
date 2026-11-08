@@ -44,6 +44,18 @@ function scenario(initialPages = 0, initialNext = true) {
   return { worker, events };
 }
 
+test("blocked completion preserves terminal checkpoint and retries only completion", async () => {
+  const { worker, events } = scenario(12, false);
+  const complete = worker.complete;
+  worker.complete = async () => { events.push("blocked"); throw new ShopifySyncWriteRejectedError("SHOPIFY_DEACTIVATION_BLOCKED"); };
+  await assert.rejects(runPagedShopifySync(worker), /SHOPIFY_DEACTIVATION_BLOCKED/);
+  assert.deepEqual(events, ["blocked", "read", "fail"]);
+  worker.complete = complete;
+  const result = await runPagedShopifySync(worker);
+  assert.equal(result.pagesProcessed, 12);
+  assert.deepEqual(events, ["blocked", "read", "fail", "complete"]);
+});
+
 test("a reclaimed final page completes without fetching, replaying or fabricating old observations", async () => {
   const { worker, events } = scenario(12, false);
   const result = await runPagedShopifySync(worker);

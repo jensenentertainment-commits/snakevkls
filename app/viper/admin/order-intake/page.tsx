@@ -1,5 +1,5 @@
+import { Surface } from "@/app/components/design-system";
 import Link from "next/link";
-import SnakeNav from "@/app/components/SnakeNav";
 import ShopifyOrderPreviewForm from "@/app/components/viper/ShopifyOrderPreviewForm";
 import { requireViperAdminPageActor } from "@/lib/viper/auth/access";
 import { isViperShopifyImportEnabled } from "@/lib/viper/shopify/import-feature";
@@ -11,28 +11,27 @@ export default async function ShopifyOrderIntakePage() {
   const importEnabled = isViperShopifyImportEnabled();
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-3xl px-4 py-4">
-        <SnakeNav />
-        <section className="rounded-[26px] bg-[#e8eef0] p-5 text-neutral-950 sm:p-8">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#055a7d]">
-            Viper · P4.1
+    <>
+      <div className="mx-auto min-w-0 [overflow-wrap:anywhere] max-w-3xl">
+        <Surface as="section" variant="workspace" className="p-4 sm:p-6 lg:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-snake-link">
+            Viper · Ordreimport
           </p>
-          <h1 className="mt-2 text-3xl font-black">Shopify-ordre</h1>
-          <p className="mt-2 text-sm text-neutral-600">
-            Kontroller én ordre uten å lagre eller endre noe.
+          <h1 className="mt-2 text-[length:var(--snake-text-display-page-mobile-size)] sm:text-[length:var(--snake-text-display-page-size)] font-semibold">Shopify-ordre</h1>
+          <p className="mt-2 text-sm text-snake-text-secondary">
+            Forhåndsvis en Shopify-ordre og kontroller plukkgrunnlaget før import.
           </p>
-          <div className="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm">
+          <div className="mt-5 rounded-snake-action border border-snake-info-border bg-snake-info-surface p-4 text-sm">
             Mangler tilkoblingen ordretilgang?{" "}
-            <Link href="/api/shopify/install" className="font-bold underline">
+            <Link href="/api/shopify/install" className="font-semibold underline">
               Koble Shopify til på nytt
             </Link>
           </div>
           <div className="mt-5">
             <ShopifyOrderPreviewForm importEnabled={importEnabled} />
           </div>
-        </section>
+        </Surface>
       </div>
-    </main>
+    </>
   );
 }

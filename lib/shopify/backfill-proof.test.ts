@@ -55,3 +55,12 @@ test("target state, selected variant facts, IDs, bounds and missing sample are i
 test("malformed/unbounded snapshots reject without report data leakage",()=>{
   assert.throws(()=>proveBackfill({}));assert.throws(()=>proveBackfill("x".repeat(512*1024)));
 });
+
+test("catalogs without eligible unique SKUs still require exact Variant-ID receipt evidence",()=>{
+  const f=fixture(); f.facts.targets=[]; f.targets=[]; f.facts.targetEligibleCount=0;
+  assert.equal(proveBackfill(f).status,"PASS");
+  f.facts.provenance.variantMismatches=1;
+  assert.equal(proveBackfill(f).status,"FAIL");
+  f.facts.provenance.variantMismatches=0; f.facts.targetEligibleCount=-1;
+  assert.equal(proveBackfill(f).status,"FAIL");
+});

@@ -1,4 +1,5 @@
-import SnakeNav from "@/app/components/SnakeNav";
+import { Surface, Card } from "@/app/components/design-system";
+import Link from "next/link";
 import ResolveViperException from "@/app/components/viper/ResolveViperException";
 import { requireViperAdminPageActor } from "@/lib/viper/auth/access";
 import { getOpenViperExceptions } from "@/lib/viper/picks/repository";
@@ -9,28 +10,28 @@ export default async function ViperExceptionsPage() {
   await requireViperAdminPageActor();
   const exceptions = await getOpenViperExceptions();
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-3xl px-4 py-4">
-        <SnakeNav />
-        <section className="rounded-[26px] bg-[#e8eef0] p-5 text-neutral-950">
-          <h1 className="text-2xl font-bold">Åpne Viper-avvik</h1>
-          <p className="mt-1 text-sm text-neutral-600">Kun kontrollflate for P3.</p>
+    <>
+      <div className="mx-auto min-w-0 [overflow-wrap:anywhere] max-w-3xl">
+        <Surface as="section" variant="workspace" className="p-4 sm:p-6 lg:p-8">
+          <h1 className="text-[length:var(--snake-text-heading-section-size)] font-semibold">Åpne Viper-avvik</h1>
+          <p className="mt-1 text-sm text-snake-text-secondary">Kontroller og løs registrerte plukkavvik.</p>
+          <Link href="/viper/admin/recovery" className="inline-flex min-h-11 items-center text-snake-link underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus">Avbrutte og fastlåste plukk</Link>
           <div className="mt-5 space-y-4">
-            {exceptions.length === 0 && <p className="rounded-2xl bg-white p-5">Ingen åpne avvik.</p>}
+            {exceptions.length === 0 && <p className="rounded-snake-action bg-snake-surface p-5">Ingen åpne avvik.</p>}
             {exceptions.map((item) => (
-              <article key={item.id} className="rounded-2xl bg-white p-5 shadow-sm">
-                <p className="font-black">{item.orderNumber} · linje {item.sequenceNumber}</p>
-                <p className="mt-1 text-lg font-bold">{item.productName}</p>
-                <p className="text-sm text-neutral-500">{item.sku ?? "Uten SKU"}</p>
+              <Card as="article" key={item.id} className="min-w-0">
+                <p className="font-semibold">{item.orderNumber} · linje {item.sequenceNumber}</p>
+                <p className="mt-1 text-lg font-semibold">{item.productName}</p>
+                <p className="text-sm text-snake-text-secondary">{item.sku ?? "Uten SKU"}</p>
                 <p className="mt-3 font-semibold">{exceptionLabels[item.exceptionType]}</p>
                 {item.note && <p className="mt-1 text-sm">{item.note}</p>}
-                <ResolveViperException exceptionId={item.id} />
-              </article>
+                <ResolveViperException exceptionId={item.id} version={item.version} />
+              </Card>
             ))}
           </div>
-        </section>
+        </Surface>
       </div>
-    </main>
+    </>
   );
 }
 

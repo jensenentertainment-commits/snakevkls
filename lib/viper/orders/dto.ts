@@ -3,6 +3,7 @@ export type ViperQueueItemDto = {
   orderNumber: string;
   receivedAt: string;
   pickJobId: string;
+  version: number;
   pickStatus: "ready" | "in_progress";
   assignedTo: string | null;
   startedAt: string | null;
@@ -31,6 +32,7 @@ export type ViperOrderDetailDto = {
   orderNumber: string;
   receivedAt: string;
   pickJobId: string;
+  version: number;
   pickStatus: "ready" | "in_progress";
   assignedTo: string | null;
   startedAt: string | null;
@@ -43,6 +45,7 @@ export type ViperOrderDetailDto = {
 export type StartViperPickDto = {
   orderId: string;
   pickJobId: string;
+  version: number;
   status: "in_progress";
   startedAt: string;
   idempotent: boolean;

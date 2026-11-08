@@ -62,15 +62,17 @@ test("P2 API routes require Viper authorization and expose no direct writes", as
     assert.match(route, /Cache-Control|auth\.response/);
   }
 
-  assert.match(startRoute, /startViperPick/);
+  assert.match(startRoute, /handleViperCommand/);
   assert.doesNotMatch(startRoute, /\.from\(["']inventory["']\)/);
   assert.doesNotMatch(startRoute, /confirm_viper_pick_line|complete_viper_pick/);
 });
 
-test("P2 repository delegates start to the locked P1 RPC only", async () => {
-  const repository = await source("lib/viper/orders/repository.ts");
+test("Start delegates to the versioned command which retains the locked P1 implementation", async () => {
+  const repository = await source("lib/viper/picks/command-handler.ts");
 
-  assert.match(repository, /\.rpc\("start_viper_pick"/);
+  assert.match(repository, /\.rpc\('apply_viper_pick_command'/);
+  const sql = await source('supabase/migrations/20261104062000_viper_fenced_pick_commands.sql');
+  assert.match(sql, /result:=private.start_viper_pick/);
   assert.doesNotMatch(repository, /\.rpc\("confirm_viper_pick_line"/);
   assert.doesNotMatch(repository, /\.rpc\("complete_viper_pick"/);
   assert.doesNotMatch(repository, /\.from\("inventory"\)\s*\.update/);

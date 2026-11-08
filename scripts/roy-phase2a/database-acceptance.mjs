@@ -9,6 +9,13 @@ import { proveBackfill } from '../../lib/shopify/backfill-proof.ts';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const db = 'tests/database/';
 const guard = `${db}roy-phase-2a-acceptance.guard.sql`;
+export const LOCAL_CATALOG_TARGET = Object.freeze({
+  host: '127.0.0.1', port: '55433', user: 'snake_catalog_test',
+  systemId: '7705827962930311860',
+  dataDirectory: 'C:/Users/jense/AppData/Local/SnakeCatalogValidation/data',
+  passwordFile: 'C:/Users/jense/AppData/Local/SnakeCatalogValidation/pgpass.conf',
+  databases: { fresh: 'snake_phase2a_test_catalogfresh', upgrade: 'snake_phase2a_test_catalogupgrade' },
+});
 export const plan = 'Prepared, NOT RUN. On two separately approved EMPTY disposable databases run fresh and upgrade matrices. Requires existing psql, loopback connection, PGDATABASE matching snake_phase2a_test[_suffix], and exact --confirm. No provisioning. Existing independent-session suites remain required; see docs/roy-phase-2a-forward-fix.md.';
 
 export function options(args, env) {
@@ -28,12 +35,16 @@ export function options(args, env) {
   if (!flags.get('--execute') || !['fresh', 'upgrade'].includes(matrix)
       || typeof database !== 'string' || !/^snake_phase2a_test(?:_[a-z0-9]+)?$/.test(database)
       || flags.get('--confirm') !== `EXECUTE ISOLATED ${matrix} ${database}`) throw new Error('Explicit isolated matrix approval required');
-  if (env.PGDATABASE !== database || !['127.0.0.1', 'localhost', '::1'].includes(env.PGHOST)
-      || !/^\d{4,5}$/.test(env.PGPORT ?? '') || Number(env.PGPORT) > 65535 || Number(env.PGPORT) < 1024
-      || !env.PGUSER || env.PGSERVICE || env.PGSERVICEFILE || env.PGHOSTADDR) throw new Error('Explicit loopback PG target required; connection indirection forbidden');
+  if (database !== LOCAL_CATALOG_TARGET.databases[matrix]
+      || env.PGDATABASE !== database || env.PGHOST !== LOCAL_CATALOG_TARGET.host
+      || env.PGPORT !== LOCAL_CATALOG_TARGET.port || env.PGUSER !== LOCAL_CATALOG_TARGET.user
+      || env.PGPASSWORD || env.PGPASSFILE?.replaceAll('\\', '/') !== LOCAL_CATALOG_TARGET.passwordFile
+      || env.PGSSLMODE !== 'disable'
+      || env.PGSERVICE || env.PGSERVICEFILE || env.PGHOSTADDR)
+    throw new Error('Only the approved local catalog cluster and matrix database are allowed');
   // Do not inherit PGOPTIONS/search-path/service settings or use shell commands.
   const childEnv = Object.fromEntries(Object.entries(env).filter(([key]) => !key.startsWith('PG')));
-  for (const key of ['PGHOST', 'PGPORT', 'PGUSER', 'PGPASSWORD', 'PGPASSFILE', 'PGSSLMODE']) if (env[key]) childEnv[key] = env[key];
+  for (const key of ['PGHOST', 'PGPORT', 'PGUSER', 'PGPASSFILE', 'PGSSLMODE']) if (env[key]) childEnv[key] = env[key];
   childEnv.PGDATABASE = database;
   childEnv.PGOPTIONS = '-c snake.phase2a_isolated=on -c statement_timeout=60000 -c lock_timeout=20000';
   childEnv.PGCONNECT_TIMEOUT = '5';
@@ -87,6 +98,16 @@ export async function execute(config) {
     for (const result of await Promise.all([a, b])) if (result.error) throw result.error;
   }
   try {
+    const identity = JSON.parse(await checked(['-c', `select json_build_object(
+      'systemId',system_identifier::text,'dataDirectory',current_setting('data_directory'),
+      'version',current_setting('server_version_num'),'database',current_database(),
+      'user',current_user,'address',host(inet_server_addr()),'port',inet_server_port()) from pg_control_system()`]));
+    if (identity.systemId !== LOCAL_CATALOG_TARGET.systemId
+        || identity.dataDirectory.replaceAll('\\', '/') !== LOCAL_CATALOG_TARGET.dataDirectory
+        || identity.database !== config.database || identity.user !== LOCAL_CATALOG_TARGET.user
+        || identity.address !== LOCAL_CATALOG_TARGET.host || identity.port !== Number(LOCAL_CATALOG_TARGET.port)
+        || Number(identity.version) < 170000 || Number(identity.version) >= 180000)
+      throw new Error('Local cluster identity mismatch; no bootstrap or migration permitted');
     await sql(`do $$ begin if exists(select 1 from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname in ('public','private','auth','phase2a_test') and c.relkind in ('r','p')) or to_regnamespace('auth') is not null or to_regnamespace('private') is not null or to_regnamespace('phase2a_test') is not null then raise exception 'EMPTY disposable database required';end if;end $$;`);
     await checked(['-1', '-f', guard, '-f', `${db}supabase-local-bootstrap.sql`]);
     const migrations = readdirSync(resolve(root, 'supabase/migrations')).filter(n => n.endsWith('.sql')).sort();
@@ -114,6 +135,19 @@ export async function execute(config) {
     }
     if (config.matrix === 'upgrade') await file('roy-phase-2a-upgrade-assertions');
     for (const suite of ['sync-persistence', 'catalog-foundation', 'targeted', 'backfill']) await file(`roy-phase-2a-${suite}.dynamic`);
+    await file('catalog-identity.dynamic');
+    await file('catalog-viper-sales.dynamic');
+    await file('catalog-concurrency-setup');
+    for (const scenario of ['inventory', 'inventory_insert', 'order', 'order_insert', 'pick', 'product_share']) {
+      // Both sessions rendezvous using database-visible advisory barriers.
+      // No sleep-based race assumptions, and no cleanup after a failing case.
+      const writer = checked(['-f', guard, '-v', `scenario=${scenario}`, '-f', `${db}catalog-concurrency-writer.sql`], 'catalog-writer')
+        .then(value => ({ value }), error => ({ error }));
+      const completion = file('catalog-concurrency-completion', 'catalog-completion')
+        .then(value => ({ value }), error => ({ error }));
+      for (const result of await Promise.all([writer, completion])) if (result.error) throw result.error;
+    }
+    await file('catalog-concurrency-cleanup');
     await file('roy-phase-2a-recovery-setup');
     await overlap('roy-phase-2a-reclaim-page-session', 'phase2a-page', 1, 'roy-phase-2a-reclaim-session', 'phase2a-reclaim');
     await sql('update phase2a_test.recovery_state set before_state=phase2a_test.control_snapshot()');

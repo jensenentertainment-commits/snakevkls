@@ -5,8 +5,9 @@ import { createHash } from 'node:crypto';
 import test from 'node:test';
 import { options, acceptanceResult } from '../scripts/roy-phase2a/database-acceptance.mjs';
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
-const args = ['--execute', '--matrix', 'fresh', '--database', 'snake_phase2a_test_fresh', '--confirm', 'EXECUTE ISOLATED fresh snake_phase2a_test_fresh'];
-const env = { PGHOST: '127.0.0.1', PGPORT: '5432', PGDATABASE: 'snake_phase2a_test_fresh', PGUSER: 'isolated_owner' };
+const args = ['--execute', '--matrix', 'fresh', '--database', 'snake_phase2a_test_catalogfresh', '--confirm', 'EXECUTE ISOLATED fresh snake_phase2a_test_catalogfresh'];
+const env = { PGHOST: '127.0.0.1', PGPORT: '55433', PGDATABASE: 'snake_phase2a_test_catalogfresh', PGUSER: 'snake_catalog_test',
+  PGPASSFILE: 'C:/Users/jense/AppData/Local/SnakeCatalogValidation/pgpass.conf', PGSSLMODE: 'disable' };
 
 test('approved historical migration chain remains byte-equivalent apart from checkout line endings', () => {
   const hash = createHash('sha256');
@@ -48,7 +49,7 @@ test('both matrices prepare baseline immediately before priority migration and r
   assert.match(block, /console.error\(JSON.stringify/);
   assert.match(source, /manifest, preparations, proof/);
   for (const matrix of ['fresh', 'upgrade']) {
-    assert.equal(options(args.map(a => a.replaceAll('fresh', matrix)), { ...env, PGDATABASE: `snake_phase2a_test_${matrix}` }).matrix, matrix);
+    assert.equal(options(args.map(a => a.replaceAll('fresh', matrix)), { ...env, PGDATABASE: `snake_phase2a_test_catalog${matrix}` }).matrix, matrix);
   }
   assert.ok(end < source.indexOf("await checked(['-1', '-f', guard, '-f', path]);", end));
 });
@@ -73,14 +74,43 @@ test('acceptance requires exact explicit target, matrix and approval', () => {
   }
   for (const patch of [{ PGDATABASE: 'postgres' }, { PGHOST: 'production.supabase.co' }, { PGHOST: '' }, { PGPORT: '99999' },
     { PGSERVICE: 'prod' }, { PGSERVICEFILE: 'prod' }, { PGHOSTADDR: '1.2.3.4' }]) assert.throws(() => options(args, { ...env, ...patch }));
-  assert.throws(() => options(args.map(a => a.replaceAll('snake_phase2a_test_fresh', 'TV19')), { ...env, PGDATABASE: 'TV19' }));
+  assert.throws(() => options(args.map(a => a.replaceAll('snake_phase2a_test_catalogfresh', 'TV19')), { ...env, PGDATABASE: 'TV19' }));
 });
 test('connection options cannot silently redirect target or remove isolation', () => {
-  const parsed = options(args, { ...env, PGOPTIONS: '-c snake.phase2a_isolated=off', PGAPPNAME: 'prod', PGPASSWORD: 'fixture-secret' });
+  const parsed = options(args, { ...env, PGOPTIONS: '-c snake.phase2a_isolated=off', PGAPPNAME: 'prod' });
   assert.match(parsed.childEnv.PGOPTIONS, /snake.phase2a_isolated=on/);
   assert.equal(parsed.childEnv.PGAPPNAME, undefined);
-  assert.equal(parsed.childEnv.PGPASSWORD, 'fixture-secret');
+  assert.equal(parsed.childEnv.PGPASSWORD, undefined);
+  for (const patch of [{ PGPASSWORD: 'fixture-secret' }, { PGPASSFILE: 'other-file' }, { PGPORT: '5432' }, { PGUSER: 'postgres' }, { PGHOST: 'localhost' }])
+    assert.throws(() => options(args, { ...env, ...patch }));
   assert.equal(env.PGOPTIONS, undefined);
+});
+
+test('loopback normalization preserves exact host allowlist in both matrices', () => {
+  for (const matrix of ['fresh', 'upgrade']) {
+    const matrixArgs = args.map(a => a.replaceAll('fresh', matrix));
+    const matrixEnv = { ...env, PGDATABASE: `snake_phase2a_test_catalog${matrix}` };
+    assert.equal(options(matrixArgs, matrixEnv).childEnv.PGHOST, '127.0.0.1');
+    for (const host of ['127.0.0.2', '::1', 'localhost', '192.0.2.1', '127.0.0.1/32'])
+      assert.throws(() => options(matrixArgs, { ...matrixEnv, PGHOST: host }));
+  }
+  const runner = read('scripts/roy-phase2a/database-acceptance.mjs');
+  const guard = read('tests/database/roy-phase-2a-acceptance.guard.sql');
+  assert.match(runner, /'address',host\(inet_server_addr\(\)\)/);
+  assert.match(runner, /identity.address !== LOCAL_CATALOG_TARGET.host/);
+  assert.match(guard, /host\(inet_server_addr\(\)\) is distinct from '127\.0\.0\.1'/);
+  for (const source of [runner, guard]) assert.doesNotMatch(source, /inet_server_addr\(\)::text/);
+});
+
+test('local catalog identity is checked before bootstrap and SQL guard pins the same target', () => {
+  const runner = read('scripts/roy-phase2a/database-acceptance.mjs');
+  assert.ok(runner.indexOf('const identity = JSON.parse') < runner.indexOf("await sql(`do $$"));
+  const guard = read('tests/database/roy-phase-2a-acceptance.guard.sql');
+  for (const value of ['7705827962930311860', 'snake_phase2a_test_catalogfresh', 'snake_phase2a_test_catalogupgrade', '55433', 'snake_catalog_test']) {
+    assert.ok(runner.includes(value)); assert.ok(guard.includes(value));
+  }
+  assert.match(guard, /pg_control_system/);
+  assert.match(guard, /data_directory/);
 });
 test('malformed proof cannot pass the actual-export acceptance boundary', () => {
   assert.throws(() => acceptanceResult({}));

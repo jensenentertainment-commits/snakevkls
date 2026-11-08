@@ -87,7 +87,7 @@ test("P4.2 is fail-closed behind the production feature flag", async () => {
   assert.match(page, /isViperShopifyImportEnabled\(\)/);
   assert.match(page, /importEnabled=\{importEnabled\}/);
   assert.match(form, /preview\.importable && importEnabled/);
-  assert.match(form, /Forhåndsvisningen er[\s\S]*fortsatt read-only/);
+  assert.match(form, /Forhåndsvisningen er[\s\S]*fortsatt skrivebeskyttet/);
 });
 
 test("P4.2 UI imports only an approved preview and routes into the existing queue domain", async () => {

@@ -34,7 +34,8 @@ test("UI Refresh activates only migrated route shells", () => {
   assert.match(config, /id: "lager"/);
   assert.match(config, /id: "settings"/);
   assert.match(config, /LAGER_MODULE_NAVIGATION/);
-  assert.doesNotMatch(config, /id: "viper"/);
+  assert.match(config, /id: "viper"/);
+  assert.match(config, /VIPER_MODULE_NAVIGATION/);
 });
 
 test("the generic shell uses only canonical visual tokens", () => {

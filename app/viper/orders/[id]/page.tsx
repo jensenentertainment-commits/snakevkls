@@ -1,8 +1,7 @@
+import { Surface, Card } from "@/app/components/design-system";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, MapPin } from "lucide-react";
 import { notFound } from "next/navigation";
-import SnakeFooter from "@/app/components/SnakeFooter";
-import SnakeNav from "@/app/components/SnakeNav";
 import StartPickButton from "@/app/components/viper/StartPickButton";
 import { requireViperPageActor } from "@/lib/viper/auth/access";
 import { getViperOrderDetail } from "@/lib/viper/orders/repository";
@@ -23,38 +22,37 @@ export default async function ViperOrderPage({
   if (!order) notFound();
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-4xl px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
+    <>
+      <div className="mx-auto min-w-0 [overflow-wrap:anywhere] max-w-4xl">
 
-        <section className="overflow-hidden rounded-[26px] bg-[#e8eef0] text-neutral-950 shadow-2xl shadow-black/30 sm:rounded-[32px]">
-          <header className="bg-[#05495b] px-5 py-6 text-white sm:px-8 sm:py-8">
+        <Surface as="section" variant="workspace" className="overflow-hidden">
+          <header className="bg-snake-hero px-5 py-6 text-snake-text-on-dark sm:px-8 sm:py-8">
             <Link
               href="/viper"
-              className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-white/70 hover:text-white"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-snake-text-on-dark-muted hover:text-snake-text-on-dark"
             >
               <ArrowLeft className="h-4 w-4" />
               Tilbake til køen
             </Link>
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-white/55">
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-snake-text-on-dark-muted">
               Ordre
             </p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+            <h1 className="mt-1 text-[length:var(--snake-text-display-page-mobile-size)] sm:text-[length:var(--snake-text-display-page-size)] font-semibold tracking-tight">
               {order.orderNumber}
             </h1>
-            <p className="mt-2 text-sm text-white/65">
+            <p className="mt-2 text-sm text-snake-text-on-dark-muted">
               {order.lines.length} linjer · {order.totalUnits} varer
             </p>
           </header>
 
           <div className="space-y-5 p-4 sm:p-8">
             {order.isOwnedByActor && (
-              <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900">
+              <div className="flex items-center gap-3 rounded-snake-action border border-snake-success-border bg-snake-success-surface p-4 text-snake-success">
                 <CheckCircle2 className="h-6 w-6 shrink-0" />
                 <div>
-                  <p className="font-bold">Plukket er startet</p>
-                  <p className="text-sm text-emerald-800/75">
-                    Linjeplukk åpnes i neste fase.
+                  <p className="font-semibold">Plukket er startet</p>
+                  <p className="text-sm text-snake-success">
+                    Du finner det aktive plukket i arbeidskøen.
                   </p>
                 </div>
               </div>
@@ -62,12 +60,12 @@ export default async function ViperOrderPage({
 
             <section className="space-y-3">
               {order.lines.map((line) => (
-                <article
+                <Card as="article"
                   key={line.id}
-                  className="rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-5"
+                  className="min-w-0"
                 >
                   <div className="flex gap-4">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-neutral-100">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-snake-action bg-snake-surface-subtle">
                       {line.imageUrl ? (
                         <>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -78,48 +76,46 @@ export default async function ViperOrderPage({
                           />
                         </>
                       ) : (
-                        <span className="text-2xl font-bold text-neutral-300">
+                        <span className="text-[length:var(--snake-text-heading-section-size)] font-semibold text-snake-text-muted">
                           {line.sequenceNumber}
                         </span>
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-lg font-bold leading-tight">
+                      <p className="text-lg font-semibold leading-tight">
                         {line.productName}
                       </p>
                       {line.variantName && (
-                        <p className="mt-1 text-sm text-neutral-500">
+                        <p className="mt-1 text-sm text-snake-text-secondary">
                           {line.variantName}
                         </p>
                       )}
                       <div className="mt-3 flex flex-wrap gap-2 text-sm font-semibold">
-                        <span className="rounded-full bg-neutral-100 px-3 py-1.5">
+                        <span className="rounded-snake-pill bg-snake-surface-subtle px-3 py-1.5">
                           {line.sku ? `SKU ${line.sku}` : "Uten SKU"}
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#055a7d]/10 px-3 py-1.5 text-[#055a7d]">
+                        <span className="inline-flex items-center gap-1 rounded-snake-pill bg-snake-info-surface px-3 py-1.5 text-snake-link">
                           <MapPin className="h-4 w-4" />
                           {line.locationCode}
                         </span>
-                        <span className="rounded-full bg-[#b58a14]/10 px-3 py-1.5 text-[#8a6704]">
+                        <span className="rounded-snake-pill bg-snake-brand-soft px-3 py-1.5 text-snake-warning">
                           Antall {line.expectedQuantity}
                         </span>
                       </div>
                     </div>
                   </div>
-                </article>
+                </Card>
               ))}
             </section>
 
             {order.canStart && (
-              <div className="sticky bottom-3 rounded-3xl border border-neutral-200 bg-white/95 p-4 shadow-xl backdrop-blur">
-                <StartPickButton pickJobId={order.pickJobId} />
+              <div className="sticky bottom-3 rounded-snake-card border border-snake-border-subtle bg-snake-surface/95 p-4 shadow-snake-panel backdrop-blur">
+                <StartPickButton pickJobId={order.pickJobId} version={order.version} />
               </div>
             )}
           </div>
-        </section>
-
-        <SnakeFooter />
+        </Surface>
       </div>
-    </main>
+    </>
   );
 }

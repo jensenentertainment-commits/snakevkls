@@ -58,7 +58,7 @@ test("conflicting, mismatched, or incomplete snapshots fail before any RPC", () 
 });
 
 test("SQL rejections are distinct from ambiguous transport and malformed responses", () => {
-  for (const code of ["P0001", "23505", "23514", "22007", "40001", "42501"]) {
+  for (const code of ["P0001", "23505", "23514", "22007", "40001", "42501", "55P03"]) {
     assert.throws(() => syncWriteResult(null, { message: "rejected", code }), ShopifySyncWriteRejectedError);
   }
   for (const code of ["", "08006", "57014", "PGRST002"]) {
@@ -66,6 +66,16 @@ test("SQL rejections are distinct from ambiguous transport and malformed respons
       error instanceof Error && !(error instanceof ShopifySyncWriteRejectedError));
   }
   for (const value of [null, [], "OK"]) assert.throws(() => syncWriteResult(value, null), /acknowledgement/);
+});
+
+test("completion blockers retain bounded product UUID/reason diagnostics without unrelated fields", () => {
+  const id = "98000000-0000-4000-8000-000000000001";
+  assert.throws(() => syncWriteResult(null, { code: "P0001", message: "SHOPIFY_DEACTIVATION_BLOCKED",
+    details: JSON.stringify({ blockedCount: 1, examples: [{ product_id: id, dependencies: ["physical_stock"], unwanted: "do-not-emit" }] }) }),
+    (error: unknown) => error instanceof ShopifySyncWriteRejectedError && error.message.includes(id)
+      && error.message.includes("physical_stock") && !error.message.includes("do-not-emit"));
+  assert.throws(() => syncWriteResult(null, { code: "P0001", message: "SHOPIFY_DEACTIVATION_BLOCKED", details: "invalid" }),
+    (error: unknown) => error instanceof ShopifySyncWriteRejectedError && error.message === "SHOPIFY_DEACTIVATION_BLOCKED");
 });
 
 const stored = {

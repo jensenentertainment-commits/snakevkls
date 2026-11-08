@@ -4,10 +4,8 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type { ViperActor } from "@/lib/viper/auth/access";
 import {
   canReadViperPick,
-  canStartViperPick,
 } from "@/lib/viper/auth/resource-access";
 import type {
-  StartViperPickDto,
   ViperOrderDetailDto,
   ViperQueueDto,
   ViperQueueItemDto,
@@ -15,6 +13,7 @@ import type {
 
 type QueueRow = {
   id: string;
+  version: number;
   status: "ready" | "in_progress";
   assigned_to: string | null;
   started_at: string | null;
@@ -28,6 +27,7 @@ type QueueRow = {
 
 type DetailRow = {
   id: string;
+  version: number;
   status: "ready" | "in_progress";
   assigned_to: string | null;
   started_at: string | null;
@@ -58,6 +58,7 @@ function queueItem(row: QueueRow): ViperQueueItemDto {
     orderNumber: row.orders.order_number,
     receivedAt: row.orders.received_at,
     pickJobId: row.id,
+    version: row.version,
     pickStatus: row.status,
     assignedTo: row.assigned_to,
     startedAt: row.started_at,
@@ -73,7 +74,7 @@ export async function getViperQueue(actor: ViperActor): Promise<ViperQueueDto> {
   const { data, error } = await getSupabaseAdmin()
     .from("pick_jobs")
     .select(
-      "id,status,assigned_to,started_at,orders!inner(id,order_number,received_at,order_lines(requested_quantity))"
+      "id,version,status,assigned_to,started_at,orders!inner(id,order_number,received_at,order_lines(requested_quantity))"
     )
     .or(`status.eq.ready,and(status.eq.in_progress,assigned_to.eq.${actor.id})`)
     .order("created_at", { ascending: true });
@@ -99,7 +100,7 @@ export async function getViperOrderDetail(
   const { data, error } = await getSupabaseAdmin()
     .from("pick_jobs")
     .select(
-      "id,status,assigned_to,started_at,orders!inner(id,order_number,received_at),pick_lines(id,expected_quantity,sequence_number,order_lines(sku,product_name,variant_name),products(image_url),locations(code))"
+      "id,version,status,assigned_to,started_at,orders!inner(id,order_number,received_at),pick_lines(id,expected_quantity,sequence_number,order_lines(sku,product_name,variant_name),products(image_url),locations(code))"
     )
     .eq("order_id", orderId)
     .maybeSingle();
@@ -145,6 +146,7 @@ export async function getViperOrderDetail(
     orderNumber: row.orders.order_number,
     receivedAt: row.orders.received_at,
     pickJobId: row.id,
+    version: row.version,
     pickStatus: row.status,
     assignedTo: row.assigned_to,
     startedAt: row.started_at,
@@ -152,44 +154,5 @@ export async function getViperOrderDetail(
     lines,
     canStart: row.status === "ready",
     isOwnedByActor,
-  };
-}
-
-export async function startViperPick(
-  pickJobId: string,
-  actor: ViperActor,
-  correlationId: string
-): Promise<StartViperPickDto | null> {
-  const supabase = getSupabaseAdmin();
-  const { data: job, error: jobError } = await supabase
-    .from("pick_jobs")
-    .select("id,status,assigned_to")
-    .eq("id", pickJobId)
-    .maybeSingle();
-
-  if (jobError) throw new Error(`Kunne ikke kontrollere plukk: ${jobError.message}`);
-  if (!job) return null;
-
-  const allowed = canStartViperPick(
-    { status: job.status, assignedTo: job.assigned_to },
-    actor.id
-  );
-  if (!allowed) return null;
-
-  const { data, error } = await supabase.rpc("start_viper_pick", {
-    requested_pick_job_id: pickJobId,
-    requested_actor_id: actor.id,
-    requested_actor_email: actor.email,
-    requested_actor_name: actor.displayName,
-    requested_correlation_id: correlationId,
-  });
-
-  if (error) throw new Error(error.message);
-  return {
-    orderId: String(data.orderId),
-    pickJobId: String(data.pickJobId),
-    status: "in_progress",
-    startedAt: String(data.startedAt),
-    idempotent: Boolean(data.idempotent),
   };
 }

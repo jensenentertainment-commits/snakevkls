@@ -10,6 +10,7 @@ import type {
 
 type PickRow = {
   id: string;
+  version: number;
   status: "in_progress" | "completed";
   assigned_to: string | null;
   orders: { id: string; order_number: string } | null;
@@ -37,7 +38,7 @@ export async function getActiveViperPick(
   const { data, error } = await getSupabaseAdmin()
     .from("pick_jobs")
     .select(
-      "id,status,assigned_to,orders!inner(id,order_number),pick_lines(id,sequence_number,status,expected_quantity,picked_at,order_lines(product_name,variant_name,sku),products(image_url),locations(code),pick_exceptions(id,status))"
+      "id,version,status,assigned_to,orders!inner(id,order_number),pick_lines(id,sequence_number,status,expected_quantity,picked_at,order_lines(product_name,variant_name,sku),products(image_url),locations(code),pick_exceptions(id,status))"
     )
     .eq("id", pickJobId)
     .maybeSingle();
@@ -73,6 +74,7 @@ export async function getActiveViperPick(
 
   return {
     pickJobId: row.id,
+    version: row.version,
     orderId: row.orders.id,
     orderNumber: row.orders.order_number,
     status: row.status,
@@ -83,78 +85,11 @@ export async function getActiveViperPick(
   };
 }
 
-async function assertOwnedActivePickLine(pickLineId: string, actorId: string) {
-  const { data, error } = await getSupabaseAdmin()
-    .from("pick_lines")
-    .select("id,pick_jobs!inner(status,assigned_to)")
-    .eq("id", pickLineId)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  const job = data?.pick_jobs as unknown as { status: string; assigned_to: string } | null;
-  return Boolean(data && job?.status === "in_progress" && job.assigned_to === actorId);
-}
-
-export async function confirmViperPickLine(
-  pickLineId: string,
-  actor: ViperActor,
-  correlationId: string
-) {
-  if (!(await assertOwnedActivePickLine(pickLineId, actor.id))) return null;
-  const { data, error } = await getSupabaseAdmin().rpc("confirm_viper_pick_line", {
-    requested_pick_line_id: pickLineId,
-    requested_actor_id: actor.id,
-    requested_correlation_id: correlationId,
-  });
-  if (error) throw new Error(error.message);
-  return data;
-}
-
-export async function reportViperPickException(
-  pickLineId: string,
-  exceptionType: ViperPickExceptionType,
-  observedQuantity: number | null,
-  note: string | null,
-  actor: ViperActor,
-  correlationId: string
-) {
-  if (!(await assertOwnedActivePickLine(pickLineId, actor.id))) return null;
-  const { data, error } = await getSupabaseAdmin().rpc("report_viper_pick_exception", {
-    requested_pick_line_id: pickLineId,
-    requested_exception_type: exceptionType,
-    requested_observed_quantity: observedQuantity,
-    requested_note: note,
-    requested_actor_id: actor.id,
-    requested_actor_email: actor.email,
-    requested_actor_name: actor.displayName,
-    requested_correlation_id: correlationId,
-  });
-  if (error) throw new Error(error.message);
-  return data;
-}
-
-export async function completeViperPick(
-  pickJobId: string,
-  actor: ViperActor,
-  correlationId: string
-) {
-  const pick = await getActiveViperPick(pickJobId, actor);
-  if (!pick) return null;
-  const { data, error } = await getSupabaseAdmin().rpc("complete_viper_pick", {
-    requested_pick_job_id: pickJobId,
-    requested_actor_id: actor.id,
-    requested_actor_email: actor.email,
-    requested_actor_name: actor.displayName,
-    requested_correlation_id: correlationId,
-  });
-  if (error) throw new Error(error.message);
-  return data;
-}
-
 export async function getOpenViperExceptions(): Promise<ViperOpenExceptionDto[]> {
   const { data, error } = await getSupabaseAdmin()
     .from("pick_exceptions")
     .select(
-      "id,exception_type,note,observed_quantity,reported_at,pick_line_id,pick_lines!inner(sequence_number,order_lines!inner(product_name,sku),pick_jobs!inner(orders!inner(order_number)))"
+      "id,exception_type,note,observed_quantity,reported_at,pick_line_id,pick_lines!inner(sequence_number,order_lines!inner(product_name,sku),pick_jobs!inner(id,version,orders!inner(order_number)))"
     )
     .eq("status", "open")
     .order("reported_at", { ascending: true });
@@ -164,10 +99,10 @@ export async function getOpenViperExceptions(): Promise<ViperOpenExceptionDto[]>
       id: string; exception_type: ViperPickExceptionType; note: string | null;
       observed_quantity: number | null; reported_at: string; pick_line_id: string;
       pick_lines: { sequence_number: number; order_lines: { product_name: string; sku: string | null };
-        pick_jobs: { orders: { order_number: string } } };
+        pick_jobs: { id: string; version: number; orders: { order_number: string } } };
     };
     return {
-      id: row.id, exceptionType: row.exception_type, note: row.note,
+      id: row.id, pickJobId: row.pick_lines.pick_jobs.id, version: row.pick_lines.pick_jobs.version, exceptionType: row.exception_type, note: row.note,
       observedQuantity: row.observed_quantity, reportedAt: row.reported_at,
       pickLineId: row.pick_line_id, sequenceNumber: row.pick_lines.sequence_number,
       orderNumber: row.pick_lines.pick_jobs.orders.order_number,
@@ -175,22 +110,4 @@ export async function getOpenViperExceptions(): Promise<ViperOpenExceptionDto[]>
       sku: row.pick_lines.order_lines.sku,
     };
   });
-}
-
-export async function resolveViperPickException(
-  exceptionId: string,
-  resolutionNote: string,
-  actor: ViperActor,
-  correlationId: string
-) {
-  const { data, error } = await getSupabaseAdmin().rpc("resolve_viper_pick_exception", {
-    requested_exception_id: exceptionId,
-    requested_resolution_note: resolutionNote,
-    requested_actor_id: actor.id,
-    requested_actor_email: actor.email,
-    requested_actor_name: actor.displayName,
-    requested_correlation_id: correlationId,
-  });
-  if (error) throw new Error(error.message);
-  return data;
 }

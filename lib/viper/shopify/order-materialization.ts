@@ -7,6 +7,7 @@ import {
   isViperPickJobStatus,
 } from "@/lib/viper/types";
 import { fetchShopifyOrderForPreview } from "@/lib/viper/shopify/order-client";
+import { sourceLines } from "@/lib/viper/shopify/order-source";
 import { previewFetchedShopifyOrder } from "@/lib/viper/shopify/order-preview";
 import type { ShopifyOrderImportResult } from "@/lib/viper/shopify/preview-types";
 
@@ -48,17 +49,7 @@ export async function materializeFreshShopifyOrder(
     );
   }
 
-  const lines = order.lineItems.nodes
-    .filter((line) => line.unfulfilledQuantity > 0)
-    .map((line, index) => ({
-      externalLineId: line.id,
-      shopifyVariantId: line.variant!.id,
-      sku: (line.variant?.sku ?? line.sku)?.trim() || null,
-      productName: line.title,
-      variantName: line.variantTitle,
-      requestedQuantity: line.unfulfilledQuantity,
-      sequenceNumber: index + 1,
-    }));
+  const lines = sourceLines(order);
 
   const { data, error } = await getSupabaseAdmin().rpc(
     "materialize_viper_shopify_order",

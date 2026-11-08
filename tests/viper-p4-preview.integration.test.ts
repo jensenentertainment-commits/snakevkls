@@ -59,7 +59,9 @@ test("P4.1 matches exact variant IDs and provides closed rejection codes", async
   const preview = await source("lib/viper/shopify/order-preview.ts");
   const types = await source("lib/viper/shopify/preview-types.ts");
 
-  assert.match(preview, /\.in\("shopify_variant_id", variantIds\)/);
+  assert.match(preview, /\.rpc\("validate_viper_order_lines"/);
+  const sql = await source("supabase/migrations/20261103215816_viper_shared_location_validation.sql");
+  assert.match(sql, /where shopify_variant_id = variant_id/);
   assert.match(preview, /SKU_MISMATCH/);
   assert.doesNotMatch(preview, /sku.*fallback|fallback.*sku/i);
 

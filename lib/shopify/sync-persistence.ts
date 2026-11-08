@@ -41,14 +41,14 @@ export function prepareShopifyPersistencePage(variants: ShopifyVariantPayload[])
 
 export function syncWriteResult<T>(
   data: unknown,
-  error: { message: string; code?: string } | null,
+  error: { message: string; code?: string; details?: string | null } | null,
 ): T {
   if (error) {
     // SQL data/constraint/transaction/access/PLpgSQL errors are explicit
     // rejections. Connection errors and malformed/absent responses remain
     // ambiguous and are reconciled by the engine through the stored run.
-    if (/^(22|23|40|42|P0)[A-Z0-9]{3}$/.test(error.code ?? "")) {
-      throw new ShopifySyncWriteRejectedError(error.message);
+    if (/^(22|23|40|42|P0)[A-Z0-9]{3}$/.test(error.code ?? "") || error.code === "55P03") {
+      throw new ShopifySyncWriteRejectedError(deactivationDiagnostic(error));
     }
     throw new Error(error.message);
   }
@@ -56,6 +56,21 @@ export function syncWriteResult<T>(
     throw new Error("Shopify sync write returned an invalid acknowledgement");
   }
   return data as T;
+}
+
+function deactivationDiagnostic(error: { message: string; details?: string | null }) {
+  if (error.message !== "SHOPIFY_DEACTIVATION_BLOCKED" || !error.details) return error.message;
+  // Only known non-personal diagnostic fields enter the stored run error.
+  const allowed = new Set(["physical_stock", "active_order", "active_pick", "open_pick_exception", "unfinished_sale_sync"]);
+  try {
+    const detail = JSON.parse(error.details);
+    if (!Number.isSafeInteger(detail.blockedCount) || detail.blockedCount < 1 || !Array.isArray(detail.examples)) return error.message;
+    const examples = detail.examples.slice(0, 8).map((b: { product_id: string; dependencies: string[] }) => {
+      if (!/^[0-9a-f-]{36}$/.test(b.product_id) || !Array.isArray(b.dependencies) || !b.dependencies.length || !b.dependencies.every(d => allowed.has(d))) throw new Error("Invalid diagnostic");
+      return `${b.product_id} [${b.dependencies.join(",")}]`;
+    });
+    return `${error.message}: ${detail.blockedCount} products. ${examples.join("; ")}. Full list: private.catalog_deactivation_blockers_v1(run_id).`;
+  } catch { return error.message; }
 }
 
 export function parseStoredSyncRun(data: unknown, runId: string): ShopifySyncStoredRun {

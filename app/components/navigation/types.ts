@@ -9,6 +9,7 @@ export type NavigationIcon = ComponentType<{
 }>;
 
 export type NavigationItem = {
+  exact?: boolean;
   href: string;
   icon?: NavigationIcon;
   id: string;
@@ -30,6 +31,16 @@ export function isNavigationItemActive(
   const paths = item.matchPaths ?? [item.href];
 
   return paths.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`),
+    (path) => pathname === path || (!item.exact && pathname.startsWith(`${path}/`)),
+  );
+}
+
+// Visibility only; server-side page/API authorization remains authoritative.
+export function visibleNavigationItems(
+  items: readonly NavigationItem[],
+  role?: Role,
+) {
+  return items.filter(
+    (item) => !item.roles || (role !== undefined && item.roles.includes(role)),
   );
 }

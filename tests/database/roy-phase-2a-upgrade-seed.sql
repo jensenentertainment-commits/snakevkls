@@ -5,7 +5,12 @@ create table phase2a_test.upgrade_state (claim jsonb, snapshot jsonb);
 do $$ declare c jsonb; begin
   c:=public.claim_shopify_sync_run('manual','historical-fixture@example.test',300);
   perform public.apply_shopify_sync_page((c->>'runId')::uuid,(c->>'leaseToken')::uuid,null,'historical-page',true,
-    jsonb_build_array(phase2a_test.variant(99101,99101,'HISTORICAL')),300);
+    jsonb_build_array(phase2a_test.variant(99101,99101,'HISTORICAL'),phase2a_test.variant(99104,99104,null)),300);
+  -- Historical physical state must survive ALL forward migrations and resume.
+  insert into public.inventory(product_id,quantity)
+    select id,4 from public.products where shopify_variant_id='gid://shopify/ProductVariant/99101';
+  insert into public.stock_movements(product_id,quantity_delta,reason)
+    select id,4,'receiving' from public.products where shopify_variant_id='gid://shopify/ProductVariant/99101';
   perform public.pause_shopify_sync_run((c->>'runId')::uuid,(c->>'leaseToken')::uuid,'upgrade fixture');
   insert into public.shopify_product_content(shopify_product_id,product_name,description,product_handle,shopify_status,
     shopify_updated_at,content_observed_at,synced_at,shopify_category_id,shopify_category_full_name)

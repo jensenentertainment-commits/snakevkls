@@ -1,0 +1,3443 @@
+{
+  "observedAt": "2026-11-08T17:23:24.080Z",
+  "nonAtomicRead": true,
+  "shop": {
+    "id": "gid://shopify/Shop/78287667506",
+    "myshopifyDomain": "245830-2.myshopify.com"
+  },
+  "scopes": [
+    "write_inventory",
+    "read_inventory",
+    "read_orders",
+    "read_products",
+    "write_products",
+    "read_locations"
+  ],
+  "pages": 6,
+  "sourceComplete": true,
+  "counts": {
+    "activeShopifyVariants": 1408,
+    "activeShopifyProducts": 785,
+    "missingSku": 71,
+    "duplicateSkuGroups": 4,
+    "snakeProducts": 1990,
+    "snakeActive": 1443,
+    "matchedVariants": 1292,
+    "newVariants": 116,
+    "newWithoutSku": 71,
+    "deactivationCandidates": 193,
+    "blockedCandidates": 1
+  },
+  "riskyDeactivations": [
+    {
+      "id": "f313e906-be1a-4eef-8b03-dad3758a5904",
+      "sku": "63104",
+      "product_name": "Badmintonsett 4 Spillere med Nett - Sunflex MATCHMAKER",
+      "shopify_product_id": "gid://shopify/Product/9752092737842",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49709379649842",
+      "active": true,
+      "dependencies": [
+        "physical_stock"
+      ],
+      "stock": [
+        {
+          "quantity": 4,
+          "location": "HL01-01-01-A1"
+        }
+      ]
+    }
+  ],
+  "deactivationCandidates": [
+    {
+      "id": "46e2197f-be47-497c-95b7-d6da270ed01a",
+      "sku": "VITILITY-GAFFEL-BOYBAR-25CM",
+      "product_name": "Vitility Ergonomisk Gaffel Bøybar - Spisegaffel med Bøybart Stål og Ergonomisk Håndtak 25cm",
+      "shopify_product_id": "gid://shopify/Product/9524997128498",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49039104344370",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f386a832-ecba-4fac-8966-35d190362c05",
+      "sku": "LUM-TWL-240-18M-CW",
+      "product_name": "Lumineo twinkle lights - lyslenke - inne og utendørs",
+      "shopify_product_id": "gid://shopify/Product/10014566383922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50546755928370",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "1073814d-b7ff-4028-9487-37d67e95fc1d",
+      "sku": "MP-0098-001",
+      "product_name": "Setebeskyttelse til bilsete for hund – svart med potetrykk",
+      "shopify_product_id": "gid://shopify/Product/10346901963058",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730996134194",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "680bb454-ed10-40f4-98b7-e32720583c1c",
+      "sku": "MABS-TAHETTE-GEL",
+      "product_name": "Mabs Elastisk Tåhette med Gel - Beskyttelse",
+      "shopify_product_id": "gid://shopify/Product/9556073709874",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49131196580146",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "283afef0-52e1-41ae-b77e-0b5e8f9588ea",
+      "sku": "ING-COR-DAY-2S-DGR",
+      "product_name": "InGarden Corona 2 - seters daybed sofa",
+      "shopify_product_id": "gid://shopify/Product/10181818548530",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51144726118706",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "2067d2b6-9089-4037-9bce-0c35f63a8d82",
+      "sku": "008418044",
+      "product_name": "Monaco Sengegavl sort velour - 180x120x8 cm",
+      "shopify_product_id": "gid://shopify/Product/9941791932722",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50332886630706",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "04e764d3-e1e9-463c-bfb2-53b37c0ae579",
+      "sku": "MP-0091-009",
+      "product_name": "Transportveske hund og katt, S–L, flere farger",
+      "shopify_product_id": "gid://shopify/Product/10347616370994",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51731032146226",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c9d79a2a-4fc1-454c-a652-317955334cfc",
+      "sku": "ST606831",
+      "product_name": "Våt- og tørrstøvsuger 30L 1600W med strømuttak – ST606831",
+      "shopify_product_id": "gid://shopify/Product/10303599968562",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51661123518770",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f53268a6-4557-45f1-a1cc-1af688bcaccb",
+      "sku": "7363977",
+      "product_name": "Dekor Hjerte i Velur 17 cm - Rød Hjertepynt med Silkebånd",
+      "shopify_product_id": "gid://shopify/Product/9840275521842",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49999934193970",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9e3549f3-7bbf-453d-befa-1986cf28a372",
+      "sku": "JUL-ENGEL-31CM-LED",
+      "product_name": "Stor Juleengel med LED Lys 31 cm - Hvit Dekorativ Engel",
+      "shopify_product_id": "gid://shopify/Product/9665214677298",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49410052194610",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9d2f4fc1-9d22-4508-8af9-688d798fd13c",
+      "sku": "Trehjerte",
+      "product_name": "Juletrepynt Trehjerte 12cm - Koselig Juledekorasjon",
+      "shopify_product_id": "gid://shopify/Product/9986095448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50456798003506",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "0b908b87-3fc3-4e44-8fea-05ebef70ff1e",
+      "sku": "MALDITA-BOHO-02",
+      "product_name": "Boho omslagsjakke dame – lett sommerjakke med flerfarget mønster (Maldita)",
+      "shopify_product_id": "gid://shopify/Product/10005427945778",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50513631445298",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9a8203c8-bc3f-4b18-92ae-3e0cf79f04e8",
+      "sku": "nissedør",
+      "product_name": "Koselig Nissedør med LED-lys - Magisk Juledekorasjon 20x30cm",
+      "shopify_product_id": "gid://shopify/Product/9665215988018",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49410054095154",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f2f865f4-3ba2-4a50-afdb-78c7a5092b9e",
+      "sku": "grønn 009",
+      "product_name": "Deluxe homeart LED kubbelys mørk grønn 5x15 cm",
+      "shopify_product_id": "gid://shopify/Product/9665482588466",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49410456256818",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7eeec069-37d8-4e3a-abbc-91442d73cd98",
+      "sku": "Brille001",
+      "product_name": "VicPro Multisport Solbriller - 3 Glass UV400 | Løping Sykkel Ski",
+      "shopify_product_id": "gid://shopify/Product/9751652598066",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49707262279986",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f313e906-be1a-4eef-8b03-dad3758a5904",
+      "sku": "63104",
+      "product_name": "Badmintonsett 4 Spillere med Nett - Sunflex MATCHMAKER",
+      "shopify_product_id": "gid://shopify/Product/9752092737842",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49709379649842",
+      "active": true,
+      "dependencies": [
+        "physical_stock"
+      ],
+      "stock": [
+        {
+          "quantity": 4,
+          "location": "HL01-01-01-A1"
+        }
+      ]
+    },
+    {
+      "id": "3a540970-7aad-4e08-96b7-51f4808a608e",
+      "sku": "mat006",
+      "product_name": "Kunstig Salami Dekor 17cm - Naturtro Pølse Dekorasjon (2 stk)",
+      "shopify_product_id": "gid://shopify/Product/9859017212210",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50293838283058",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "0c8a04db-99ee-47e2-a440-8afa5d2f4b07",
+      "sku": "63455",
+      "product_name": "Yato Hullsag 64 mm YT-3330 - Profesjonell Hullsag med 5/8' Gjenge",
+      "shopify_product_id": "gid://shopify/Product/9753431048498",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49715916046642",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "eea52664-fb6d-4908-ae3f-4abb814280b0",
+      "sku": "2890-40",
+      "product_name": "Kunstig rose 75 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224094413106",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633688370",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f8bf1464-3aa4-4581-b2de-f1073224bc4c",
+      "sku": "DYR-MEATY-OST-150ML",
+      "product_name": "Meaty bubbles - såpebobler til hund og katt - Ostesmak",
+      "shopify_product_id": "gid://shopify/Product/10110300422450",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50909581279538",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "1e64ed9a-5600-46d4-b9b4-e1ca5c1b39e2",
+      "sku": "63034",
+      "product_name": "Vorel 24100 Drill og pluggsett 300 deler",
+      "shopify_product_id": "gid://shopify/Product/9753936855346",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49718142206258",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bd71b8bf-b6c8-4d58-bd33-16683c4f8b24",
+      "sku": "DELL-KB216-NO",
+      "product_name": "Dell KB216 Tastatur - USB",
+      "shopify_product_id": "gid://shopify/Product/9753973391666",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49718395928882",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "07a0755e-a932-497d-b518-ad38e647f31b",
+      "sku": "JULESTJERNE-STOFF-93",
+      "product_name": "Julestjerne i stoff 93x20 cm -Tradisjonell julepynt",
+      "shopify_product_id": "gid://shopify/Product/10024296186162",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50578631524658",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e1ad4c27-c088-49ea-afca-69c6f6c62bc7",
+      "sku": "MIL-FRIDE-DRESS-ROSA-XS-S-007",
+      "product_name": "Milliie - Fride Dress – Romantisk blomsterkjole med volanger i rosa",
+      "shopify_product_id": "gid://shopify/Product/10285612826930",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624932639026",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "52caedae-8959-407e-b596-a6d153ebb2f8",
+      "sku": "01139",
+      "product_name": "Klipy tallerken tørker",
+      "shopify_product_id": "gid://shopify/Product/9533716463922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49066595057970",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "de8df0ac-bd89-41b5-9b3a-9d6b438cc41d",
+      "sku": "PHAL-SKRU-26",
+      "product_name": "Phaling skrutrekkersett 26 deler - ekstra slitesterk",
+      "shopify_product_id": "gid://shopify/Product/10171044069682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51100821455154",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "386ee7f8-e727-4ac3-80fe-c03614b48fee",
+      "sku": "VK-HAGEPORT-122-134-BLK",
+      "product_name": "Hageport Smijern 122x134 cm – Rustbestandig",
+      "shopify_product_id": "gid://shopify/Product/10187254038834",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51162570424626",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b0364e56-cf39-4e6e-aa8f-acea903c982d",
+      "sku": "DEKOR-TOMAT-BIFF-3STK",
+      "product_name": "Naturtro dekorative bifftomater  - Dekorasjon (3 stk)",
+      "shopify_product_id": "gid://shopify/Product/9859015344434",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50056794177842",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bfd7fb8f-75cb-45a5-a364-f154e9b631f1",
+      "sku": "KEUNE-ABT-500ML",
+      "product_name": "Keune After blonde treatment 500ml - Balsam med Bond Fuser",
+      "shopify_product_id": "gid://shopify/Product/10092102385970",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50858742776114",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c9d4ae70-67b0-47d8-b891-391487cfe83f",
+      "sku": "6283-20-1",
+      "product_name": "Kunstig Pensé i Potte 23 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224088908082",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628052274",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f3b3d0f2-f19d-486e-b2d0-8e3f6cc94c78",
+      "sku": "WH-GODBIT-PREM",
+      "product_name": "Walter Hart Godbit krukke - Premium",
+      "shopify_product_id": "gid://shopify/Product/10110623973682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50910596759858",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "25e15855-b3ef-484b-b089-5aba12f9afa6",
+      "sku": "INV-AVI-MOP-W-36",
+      "product_name": "Invicta Aviator Dameklokke  Mother of Pearl - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10240324108594",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51474219696434",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e3b91196-3d88-4049-b24f-3d6493b2a01a",
+      "sku": "JULEKULE-TURKIS-8CM-6PK",
+      "product_name": "Julekuler Turkis 8 cm - Gaveeske 12 pk",
+      "shopify_product_id": "gid://shopify/Product/10024297988402",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50578645451058",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "59009082-64cf-466a-ba8b-9a5f81433159",
+      "sku": "Isa 015",
+      "product_name": "Isa Bee Ullue 100% Ull grafitgrå - Premium Vinterlue",
+      "shopify_product_id": "gid://shopify/Product/9590731211058",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49230189035826",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bac49380-42c3-43d3-9dea-870d2d479a78",
+      "sku": "7062-1",
+      "product_name": "Kunstig Rosebukett 25 cm kunstig",
+      "shopify_product_id": "gid://shopify/Product/10224080060722",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384614650162",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "0c3ebefe-ec64-412e-991f-84bc9fdec4d2",
+      "sku": "9603-71",
+      "product_name": "Kunstig Snittrose 50 cm beige",
+      "shopify_product_id": "gid://shopify/Product/10224093593906",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632869170",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c04fa8c1-0f45-42cc-82c9-2b32f0c33d05",
+      "sku": "9603-51",
+      "product_name": "Kunstig Snittrose gul 50 cm",
+      "shopify_product_id": "gid://shopify/Product/10224093692210",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632967474",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "cdae69f6-3bd7-49ef-af24-9f3f0d50e394",
+      "sku": "2620-45",
+      "product_name": "Tulipan Miks Lilla - 3 stk, 36 cm",
+      "shopify_product_id": "gid://shopify/Product/10224095002930",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384634409266",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "98c94a9c-44ad-4907-ba32-b5287f433ed2",
+      "sku": "KAMPUNI-PEARL-OX-L",
+      "product_name": "Kampuni Perle Hundehalsbånd - Håndlaget Okseskinn fra Kenya - 61 x 2 cm",
+      "shopify_product_id": "gid://shopify/Product/10114073952562",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50921989505330",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "66c65946-4dbc-4c6a-a2c2-82fe6aa3039e",
+      "sku": "9603-80",
+      "product_name": "Kunstig Snittrose 50 cm rød",
+      "shopify_product_id": "gid://shopify/Product/10224094019890",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633295154",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e5b64e83-9a95-41f1-9c8c-e88fdb6c8b85",
+      "sku": "63155",
+      "product_name": "Forkle med Grillsett 8 deler - Alt Grillmesteren Trenger | Komplett Grillverktøy",
+      "shopify_product_id": "gid://shopify/Product/9751319544114",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49706258989362",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "35f5f86b-5891-4325-83e0-c6e21d3aacea",
+      "sku": "7012-070",
+      "product_name": "Sitrustre i potte 70 cm",
+      "shopify_product_id": "gid://shopify/Product/10224095887666",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384635326770",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "162d9a34-e542-4076-9c84-6e002cf80c9d",
+      "sku": "VK-HAGEBOD-ALU-SKYV",
+      "product_name": "Hagebod i aluminium -Redskapbod med dobbel  skyvedør - 5,3 kvm",
+      "shopify_product_id": "gid://shopify/Product/10181519737138",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51143704772914",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "5dea9225-e157-41ee-8463-aba3db7a7f4b",
+      "sku": "MIL-SCARLETT-DRESS-SVART-XS-S-012",
+      "product_name": "Millie - Scarlett Dress – Elegant svart kjole med fjærdetaljer",
+      "shopify_product_id": "gid://shopify/Product/10285613351218",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624932802866",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "170eaac7-3b20-4094-ae05-ebb63d727e2c",
+      "sku": "BOHO-JAKKE-10",
+      "product_name": "Boho omslagsjakke dame – fargerik sommerjakke i bohemstil (Maldita)",
+      "shopify_product_id": "gid://shopify/Product/10005431451954",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50513655955762",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "58b54482-b5e0-43de-88de-8037397316f7",
+      "sku": "INGARDEN-ELISE-GREY-SG",
+      "product_name": "InGarden Elise Grey Loungesett - Aluminium og tauverk",
+      "shopify_product_id": "gid://shopify/Product/10198161097010",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51218610061618",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d73444a7-4ea6-4f38-972e-82ac30dac985",
+      "sku": "jul001",
+      "product_name": "Juledekorasjon med Lys - 2 Barn på Pakker",
+      "shopify_product_id": "gid://shopify/Product/9700114661682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49532859679026",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7ddae1e3-a26e-4810-8d07-21dcf31869c2",
+      "sku": "4315-01",
+      "product_name": "Fat av metall, 30 cm diameter, røff finish",
+      "shopify_product_id": "gid://shopify/Product/10224083665202",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384620024114",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d7ab078c-6717-418f-996e-5577354401dd",
+      "sku": "Juletre-2",
+      "product_name": "Kunstig Juletre Premium 210 cm - Fyldig med Fot",
+      "shopify_product_id": "gid://shopify/Product/9843466535218",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50009924370738",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "58afdf49-f1a9-43e4-8d9f-955df39f5089",
+      "sku": "2889-51",
+      "product_name": "Kunstig rose 50 cm gul",
+      "shopify_product_id": "gid://shopify/Product/10224093724978",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633000242",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8924ac03-a082-48e6-93c6-40520aa9ac90",
+      "sku": "KEUNE-SCALP-BRUSH-COCO",
+      "product_name": "Keune Scalp Brush",
+      "shopify_product_id": "gid://shopify/Product/10084743577906",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50807369236786",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "4857d75e-9ab7-4c47-a6bd-3933d6eff171",
+      "sku": "YATO-SETT-63064",
+      "product_name": "Yato Verktøysett 23 Deler - Komplett Sett med Bor, Saks og Tester",
+      "shopify_product_id": "gid://shopify/Product/9755608187186",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49723496595762",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7d9dc99e-8ae9-4500-90a5-74a8c3156221",
+      "sku": "2889-11",
+      "product_name": "Kunstig Rose 50 cm Hvitrosa",
+      "shopify_product_id": "gid://shopify/Product/10224093790514",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633065778",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "330cdd32-3563-4e6e-8bd5-4d425e75cbeb",
+      "sku": "63439",
+      "product_name": "Yato Kombinasjonsnøkkel med Skralle 13mm - Tolvkantet Ringnøkkel 180mm | CRV 6140 Stål",
+      "shopify_product_id": "gid://shopify/Product/9755744141618",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49724163621170",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "60d4a6f2-e439-4865-a7d1-28c4ad9d2c2a",
+      "sku": "9603-10",
+      "product_name": "Kunstig Snittrose 50 cm hvit",
+      "shopify_product_id": "gid://shopify/Product/10224093757746",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633033010",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "15ed1298-85a9-43ff-9abc-510dbc984077",
+      "sku": "MIL-NOELLE-SETT-SVART-XS-S-059",
+      "product_name": "Milliie - Noelle Sett - Genser og skjørt - Svart eller burgunder",
+      "shopify_product_id": "gid://shopify/Product/10285615448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934342962",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "6358adef-1465-41e6-bfb0-09c4bae73bc3",
+      "sku": "63458",
+      "product_name": "Yato Pipenøkkel Innsats 17mm - Rørleggerverktøy | Profesjonell Pipenøkkel",
+      "shopify_product_id": "gid://shopify/Product/9756014444850",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49725343269170",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7da36133-3616-499e-8d05-4da458f2a25e",
+      "sku": "POMELO-LAPTOP-STAND-01",
+      "product_name": "Pomelo Justerbar Laptop Holder - Ergonomisk Bordstativ for Laptop & Nettbrett",
+      "shopify_product_id": "gid://shopify/Product/10132105265458",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50977191821618",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "26b0bc0b-1d9b-45d1-b6af-442673158552",
+      "sku": "sol005",
+      "product_name": "VK Solbriller -Runde Pilotbriller - Klassiske Solbriller |",
+      "shopify_product_id": "gid://shopify/Product/9764045848882",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49754819002674",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "04d57f43-b015-42d4-a5ff-084c10d49ae5",
+      "sku": "2620-50",
+      "product_name": "Tulipan Miks 3 stk gul 36 cm",
+      "shopify_product_id": "gid://shopify/Product/10224094970162",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384634376498",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "5ea4f70b-82ca-42df-9ab1-d27bec4da8f0",
+      "sku": "2928-90-1",
+      "product_name": "Kunstig Yucca kunstig plante i potte 58 cm",
+      "shopify_product_id": "gid://shopify/Product/10224091693362",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630968626",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f6ad7364-c4d8-4d5c-a20d-4eef6bae27b4",
+      "sku": "63457",
+      "product_name": "Yato Pipenøkkel Innsats 15mm - verktøy 3/8\" | Krom-Vanadium Stål",
+      "shopify_product_id": "gid://shopify/Product/9755750629682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49724192850226",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d7d0f494-5943-4c00-b620-60b3b69971c8",
+      "sku": "7363979",
+      "product_name": "Dekor Hjerte i Velur med Oppheng - Isopor med Veluroverflate  29 cm | Romantisk Pynt",
+      "shopify_product_id": "gid://shopify/Product/9840278077746",
+      "shopify_variant_id": "gid://shopify/ProductVariant/49999941173554",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "11faf5ec-257c-4093-98db-5920912fae08",
+      "sku": "2890-23",
+      "product_name": "Kunstig Rose 75 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094478642",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633753906",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "51f20676-e5e2-4165-8b34-3f298b62a057",
+      "sku": "KOMP-50L-OF-RD-1500W",
+      "product_name": "50 liter oljefri, reimdrevet kompressor – 1500 W / 2 HK",
+      "shopify_product_id": "gid://shopify/Product/10284183781682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51618692006194",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7e97b3d1-7e2b-4042-b9cc-f94686376ce2",
+      "sku": "IG-SEV-HAGESTOL-GRA",
+      "product_name": "InGarden Sevilla Hagestol - Svingbar",
+      "shopify_product_id": "gid://shopify/Product/10176093585714",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51121965957426",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "52087f45-9a22-4468-b8f8-5f7136c653b1",
+      "sku": "2620-10",
+      "product_name": "Tulipan Miks assortert 3 stk, 36 cm",
+      "shopify_product_id": "gid://shopify/Product/10224095035698",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384634442034",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "191f2abc-530e-4963-bd1d-573f2d1b3338",
+      "sku": "ENGEL-KULE-30CM",
+      "product_name": "Stor Engel Sittende på Kule 30 cm - Julepynt med Gulldetaljer",
+      "shopify_product_id": "gid://shopify/Product/10043408154930",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50633986867506",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "a8007250-bf27-40c3-841f-0a7172ac521b",
+      "sku": "YATO-KNIFE-16PC",
+      "product_name": "Yato Presisjons knivsett 16 deler- utskiftbare blader",
+      "shopify_product_id": "gid://shopify/Product/10185016607026",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51156371079474",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f6e12f8c-0d2a-4226-9ce9-83f07fedef72",
+      "sku": "MIL-INGRID-JACKET-HVIT-XS-S-048",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624933982514",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "ceddf26c-e756-43bf-b9f1-4d59297e8e37",
+      "sku": "MIL-INGRID-JACKET-HVIT-M-049",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934015282",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f140b9cb-d705-4368-b20f-5861d3780126",
+      "sku": "1513-11",
+      "product_name": "Pinselilje kunstig 35 cm",
+      "shopify_product_id": "gid://shopify/Product/10224093462834",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632738098",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "6de030ab-3878-4d9d-8aa6-c62a6f803ce6",
+      "sku": "AM-DRYBAG-90L-BLA",
+      "product_name": "Aqua Marina Dry-ryggsekk 90L - blå - Vanntett ryggsekk",
+      "shopify_product_id": "gid://shopify/Product/10187236704562",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51162534084914",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "639f3055-dcb6-49b8-bbcb-04744d909056",
+      "sku": "Reinsdyr gull45",
+      "product_name": "Reinsdyr Dekorasjon i Gull  - Elegant Julepynt i Metall 45x45 cm",
+      "shopify_product_id": "gid://shopify/Product/9843482100018",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50009985122610",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "27038568-36dd-4dd1-bbfb-e58d43a48e45",
+      "sku": "mat005",
+      "product_name": "Kunstig Salami Dekor 17cm - Naturtro Pølse Dekorasjon (2 stk)",
+      "shopify_product_id": "gid://shopify/Product/9859017212210",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50293838250290",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "073feec8-9a1c-47e3-af35-8adf9efaa78a",
+      "sku": "1877-10-1",
+      "product_name": "Kunstig Phalaenopsis Orkidé 65cm",
+      "shopify_product_id": "gid://shopify/Product/10224089366834",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628543794",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bbf15898-818b-4f63-9c66-526a8581709e",
+      "sku": "MP-0011-001",
+      "product_name": "Hundemadrass 85 × 55 cm, svart",
+      "shopify_product_id": "gid://shopify/Product/10346891706674",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730972541234",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e23a50d2-ec22-498d-ac52-52b77cc2db02",
+      "sku": "4315-02",
+      "product_name": "Metallfat 40 cm - dekorativ serveringsfat",
+      "shopify_product_id": "gid://shopify/Product/10224083599666",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384619958578",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "88b5edea-dc79-490c-b3ba-c87934cb57dc",
+      "sku": "6366-90",
+      "product_name": "Kunstig Eføy 70 cm kunstig uten potte",
+      "shopify_product_id": "gid://shopify/Product/10224090579250",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384629756210",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "422e2cd1-9ea5-4f4e-b215-0fe971febc13",
+      "sku": "9603-32",
+      "product_name": "Kunstig Snittrose 50 cm oransje",
+      "shopify_product_id": "gid://shopify/Product/10224093987122",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633262386",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8c076096-da24-40ff-847b-16e9742935fe",
+      "sku": "2889-24",
+      "product_name": "Kunstig Rose 50 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094085426",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633360690",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "33ffd658-f529-4701-8be0-0adf12f641af",
+      "sku": "MPW-0007",
+      "product_name": "Invicta Montres Prestige X  Dameklokke - 33.5mm, Gold - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10240984678706",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51477279408434",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "01f6542e-7c96-48da-b3fb-4f28fa326343",
+      "sku": "2573-90",
+      "product_name": "Kunstig Muehlenbeckia ball kunstig plante 30 cm",
+      "shopify_product_id": "gid://shopify/Product/10224091169074",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630444338",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "60fa3ad9-ba11-472b-a47a-5709058aad17",
+      "sku": "VK-TEINE-KRAFTIG-001",
+      "product_name": "Oppsamlingsteine - sanketeine - til hummer, krabbe etc - Kraftig modell",
+      "shopify_product_id": "gid://shopify/Product/10268807070002",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51564512182578",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "982a6a40-8cc6-493a-8e5e-e83c86047741",
+      "sku": "MALDITA-BOHO-01",
+      "product_name": "Boho omslagsjakke dame – lett sommer- og festivaljakke med artig mønster (Maldita)",
+      "shopify_product_id": "gid://shopify/Product/10005427126578",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50513626300722",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b18e17b5-904c-4f3e-8b05-772c0042f914",
+      "sku": "Bohu02",
+      "product_name": "Boho omslagsjakke dame – fargerik festival og sommerjakke i bohemstil (Maldita)",
+      "shopify_product_id": "gid://shopify/Product/10005432303922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50513660444978",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d76ae641-3280-4262-b45c-7108429925e1",
+      "sku": "INGARDEN-UTEPEIS-001",
+      "product_name": "InGarden Utepeis - solid utepeis til hus og hytte",
+      "shopify_product_id": "gid://shopify/Product/10173359915314",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51110589333810",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "feb7cb7c-503d-4667-a01b-a972ff828f26",
+      "sku": "VK-VKANON-30KW-230V",
+      "product_name": "Diesel-/parafin varmekanon 30 kW – 230 V",
+      "shopify_product_id": "gid://shopify/Product/10293601370418",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51646284628274",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f723c946-5028-4dd4-b605-d0d2134bcae3",
+      "sku": "ACK-1080P-WP10",
+      "product_name": "1080P HD Actionkamera med vanntett kamerahus – 10 meter",
+      "shopify_product_id": "gid://shopify/Product/10336445169970",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51714100068658",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b27477ae-0bdb-42fd-b71b-3590fdcb0e86",
+      "sku": "BF-1000-SS",
+      "product_name": "Bladefish 1000 undervannsscooter",
+      "shopify_product_id": "gid://shopify/Product/10187270717746",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51162640056626",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c3fa3712-e6e1-4d75-8c06-3be3676f66cd",
+      "sku": "2889-80",
+      "product_name": "Kunstig Rose 50 cm Rød - 1 stk",
+      "shopify_product_id": "gid://shopify/Product/10224094052658",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633327922",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "20af1d85-620f-4f48-922e-e43b21f2532c",
+      "sku": "MIL-JENNIE-MAXI-DRESS-ROSA-XS-S-041",
+      "product_name": "Milliie - Jennie Maxi Dress – Romantisk maxikjole med blomsterprint",
+      "shopify_product_id": "gid://shopify/Product/10285614596402",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624933753138",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e6f1fbfc-b697-4242-9206-2506bb99fb47",
+      "sku": "5995-90",
+      "product_name": "Kunstig Basilikum kunstig plante 38 cm",
+      "shopify_product_id": "gid://shopify/Product/10224080814386",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384615469362",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "db344ac4-3a3c-4719-90fa-3170c3928350",
+      "sku": "JULE-PAERE-GULL-10CM-3PK",
+      "product_name": "Julekuler pæreformet med gulldekorasjon 10 cm - 3pk",
+      "shopify_product_id": "gid://shopify/Product/10024294056242",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50578619466034",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f9482ad9-ef63-461d-8807-0d663cba2dfb",
+      "sku": "MEL-SKOTORK-350W",
+      "product_name": "Melissa skotørker 350 W",
+      "shopify_product_id": "gid://shopify/Product/10173685432626",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51111773503794",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9ca4df4f-86cf-48bf-ba2a-782b800370b7",
+      "sku": "1988-30",
+      "product_name": "Tulipan kunstig 37 cm kunstig blomst",
+      "shopify_product_id": "gid://shopify/Product/10224094675250",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633950514",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "75e86073-8b74-42c3-b18a-6df8018f925a",
+      "sku": "9118-70",
+      "product_name": "Kvist med kongler 60 cm",
+      "shopify_product_id": "gid://shopify/Product/10224092971314",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632246578",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "84ad7bff-52ac-4b9f-8190-d6c16b90ef5f",
+      "sku": "JULETRE-GRAN-190",
+      "product_name": "Kunstig juletre Gran - 210 cm - med fot",
+      "shopify_product_id": "gid://shopify/Product/10047114641714",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50647675142450",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "eee12720-d834-4f1e-93e2-18ee68162c3a",
+      "sku": "BOHO-JAKKE-13",
+      "product_name": "Boho omslagsjakke dame – lett jakke med unikt mønster i bohemstil (Maldita)",
+      "shopify_product_id": "gid://shopify/Product/10005432041778",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50513659461938",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "992bb6ff-4419-4868-95e0-8b7cb65ccc58",
+      "sku": "KEUNE-BLONDE-MASK-200",
+      "product_name": "Keune Care Blonde Savior Mask 200 ml",
+      "shopify_product_id": "gid://shopify/Product/10087799259442",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50820265083186",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8b782b92-8a94-4058-97f1-8e22f4cbe39d",
+      "sku": "REIN-GULL-55",
+      "product_name": "Reinsdyr Dekorasjon i Gull  - Elegant Julepynt i Metall 55 x55cm",
+      "shopify_product_id": "gid://shopify/Product/10053725323570",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50670471217458",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "2dad851d-5ccb-44af-ab2e-eb840475faae",
+      "sku": "KEUNE-HEAD-LOCK-200ML",
+      "product_name": "Keune Style Head Lock 200 ml",
+      "shopify_product_id": "gid://shopify/Product/10085209342258",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50808539578674",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "1bf4d068-75a9-428d-b50c-a3915435ad36",
+      "sku": "5754-10-1",
+      "product_name": "Kunstig Phalaenopsis Orkidé 60cm Hvit",
+      "shopify_product_id": "gid://shopify/Product/10224089235762",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628412722",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c1d3f979-0426-4e79-8015-5feb01601690",
+      "sku": "2911-10-1",
+      "product_name": "Kunstig Phalaenopsis Orkidé 45cm Hvit",
+      "shopify_product_id": "gid://shopify/Product/10224089399602",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628576562",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e0aa8af5-115a-4daf-870a-c17a19fc3ae5",
+      "sku": "MIL-INGRID-JACKET-SVART-XS-S-053",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934146354",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e63e7bcc-1ca5-4712-937c-a82957d6460c",
+      "sku": "MIL-NOELLE-SETT-BURGUNDER-M-063",
+      "product_name": "Milliie - Noelle Sett - Genser og skjørt - Svart eller burgunder",
+      "shopify_product_id": "gid://shopify/Product/10285615448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934474034",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9c7be793-9e5b-4eee-b79d-b6cda0641129",
+      "sku": "KEUNE-TINTA-SHAMPOO-300",
+      "product_name": "Keune Care Tinta Color Shampoo 300 ml - Fargebevarende",
+      "shopify_product_id": "gid://shopify/Product/10087820624178",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50820311286066",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e1c8efd9-fdda-4962-91e1-c0aa4cb67430",
+      "sku": "KAMPUNI-PERLE-61-38",
+      "product_name": "Kampuni Perle Hundehalsbånd - Håndlaget Okseskinn fra Kenya 61 x 3,8 cm",
+      "shopify_product_id": "gid://shopify/Product/10114074738994",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50921994780978",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "a97a6953-ed7e-402f-9594-b88bd1bdcaa9",
+      "sku": "SKAGEN-SOFA-GRP-5P",
+      "product_name": "InGarden Skagen Sofagruppe i kraftig rotting - Ekslusiv hagegruppe",
+      "shopify_product_id": "gid://shopify/Product/10158989705522",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51065817432370",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "4f8450e6-88e7-41de-8cf7-e952d98739cb",
+      "sku": "MIL-ALEAH-JACKET-ROD-XS-S-042",
+      "product_name": "Millie - Aleah Jacket – Sofistikert damjakke med gulldetaljer",
+      "shopify_product_id": "gid://shopify/Product/10285614760242",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624933785906",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d8bfc54b-55ac-48bb-a6f7-0e9ad3e6d4b0",
+      "sku": "MP-0053-001",
+      "product_name": "Keramisk matskål med trefot, 200 ml – svart",
+      "shopify_product_id": "gid://shopify/Product/10346896752946",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730983616818",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c50bbd60-d884-4566-8f06-6a734f81d6ed",
+      "sku": "6644-10-1",
+      "product_name": "Kunstig Lyng 28cm Hvit",
+      "shopify_product_id": "gid://shopify/Product/10224088711474",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384627855666",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "533298b2-fde6-4605-9191-0f4c3a2247e3",
+      "sku": "IG-LISBOA-SP6",
+      "product_name": "InGarden Lisboa Spisegruppe  6 pers - Eukalyptus & Rotting",
+      "shopify_product_id": "gid://shopify/Product/10174192386354",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51113842934066",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "88aa4100-6758-4afd-a2a3-6a0298dcbd75",
+      "sku": "5843-10",
+      "product_name": "Lysmansjett med 3 cm indre ring",
+      "shopify_product_id": "gid://shopify/Product/10224086483250",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384625627442",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f7fd981a-7ea8-45ab-8191-66e98d3f0c0b",
+      "sku": "SL-JUKEBOX-XT-BT",
+      "product_name": "Soundlogic XT Bluetooth  Retro Jukebox - Innebygd lys",
+      "shopify_product_id": "gid://shopify/Product/10194143838514",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51193902825778",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "517c202d-2a8f-4c51-8d21-10f726cbaa04",
+      "sku": "VK-AIRHOCKEY-5STK",
+      "product_name": "Airhockey B-vare - Full size",
+      "shopify_product_id": "gid://shopify/Product/10211409101106",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51303458767154",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c1784efb-f2c3-444c-a1b2-8df7d530b8ba",
+      "sku": "3060-95-1",
+      "product_name": "Kunstig Prikkeblad kunstig plante 55 cm i potte",
+      "shopify_product_id": "gid://shopify/Product/10224091365682",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630640946",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "3e3ced28-7b13-4672-93df-183f39b250d8",
+      "sku": "5754-41-1",
+      "product_name": "Kunstig Phalaenopsis kunstig orkidé 60 cm lys lilla",
+      "shopify_product_id": "gid://shopify/Product/10224089301298",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628478258",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e316494a-b2ba-4f80-ba96-d22deb11ae20",
+      "sku": "YAS-DOTANA-BAG-OS",
+      "product_name": "Y.A.S YASDOTANA BAG - Skulderveske",
+      "shopify_product_id": "gid://shopify/Product/10243601301810",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51486925029682",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "79ac7dae-2c5a-4ac4-8aff-dee346a65475",
+      "sku": "9603-20",
+      "product_name": "Snittrose 50 cm rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094150962",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633426226",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "fe3056aa-3dc0-48de-bcfc-5302966c0f73",
+      "sku": "9603-40",
+      "product_name": "Kunstig Snittrose 50 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224093921586",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633196850",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8ada28ca-4aab-4780-ac75-6636afc20158",
+      "sku": "MIL-NOELLE-SETT-SVART-L-061",
+      "product_name": "Milliie - Noelle Sett - Genser og skjørt - Svart eller burgunder",
+      "shopify_product_id": "gid://shopify/Product/10285615448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934408498",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "a7b4ce48-818a-4d2e-937e-3599748508fe",
+      "sku": "MIL-NOELLE-SETT-BURGUNDER-XS-S-062",
+      "product_name": "Milliie - Noelle Sett - Genser og skjørt - Svart eller burgunder",
+      "shopify_product_id": "gid://shopify/Product/10285615448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934441266",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7e210dd3-344c-4b76-aeb1-e4f1b1cfaf56",
+      "sku": "MIL-INGRID-JACKET-HVIT-L-050",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934048050",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9c41a3fe-8d76-4f33-bc13-ebef7717d5e0",
+      "sku": "JULEKULE-HJERTE-SORT-10CM",
+      "product_name": "Julekule Hjerte i Sort - 10 cm",
+      "shopify_product_id": "gid://shopify/Product/10045066215730",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50640083747122",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "ad899544-fe39-4b73-996c-ad68476ec688",
+      "sku": "IG-HAGE-4P-TEAK",
+      "product_name": "InGarden Nora Spisegruppe 4 pers - Teak",
+      "shopify_product_id": "gid://shopify/Product/10174804820274",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51115778441522",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c8de0ab5-6205-41ad-9e3b-d471899692ea",
+      "sku": "INGARDEN-VENEZIA-5PCS-BLK",
+      "product_name": "InGarden Venezia spisegruppe - 4 personer",
+      "shopify_product_id": "gid://shopify/Product/10180336615730",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51137442382130",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9bff4ae7-2bda-4aaa-b80e-cc9e831c13d0",
+      "sku": "9603-21",
+      "product_name": "Snittrose 50 cm rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094216498",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633491762",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f3262ada-8991-404f-94ab-12b5089dc7d5",
+      "sku": "SE-WATCH-WHT-001",
+      "product_name": "Sofia Everly Dameklokke Hvit i gaveeske- Elegant Norsk Design",
+      "shopify_product_id": "gid://shopify/Product/10076096987442",
+      "shopify_variant_id": "gid://shopify/ProductVariant/50771397116210",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "547f2316-0007-4580-9590-34543d98dd81",
+      "sku": "2911-51-1",
+      "product_name": "Kunstig Phalaenopsis gul kunstig orkidé 45 cm",
+      "shopify_product_id": "gid://shopify/Product/10224089071922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628216114",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "0b61e197-d066-4386-9de6-cc3df5cc35a4",
+      "sku": "1513-10",
+      "product_name": "Pinselilje kunstig 35 cm",
+      "shopify_product_id": "gid://shopify/Product/10224093495602",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632770866",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "ed35477e-e96a-4498-ab5e-803a0468d9f1",
+      "sku": "2890-80",
+      "product_name": "Kunstig Rød Rose 75 cm",
+      "shopify_product_id": "gid://shopify/Product/10224094445874",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633721138",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "fd6ea64e-2345-4597-a358-eedb1a414707",
+      "sku": "1508-99-1",
+      "product_name": "Kunstig Assorterte Kaktus i Potte 5-11 cm - 24 stk",
+      "shopify_product_id": "gid://shopify/Product/10224084484402",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384620843314",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bb48c03e-d056-4dfd-aea1-9f3c19ee9f30",
+      "sku": "MIL-NOELLE-SETT-SVART-M-060",
+      "product_name": "Milliie - Noelle Sett - Genser og skjørt - Svart eller burgunder",
+      "shopify_product_id": "gid://shopify/Product/10285615448370",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934375730",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "063ad209-e0fd-4ca4-b455-651a67acb379",
+      "sku": "1988-21",
+      "product_name": "Tulipan kunstig 37 cm",
+      "shopify_product_id": "gid://shopify/Product/10224094642482",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633917746",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "fa24c1c3-e3f1-41ec-9a66-83c72eb167c9",
+      "sku": "5954-80",
+      "product_name": "Kunstig Pose med 6 kunstige jordbær, 4,5-5 cm",
+      "shopify_product_id": "gid://shopify/Product/10224082190642",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384618516786",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "114db6ed-5dfd-4866-969b-2f805c28343f",
+      "sku": "6869-99",
+      "product_name": "Kunstig Assorterte småkaker 5 cm",
+      "shopify_product_id": "gid://shopify/Product/10224078913842",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384613470514",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "28b1b397-ba4c-4ef8-8d1e-6b06e0c0aa9a",
+      "sku": "3481-99",
+      "product_name": "Kunstig Minimuffins 6 stk med topping 4 cm",
+      "shopify_product_id": "gid://shopify/Product/10224079208754",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384613765426",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "89cf9e73-3e07-4249-b6b1-00ae37c841ca",
+      "sku": "7119-115",
+      "product_name": "Buxbom kunstig plante 115 cm",
+      "shopify_product_id": "gid://shopify/Product/10224095265074",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384634671410",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "6e8322a7-8edf-4f64-bda4-657d211c0e55",
+      "sku": "36076",
+      "product_name": "Invicta Angel Dameklokke – Mother of Pearl, 34mm, Stål/Roségull - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10241912504626",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51481373049138",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8b8f0114-4374-4e8c-a446-2a74393ba21e",
+      "sku": "TOOL-SCRW-42PC",
+      "product_name": "Phaling skrutrekkersett 42 deler - Meget slitesterk",
+      "shopify_product_id": "gid://shopify/Product/10171039187250",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51100815556914",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "abe778ee-5f65-4690-b4e5-b78141917961",
+      "sku": "6382-80-1",
+      "product_name": "Kunstig Petunia rød i potte 30 cm",
+      "shopify_product_id": "gid://shopify/Product/10224089006386",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628150578",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "ab1b72a2-9e2a-419b-a83e-07cb08780fc7",
+      "sku": "2911-45-1",
+      "product_name": "Kunstig Phalaenopsis orkidé kunstig 45 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224089137458",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628314418",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8f962386-33dc-4ab0-8ffb-778f7f427e00",
+      "sku": "5754-20-1",
+      "product_name": "Kunstig Phalaenopsis Potteplante 60 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224089334066",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628511026",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d7b296cf-9342-43ef-9d72-71842729ac26",
+      "sku": "MPW-0014",
+      "product_name": "nvicta Montres Prestige X Dameklokke - 33.5mm, Gold Heart - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10241148256562",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51477859500338",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b40a396d-05a6-415a-858c-41b9135d066e",
+      "sku": "EW-SLC-370-NB",
+      "product_name": "Easy Waste avfallskvern - kraftig matavfallskvern",
+      "shopify_product_id": "gid://shopify/Product/10268775678258",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51564460572978",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "aade33bf-f781-4c20-b563-0a7afea73bfc",
+      "sku": "TEINE-KRABBE-62",
+      "product_name": "Krabbeteine - fritidsfiske - Kraftig teine",
+      "shopify_product_id": "gid://shopify/Product/10268787769650",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51564487016754",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "a0141058-d8e9-412c-86e1-6d316c57693e",
+      "sku": "1852-95-1",
+      "product_name": "Kunstig Bonsai plante 40 cm i potte",
+      "shopify_product_id": "gid://shopify/Product/10224090153266",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384629330226",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "343445de-8f68-4dc7-ba0a-bef3de1d74ab",
+      "sku": "TM-AIRHORN-6P",
+      "product_name": "T- Max Six Pipes Music Air Horn - kompressor horn/signalhorn",
+      "shopify_product_id": "gid://shopify/Product/10216301560114",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51336949137714",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "144d88bd-1de0-48a6-aa8a-63ffd58cc7bc",
+      "sku": "3597-91",
+      "product_name": "Kunstig Gress kunstig 85 cm",
+      "shopify_product_id": "gid://shopify/Product/10224090972466",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630247730",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8f05f3ee-19f5-4114-989a-462a2cbd7d99",
+      "sku": "MP-0029-001",
+      "product_name": "Gulv-til-tak kattestativ 230–280 cm, grå",
+      "shopify_product_id": "gid://shopify/Product/10346894721330",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730974671154",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "7a938dc5-48a8-4192-84af-fc3a2f8d314b",
+      "sku": "VK-SOFA-MARTINSEN-15-BLA",
+      "product_name": "Martinsen 1,5 sofa - Grå\\blå velour fløyel",
+      "shopify_product_id": "gid://shopify/Product/10219213553970",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51348414628146",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "27317388-df6b-4be3-8307-88520aa36186",
+      "sku": "1734-20",
+      "product_name": "Lysmansjett til stearinlys Ø 3 cm",
+      "shopify_product_id": "gid://shopify/Product/10224086417714",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384625561906",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "3ee8a69e-ffc0-4dcf-a9b7-cff84272fdba",
+      "sku": "INGARDEN-STOLSETT-LYS-ROTTING",
+      "product_name": "InGarden Roma stolsett i lys rotting med glassbord",
+      "shopify_product_id": "gid://shopify/Product/10200233050418",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51234034090290",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "dcdf484d-53ec-42ce-9781-9c7f280c486d",
+      "sku": "3090-95-1",
+      "product_name": "Kunstig Prikkeblad kunstig plante 55 cm i potte",
+      "shopify_product_id": "gid://shopify/Product/10224091332914",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630608178",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "1e92a564-c5d3-49bd-882b-a2f2ac092908",
+      "sku": "7396-180",
+      "product_name": "Kunstig lerketre i potte 180 cm med kongler",
+      "shopify_product_id": "gid://shopify/Product/10224095592754",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384635031858",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "4f4c9f48-dcc0-49f8-ab56-214bd411dce7",
+      "sku": "3237-01",
+      "product_name": "Kvist med kongler 70 cm",
+      "shopify_product_id": "gid://shopify/Product/10224093004082",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632279346",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b7989b93-d55b-494a-89f6-106e7273f948",
+      "sku": "2889-25",
+      "product_name": "Kunstig Rose 50 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094118194",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633393458",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "4fb1e697-f409-40ce-b9e8-f5b49fade219",
+      "sku": "9603-25",
+      "product_name": "Snittrose 50 cm rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094249266",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633524530",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8521d263-c7ff-4d11-9b09-47a8c9296833",
+      "sku": "2889-20",
+      "product_name": "Kunstig Rose 50 cm Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094314802",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633590066",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "62f56976-211e-4a74-b72b-3f75507c7842",
+      "sku": "9603-41",
+      "product_name": "Kunstig Snittrose 50 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224093888818",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633164082",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "ec5132d6-2461-49ad-9f96-8f2aebbd932f",
+      "sku": "2889-96",
+      "product_name": "Kunstig rose 50 cm grønn",
+      "shopify_product_id": "gid://shopify/Product/10224093626674",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632901938",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f209968b-f211-4930-96d2-d68372a5c7f8",
+      "sku": "2889-90",
+      "product_name": "Kunstig Rose 50 cm Grønn",
+      "shopify_product_id": "gid://shopify/Product/10224093659442",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384632934706",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "b197062b-e78f-4c2e-8a36-70c1a7ed8afc",
+      "sku": "2889-40",
+      "product_name": "Kunstig rose 50 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224093823282",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633098546",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d432a95c-8d43-49f7-b3c5-c0dc54c901e2",
+      "sku": "2889-48",
+      "product_name": "Kunstig rose 50 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224093856050",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633131314",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bea45860-ed4d-4358-a293-72b19f4101d6",
+      "sku": "9603-30",
+      "product_name": "Kunstig Snittrose 50 cm oransje",
+      "shopify_product_id": "gid://shopify/Product/10224093954354",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633229618",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "4fb2ba28-e4ca-4e1d-8beb-028d7d727918",
+      "sku": "7396-100",
+      "product_name": "Kunstig Lerketre med potte 100 cm",
+      "shopify_product_id": "gid://shopify/Product/10224095559986",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384634999090",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "8c50fb97-d748-4bb5-92bd-34135d159cae",
+      "sku": "2890-43",
+      "product_name": "Kunstig Rose 75 cm Lilla",
+      "shopify_product_id": "gid://shopify/Product/10224094380338",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633655602",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "a3853ba0-e447-4fa8-86c9-f8807e96b9b6",
+      "sku": "INV-ANG-HALO-D-BLK-38",
+      "product_name": "Invicta Angel Halo Dameklokke Svart - 38mm - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10240330793266",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51474245550386",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "e1eec9a5-5747-4df8-b102-5e174100d5fd",
+      "sku": "7336-120",
+      "product_name": "Kunstig Oliventre kunstig 120 cm grønn",
+      "shopify_product_id": "gid://shopify/Product/10224095691058",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384635130162",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "453780e4-50a4-4ee0-b4dd-d096c382a6ee",
+      "sku": "5754-45-1",
+      "product_name": "Kunstig Phalaenopsis kunstig orkidé 60 cm lilla",
+      "shopify_product_id": "gid://shopify/Product/10224089268530",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628445490",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "583d1a73-5de9-41f5-b440-048bb69c2f5b",
+      "sku": "MPW-0125",
+      "product_name": "Invicta Montres Prestige Eclat X Herreklokke - 42mm, Gold - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10240929300786",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51477106295090",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f2afccf7-4cee-4821-8392-39e49757c6dd",
+      "sku": "MPW-0010",
+      "product_name": "Invicta Montres Prestige X Dameklokke - 32mm, Steel, Gold - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10241588166962",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51480398496050",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c840dd87-e6b1-4627-9666-b67d43a56ae6",
+      "sku": "1690-90-1",
+      "product_name": "Kunstig Ormegress i potte 60 cm",
+      "shopify_product_id": "gid://shopify/Product/10224091234610",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384630509874",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d4d9388b-f133-4ab5-8465-c6d784dca30c",
+      "sku": "5996-90",
+      "product_name": "Kunstig Mynte 38 cm",
+      "shopify_product_id": "gid://shopify/Product/10224082026802",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384618352946",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d503de05-e9a3-4f0f-bcfb-8de5de994594",
+      "sku": "8559-80",
+      "product_name": "Kunstig Rambutan 6 cm",
+      "shopify_product_id": "gid://shopify/Product/10224082223410",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384618549554",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "829db665-c0c8-4c68-aa73-4f42740f57ad",
+      "sku": "49711",
+      "product_name": "Invicta Pro Diver Unisex Watch - 43mm, Gold, Steel - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10241613103410",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51480568398130",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "63d9023b-8b1f-4cca-a349-d4d9a61b50f6",
+      "sku": "2911-20-1",
+      "product_name": "Kunstig Phalaenopsis kunstig orkidé 45 cm rosa",
+      "shopify_product_id": "gid://shopify/Product/10224089202994",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384628379954",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "02c690e1-b271-4341-8567-f0df9ffc6928",
+      "sku": "6232",
+      "product_name": "Kunstig Rose 70 cm Real Touch Rosa",
+      "shopify_product_id": "gid://shopify/Product/10224094347570",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384633622834",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9c397a2a-10eb-409f-bc19-c09be53d9657",
+      "sku": "MIL-INGRID-JACKET-BRUN-M-052",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934113586",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "bb33af14-af57-4d0c-bbb9-49f4542c0955",
+      "sku": "MIL-JULIETTE-JACKET-BRUN-XS-S-046",
+      "product_name": "Milliie Juliette Jacket – Klassisk damjakke i hvit og brun",
+      "shopify_product_id": "gid://shopify/Product/10285614924082",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624933916978",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "fc640d52-111f-42c2-a021-225501786fc2",
+      "sku": "MIL-INGRID-JACKET-BRUN-XS-S-051",
+      "product_name": "Milliie - Ingrid Jakke",
+      "shopify_product_id": "gid://shopify/Product/10285615087922",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51624934080818",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "f37854ba-c68e-4b96-9cf5-fa48c7d870b2",
+      "sku": "NM-PT-AS-2",
+      "product_name": "Northmark 2-i-1 Dykkert- og Stiftepistol for trykkluft – PT-AS-2",
+      "shopify_product_id": "gid://shopify/Product/10299595915570",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51654660325682",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c0e10a9b-45bb-4b6c-a2fa-cdad09edccd7",
+      "sku": "UK-TFT7-20M-KOFFERT",
+      "product_name": "Profesjonelt Undervannskamera med 7\" TFT-skjerm og 20 m kabel – komplett i koffert",
+      "shopify_product_id": "gid://shopify/Product/10336305086770",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51713507361074",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "92e0f03d-5c10-4984-9412-1b5c812c74a0",
+      "sku": "MP-0042-001",
+      "product_name": "Aluminium mat- og vannskål med uttakbar rustfri skål, blå – S/M/L",
+      "shopify_product_id": "gid://shopify/Product/10346895802674",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730981945650",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "72635310-0aca-4083-8105-da8019643780",
+      "sku": "MP-0042-002",
+      "product_name": "Aluminium mat- og vannskål med uttakbar rustfri skål, blå – S/M/L",
+      "shopify_product_id": "gid://shopify/Product/10346895802674",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730981978418",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "50b1170d-0004-4916-bb96-3a538c4c1734",
+      "sku": "6324-99",
+      "product_name": "Kunstige druer 3 stk, 14 cm, assorterte farger",
+      "shopify_product_id": "gid://shopify/Product/10224082649394",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51384619008306",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "60731395-1337-4f69-a76a-6888a1a1f56f",
+      "sku": "49823",
+      "product_name": "Invicta Lupah Dameklokke - 29mm, Gold - 2 års garanti",
+      "shopify_product_id": "gid://shopify/Product/10241615167794",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51480574525746",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "25fb5826-9a2b-485c-bab5-63c7f2049b49",
+      "sku": "MP-0091-003",
+      "product_name": "Transportveske hund og katt, S–L, flere farger",
+      "shopify_product_id": "gid://shopify/Product/10347616370994",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51731031949618",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "9606b978-7f10-4ead-b956-c855cc38af6d",
+      "sku": "MP-0091-006",
+      "product_name": "Transportveske hund og katt, S–L, flere farger",
+      "shopify_product_id": "gid://shopify/Product/10347616370994",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51731032047922",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "d47afe32-8ce4-4428-a584-9b551327971b",
+      "sku": "MP-0042-003",
+      "product_name": "Aluminium mat- og vannskål med uttakbar rustfri skål, blå – S/M/L",
+      "shopify_product_id": "gid://shopify/Product/10346895802674",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730982011186",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "c0440d22-5a78-4f93-871c-85ac28dbb900",
+      "sku": "MP-0043-001",
+      "product_name": "Fôrautomat til hund og katt, hvit/grå",
+      "shopify_product_id": "gid://shopify/Product/10346895835442",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730982076722",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    },
+    {
+      "id": "1e33b7b6-6938-4aa2-b5d6-731b149bb335",
+      "sku": "MP-0049-001",
+      "product_name": "Keramikk mat- og vannskål på stålstativ, khaki",
+      "shopify_product_id": "gid://shopify/Product/10346896261426",
+      "shopify_variant_id": "gid://shopify/ProductVariant/51730982535474",
+      "active": true,
+      "dependencies": [],
+      "stock": []
+    }
+  ],
+  "newVariants": [
+    {
+      "id": "gid://shopify/ProductVariant/47938702836018",
+      "sku": "",
+      "title": "25/32",
+      "product": {
+        "id": "gid://shopify/Product/9081896665394",
+        "title": "Neuw Frida Super Wide Jeans - Høyt Liv - Premium denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/47938702868786",
+      "sku": "",
+      "title": "26/32",
+      "product": {
+        "id": "gid://shopify/Product/9081896665394",
+        "title": "Neuw Frida Super Wide Jeans - Høyt Liv - Premium denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/47938702901554",
+      "sku": "",
+      "title": "27/32",
+      "product": {
+        "id": "gid://shopify/Product/9081896665394",
+        "title": "Neuw Frida Super Wide Jeans - Høyt Liv - Premium denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/47939658744114",
+      "sku": "",
+      "title": "25/30",
+      "product": {
+        "id": "gid://shopify/Product/9082701152562",
+        "title": "Neuw Stockholm Jeans - Nico Super High Straight - Premium denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/47939686596914",
+      "sku": "",
+      "title": "25/30",
+      "product": {
+        "id": "gid://shopify/Product/9082706002226",
+        "title": "Neuw Stockholm Jeans Lola Mom Black Earth - Premium Denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/47939686662450",
+      "sku": "",
+      "title": "27/30",
+      "product": {
+        "id": "gid://shopify/Product/9082706002226",
+        "title": "Neuw Stockholm Jeans Lola Mom Black Earth - Premium Denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/49097406316850",
+      "sku": "",
+      "title": "24/28",
+      "product": {
+        "id": "gid://shopify/Product/9082706002226",
+        "title": "Neuw Stockholm Jeans Lola Mom Black Earth - Premium Denim",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/49987003941170",
+      "sku": "",
+      "title": "XL - 65-75 cm",
+      "product": {
+        "id": "gid://shopify/Product/9835353080114",
+        "title": "Trixie Magebelte for Hannhund - Bleie med 3 Absorberende Innlegg",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/49987003973938",
+      "sku": "",
+      "title": "60",
+      "product": {
+        "id": "gid://shopify/Product/9835353080114",
+        "title": "Trixie Magebelte for Hannhund - Bleie med 3 Absorberende Innlegg",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/49987004006706",
+      "sku": "",
+      "title": "M - 45-55 cm",
+      "product": {
+        "id": "gid://shopify/Product/9835353080114",
+        "title": "Trixie Magebelte for Hannhund - Bleie med 3 Absorberende Innlegg",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50098543231282",
+      "sku": null,
+      "title": "Brun\\rød",
+      "product": {
+        "id": "gid://shopify/Product/9876178141490",
+        "title": "Englehår til dekor - sølv og kobber",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50098543264050",
+      "sku": null,
+      "title": "Sølv",
+      "product": {
+        "id": "gid://shopify/Product/9876178141490",
+        "title": "Englehår til dekor - sølv og kobber",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50502612549938",
+      "sku": null,
+      "title": "Rosa",
+      "product": {
+        "id": "gid://shopify/Product/10000856514866",
+        "title": "Turflaske til Hund - 2-i-1 Vannflaske og Matbeholder",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50502612582706",
+      "sku": null,
+      "title": "Blå",
+      "product": {
+        "id": "gid://shopify/Product/10000856514866",
+        "title": "Turflaske til Hund - 2-i-1 Vannflaske og Matbeholder",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50566397526322",
+      "sku": "739007",
+      "title": "10 pk",
+      "product": {
+        "id": "gid://shopify/Product/10022383911218",
+        "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50566397559090",
+      "sku": "739008",
+      "title": "100 pk",
+      "product": {
+        "id": "gid://shopify/Product/10022383911218",
+        "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50568913191218",
+      "sku": "739012",
+      "title": "200 stk",
+      "product": {
+        "id": "gid://shopify/Product/10022919700786",
+        "title": "OUTH Engangsmopp Dobbeltsidig 40cm - Profesjonell Rengjøring - 25pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50569474146610",
+      "sku": null,
+      "title": "100 pk",
+      "product": {
+        "id": "gid://shopify/Product/10021244993842",
+        "title": "Mikrofiber Combimopp 45 cm med Borrelås - Profesjonell Rengjøring",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50569474900274",
+      "sku": null,
+      "title": "100 pk",
+      "product": {
+        "id": "gid://shopify/Product/10021144559922",
+        "title": "Mikrofiber Combimopp 30 cm med Borrelås - Profesjonell Rengjøring",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50569476735282",
+      "sku": null,
+      "title": "100 pk",
+      "product": {
+        "id": "gid://shopify/Product/10015422710066",
+        "title": "Mikrofiber combimopp m/borrelås og fryns - 30 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50633446752562",
+      "sku": null,
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10043276886322",
+        "title": "Juletrepynt Stjerne med glitter og perler 15 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50727658946866",
+      "sku": null,
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10066014077234",
+        "title": "Gren med glitter 70 cm - sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50921921741106",
+      "sku": null,
+      "title": "Small",
+      "product": {
+        "id": "gid://shopify/Product/10114057929010",
+        "title": "Ollie & James Premium Hundehalsbånd - Italiensk Skinn rosa",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50921921773874",
+      "sku": null,
+      "title": "Medium",
+      "product": {
+        "id": "gid://shopify/Product/10114057929010",
+        "title": "Ollie & James Premium Hundehalsbånd - Italiensk Skinn rosa",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50921927541042",
+      "sku": null,
+      "title": "Small",
+      "product": {
+        "id": "gid://shopify/Product/10114059043122",
+        "title": "Brighton Regnjakke til Hund - Vanntett Hundejakke - Lambwolf Collective",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50921927573810",
+      "sku": null,
+      "title": "Large",
+      "product": {
+        "id": "gid://shopify/Product/10114059043122",
+        "title": "Brighton Regnjakke til Hund - Vanntett Hundejakke - Lambwolf Collective",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50940835561778",
+      "sku": null,
+      "title": "Small 60 x 40 cm",
+      "product": {
+        "id": "gid://shopify/Product/10119812219186",
+        "title": "Layzy Hundedekken - Vanntett Reiseteppe til Hund",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50940835594546",
+      "sku": null,
+      "title": "Large 90 x 70 cm",
+      "product": {
+        "id": "gid://shopify/Product/10119812219186",
+        "title": "Layzy Hundedekken - Vanntett Reiseteppe til Hund",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50974940561714",
+      "sku": null,
+      "title": "60 x 30 cm",
+      "product": {
+        "id": "gid://shopify/Product/10131234226482",
+        "title": "Pomelo Bordmatte Musematte  Lys rosa- Premium Skrivebordsunderlag",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50974940594482",
+      "sku": null,
+      "title": "80 x 30 cm",
+      "product": {
+        "id": "gid://shopify/Product/10131234226482",
+        "title": "Pomelo Bordmatte Musematte  Lys rosa- Premium Skrivebordsunderlag",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50974940627250",
+      "sku": null,
+      "title": "80 x 40 cm",
+      "product": {
+        "id": "gid://shopify/Product/10131234226482",
+        "title": "Pomelo Bordmatte Musematte  Lys rosa- Premium Skrivebordsunderlag",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50977207517490",
+      "sku": null,
+      "title": "80 x 30 cm",
+      "product": {
+        "id": "gid://shopify/Product/10132110573874",
+        "title": "Pomelo Bordmatte Musematte Grønn- Premium Skrivebordsunderlag",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/50977207550258",
+      "sku": null,
+      "title": "60 x 30 cm",
+      "product": {
+        "id": "gid://shopify/Product/10132110573874",
+        "title": "Pomelo Bordmatte Musematte Grønn- Premium Skrivebordsunderlag",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51099794964786",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10170775634226",
+        "title": "NA-KD Strikket Vest grå – Ermeløs Ribbestrikkede Kanter",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51099794997554",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10170775634226",
+        "title": "NA-KD Strikket Vest grå – Ermeløs Ribbestrikkede Kanter",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51099795030322",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10170775634226",
+        "title": "NA-KD Strikket Vest grå – Ermeløs Ribbestrikkede Kanter",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262786208050",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10205370188082",
+        "title": "Evolve MAX Ocean Blue T-skjorte - Lett og behagelig  - Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262786240818",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10205370188082",
+        "title": "Evolve MAX Ocean Blue T-skjorte - Lett og behagelig  - Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262786273586",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10205370188082",
+        "title": "Evolve MAX Ocean Blue T-skjorte - Lett og behagelig  - Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262786306354",
+      "sku": null,
+      "title": "XL",
+      "product": {
+        "id": "gid://shopify/Product/10205370188082",
+        "title": "Evolve MAX Ocean Blue T-skjorte - Lett og behagelig  - Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262786339122",
+      "sku": null,
+      "title": "2XL",
+      "product": {
+        "id": "gid://shopify/Product/10205370188082",
+        "title": "Evolve MAX Ocean Blue T-skjorte - Lett og behagelig  - Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262857249074",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10205375660338",
+        "title": "Evolve MAX Pure Black T-skjorte - lett og behagelig  -Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262857281842",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10205375660338",
+        "title": "Evolve MAX Pure Black T-skjorte - lett og behagelig  -Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262857314610",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10205375660338",
+        "title": "Evolve MAX Pure Black T-skjorte - lett og behagelig  -Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262857347378",
+      "sku": null,
+      "title": "XL",
+      "product": {
+        "id": "gid://shopify/Product/10205375660338",
+        "title": "Evolve MAX Pure Black T-skjorte - lett og behagelig  -Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51262857380146",
+      "sku": null,
+      "title": "2XL",
+      "product": {
+        "id": "gid://shopify/Product/10205375660338",
+        "title": "Evolve MAX Pure Black T-skjorte - lett og behagelig  -Unisex",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345471930674",
+      "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+      "title": "XS",
+      "product": {
+        "id": "gid://shopify/Product/10216699822386",
+        "title": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345547591986",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10218135912754",
+        "title": "Y.A.S Flaxy Hmw Linen Pant - Star White - Hvit linbukse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345547624754",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10218135912754",
+        "title": "Y.A.S Flaxy Hmw Linen Pant - Star White - Hvit linbukse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345547657522",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10218135912754",
+        "title": "Y.A.S Flaxy Hmw Linen Pant - Star White - Hvit linbukse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345547690290",
+      "sku": null,
+      "title": "XL",
+      "product": {
+        "id": "gid://shopify/Product/10218135912754",
+        "title": "Y.A.S Flaxy Hmw Linen Pant - Star White - Hvit linbukse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51345724899634",
+      "sku": null,
+      "title": "1 stk",
+      "product": {
+        "id": "gid://shopify/Product/10217798140210",
+        "title": "Keune confident curl low-poo shampo - perfekt til reise",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51487673614642",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10243830481202",
+        "title": "Y.A.S Yasroya Ls Shirt S. - Star White - Skjorte med plisse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51487673647410",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10243830481202",
+        "title": "Y.A.S Yasroya Ls Shirt S. - Star White - Skjorte med plisse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51487673680178",
+      "sku": null,
+      "title": "XL",
+      "product": {
+        "id": "gid://shopify/Product/10243830481202",
+        "title": "Y.A.S Yasroya Ls Shirt S. - Star White - Skjorte med plisse",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611710554418",
+      "sku": null,
+      "title": "XS",
+      "product": {
+        "id": "gid://shopify/Product/10277135548722",
+        "title": "Cardsome Sweatshirt genser - You get what you give",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611710587186",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10277135548722",
+        "title": "Cardsome Sweatshirt genser - You get what you give",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611710619954",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10277135548722",
+        "title": "Cardsome Sweatshirt genser - You get what you give",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611710652722",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10277135548722",
+        "title": "Cardsome Sweatshirt genser - You get what you give",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611730870578",
+      "sku": null,
+      "title": "XS",
+      "product": {
+        "id": "gid://shopify/Product/10280415985970",
+        "title": "Cardsome Hettegenser Vintage - Double trouble",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611730903346",
+      "sku": null,
+      "title": "S",
+      "product": {
+        "id": "gid://shopify/Product/10280415985970",
+        "title": "Cardsome Hettegenser Vintage - Double trouble",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611730936114",
+      "sku": null,
+      "title": "M",
+      "product": {
+        "id": "gid://shopify/Product/10280415985970",
+        "title": "Cardsome Hettegenser Vintage - Double trouble",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51611730968882",
+      "sku": null,
+      "title": "L",
+      "product": {
+        "id": "gid://shopify/Product/10280415985970",
+        "title": "Cardsome Hettegenser Vintage - Double trouble",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51618686271794",
+      "sku": null,
+      "title": "1 stk",
+      "product": {
+        "id": "gid://shopify/Product/10284179358002",
+        "title": "Keune Nutrition Shampoo 80 ml - Næring til tørt hår- Perfekt til reise",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51618686304562",
+      "sku": null,
+      "title": "3 stk",
+      "product": {
+        "id": "gid://shopify/Product/10284179358002",
+        "title": "Keune Nutrition Shampoo 80 ml - Næring til tørt hår- Perfekt til reise",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645780787506",
+      "sku": null,
+      "title": "Sort / XS-S",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781737778",
+      "sku": null,
+      "title": "Beige / M",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781770546",
+      "sku": null,
+      "title": "Beige / L",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781803314",
+      "sku": null,
+      "title": "Beige / XL",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781836082",
+      "sku": null,
+      "title": "Sort / M",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781868850",
+      "sku": null,
+      "title": "Sort / L",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51645781901618",
+      "sku": null,
+      "title": "Sort / XL",
+      "product": {
+        "id": "gid://shopify/Product/10293336178994",
+        "title": "Milliie - Oline kjole - Elegant Halterneck minikjole - Beige eller sort",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51728145121586",
+      "sku": null,
+      "title": "S/M",
+      "product": {
+        "id": "gid://shopify/Product/10345753215282",
+        "title": "Northpeak fleecehals med 3M Thinsulate til voksen",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/51728145154354",
+      "sku": null,
+      "title": "M/L",
+      "product": {
+        "id": "gid://shopify/Product/10345753215282",
+        "title": "Northpeak fleecehals med 3M Thinsulate til voksen",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52177650155826",
+      "sku": "KAL-24-SMAGAVER-ROD",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10419634372914",
+        "title": "Kalendergaver 2026 - 24 stk smågaver til julekalenderen - Rød",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52178034622770",
+      "sku": "KAL-GRONN-24",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10419643973938",
+        "title": "Kalendergaver 2026 -  24 stk smågaver til julekalenderen - Grønn",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52228705059122",
+      "sku": "SANRIO-MM-FLASKE-500-ROSA",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10420594377010",
+        "title": "My Melody Sanrio drikkeflaske m/ sugerør 500 ml - lys rosa",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52229807735090",
+      "sku": "MM-SANRIO-TERMO-500ML",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10420617806130",
+        "title": "My Melody Sanrio termosflaske med sugerør 500 ml - lys rosa",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52230890291506",
+      "sku": "KUROMI-TERMOS-500-LILLA",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10420630815026",
+        "title": "Sanrio Kuromi termosflaske med sugerør 500 ml – Lilla",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/52231433847090",
+      "sku": "VK-MM550-ROSA",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/10420636385586",
+        "title": "My Melody Sanrio drikkeflaske med 3D-figur 550 ml",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67942846005554",
+      "sku": "MM-MAT-850-BLA-15421737271602",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421737271602",
+        "title": "Moshi Moshi matboks med med skje og gaffel 850 ml – blå",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67942925173042",
+      "sku": "MM-MAT-850-BEI-63282",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421774463282",
+        "title": "Moshi Moshi matboks med med skje og gaffel 850 ml – beige",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67943030849842",
+      "sku": "MM-MAT-850-ROS-54418",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421809754418",
+        "title": "Moshi Moshi matboks med med skje og gaffel 850 ml – rosa",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67943045693746",
+      "sku": "VK-CIN-TERM-400",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421816602930",
+        "title": "Sanrio Cinnamoroll termoflaske 400 ml",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67943056769330",
+      "sku": "VK-MAR-IRON-PEN",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421820567858",
+        "title": "Marvel Iron Man pennal",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67943066403122",
+      "sku": "VK-FROZEN2-ELSA-PEN-84210",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421823484210",
+        "title": "Disney Frozen II “Forest Spirit” pennal med Elsa-motiv.",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67943094419762",
+      "sku": "MAR-SPIDEY-PEN-001",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15421841047858",
+        "title": "Marvel Spidey and His Amazing Friends pennal",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67945422586162",
+      "sku": "SAN-KUROMI-400ML",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15422386667826",
+        "title": "Sanrio Kuromi termosflaske med 3D-figur 400 ml",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67945680634162",
+      "sku": "BBL-812-MINT",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15422446338354",
+        "title": "Bibaile 4-i-1 skrivesett med saks, stiftemaskin og korrekturroller",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67946011492658",
+      "sku": "HK-FLASKE-550-3D",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15422528061746",
+        "title": "Hello Kitty drikkeflaske med 3D-figur – 550 ml",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67948328878386",
+      "sku": "VK-STITCH-550-3D-98945842",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15423098945842",
+        "title": "Disney Stitch drikkeflaske med 3D-figur 550 ml",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67982076969266",
+      "sku": "1513-11",
+      "title": "10 stk",
+      "product": {
+        "id": "gid://shopify/Product/10224093462834",
+        "title": "Pinselilje kunstig 35 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/67982080540978",
+      "sku": null,
+      "title": "1 stk",
+      "product": {
+        "id": "gid://shopify/Product/10224093462834",
+        "title": "Pinselilje kunstig 35 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299264818",
+      "sku": "6244",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674518322",
+        "title": "Telysholder kobberfarget - 2 pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299363122",
+      "sku": "9395",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674583858",
+        "title": "Julenisser med skjegg og glitterlue – 3-pk - 8 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299494194",
+      "sku": "6623",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674682162",
+        "title": "Duk til borddekking - Sølvfarget med mønster - 120 x 120. cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299592498",
+      "sku": "6852",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674780466",
+        "title": "Englehår og tinsel til juledekorasjon - 30 g",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299854642",
+      "sku": "12622",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674846002",
+        "title": "Bilderamme med engler og oval åpning – Sett med 2 stk -11 x 6 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079299952946",
+      "sku": "12661",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454674944306",
+        "title": "Bilderamme med englemotiv – 4pk - 8 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300051250",
+      "sku": "12078",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675009842",
+        "title": "Smykkeskrin med engel og lokk – kiste - 2pk -11 x 6 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300215090",
+      "sku": "12608",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675140914",
+        "title": "Rundt smykkeskrin med englemotiv – 5 x 7 cm - 2pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300280626",
+      "sku": "12568",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675206450",
+        "title": "Hjerteformet smykkeskrin med engel – 4pk - 8 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300346162",
+      "sku": "6076",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675271986",
+        "title": "Engler i gullfarget glass LED - Glitter - 21 cm - 2pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300411698",
+      "sku": "8219",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675337522",
+        "title": "Fotoalbum med englemotiv og sløyfe - 20 x 18 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300444466",
+      "sku": "5775",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675370290",
+        "title": "Gavebånd med God jul-tekst – 3pk - 10mm x 10 m",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300510002",
+      "sku": "6050",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675435826",
+        "title": "Dekorgirlander 2,7 m til jul – 3 stk a 90 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300575538",
+      "sku": "6292",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675501362",
+        "title": "Julekule i glass med figurer - Snømann og Isbjørn - 2pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300641074",
+      "sku": "8683",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675566898",
+        "title": "Julemus med blå klær – 51 cm - Gutt og jente",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300739378",
+      "sku": "5442",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675632434",
+        "title": "Julestrømpe i strie med røde detaljer – 2pk - Snømann og nisse  40 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079300903218",
+      "sku": "5293",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675763506",
+        "title": "Telysholder med julefigurer - Bamse og julenisse- 12 cm -2 pk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079301001522",
+      "sku": "8605",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454675829042",
+        "title": "Sølvfarget toppstjerne med glitter - Julestjerne 26 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68079751463218",
+      "sku": "6027",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15454869815602",
+        "title": "Julekule gull 2pk - 8 cm - Dekorative design",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68105326854450",
+      "sku": "9401",
+      "title": "Default Title",
+      "product": {
+        "id": "gid://shopify/Product/15465058566450",
+        "title": "Julebamser 8 cm – dekorative bamsefigurer, 2 stk",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68498959663410",
+      "sku": "5415-REIN",
+      "title": "Reinsdyr",
+      "product": {
+        "id": "gid://shopify/Product/15454675730738",
+        "title": "Julestrømpe i velur – Reinsdyr, snømann eller 2-pakning – 42 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68498959696178",
+      "sku": "5415-SNO",
+      "title": "Snømann",
+      "product": {
+        "id": "gid://shopify/Product/15454675730738",
+        "title": "Julestrømpe i velur – Reinsdyr, snømann eller 2-pakning – 42 cm",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "id": "gid://shopify/ProductVariant/68498959728946",
+      "sku": "5415",
+      "title": "2-pakning – Reinsdyr og snømann",
+      "product": {
+        "id": "gid://shopify/Product/15454675730738",
+        "title": "Julestrømpe i velur – Reinsdyr, snømann eller 2-pakning – 42 cm",
+        "status": "ACTIVE"
+      }
+    }
+  ],
+  "duplicateSkus": [
+    {
+      "sku": "739007",
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50566397526322",
+          "sku": "739007",
+          "title": "10 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022383911218",
+            "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50566405783858",
+          "sku": "739007",
+          "title": "1 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022388793650",
+            "title": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "739008",
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50566397559090",
+          "sku": "739008",
+          "title": "100 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022383911218",
+            "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50566405816626",
+          "sku": "739008",
+          "title": "10 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022388793650",
+            "title": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "739012",
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/50568913191218",
+          "sku": "739012",
+          "title": "200 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022919700786",
+            "title": "OUTH Engangsmopp Dobbeltsidig 40cm - Profesjonell Rengjøring - 25pk",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50569019162930",
+          "sku": "739012",
+          "title": "25 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022934315314",
+            "title": "OUTH Engangsmopp Dobbeltsidig 60 cm - Profesjonell Rengjøring - 25 pk",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+      "variants": [
+        {
+          "id": "gid://shopify/ProductVariant/51345471930674",
+          "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+          "title": "XS",
+          "product": {
+            "id": "gid://shopify/Product/10216699822386",
+            "title": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/51379352633650",
+          "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+          "title": "L",
+          "product": {
+            "id": "gid://shopify/Product/10216699822386",
+            "title": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    }
+  ],
+  "reviewSkus": [
+    {
+      "sku": "739007",
+      "snake": [
+        {
+          "id": "67ddc24c-bca1-40da-9a9f-784f4cee2223",
+          "sku": "739007",
+          "product_name": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+          "shopify_product_id": "gid://shopify/Product/10022388793650",
+          "shopify_variant_id": "gid://shopify/ProductVariant/50566405783858",
+          "active": false
+        }
+      ],
+      "shopify": [
+        {
+          "id": "gid://shopify/ProductVariant/50566397526322",
+          "sku": "739007",
+          "title": "10 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022383911218",
+            "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50566405783858",
+          "sku": "739007",
+          "title": "1 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022388793650",
+            "title": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "739008",
+      "snake": [
+        {
+          "id": "f4132055-7f92-4c68-963d-ac6dc92c243f",
+          "sku": "739008",
+          "product_name": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+          "shopify_product_id": "gid://shopify/Product/10022388793650",
+          "shopify_variant_id": "gid://shopify/ProductVariant/50566405816626",
+          "active": false
+        }
+      ],
+      "shopify": [
+        {
+          "id": "gid://shopify/ProductVariant/50566397559090",
+          "sku": "739008",
+          "title": "100 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022383911218",
+            "title": "OUTH mikrofobermopp m/borrlås - 40 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50566405816626",
+          "sku": "739008",
+          "title": "10 pk",
+          "product": {
+            "id": "gid://shopify/Product/10022388793650",
+            "title": "OUTH mikrofobermopp m/borrlås - 60 cm - Profesjonell rengjøring",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "739012",
+      "snake": [
+        {
+          "id": "dfac3a08-be74-4b44-a2c9-a779767b170c",
+          "sku": "739012",
+          "product_name": "OUTH Engangsmopp Dobbeltsidig 60 cm - Profesjonell Rengjøring - 25 pk",
+          "shopify_product_id": "gid://shopify/Product/10022934315314",
+          "shopify_variant_id": "gid://shopify/ProductVariant/50569019162930",
+          "active": false
+        }
+      ],
+      "shopify": [
+        {
+          "id": "gid://shopify/ProductVariant/50568913191218",
+          "sku": "739012",
+          "title": "200 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022919700786",
+            "title": "OUTH Engangsmopp Dobbeltsidig 40cm - Profesjonell Rengjøring - 25pk",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/50569019162930",
+          "sku": "739012",
+          "title": "25 stk",
+          "product": {
+            "id": "gid://shopify/Product/10022934315314",
+            "title": "OUTH Engangsmopp Dobbeltsidig 60 cm - Profesjonell Rengjøring - 25 pk",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+      "snake": [
+        {
+          "id": "8befa09e-d307-4bbd-b54a-286cf24310be",
+          "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+          "product_name": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+          "shopify_product_id": "gid://shopify/Product/10216699822386",
+          "shopify_variant_id": "gid://shopify/ProductVariant/51379352633650",
+          "active": true
+        }
+      ],
+      "shopify": [
+        {
+          "id": "gid://shopify/ProductVariant/51345471930674",
+          "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+          "title": "XS",
+          "product": {
+            "id": "gid://shopify/Product/10216699822386",
+            "title": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+            "status": "ACTIVE"
+          }
+        },
+        {
+          "id": "gid://shopify/ProductVariant/51379352633650",
+          "sku": "VK-TIGHTS-SCRUNCH-GRBL-HW-1",
+          "title": "L",
+          "product": {
+            "id": "gid://shopify/Product/10216699822386",
+            "title": "Evolve MAX Scrunch Seamless Blue Tights  -High waist",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "1513-11",
+      "snake": [
+        {
+          "id": "f140b9cb-d705-4368-b20f-5861d3780126",
+          "sku": "1513-11",
+          "product_name": "Pinselilje kunstig 35 cm",
+          "shopify_product_id": "gid://shopify/Product/10224093462834",
+          "shopify_variant_id": "gid://shopify/ProductVariant/51384632738098",
+          "active": true
+        }
+      ],
+      "shopify": [
+        {
+          "id": "gid://shopify/ProductVariant/67982076969266",
+          "sku": "1513-11",
+          "title": "10 stk",
+          "product": {
+            "id": "gid://shopify/Product/10224093462834",
+            "title": "Pinselilje kunstig 35 cm",
+            "status": "ACTIVE"
+          }
+        }
+      ]
+    },
+    {
+      "sku": "63104",
+      "snake": [
+        {
+          "id": "f313e906-be1a-4eef-8b03-dad3758a5904",
+          "sku": "63104",
+          "product_name": "Badmintonsett 4 Spillere med Nett - Sunflex MATCHMAKER",
+          "shopify_product_id": "gid://shopify/Product/9752092737842",
+          "shopify_variant_id": "gid://shopify/ProductVariant/49709379649842",
+          "active": true
+        }
+      ],
+      "shopify": []
+    }
+  ],
+  "product63104Lookup": {
+    "productVariant": null,
+    "productVariants": {
+      "nodes": [],
+      "pageInfo": {
+        "hasNextPage": false
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildCatalogAudit, groupCatalogVariants, type CatalogVariantRow } from "../lib/intelligence/roy/catalog-semantics.ts";
+import { buildCatalogAudit, groupCatalogVariants, uniqueCatalogSkuMatch, type CatalogVariantRow } from "../lib/intelligence/roy/catalog-semantics.ts";
 import { buildRoyModelInput } from "../lib/intelligence/roy/chat-input-builder.ts";
 import { createRoyUserResponse } from "../lib/intelligence/roy/presentation.ts";
 import { ROY_RECEIVED_CATALOG_FIELDS, type ShopifyCatalogContext } from "../lib/intelligence/workforce/contexts/shopify-catalog.ts";
@@ -13,6 +13,18 @@ const base = {
   shopify_inventory_tracked: true, shopify_inventory_observed_at: "2026-08-20T09:59:00.000Z",
 } satisfies CatalogVariantRow;
 const rows: CatalogVariantRow[] = [base, { ...base, id: "row-2", shopify_variant_id: "gid://variant/secret-2", sku: "SKU-BLUE", variant_name: "Blue", shopify_quantity: 4 }];
+
+test("duplicate SKU never selects an arbitrary sibling or unrelated product", () => {
+  for (const parent of [base.shopify_product_id, "other-product"]) {
+    const duplicates = [base, { ...base, id: "other", shopify_variant_id: "other-variant", shopify_product_id: parent }];
+    assert.equal(uniqueCatalogSkuMatch(duplicates, base.sku), null);
+    assert.deepEqual(groupCatalogVariants(duplicates, new Map(), base.sku), []);
+    assert.equal(groupCatalogVariants(duplicates, new Map()).flatMap(p => p.variants).length, 2);
+  }
+  assert.equal(uniqueCatalogSkuMatch(rows, "SKU-BLUE")?.id, "row-2");
+  assert.equal(uniqueCatalogSkuMatch(rows, "absent"), null);
+  assert.equal(groupCatalogVariants([{ ...base, sku: null }], new Map())[0].sku, null);
+});
 
 function context(products = groupCatalogVariants(rows, new Map(), "SKU-BLUE")): ShopifyCatalogContext {
   return {

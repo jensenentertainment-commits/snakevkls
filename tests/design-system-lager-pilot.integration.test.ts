@@ -56,7 +56,8 @@ test("the Lager shell composes only the frozen layout contracts", () => {
   assert.match(appRouteShell, /<AuthenticatedAppShell/);
   assert.match(authenticatedShell, /<AppShell/);
   assert.match(authenticatedShell, /<AppNavbar/);
-  assert.match(authenticatedShell, /<ModuleNav navigation=\{moduleNavigation\}/);
+  assert.match(authenticatedShell, /<ModuleNav/);
+  assert.match(authenticatedShell, /visibleNavigationItems\(\s*moduleNavigation.items,\s*profile\?\.role/);
   assert.match(routeConfig, /moduleNavigation: LAGER_MODULE_NAVIGATION/);
   assert.match(rootLayout, /<AppRouteShell>\{children\}<\/AppRouteShell>/);
   assert.doesNotMatch(shell, /SnakeNav|SnakeFooter|Viper/);

@@ -1,0 +1,9 @@
+\ir viper-acceptance.guard.sql
+-- Same synthetic historical prerequisite as Roy; no production IDs or data.
+do $$ begin
+ if exists(select 1 from public.zones) then raise exception 'Expected empty zones'; end if;
+end $$;
+insert into public.zones(code,name,active) values
+ ('HL','Acceptance fixture HL',true),
+ ('ML','Acceptance fixture ML',true),
+ ('SL','Acceptance fixture SL',true);

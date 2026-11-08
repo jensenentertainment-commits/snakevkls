@@ -44,12 +44,12 @@ begin
   result := public.apply_shopify_sync_page_v2(run_id, token, null, 0, 'page-1', true, variants, products, 300);
   reset role;
   perform phase2a_test.check(result ->> 'pagesProcessed' = '1', 'page checkpoint');
-  perform phase2a_test.check(result ->> 'processedCount' = '2' and result ->> 'skippedNoSku' = '1', 'unchanged variant counters');
-  perform phase2a_test.check(result ->> 'collectionsLinked' = '2', 'legacy collection counter is per variant');
+  perform phase2a_test.check(result ->> 'processedCount' = '3' and result ->> 'skippedNoSku' = '0', 'all variants processed including null SKU');
+  perform phase2a_test.check(result ->> 'collectionsLinked' = '3', 'legacy collection counter is per variant');
   perform phase2a_test.check((select count(*) = 2 from public.shopify_product_content), 'one canonical row per product including no-SKU product');
   perform phase2a_test.check((select count(*) = 2 from public.shopify_product_collections), 'one relation per product/collection');
-  perform phase2a_test.check((select count(*) = 2 from public.product_collections), 'legacy relations preserved per variant');
-  perform phase2a_test.check((select count(*) = 3 from private.sync_run_variants), 'skipped variants still seen');
+  perform phase2a_test.check((select count(*) = 3 from public.product_collections), 'legacy relations preserved per variant');
+  perform phase2a_test.check((select count(*) = 3 from private.sync_run_variants), 'every variant seen');
   perform phase2a_test.check((select count(*) = 2 from public.shopify_product_content where product_handle = 'reassigned-handle'), 'handle reassignment is non-unique');
   perform phase2a_test.check((select bool_and(shopify_updated_at = '2026-09-15T10:00:00Z'::timestamptz
     and content_observed_at = '2026-09-16T10:00:00Z'::timestamptz and synced_at <> shopify_updated_at
@@ -99,9 +99,9 @@ begin
   -- All explicit missing content replaces the previous observed values.
   changed := jsonb_set(products, '{0,productContent}', (products #> '{0,productContent}') ||
     '{"description":"","seoTitle":null,"seoDescription":"","productType":null,"shopifyCategory":null,"vendor":"","imageReference":null}'::jsonb);
-  changed := jsonb_set(changed, '{0,collectionObservation,collections}', '[]');
-  variants := jsonb_set(jsonb_set(variants, '{0,collections}', '[]'), '{1,collections}', '[]');
-  -- Existing variant without SKU keeps its established local identity and SKU.
+  changed := jsonb_set(jsonb_set(changed, '{0,collectionObservation,collections}', '[]'), '{1,collectionObservation,collections}', '[]');
+  variants := jsonb_set(jsonb_set(jsonb_set(variants, '{0,collections}', '[]'), '{1,collections}', '[]'), '{2,collections}', '[]');
+  -- Existing variant without SKU keeps its established local identity; explicit absent SKU replaces the old value.
   variants := jsonb_set(variants, '{0,sku}', 'null');
   result := public.apply_shopify_sync_page_v2(run_id, token, 'page-1', 1, 'page-2', true, variants, changed, 300);
   perform phase2a_test.check((select collections_complete and description = '' and seo_title is null and seo_description = ''
@@ -109,12 +109,12 @@ begin
     and vendor = '' and image_url is null from public.shopify_product_content where shopify_product_id = 'gid://shopify/Product/91001'), 'observed missing values overwrite');
   perform phase2a_test.check(not exists (select 1 from public.shopify_product_collections where shopify_product_id = 'gid://shopify/Product/91001'), 'complete empty replaces old canonical rows');
   perform phase2a_test.check(not exists (select 1 from public.product_collections), 'complete empty also preserves legacy replacement semantics');
-  perform phase2a_test.check((select id = local_id and sku = 'PHASE2A-1' and shopify_price_minor = 12345 and shopify_quantity = 7
+  perform phase2a_test.check((select id = local_id and sku is null and shopify_price_minor = 12345 and shopify_quantity = 7
     from public.products where shopify_variant_id = 'gid://shopify/ProductVariant/91001'), 'variant identity SKU price inventory preserved');
   perform phase2a_test.check((select quantity = 23 and product_id = local_id from public.inventory
     where id = '91000000-0000-4000-8000-000000000012'), 'physical inventory and local FK unchanged');
-  perform phase2a_test.check(result ->> 'processedCount' = '4' and result ->> 'skippedNoSku' = '2'
-    and result ->> 'collectionsLinked' = '2', 'existing counter accumulation');
+  perform phase2a_test.check(result ->> 'processedCount' = '6' and result ->> 'skippedNoSku' = '0'
+    and result ->> 'collectionsLinked' = '3', 'counter accumulation including SKU-less variants');
 
   -- A failed refresh of a complete-empty snapshot must keep it complete-empty.
   perform phase2a_test.reject_page(run_id, token, 'page-2', 2, 'page-3', true, variants,

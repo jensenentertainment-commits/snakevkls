@@ -58,7 +58,10 @@ export function proveBackfill(snapshot: unknown): BackfillProof {
   check("reconciliation",provenance.reconciliationAgreement===true,"Approved affected count and unseen post-completion state agree.",provenance.reconciliationAgreement==null);
   const expected=facts.targets, actual=root.targets;
   let targetCount=0;
-  const targetShape=Array.isArray(expected) && Array.isArray(actual) && expected.length===actual.length && expected.length<=8
+  const eligibleCount=facts.targetEligibleCount;
+  const targetShape=Number.isSafeInteger(eligibleCount) && (eligibleCount as number)>=0
+    && (eligibleCount as number)<=Number(record(facts.totals).variantCount)
+    && Array.isArray(expected) && Array.isArray(actual) && expected.length===actual.length && expected.length<=8
     && facts.sampleLimit===8 && expected.length===Math.min(8, Number(facts.targetEligibleCount));
   check("target_allocation",targetShape,"Deterministic stratified samples, at most eight; exact counts remain separate.");
   if(targetShape && Array.isArray(expected) && Array.isArray(actual)) {
@@ -75,7 +78,8 @@ export function proveBackfill(snapshot: unknown): BackfillProof {
       check(`target_${i+1}`,ok,"Selected variant facts, field states, complete membership count, response bounds and ID suppression.");
     }
   }
-  check("target_coverage",targetCount>0 || record(facts.totals).productCount===0,"Nonempty catalogs require eligible targeted-reader samples.",true);
+  check("target_coverage",targetShape && (targetCount>0 || eligibleCount===0),
+    "Samples cover eligible unique SKUs only. SKU-less/ambiguous variants remain covered by exact aggregates and Variant-ID source receipts.",true);
   return {schemaVersion:1,inputDigest:createHash("sha256").update(serialized).digest("hex"),status:checks.some(c=>c.status==="FAIL")?"FAIL":checks.some(c=>c.status==="BLOCKED")?"BLOCKED":"PASS",
     checks,exactCounts:aggregate?{totals:aggregate.totals,contentCoverage:aggregate.contentCoverage,fields:aggregate.fields,collections:aggregate.collections,
       collectionDetail:detailValid?{noCanonicalRow:collectionDetail.noCanonicalRow,incompleteCanonicalRow:collectionDetail.incompleteCanonicalRow}:null,freshness:aggregate.freshness}:null,boundedTargetSampleCount:targetCount,

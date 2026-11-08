@@ -30,7 +30,7 @@ begin
  perform phase2a_test.reject_command(format('select public.apply_shopify_backfill_page_v1(%L,%L,%L,null,0,%L,true,%L,%L,%L)',op,rid,token,'first',variants,products,phase2a_test.traversal(products)),'fixture injected failure');
  perform set_config('snake.phase2a_fault','',true);
  result:=public.apply_shopify_backfill_page_v1(op,rid,token,null,0,'first',true,variants,products,phase2a_test.traversal(products));
- perform phase2a_test.check(result->>'pagesProcessed'='1' and result->>'processedCount'='2' and result->>'skippedNoSku'='1','page and counter compatibility');
+ perform phase2a_test.check(result->>'pagesProcessed'='1' and result->>'processedCount'='3' and result->>'skippedNoSku'='0','page and counter compatibility');
  perform phase2a_test.reject_command(format('select public.apply_shopify_backfill_page_v1(%L,%L,%L,null,0,%L,true,%L,%L,%L)',op,rid,token,'first',variants,products,phase2a_test.traversal(products)),'checkpoint conflict');
  -- An incomplete refresh cannot change the prior complete zero snapshot.
  products:=jsonb_set(products,'{0,collectionObservation,state}','"incomplete"');

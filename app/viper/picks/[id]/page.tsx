@@ -1,6 +1,4 @@
 import { notFound } from "next/navigation";
-import SnakeFooter from "@/app/components/SnakeFooter";
-import SnakeNav from "@/app/components/SnakeNav";
 import ViperPickFlow from "@/app/components/viper/ViperPickFlow";
 import { requireViperPageActor } from "@/lib/viper/auth/access";
 import { isUuid } from "@/lib/viper/orders/validation";
@@ -20,12 +18,10 @@ export default async function ViperPickPage({
   if (!pick) notFound();
 
   return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-xl px-3 py-3 sm:px-5">
-        <SnakeNav />
+    <>
+      <div className="mx-auto min-w-0 [overflow-wrap:anywhere] max-w-xl">
         <ViperPickFlow initialPick={pick} />
-        <SnakeFooter />
       </div>
-    </main>
+    </>
   );
 }

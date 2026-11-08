@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { AppNavbar, AppShell, ModuleNav } from "@/app/components/layout";
+import { visibleNavigationItems } from "@/app/components/navigation/types";
 import type { ModuleNavigation } from "@/app/components/navigation";
 import { isRole, type Role } from "@/lib/auth/roles";
 import { supabase } from "@/lib/supabase";
@@ -67,7 +68,12 @@ export function AuthenticatedAppShell({
     <AppShell
       moduleNav={
         moduleNavigation ? (
-          <ModuleNav navigation={moduleNavigation} />
+          <ModuleNav
+            navigation={{
+              ...moduleNavigation,
+              items: visibleNavigationItems(moduleNavigation.items, profile?.role),
+            }}
+          />
         ) : undefined
       }
       navbar={

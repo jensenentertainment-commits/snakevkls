@@ -1,6 +1,7 @@
 export type ShopifyPreviewReasonCode =
   | "AUTH_SCOPE_MISSING"
   | "ORDER_NOT_FOUND"
+  | "ORDER_ORIGIN_NOT_ALLOWED"
   | "ORDER_CANCELLED"
   | "ORDER_CLOSED"
   | "ORDER_NOT_FULFILLABLE"
@@ -18,7 +19,8 @@ export type ShopifyPreviewReasonCode =
   | "LOCATION_INACTIVE"
   | "INSUFFICIENT_PHYSICAL_STOCK"
   | "PICK_LOCATION_AMBIGUOUS"
-  | "DUPLICATE_PICK_TARGET";
+  | "DUPLICATE_PICK_TARGET"
+  | "PICK_ORDER_MISSING";
 
 export type ShopifyPreviewReason = {
   code: ShopifyPreviewReasonCode;

@@ -1,5 +1,8 @@
 "use client";
 
+import { Button, Card, StatusBadge } from "@/app/components/design-system";
+
+
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type {
@@ -78,11 +81,11 @@ export default function ShopifyOrderPreviewForm({
 
   return (
     <div className="space-y-5">
-      <form onSubmit={submit} className="rounded-3xl bg-white p-5 shadow-sm">
-        <label htmlFor="shopify-order-id" className="text-sm font-bold">
+      <form onSubmit={submit} className="min-w-0">
+        <label htmlFor="shopify-order-id" className="text-sm font-semibold">
           Shopify Order ID
         </label>
-        <p className="mt-1 text-sm text-neutral-500">
+        <p className="mt-1 text-sm text-snake-text-secondary">
           Lim inn numerisk ID eller full Shopify GID.
         </p>
         <input
@@ -91,18 +94,18 @@ export default function ShopifyOrderPreviewForm({
           onChange={(event) => setOrderId(event.target.value)}
           autoComplete="off"
           inputMode="numeric"
-          className="mt-3 min-h-12 w-full rounded-xl border border-neutral-300 px-4"
+          className="mt-3 min-h-12 w-full rounded-snake-control border border-snake-border-default px-4 bg-snake-surface text-snake-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus"
           placeholder="For eksempel 1234567890"
         />
-        <button
+        <Button
           type="submit"
           disabled={!orderId.trim() || busy}
-          className="mt-3 min-h-12 w-full rounded-xl bg-[#055a7d] px-5 font-bold text-white disabled:opacity-50"
+          variant="primary" size="lg" className="h-auto py-3 whitespace-normal mt-3 min-h-12 w-full"
         >
           {busy ? "Kontrollerer …" : "Forhåndsvis ordre"}
-        </button>
+        </Button>
         {error && (
-          <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-800">
+          <p role="alert" className="mt-3 rounded-snake-control bg-snake-danger-surface p-3 text-sm font-semibold text-snake-danger">
             {error}
           </p>
         )}
@@ -111,20 +114,20 @@ export default function ShopifyOrderPreviewForm({
       {preview && (
         <section className="space-y-4" aria-live="polite">
           <header
-            className={`rounded-3xl p-5 ${
+            className={`rounded-snake-card p-5 ${
               preview.importable && importEnabled
-                ? "bg-emerald-50 text-emerald-950"
-                : "bg-amber-50 text-amber-950"
+                ? "bg-snake-success-surface text-snake-success"
+                : "bg-snake-warning-surface text-snake-warning"
             }`}
           >
-            <p className="text-sm font-bold uppercase tracking-wide">
+            <p className="text-sm font-semibold uppercase tracking-wide">
               {preview.importable && importEnabled
                 ? "Kan importeres"
                 : preview.importable
                   ? "Klar, men import er deaktivert"
                   : "Kan ikke importeres"}
             </p>
-            <h2 className="mt-1 text-2xl font-black">{preview.order.name}</h2>
+            <h2 className="mt-1 text-[length:var(--snake-text-heading-section-size)] font-semibold">{preview.order.name}</h2>
             <p className="mt-1 text-sm">
               Betaling: {preview.order.financialStatus ?? "Ukjent"} · Oppfyllelse:{" "}
               {preview.order.fulfillmentStatus ?? "Ukjent"}
@@ -132,13 +135,13 @@ export default function ShopifyOrderPreviewForm({
           </header>
 
           {preview.reasons.length > 0 && (
-            <div className="rounded-3xl bg-white p-5">
-              <h3 className="font-black">Må avklares</h3>
+            <div className="rounded-snake-card bg-snake-surface p-5">
+              <h3 className="font-semibold [overflow-wrap:anywhere]">Må avklares</h3>
               <ul className="mt-3 space-y-2">
                 {preview.reasons.map((item, index) => (
                   <li key={`${item.code}-${item.lineId ?? "order"}-${index}`} className="text-sm">
                     {item.message}{" "}
-                    <span className="font-mono text-xs text-neutral-500">({item.code})</span>
+                    <span className="font-mono text-xs text-snake-text-secondary">({item.code})</span>
                   </li>
                 ))}
               </ul>
@@ -147,64 +150,56 @@ export default function ShopifyOrderPreviewForm({
 
           <div className="space-y-3">
             {preview.lines.map((line) => (
-              <article key={line.lineId} className="rounded-3xl bg-white p-5 shadow-sm">
-                <div className="flex items-start justify-between gap-3">
+              <Card as="article" key={line.lineId} className="rounded-snake-card bg-snake-surface p-5 shadow-snake-card">
+                <div className="flex flex-col items-start justify-between gap-3 sm:flex-row">
                   <div>
-                    <h3 className="text-lg font-black">{line.title}</h3>
-                    <p className="text-sm text-neutral-500">
+                    <h3 className="text-lg font-semibold">{line.title}</h3>
+                    <p className="text-sm text-snake-text-secondary">
                       {line.variantTitle ?? "Standardvariant"} · {line.sku ?? "Uten SKU"}
                     </p>
                   </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold ${
-                      line.importable
-                        ? "bg-emerald-100 text-emerald-900"
-                        : "bg-amber-100 text-amber-900"
-                    }`}
-                  >
-                    {line.importable ? "Klar" : "Stopp"}
-                  </span>
+                  <StatusBadge tone={line.importable ? "success" : "warning"} label={line.importable ? "Klar" : "Stopp"} />
                 </div>
-                <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
                   <div>
-                    <dt className="text-neutral-500">Antall</dt>
-                    <dd className="font-bold">{line.requestedQuantity}</dd>
+                    <dt className="text-snake-text-secondary">Antall</dt>
+                    <dd className="font-semibold">{line.requestedQuantity}</dd>
                   </div>
                   <div>
-                    <dt className="text-neutral-500">Lokasjon</dt>
-                    <dd className="font-bold">{line.locationCode ?? "Ikke valgt"}</dd>
+                    <dt className="text-snake-text-secondary">Lokasjon</dt>
+                    <dd className="font-semibold">{line.locationCode ?? "Ikke valgt"}</dd>
                   </div>
                   <div>
-                    <dt className="text-neutral-500">Produkt i Snake</dt>
-                    <dd className="font-bold">{line.productName ?? "Ingen match"}</dd>
+                    <dt className="text-snake-text-secondary">Produkt i Snake</dt>
+                    <dd className="font-semibold">{line.productName ?? "Ingen match"}</dd>
                   </div>
                   <div>
-                    <dt className="text-neutral-500">Fysisk beholdning</dt>
-                    <dd className="font-bold">{line.availableQuantity ?? "Ukjent"}</dd>
+                    <dt className="text-snake-text-secondary">Fysisk beholdning</dt>
+                    <dd className="font-semibold">{line.availableQuantity ?? "Ukjent"}</dd>
                   </div>
                 </dl>
-              </article>
+              </Card>
             ))}
           </div>
 
           {preview.importable && importEnabled ? (
-            <div className="sticky bottom-3 rounded-3xl border border-neutral-200 bg-white/95 p-4 shadow-xl backdrop-blur">
-              <button
+            <div className="sticky bottom-3 rounded-snake-card border border-snake-border-subtle bg-snake-surface/95 p-4 shadow-snake-panel backdrop-blur">
+              <Button
                 type="button"
                 onClick={importOrder}
                 disabled={importing}
-                className="min-h-14 w-full rounded-2xl bg-emerald-700 px-5 text-base font-black text-white disabled:opacity-60"
+                variant="primary" size="lg" className="h-auto py-3 whitespace-normal min-h-14 w-full"
               >
                 {importing ? "Importerer …" : "Importer til Viper"}
-              </button>
-              <p className="mt-2 text-center text-xs text-neutral-500">
+              </Button>
+              <p className="mt-2 text-center text-xs text-snake-text-secondary">
                 Ordren kontrolleres på nytt før import.
               </p>
             </div>
           ) : preview.importable ? (
-            <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-950">
+            <div className="rounded-snake-card border border-snake-warning-border bg-snake-warning-surface p-4 text-sm font-semibold text-snake-warning">
               Shopify-import til Viper er deaktivert. Forhåndsvisningen er
-              fortsatt read-only.
+              fortsatt skrivebeskyttet.
             </div>
           ) : null}
         </section>

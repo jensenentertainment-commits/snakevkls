@@ -66,10 +66,10 @@ test("P3 routes authorize every mutation and delegate inventory writes to RPC", 
     assert.match(route, /requireViper(?:Admin)?ApiActor\(\)/);
     assert.doesNotMatch(route, /\.from\(["']inventory["']\)[\s\S]*update/);
   }
-  assert.match(routes[0], /confirmViperPickLine/);
-  assert.match(routes[1], /reportViperPickException/);
-  assert.match(routes[2], /completeViperPick/);
-  assert.match(routes[3], /resolveViperPickException/);
+  for (const [index, action] of ["confirm", "report", "complete", "resolve"].entries()) {
+    assert.match(routes[index], /handleViperCommand/);
+    assert.ok(routes[index].includes("'" + action + "'"));
+  }
 });
 
 test("P3 exception types are closed and reject unknown workflow expansion", () => {

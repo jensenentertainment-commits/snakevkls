@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import { buildCatalogAudit, groupCatalogVariants, type CatalogVariantRow } from "../../roy/catalog-semantics";
+import { buildCatalogAudit, groupCatalogVariants, uniqueCatalogSkuMatch, type CatalogVariantRow } from "../../roy/catalog-semantics";
 import { resolveRoyQueryIntent } from "../../roy/query-intent";
 import type { ContextProvider } from "../context-provider";
 import { ROY_RECEIVED_CATALOG_FIELDS, type ShopifyCatalogContext } from "./shopify-catalog";
@@ -75,8 +75,12 @@ export const shopifyCatalogProvider = {
     if (error) throw new Error(`Catalog query failed: ${error.message}`);
     let rows = (initialRows ?? []) as CatalogVariantRow[];
 
-    if (intent.kind === "product" && rows[0]?.shopify_product_id) {
-      const { data: siblings, error: siblingsError } = await supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).eq("shopify_product_id", rows[0].shopify_product_id).order("sku");
+    const selected = intent.kind === "product" ? uniqueCatalogSkuMatch(rows, intent.sku) : null;
+    if (intent.kind === "product" && rows.length > 1) {
+      return legacyContext({ kind: "unresolved_reference" }, "", [], null);
+    }
+    if (selected) {
+      const { data: siblings, error: siblingsError } = await supabase.from("products").select(PRODUCT_COLUMNS).eq("active", true).eq("shopify_product_id", selected.shopify_product_id).order("sku");
       if (siblingsError) throw new Error(`Variant context failed: ${siblingsError.message}`);
       rows = (siblings ?? []) as CatalogVariantRow[];
     }

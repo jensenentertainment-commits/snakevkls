@@ -1,32 +1,15 @@
-import type { ProductRow, ZoneOption } from "./types";
+import type { ProductRow } from "./types";
 
 type ToastTone = "success" | "error";
 
 type Args = {
   products: ProductRow[];
-  zones: ZoneOption[];
-
-  inlineZone: Record<string, string>;
-  inlineSaving: string | null;
-  setInlineZone: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  setInlineSaving: React.Dispatch<React.SetStateAction<string | null>>;
-
   syncingShopify: boolean;
   setSyncingShopify: React.Dispatch<React.SetStateAction<boolean>>;
   setLastShopifySync: React.Dispatch<React.SetStateAction<string | null>>;
 
-  selected: string[];
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
-  batchZone: string;
-  setBatchZone: React.Dispatch<React.SetStateAction<string>>;
-  batchSaving: boolean;
-  setBatchSaving: React.Dispatch<React.SetStateAction<boolean>>;
-  setBatchOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
   editing: ProductRow | null;
   setEditing: React.Dispatch<React.SetStateAction<ProductRow | null>>;
-  newZone: string;
-  setNewZone: React.Dispatch<React.SetStateAction<string>>;
   newLocation: string;
   setNewLocation: React.Dispatch<React.SetStateAction<string>>;
   newQuantity: string;
@@ -51,29 +34,12 @@ type Args = {
 };
 
 export function useProductsActions({
-  zones,
-
-  inlineZone,
-  inlineSaving,
-  setInlineZone,
-  setInlineSaving,
-
   syncingShopify,
   setSyncingShopify,
   setLastShopifySync,
 
-  selected,
-  setSelected,
-  batchZone,
-  setBatchZone,
-  batchSaving,
-  setBatchSaving,
-  setBatchOpen,
-
   editing,
   setEditing,
-  newZone,
-  setNewZone,
   newLocation,
   setNewLocation,
   newQuantity,
@@ -140,116 +106,13 @@ export function useProductsActions({
     }
   }
 
-  async function handleBatchSave() {
-    if (!batchZone || selected.length === 0 || batchSaving) return;
-
-    setBatchSaving(true);
-
-    try {
-      const res = await fetch("/api/inventory/batch-zone", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productIds: selected,
-          zoneId: batchZone,
-        }),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result?.error || "Batch assign feilet");
-      }
-
-      const zoneName =
-        zones.find((zone) => zone.id === batchZone)?.code ?? "valgt sone";
-
-      setBatchOpen(false);
-      setSelected([]);
-      setBatchZone("");
-
-      showToast(`${result.updated} produkter → ${zoneName}`);
-
-      await loadData();
-
-      setRecentlyUpdated(true);
-      setTimeout(() => setRecentlyUpdated(false), 1800);
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Batch assign feilet";
-
-      showToast(message, "error");
-    } finally {
-      setBatchSaving(false);
-    }
-  }
-
-  async function handleInlineSave(product: ProductRow) {
-    const zoneId = inlineZone[product.id];
-
-    if (!zoneId || inlineSaving) return;
-
-    setInlineSaving(product.id);
-
-    const existing = product.inventory?.[0];
-    const quantity = existing?.quantity ?? product.shopify_quantity ?? 0;
-
-    try {
-      const res = await fetch("/api/inventory/set-location", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productId: product.id,
-          inventoryId: existing?.id ?? null,
-          zoneId,
-          locationId: null,
-          quantity,
-        }),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result?.error || "Kunne ikke lagre sone");
-      }
-
-      setInlineZone((prev) => {
-        const next = { ...prev };
-        delete next[product.id];
-        return next;
-      });
-
-      showToast("Sone satt");
-
-      await loadData();
-
-      setRecentlyUpdated(true);
-      setTimeout(() => setRecentlyUpdated(false), 1800);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Kunne ikke lagre sone";
-
-      showToast(message, "error");
-    } finally {
-      setInlineSaving(null);
-    }
-  }
-
   async function handleSave() {
     if (!editing || saveSaving) return;
+    if (!newLocation) { showToast("Velg en konkret lokasjon", "error"); return; }
 
     const quantity = Number(newQuantity);
 
-    if (Number.isNaN(quantity) || quantity < 0) {
+    if (!Number.isInteger(quantity) || quantity < 0) {
       showToast("Antall må være 0 eller høyere", "error");
       return;
     }
@@ -267,7 +130,6 @@ export function useProductsActions({
         body: JSON.stringify({
           productId: editing.id,
           inventoryId: existing?.id ?? null,
-          zoneId: newZone || null,
           locationId: newLocation || null,
           quantity,
         }),
@@ -280,7 +142,6 @@ export function useProductsActions({
       }
 
       setEditing(null);
-      setNewZone("");
       setNewLocation("");
       setNewQuantity("0");
 
@@ -354,8 +215,6 @@ export function useProductsActions({
 
   return {
     handleShopifySync,
-    handleBatchSave,
-    handleInlineSave,
     handleSave,
     handleStockMovement,
   };

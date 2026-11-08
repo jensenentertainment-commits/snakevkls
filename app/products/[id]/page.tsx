@@ -25,7 +25,6 @@ const [showMovementModal, setShowMovementModal] = useState(false);
 const [zones, setZones] = useState<ZoneOption[]>([]);
 const [locations, setLocations] = useState<LocationOption[]>([]);
 
-const [newZone, setNewZone] = useState("");
 const [newLocation, setNewLocation] = useState("");
 const [newQuantity, setNewQuantity] = useState("0");
 
@@ -64,7 +63,7 @@ useEffect(() => {
 
 
 async function handleSavePlacement() {
-  if (!inv?.id) return;
+  if (!product?.id || !newLocation || !Number.isInteger(Number(newQuantity)) || Number(newQuantity) < 0) return;
 
   setSaveSaving(true);
 
@@ -73,8 +72,7 @@ async function handleSavePlacement() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       productId: product.id,
-      inventoryId: inv.id,
-      zoneId: newZone || null,
+      inventoryId: inv?.id ?? null,
       locationId: newLocation || null,
       quantity: Number(newQuantity),
     }),
@@ -167,7 +165,6 @@ async function handleSaveMovement() {
     }
   | undefined;
 
-setNewZone(loadedInv?.zone_id ?? "");
 setNewLocation(loadedInv?.locations?.id ?? "");
 setNewQuantity(String(loadedInv?.quantity ?? 0));
 
@@ -348,8 +345,6 @@ const { data: activityData } = await supabase
     editing={product}
     locations={locations}
     zones={zones}
-    newZone={newZone}
-    setNewZone={setNewZone}
     newLocation={newLocation}
     setNewLocation={setNewLocation}
     newQuantity={newQuantity}

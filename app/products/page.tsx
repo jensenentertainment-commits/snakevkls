@@ -23,7 +23,6 @@ import type {
 import { getMeta } from "../components/products/utils";
 import { useProductsFiltering } from "../components/products/useProductsFiltering";
 import EditPlacementModal from "../components/products/EditPlacementModal";
-import BatchAssignModal from "../components/products/BatchAssignModal";
 import StockMovementModal from "../components/products/StockMovementModal";
 import { useProductsActions } from "../components/products/useProductsActions";
 import RoleGate from "../components/auth/RoleGate";
@@ -33,8 +32,6 @@ import { Progress } from "../components/design-system";
 
 
 function ProductsPageContent() {
-  const [inlineZone, setInlineZone] = useState<Record<string, string>>({});
-  const [inlineSaving, setInlineSaving] = useState<string | null>(null);
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [locations, setLocations] = useState<LocationOption[]>([]);
   const [zones, setZones] = useState<ZoneOption[]>([]);
@@ -49,14 +46,9 @@ function ProductsPageContent() {
   const [movementReason, setMovementReason] = useState("manual_sale");
   const [movementNote, setMovementNote] = useState("");
   const [movementSaving, setMovementSaving] = useState(false);
-  const [newZone, setNewZone] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [newQuantity, setNewQuantity] = useState("0");
   const [saveSaving, setSaveSaving] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [batchOpen, setBatchOpen] = useState(false);
-  const [batchZone, setBatchZone] = useState("");
-  const [batchSaving, setBatchSaving] = useState(false);
   const [toast, setToast] = useState<{
   message: string;
   tone: "success" | "error";
@@ -124,11 +116,6 @@ useEffect(() => {
   }
 }, [statusParam]);
 
-  useEffect(() => {
-  if (batchOpen) {
-    setBatchZone("");
-  }
-}, [batchOpen]);
 function showToast(message: string, tone: "success" | "error" = "success") {
   setToast({ message, tone });
   setTimeout(() => setToast(null), 3200);
@@ -209,14 +196,7 @@ function showToast(message: string, tone: "success" | "error" = "success") {
 function openModal(product: ProductRow) {
   const inventory = product.inventory?.[0];
 
-  const zoneId =
-    inventory?.locations?.zone_id ||
-    inventory?.locations?.zones?.id ||
-    inventory?.zone_id ||
-    "";
-
   setEditing(product);
-  setNewZone(zoneId);
   setNewLocation(inventory?.locations?.id ?? "");
   setNewQuantity(String(inventory?.quantity ?? 0));
 }
@@ -243,35 +223,19 @@ const diffCount = products.filter((product) => {
 
 const {
   handleShopifySync,
-  handleBatchSave,
-  handleInlineSave,
   handleSave,
   handleStockMovement,
 } = useProductsActions({
   products,
-  zones,
 
-  inlineZone,
-  inlineSaving,
-  setInlineZone,
-  setInlineSaving,
 
   syncingShopify,
   setSyncingShopify,
   setLastShopifySync,
 
-  selected,
-  setSelected,
-  batchZone,
-  setBatchZone,
-  batchSaving,
-  setBatchSaving,
-  setBatchOpen,
 
   editing,
   setEditing,
-  newZone,
-  setNewZone,
   newLocation,
   setNewLocation,
   newQuantity,
@@ -301,7 +265,7 @@ const {
   <LagerHero
     eyebrow="SNAKE / Produkter"
     title="Varesøk"
-    description="Sett sone først, og nøyaktig lokasjon senere når lageret er ferdig merket."
+    description="Velg en konkret lagerlokasjon. Sonen bestemmes automatisk av lokasjonen."
     searchValue={query}
     onSearchChange={setQuery}
     searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
@@ -435,24 +399,7 @@ const percent = Math.round((placed / total) * 100);
         Vis mangler
       </button>
 
-      {canWrite && (
-        <button
-          onClick={() => {
-            const missingIds = products
-              .filter((product) => getMeta(product).status === "missing")
-              .map((product) => product.id);
 
-            setSelected(missingIds);
-
-            if (missingIds.length >= 3) {
-              setTimeout(() => setBatchOpen(true), 150);
-            }
-          }}
-          className="rounded-snake-control bg-snake-primary px-3 py-2 text-sm font-semibold text-snake-text-on-dark shadow-snake-card"
-        >
-          Velg alle
-        </button>
-      )}
     </div>
   </div>
 );
@@ -541,17 +488,7 @@ const percent = Math.round((placed / total) * 100);
   key={product.id}
   product={product}
   meta={getMeta(product)}
-  selected={selected.includes(product.id)}
   canWrite={canWrite}
-  onToggleSelected={() => {
-  if (!canWrite) return;
-
-  setSelected((prev) =>
-    prev.includes(product.id)
-      ? prev.filter((id) => id !== product.id)
-      : [...prev, product.id]
-  );
-}}
   onEdit={() => {
   if (!canWrite) return;
   openModal(product);
@@ -566,23 +503,6 @@ const percent = Math.round((placed / total) * 100);
                 <table className="min-w-full table-fixed border-collapse">
                   <thead className="bg-snake-surface text-left text-xs uppercase tracking-[0.14em] text-snake-text-muted">
                     <tr>
-  <th className="w-[48px] px-5 py-4 font-semibold">
-    {canWrite && (
-    <input
-      type="checkbox"
-      checked={selected.length === filtered.length && filtered.length > 0}
-      onChange={() =>
-        setSelected(
-          selected.length === filtered.length
-            ? []
-            : filtered.map((product) => product.id)
-        )
-      }
-    />
-    )}
-  </th>
-  
-
   <th className="px-5 py-4 font-semibold">
     <button
       onClick={() => setSortMode((current) => (current === "az" ? "za" : "az"))}
@@ -603,7 +523,7 @@ const percent = Math.round((placed / total) * 100);
                     {loading ? (
                       <tr>
                         <td
-                          colSpan={6}
+                          colSpan={5}
                           className="px-5 py-12 text-sm text-snake-text-muted"
                         >
                           Laster produkter...
@@ -612,7 +532,7 @@ const percent = Math.round((placed / total) * 100);
                     ) : filtered.length === 0 ? (
                       <tr>
                         <td
-                        colSpan={6}
+                        colSpan={5}
                           className="px-5 py-12 text-sm text-snake-text-muted"
                         >
                           Ingen treff.
@@ -629,28 +549,11 @@ const percent = Math.round((placed / total) * 100);
   window.location.href = `/products/${product.id}`;
 }}
   className={`h-[104px] cursor-pointer border-t transition ${
-  selected.includes(product.id)
-    ? "border-l-4 border-l-snake-brand border-t-snake-border-subtle bg-snake-surface ring-1 ring-snake-brand-border"
-    : meta.status === "missing"
+  meta.status === "missing"
       ? "border-l-4 border-l-snake-brand/45 border-t-snake-border-subtle bg-snake-warning-surface/38"
       : "border-l-4 border-l-transparent border-t-snake-border-subtle bg-snake-surface"
 } hover:bg-snake-primary/[0.025]`}
 >
-                            <td className="px-5 py-5 align-middle text-sm">
-                              {canWrite && (
-                              <input
-                                type="checkbox"
-                                checked={selected.includes(product.id)}
-                                onChange={() =>
-                                  setSelected((prev) =>
-                                    prev.includes(product.id)
-                                      ? prev.filter((id) => id !== product.id)
-                                      : [...prev, product.id]
-                                  )
-                                }
-                              />
-                              )}
-                            </td>
 <td className="px-5 py-5 align-middle text-sm text-snake-text-primary">
   <ProductIdentity product={product} />
 </td>
@@ -682,51 +585,7 @@ const percent = Math.round((placed / total) * 100);
 </td>
 
 <td className="w-[190px] px-5 py-5 align-middle text-sm">
-  {meta.status === "missing" && canWrite ? (
-    
-    <div className="flex flex-col gap-1.5">
-      
-  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-snake-brand-strong">
-    Velg sone
-  </span>
-
-  <div className="flex w-[132px] items-center justify-end gap-1.5">
-  <select
-    value={inlineZone[product.id] ?? ""}
-    onClick={(e) => e.stopPropagation()}
-    onDoubleClick={(e) => e.stopPropagation()}
-    onChange={(e) =>
-      setInlineZone((prev) => ({
-        ...prev,
-        [product.id]: e.target.value,
-      }))
-    }
-    disabled={inlineSaving === product.id}
-    className="h-8 w-[76px] rounded-lg border border-snake-border-default bg-snake-surface px-2 text-[11px] font-semibold text-snake-text-primary shadow-snake-card outline-none transition hover:border-snake-primary/30 focus:border-snake-primary/50 focus:ring-2 focus:ring-snake-primary/10 disabled:opacity-50"
-  >
-    <option value="">Sone</option>
-
-    {zones.map((zone) => (
-      <option key={zone.id} value={zone.id}>
-        {zone.code}
-      </option>
-    ))}
-  </select>
-
-  <button
-    onClick={(e) => {
-      e.stopPropagation();
-      handleInlineSave(product);
-    }}
-    onDoubleClick={(e) => e.stopPropagation()}
-    disabled={!inlineZone[product.id] || inlineSaving === product.id}
-    className="h-8 w-[48px] rounded-lg bg-snake-primary text-[11px] font-bold text-snake-text-on-dark shadow-snake-card transition hover:bg-snake-primary-hover disabled:bg-snake-neutral-surface disabled:text-snake-text-muted"
-  >
-    {inlineSaving === product.id ? "..." : "Sett"}
-  </button>
-</div>
-</div>
-  ) : meta.zoneLabel ? (
+  {meta.zoneLabel ? (
   <span
     className={`rounded-lg border px-2 py-1 text-xs font-semibold ${
       meta.zoneCode && ZONE_STYLES[meta.zoneCode]
@@ -746,7 +605,7 @@ const percent = Math.round((placed / total) * 100);
 <td className="w-[140px] px-5 py-5 align-middle text-sm">
   {meta.locationCode ? (
     <PlacementDisplay meta={meta} />
-  ) : meta.zoneId && canWrite ? (
+  ) : canWrite ? (
   <button
       onClick={(e) => {
         e.stopPropagation();
@@ -772,39 +631,12 @@ const percent = Math.round((placed / total) * 100);
         </section>
 
 
-{canWrite && selected.length > 0 && (
-  <div className="fixed bottom-5 left-1/2 z-40 w-[calc(100%-2rem)] max-w-[720px] -translate-x-1/2 rounded-snake-action border border-snake-brand/25 bg-snake-app-elevated/95 px-4 py-3 text-snake-text-on-dark backdrop-blur-xl shadow-snake-overlay">
-    <div className="flex items-center justify-between gap-4">
-      <span className="text-sm font-semibold">
-        {selected.length} valgt
-      </span>
-
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => setSelected([])}
-          className="rounded-snake-control bg-snake-app-elevated px-4 py-2 text-sm font-semibold text-snake-text-on-dark"
-        >
-          Fjern valg
-        </button>
-
-        <button
-          onClick={() => setBatchOpen(true)}
-          className="rounded-snake-control bg-snake-surface px-4 py-2 text-sm font-semibold text-snake-text-primary"
-        >
-          Sett sone
-        </button>
-      </div>
-    </div>
-  </div>
-)}
 <SnakeToast message={toast?.message ?? null} tone={toast?.tone ?? "success"} />
       {canWrite && editing && (
   <EditPlacementModal
     editing={editing}
     locations={locations}
     zones={zones}
-    newZone={newZone}
-    setNewZone={setNewZone}
     newLocation={newLocation}
     setNewLocation={setNewLocation}
     newQuantity={newQuantity}
@@ -812,28 +644,10 @@ const percent = Math.round((placed / total) * 100);
     saveSaving={saveSaving}
     onClose={() => {
       setEditing(null);
-      setNewZone("");
       setNewLocation("");
       setNewQuantity("0");
     }}
     onSave={handleSave}
-  />
-)}
-
-     {canWrite && batchOpen && (
-  <BatchAssignModal
-    selectedCount={selected.length}
-    zones={zones}
-    batchZone={batchZone}
-    setBatchZone={setBatchZone}
-    batchSaving={batchSaving}
-    onClose={() => {
-      if (batchSaving) return;
-      setBatchOpen(false);
-      setBatchZone("");
-      setSelected([]);
-    }}
-    onSave={handleBatchSave}
   />
 )}
 

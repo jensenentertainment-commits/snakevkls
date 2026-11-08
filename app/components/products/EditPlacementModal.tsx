@@ -9,8 +9,6 @@ type Props = {
   locations: LocationOption[];
   zones: ZoneOption[];
 
-  newZone: string;
-  setNewZone: (value: string) => void;
 
   newLocation: string;
   setNewLocation: (value: string) => void;
@@ -28,8 +26,6 @@ export default function EditPlacementModal({
   editing,
   locations,
   zones,
-  newZone,
-  setNewZone,
   newLocation,
   setNewLocation,
   newQuantity,
@@ -56,50 +52,21 @@ export default function EditPlacementModal({
       </div>
 
       <div className="px-6 py-5">
-        <label className="block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
-          Sone
-        </label>
-
-        <select
-          autoFocus
-          value={newZone}
-          onChange={(e) => {
-            setNewZone(e.target.value);
-            setNewLocation("");
-          }}
-          className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
-        >
-          <option value="">Velg sone</option>
-
-          {zones.map((zone) => (
-            <option key={zone.id} value={zone.id}>
-              {zone.code} — {zone.name}
-            </option>
-          ))}
-        </select>
-
-        <label className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
+        <label htmlFor="placement-location" className="block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
           Lokasjon
         </label>
 
         <select
+          id="placement-location"
           value={newLocation}
-          onChange={(e) => {
-            const locationId = e.target.value;
-            const location = locations.find((item) => item.id === locationId);
-
-            setNewLocation(locationId);
-
-            if (location?.zone_id) {
-              setNewZone(location.zone_id);
-            }
-          }}
+          autoFocus
+          onChange={(e) => setNewLocation(e.target.value)}
           className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
         >
-          <option value="">Ingen eksakt lokasjon ennå</option>
+          <option value="">Velg lokasjon</option>
 
           {locations
-            .filter((location) => (newZone ? location.zone_id === newZone : true))
+            .filter((location) => Boolean(location.zone_id))
             .map((location) => (
               <option key={location.id} value={location.id}>
                 {location.code}
@@ -107,11 +74,13 @@ export default function EditPlacementModal({
             ))}
         </select>
 
-        <label className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
+        <p className="mt-2 text-sm text-neutral-500">Sone: {zones.find((zone) => zone.id === locations.find((location) => location.id === newLocation)?.zone_id)?.code ?? "Velg lokasjon først"}</p>
+        <label htmlFor="placement-quantity" className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
           Antall
         </label>
 
         <input
+          id="placement-quantity"
           type="number"
           min="0"
           value={newQuantity}
@@ -130,7 +99,7 @@ export default function EditPlacementModal({
 
         <button
           onClick={onSave}
-          disabled={saveSaving}
+          disabled={saveSaving || !locations.some((location) => location.id === newLocation && location.zone_id)}
           className="rounded-2xl bg-[#055a7d] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044c6a] disabled:cursor-not-allowed disabled:opacity-45"
         >
           {saveSaving ? "Lagrer..." : "Lagre"}

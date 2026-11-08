@@ -25,24 +25,18 @@ type Product = {
 export default function MobileProductCard({
   product,
   meta,
-  selected,
   canWrite,
-  onToggleSelected,
   onEdit,
 }: {
   product: Product;
   meta: ProductMeta;
-  selected: boolean;
   canWrite: boolean;
-  onToggleSelected: () => void;
   onEdit: () => void;
 }) {
   return (
   <article
     className={`px-5 py-5 transition ${
-      selected
-        ? "bg-[#fbf6e8]/55 shadow-[inset_4px_0_0_rgba(181,138,20,0.72)]"
-        : meta.status === "missing"
+      meta.status === "missing"
           ? "bg-[#fbf6e8]/30"
           : "bg-white"
     }`}
@@ -86,18 +80,7 @@ export default function MobileProductCard({
     </div>
 
     {canWrite && (
-      <div className="mt-4 grid grid-cols-[92px_1fr] gap-3">
-        <button
-          onClick={onToggleSelected}
-          className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition ${
-            selected
-              ? "border-[#b58a14]/60 bg-[#b58a14] text-white"
-              : "border-neutral-300 bg-white text-neutral-700 hover:border-[#055a7d]/25 hover:text-[#055a7d]"
-          }`}
-        >
-          {selected ? "Valgt" : "Velg"}
-        </button>
-
+      <div className="mt-4 grid grid-cols-1 gap-3">
         <button
           onClick={onEdit}
           className="rounded-xl bg-[#055a7d] px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044c6a]"

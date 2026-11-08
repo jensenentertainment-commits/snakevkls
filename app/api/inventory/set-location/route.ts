@@ -21,7 +21,6 @@ export async function POST(request: NextRequest) {
   const body = (await request.json()) as Body;
   const productId = String(body.productId ?? "").trim();
   const inventoryId = body.inventoryId || null;
-  const zoneId = body.zoneId || null;
   const locationId = body.locationId || null;
   const quantity = Number(body.quantity);
 
@@ -31,9 +30,9 @@ export async function POST(request: NextRequest) {
   if (!Number.isInteger(quantity) || quantity < 0) {
     return NextResponse.json({ error: "Ugyldig antall" }, { status: 400 });
   }
-  if (!zoneId && !locationId) {
+  if (!locationId) {
     return NextResponse.json(
-      { error: "Velg minst sone eller lokasjon" },
+      { error: "Velg en konkret lokasjon" },
       { status: 400 }
     );
   }
@@ -41,7 +40,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabaseAdmin.rpc("set_product_location", {
     requested_product_id: productId,
     requested_inventory_id: inventoryId,
-    requested_zone_id: zoneId,
+    requested_zone_id: null,
     requested_location_id: locationId,
     requested_quantity: quantity,
     requested_actor_id: user.id,

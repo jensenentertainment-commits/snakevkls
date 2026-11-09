@@ -5,7 +5,7 @@ import test from "node:test";
 
 const lager = readFileSync(join(process.cwd(), "app/lager/page.tsx"), "utf8");
 
-test("Lager exposes Viper and Lagersalg as active operational workspaces", () => {
+test("Lager exposes Viper and hides the Lagersalg shortcut", () => {
   const viper = lager.match(
     /\{\s*href: "\/viper",[\s\S]+?title: "Viper",[\s\S]+?\},/,
   );
@@ -18,10 +18,8 @@ test("Lager exposes Viper and Lagersalg as active operational workspaces", () =>
   assert.match(viper[0], /label: "Operativ"/);
   assert.doesNotMatch(viper[0], /muted: true/);
 
-  assert.ok(warehouseSales);
-  assert.match(warehouseSales[0], /Fysiske lagersalg fra lageret/);
-  assert.match(warehouseSales[0], /label: "Operativ"/);
-  assert.doesNotMatch(warehouseSales[0], /muted: true/);
+  assert.equal(warehouseSales, null);
+  assert.doesNotMatch(lager, /href: "\/warehouse-sales"/);
 });
 
 test("the obsolete Plukk card is removed", () => {

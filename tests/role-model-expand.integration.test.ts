@@ -24,10 +24,7 @@ test("navigation separates ordinary users from warehouse-only scope", async () =
     dashboard,
     /id: "lager",[\s\S]*roles: \["admin", "user", "warehouse"\]/,
   );
-  assert.match(
-    dashboard,
-    /id: "lagersalg",[\s\S]*roles: \["admin", "user"\]/,
-  );
+  assert.doesNotMatch(dashboard, /id: "lagersalg"|href: "\/warehouse-sales"/);
   assert.match(
     dashboard,
     /id: "viper",[\s\S]*roles: \["admin", "user", "warehouse"\]/,

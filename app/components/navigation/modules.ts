@@ -66,7 +66,8 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: ShoppingBag,
     id: "warehouse-sales",
     label: "Lagersalg",
-    roles: ["admin", "user"],
+    // Navigation visibility only; page and API authorization are unchanged.
+    roles: [],
     matchPaths: ["/warehouse-sales"],
   },
 ] as const satisfies readonly NavigationItem[];

@@ -6,7 +6,6 @@ import {
   FlaskConical,
   PackageCheck,
   Settings,
-  ShoppingBag,
   type LucideIcon,
 } from "lucide-react";
 
@@ -34,15 +33,6 @@ const modules: readonly DashboardModule[] = [
     id: "lager",
     roles: ["admin", "user", "warehouse"],
     title: "Lager",
-  },
-  {
-    description: "Rask registrering av fysiske salg fra lageret.",
-    enabled: true,
-    href: "/warehouse-sales",
-    icon: ShoppingBag,
-    id: "lagersalg",
-    roles: ["admin", "user"],
-    title: "Lagersalg",
   },
   {
     description: "Arbeidskø og mobil arbeidsflyt for ordreplukk.",

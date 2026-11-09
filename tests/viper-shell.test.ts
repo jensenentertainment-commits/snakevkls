@@ -38,3 +38,15 @@ test("Viper pages use the shared main landmark and retain server authorization",
   assert.match(moduleNav, /ModuleNavMobile/);
   assert.match(moduleNav, /AppNavLinks/);
 });
+
+test("global desktop and mobile navigation hide Lagersalg for every role", () => {
+  for (const role of ["admin", "user", "warehouse"] as const) {
+    assert.deepEqual(visibleNavigationItems(GLOBAL_NAVIGATION_ITEMS, role).map(i => i.id),
+      role === "warehouse" ? ["dashboard", "lager", "viper"] : ["dashboard", "lager", "viper", "shopify"]);
+  }
+  assert.deepEqual(visibleNavigationItems(GLOBAL_NAVIGATION_ITEMS, undefined), []);
+  const navbar = readFileSync("app/components/layout/AppNavbar.tsx", "utf8");
+  assert.match(navbar, /<AppNavLinks items=\{visibleItems\}/);
+  assert.match(navbar, /<MobileNav[\s\S]*?items=\{visibleItems\}/);
+  assert.match(readFileSync("app/warehouse-sales/layout.tsx", "utf8"), /requireRole\(\["admin", "user"\]\)/);
+});

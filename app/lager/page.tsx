@@ -9,7 +9,6 @@ import {
   ScanLine,
   Activity,
   ArrowRight,
-  ShoppingBag,
   Wrench,
 } from "lucide-react";
 import SnakeIntelligencePanel from "../components/SnakeIntelligencePanel";
@@ -120,15 +119,6 @@ const issueState: IssueCardState = hasIssues
       text: "Plukk, pakk og fullfør ordre.",
       body: "Den operative arbeidsflaten for ordreplukk fra start til ferdig ordre.",
       action: "Åpne Viper",
-    },
-    {
-      href: "/warehouse-sales",
-      icon: <ShoppingBag />,
-      title: "Lagersalg",
-      label: "Operativ",
-      text: "Fysiske lagersalg fra lageret.",
-      body: "Finn varer, bygg handlekurv og registrer salg med Vipps som betalingsmåte.",
-      action: "Start lagersalg",
     },
   ];
 

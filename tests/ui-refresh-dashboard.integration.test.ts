@@ -23,7 +23,6 @@ test("Dashboard exposes only the approved module set", () => {
 
   for (const title of [
     "Lager",
-    "Lagersalg",
     "Viper",
     "Snake Labs",
     "Innstillinger",
@@ -40,17 +39,11 @@ test("Dashboard exposes only the approved module set", () => {
   assert.doesNotMatch(dashboard, /\bArne\b|\bRoy\b/);
 });
 
-test("Lagersalg is visible, enabled and links to the safe UI workspace", () => {
-  const dashboard = readProjectFile("app/dashboard/page.tsx");
-  const lagersalgBlock = dashboard.match(
-    /\{\s*description: "Rask[\s\S]+?title: "Lagersalg",\s*\},/,
-  );
-
-  assert.ok(lagersalgBlock);
-  assert.match(lagersalgBlock[0], /enabled: true/);
-  assert.match(lagersalgBlock[0], /href: "\/warehouse-sales"/);
-  assert.match(dashboard, /label="Kommer snart"/);
-  assert.match(dashboard, /aria-disabled="true"/);
+test("Lagersalg shortcuts are hidden while the module remains available", () => {
+  for (const file of ["app/dashboard/page.tsx", "app/lager/page.tsx"]) {
+    assert.doesNotMatch(readProjectFile(file), /warehouse-sales|Lagersalg/);
+  }
+  assert.match(readProjectFile("app/components/shell/route-config.ts"), /moduleNavigation: WAREHOUSE_SALES_MODULE_NAVIGATION/);
 });
 
 test("Dashboard preserves authentication and role filtering", () => {

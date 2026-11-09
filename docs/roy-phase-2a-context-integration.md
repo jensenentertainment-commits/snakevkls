@@ -222,6 +222,13 @@ Added:
 - `tests/database/roy-phase-2a-targeted.helpers.sql`
 - `tests/digital-workforce-roy-phase2a.test.ts`
 
+## 2026-11-09 continuation
+
+Current local Variant-ID support, eight real-model request-pipeline checks,
+validation results and remaining browser/activation boundary are recorded in
+[Roy readiness](roy-phase-2a-readiness-20261109.md). Earlier results in this file
+describe Commit 7 and are retained as historical evidence.
+
 ## References and non-goals
 
 Reviewed [Supabase function security](https://supabase.com/docs/guides/database/functions)

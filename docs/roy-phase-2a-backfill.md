@@ -1,10 +1,19 @@
 # Roy Phase 2A Commit 8: protected backfill and independent proof
 
+# Operator acceptance update — 2026-11-09
+
+For the current Phase 2A rollout, the operator accepted the documented read-only
+ordinary-sync catalog verification as replacement for the original backfill-proof
+requirement. No new backfill/sync is required. This does not claim that a protected
+operation/proof ran and does not weaken or modify the historical implementation.
+See [current evidence and approval boundary](roy-phase-2a-readiness-20261109.md).
+
 This is operator tooling and forward database artifacts, not a production rollout.
 No deployment, migration, source traversal, reconciliation, checkpoint reset or
 Roy gate activation is triggered by building or deploying this commit.
 
-**Executable PostgreSQL validation: NOT RUN — isolated database target unavailable.**
+**Historical Commit 8 status at authoring: NOT RUN — isolated database target unavailable.**
+For current validation and the accepted evidence substitution, see the update above.
 The code/static tests below do not establish database transactional correctness.
 Commit 2 and Commit 5–8 execution remains a production-readiness gate. Neither
 TV19 nor production vk-lager is an approved destructive test target.

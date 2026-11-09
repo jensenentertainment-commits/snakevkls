@@ -5,6 +5,7 @@ import { parseRoyTargetedContent, TARGET_FIELDS, type RoyTargetedContent, type T
 
 export type Phase2aRoute =
   | { kind: "targeted"; sku: string }
+  | { kind: "variant"; variantId: string }
   | { kind: "foundation"; field: TargetField | "collections" | null }
   | { kind: "clarify" | "unsupported" | "capabilities" | "legacy" };
 export type Phase2aContext =
@@ -48,6 +49,14 @@ export function resolvePhase2aRoute(input: ValidChatInput): Phase2aRoute {
       || (field !== null && field !== "productType" && field !== "imageReference")) return { kind: "foundation", field };
     return { kind: "legacy" };
   }
+  // Explicit IDs never fall back to a SKU or a conversational guess.
+  if (/gid:\/\/shopify\/|variant[ -]?id/iu.test(q)) {
+    const tokens = [...q.matchAll(/gid:\/\/shopify\/[^\s,;?]+/gu)].map(m => m[0].replace(/\.$/u, ""));
+    const named = [...q.matchAll(/\bvariant[ -]?id\s*[:=]?\s*([^\s,;?]+)/giu)].map(m => m[1].replace(/\.$/u, ""));
+    const refs = [...new Set([...tokens, ...named].map(ref => /^[1-9][0-9]{0,19}$/u.test(ref) ? `gid://shopify/ProductVariant/${ref}` : ref))];
+    if (refs.some(ref => !/^gid:\/\/shopify\/ProductVariant\/[1-9][0-9]{0,19}$/u.test(ref))) return { kind: "clarify" };
+    return refs.length === 1 && !/\bSKU\s+/iu.test(q) ? { kind: "variant", variantId: refs[0] } : { kind: "clarify" };
+  }
   const explicit = skus(q);
   if (explicit.length > 1) return { kind: "clarify" };
   if (explicit.length === 1) return { kind: "targeted", sku: explicit[0] };
@@ -63,10 +72,12 @@ export function resolvePhase2aRoute(input: ValidChatInput): Phase2aRoute {
   return { kind: "legacy" };
 }
 
-export type Phase2aReadRpc = (name: "get_roy_targeted_product_v1" | "get_roy_catalog_foundation_v1", args?: { requested_sku: string }) => Promise<{ data: unknown; error: unknown }>;
+export type Phase2aReadRpc = (name: "get_roy_targeted_product_v1" | "get_roy_targeted_variant_v1" | "get_roy_catalog_foundation_v1", args?: { requested_sku: string } | { requested_variant_id: string }) => Promise<{ data: unknown; error: unknown }>;
 export async function readPhase2aContext(route: Exclude<Phase2aRoute, { kind: "legacy" }>, rpc: Phase2aReadRpc): Promise<Phase2aContext> {
-  if (route.kind === "targeted") {
-    const result = await rpc("get_roy_targeted_product_v1", { requested_sku: route.sku });
+  if (route.kind === "targeted" || route.kind === "variant") {
+    const result = route.kind === "variant"
+      ? await rpc("get_roy_targeted_variant_v1", { requested_variant_id: route.variantId })
+      : await rpc("get_roy_targeted_product_v1", { requested_sku: route.sku });
     if (result.error) throw new Error("Roy targeted retrieval failed");
     const data = parseRoyTargetedContent(result.data);
     return { source: "roy_targeted_product_v1", receivedFields: data.status === "found" ? TARGET_RECEIVED_FIELDS : [], data };

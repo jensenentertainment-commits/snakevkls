@@ -23,7 +23,7 @@ const QUALITY_NOTE = "Jeg kan beskrive observasjon og tilstedeværelse, men ikke
 export function presentPhase2a(raw: Phase2aContext, question: string): string {
   const c = phase2aModelContext(raw);
   if (c.source === "roy_phase2a_guidance_v1") {
-    if (c.reason === "clarify") return "Jeg kan ikke avgjøre hvilket produkt du mener. Oppgi én entydig SKU, så undersøker jeg det uten å gjette.";
+    if (c.reason === "clarify") return "Jeg kan ikke avgjøre hvilket produkt du mener. Oppgi én entydig SKU eller eksakt Shopify Variant-ID, så undersøker jeg det uten å gjette.";
     if (c.reason === "unsupported") return QUALITY_NOTE;
     return "Jeg kan lese variantfakta og kanoniske observasjoner av produktbeskrivelse, eksplisitte SEO-overstyringer, handle, produkttype, Shopify Product Category og collections, samt avgrensede katalogaggregater. Ukjent er ikke manglende. " + QUALITY_NOTE;
   }
@@ -72,12 +72,14 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
     return lines.join("\n\n");
   }
   const d = c.data;
-  if (d.status === "ambiguous") return "SKU-en gir flere mulige variant-/produktidentiteter. Jeg trenger en entydig SKU og velger ikke et produkt på dine vegne.";
-  if (d.status === "not_found") return "Jeg fant ikke SKU-en i Snakes aktive Shopify-tilknyttede katalog. Det beviser ikke at produktet mangler i live Shopify.";
+  if (d.status === "ambiguous") return "SKU-en gir flere mulige variant-/produktidentiteter. Oppgi eksakt Shopify Variant-ID; jeg velger ikke et produkt på dine vegne.";
+  if (d.status === "not_found") return "Jeg fant ikke produktreferansen i Snakes aktive Shopify-tilknyttede katalog. Det beviser ikke at produktet mangler i live Shopify.";
   const v = d.selectedVariant!;
   const content = d.productContent!;
   const field = requestedContentField(question);
-  const general = !field;
+  // Do not silently collapse a question about several facts to its first field.
+  const topicCount = [/beskrivelse|produkttekst/iu, /bilde|image/iu, /seo|meta/iu, /collection|kolleksjon/iu].filter(pattern => pattern.test(question)).length;
+  const general = !field || topicCount > 1;
   const lines = [`Jeg fant ${v.productName ? quote(v.productName) : "produktet"}${v.sku ? ` (SKU ${quote(v.sku)})` : ""}.`];
   if (v.textTruncated) lines.push("Variantens tekstfelt er avkortet eller holdt tilbake; ikke bruk forhåndsvisningen som en ny eksakt SKU.");
   if (general) {

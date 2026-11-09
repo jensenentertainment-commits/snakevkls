@@ -33,6 +33,56 @@ function outer(phase2a: Phase2aContext): ShopifyCatalogContext {
 function input(question: string, history: { role: "user" | "assistant"; text: string }[] = []) { return { question, history, page: "/shopify" }; }
 const history = [{ role: "user" as const, text: "Hva vet du om SKU VK-MOBSPIR-50?" }, { role: "assistant" as const, text: "Varianter VK-MOBSPIR-50 og VK-MOBSPIR-60, pakninger 200-2000." }];
 
+test("exact Variant-ID routes to separate read RPC without SKU fallback", async () => {
+  for (const ref of ["Variant-ID 123456789", "gid://shopify/ProductVariant/123456789"]) {
+    const route = resolvePhase2aRoute(input(`Vis produktinnhold for ${ref}`, history));
+    assert.deepEqual(route, { kind: "variant", variantId: "gid://shopify/ProductVariant/123456789" });
+    await readPhase2aContext(route, async (name, args) => {
+      assert.equal(name, "get_roy_targeted_variant_v1");
+      assert.deepEqual(args, { requested_variant_id: "gid://shopify/ProductVariant/123456789" });
+      const d = target(); d.selectedVariant!.sku = null;
+      return { data: d, error: null };
+    });
+  }
+  for (const ref of ["Variant-ID 0", "Variant-ID abc", "gid://shopify/Product/123", "Variant-ID 123 og Variant-ID 456", "Variant-ID 123 og SKU X", "Variant-ID 123abc", "Variant-ID 123.45", "gid://shopify/ProductVariant/123 og gid://shopify/Product/456"]) {
+    assert.equal(resolvePhase2aRoute(input(ref, history)).kind, "clarify", ref);
+  }
+});
+
+test("multi-field product question includes description, image and both SEO fields", () => {
+  const answer = presentPhase2a(ctx(), "Har SKU ALB-ULL-001 beskrivelse, bilde og SEO-felt?");
+  for (const label of ["Produktbeskrivelse:", "Featured-image-referanse:", "SEO-titteloverstyring:", "SEO-beskrivelsesoverstyring:"]) assert.ok(answer.includes(label), label);
+});
+
+test("approved missing-SKU question retains catalog audit route", () => {
+  assert.equal(resolvePhase2aRoute(input("Hvilke varianter mangler SKU?")).kind, "legacy");
+  assert.deepEqual(resolveRoyQueryIntent(input("Hvilke varianter mangler SKU?")), { kind: "catalog_overview", objective: "overview" });
+});
+
+test("missing-SKU answer uses only missing-SKU evidence and treats SKU as optional", () => {
+  const c = outer(ctx()); delete c.phase2a;
+  c.intent = { kind: "catalog_overview", objective: "overview" };
+  c.audit = { productCount: 3, variantCount: 4, findings: [{ code: "missing_sku", scope: "variant", count: 2, evidence: ["Only missing SKU", "Other missing SKU"] }], freshness: { oldestSyncedAt: null, newestSyncedAt: null }, deferred: [] };
+  const answer = createRoyUserResponse({ context: c, question: "Hvilke varianter mangler SKU?", internalAnswer: "OBSERVED\nUNKNOWN\nINFERENCE" });
+  assert.match(answer, /2 av 4 aktive varianter/);
+  assert.match(answer, /Only missing SKU/);
+  assert.match(answer, /SKU er valgfri/);
+  assert.match(answer, /ikke en fullstendig variantliste/);
+});
+
+test("additive Variant-ID SQL preserves the bounded SKU reader implementation", async () => {
+  const old = await readFile(new URL("../supabase/migrations/20260919090000_phase_2a_roy_targeted_reader.sql", import.meta.url), "utf8");
+  const next = await readFile(new URL("../supabase/migrations/20261109182708_roy_exact_variant_reader.sql", import.meta.url), "utf8");
+  // All projection, snapshot, authorization, bounds and grants stay identical.
+  const normalize = (sql: string) => sql.slice(sql.indexOf("create function public.")).replace(/\r\n/g, "\n")
+    .replaceAll("get_roy_targeted_variant_v1", "get_roy_targeted_product_v1")
+    .replaceAll("requested_variant_id", "requested_sku")
+    .replaceAll("p.shopify_variant_id = requested_sku", "p.sku = requested_sku")
+    .replace(/  if requested_sku is null[\s\S]*?  -- STABLE/, "  -- STABLE");
+  assert.equal(normalize(next), normalize(old));
+  assert.match(next, /ProductVariant\/\[1-9\]/);
+});
+
 for (const q of ["Hva vet du om SKU VK-MOBSPIR-50?", "Har dette produktet en beskrivelse?", "Har det SEO-tittel?", "Hvilken Shopify Product Category har det?", "Hvilke collections ligger det i?", "Hva kan du fortelle om dette produktet?"]) {
   test(`factual conversation: ${q}`, () => assert.deepEqual(resolvePhase2aRoute(input(q, history)), { kind: "targeted", sku: "VK-MOBSPIR-50" }));
 }
@@ -138,7 +188,7 @@ test("ambiguous/not-found responses never expose product observations", async ()
   for (const status of ["ambiguous", "not_found"] as const) {
     const d = target(); Object.assign(d, { status, selectedVariant: null, productContent: null, canonicalCollections: null, variantCount: 0 });
     const c = await readPhase2aContext({ kind: "targeted", sku: "X" }, async () => ({ data: d, error: null }));
-    assert.deepEqual(c.receivedFields, []); assert.match(presentPhase2a(c, ""), status === "ambiguous" ? /flere mulige/ : /fant ikke SKU/);
+    assert.deepEqual(c.receivedFields, []); assert.match(presentPhase2a(c, ""), status === "ambiguous" ? /flere mulige/ : /fant ikke produktreferansen/);
   }
 });
 test("merchant injection stays untrusted data; arbitrary model claims never reach presentation", () => {

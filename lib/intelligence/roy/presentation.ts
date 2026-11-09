@@ -31,6 +31,16 @@ function presentContext(context: ShopifyCatalogContext, question: string) {
   if (context.intent.kind === "unresolved_reference") {
     return "Jeg klarer ikke å avgjøre hvilket produkt du viser til. Oppgi SKU-en, så undersøker jeg riktig produkt uten å gjette.";
   }
+  if (context.audit && /(?:mangler|uten)\s+sku\b/iu.test(question)) {
+    const finding = context.audit.findings.find(({ code }) => code === "missing_sku");
+    const examples = (finding?.evidence ?? []).slice(0, 8);
+    const quote = (value: string) => value.replace(/[\r\n]/gu, " ").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/[\\`*_{}\[\]()#!|]/g, "\\$&");
+    return [
+      `${finding?.count ?? 0} av ${context.audit.variantCount} aktive varianter mangler SKU i Snakes lagrede katalog.`,
+      ...(examples.length ? ["Avgrensede eksempler, vist med produktnavn:", ...examples.map(name => `- ${quote(name)}`)] : []),
+      "Dette er et evidensutvalg, ikke en fullstendig variantliste eller entydige produktoppslag. SKU er valgfri; manglende SKU er ikke en identitetsfeil. Shopify Variant-ID er identitetsnøkkelen.",
+    ].join("\n");
+  }
   if (context.intent.kind === "catalog_overview" && context.audit) {
     return presentAudit(context.audit, context.intent.objective);
   }

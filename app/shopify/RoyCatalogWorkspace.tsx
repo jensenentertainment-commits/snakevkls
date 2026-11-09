@@ -1,19 +1,20 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Search, ShieldCheck, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
 import { Button } from "@/app/components/design-system/Button";
-import { Card } from "@/app/components/design-system/Card";
-import { Surface } from "@/app/components/design-system/Surface";
+
+
 import {
   CHAT_LIMITS,
   type ChatMessage,
 } from "@/lib/intelligence/shared/chat-input";
 
 const prompts = [
-  "Finn katalogproblemer blant produkter fra Helly Hansen",
-  "Vurder titler, varianter og kategorisering i dette utvalget",
-  "Hvilke produkter mangler leverandør, produkttype eller kolleksjon?",
+  "Hva bør jeg prioritere i katalogen?",
+  "Hvilke produkter mangler bilder?",
+  "Hvilke produkter mangler beskrivelser?",
+  "Hvor mange produkter har vi i katalogen?",
 ];
 
 const HISTORY_STORAGE_KEY = "snake.roy.catalog-history.v1";
@@ -50,6 +51,9 @@ export function RoyCatalogWorkspace() {
   const [answer, setAnswer] = useState<string | null>(null);
   const historyRef = useRef<ChatMessage[]>(readWorkspaceHistory());
   const [busy, setBusy] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const logRef = useRef<HTMLDivElement>(null);
+  useEffect(()=>{ const log=logRef.current; if(log) log.scrollTop=log.scrollHeight; },[messages,answer,busy]);
 
   async function analyze(value = question) {
     if (!value.trim() || busy) return;
@@ -62,6 +66,7 @@ export function RoyCatalogWorkspace() {
       { role: "user", text: value } satisfies ChatMessage,
     ).slice(-CHAT_LIMITS.historyMessages);
     writeWorkspaceHistory(historyRef.current);
+    setMessages([...historyRef.current]);
     try {
       const response = await fetch("/api/roy/ask", {
         method: "POST",
@@ -81,6 +86,7 @@ export function RoyCatalogWorkspace() {
         { role: "assistant", text: nextAnswer } satisfies ChatMessage,
       ).slice(-CHAT_LIMITS.historyMessages);
       writeWorkspaceHistory(historyRef.current);
+      setMessages([...historyRef.current]);
     } catch {
       setAnswer("Roy mistet kontakten. Ingen katalogdata er endret.");
     } finally {
@@ -89,47 +95,33 @@ export function RoyCatalogWorkspace() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-      <Surface className="p-5 sm:p-7">
-        <div className="flex items-start gap-3">
-          <div className="rounded-snake-control bg-snake-brand-soft p-3 text-snake-brand-strong"><Sparkles aria-hidden size={22} /></div>
-          <div>
-            <p className="text-sm font-semibold text-snake-text-primary">Spør Roy om katalogen</p>
-            <p className="mt-1 text-sm text-snake-text-secondary">Søk målrettet i sist synkroniserte Shopify-data. Roy observerer og anbefaler, men endrer ingenting.</p>
-          </div>
-        </div>
-        <label className="mt-6 block text-sm font-semibold text-snake-text-primary" htmlFor="roy-question">Produkt, SKU, leverandør eller problemstilling</label>
-        <textarea
-          id="roy-question"
-          value={question}
-          onChange={(event) => setQuestion(event.target.value)}
-          className="mt-2 min-h-32 w-full rounded-snake-action border border-snake-border-default bg-snake-surface p-4 text-snake-text-primary outline-none focus:border-snake-focus focus:ring-2 focus:ring-snake-focus-soft"
-          placeholder="Eksempel: Finn produkter fra Helly Hansen med svak kategorisering"
-        />
-        <div className="mt-4 flex justify-end">
-          <Button onClick={() => void analyze()} disabled={busy || !question.trim()}>
-            <Search aria-hidden size={18} /> {busy ? "Roy undersøker…" : "Analyser katalogutvalg"}
-          </Button>
-        </div>
-        {answer ? (
-          <div aria-live="polite" className="mt-6 whitespace-pre-wrap rounded-snake-card border border-snake-border-subtle bg-snake-surface-subtle p-5 text-sm leading-6 text-snake-text-primary">{answer}</div>
-        ) : null}
-      </Surface>
-
-      <div className="space-y-4">
-        <Card className="p-5">
-          <p className="flex items-center gap-2 font-semibold text-snake-text-primary"><ShieldCheck aria-hidden size={18} /> Read-only i v1</p>
-          <p className="mt-2 text-sm leading-6 text-snake-text-secondary">Ingen publisering, redigering, sync eller Shopify-skriving. Roy bruker sist lagrede katalogdata. En bildereferanse sier ikke noe om bildekvalitet eller et komplett bildegalleri.</p>
-        </Card>
-        <Card className="p-5">
-          <p className="font-semibold text-snake-text-primary">Forslag</p>
-          <div className="mt-3 space-y-2">
-            {prompts.map((prompt) => (
-              <button key={prompt} onClick={() => void analyze(prompt)} disabled={busy} className="w-full rounded-snake-control border border-snake-border-default bg-snake-surface px-3 py-3 text-left text-sm text-snake-text-secondary hover:border-snake-primary hover:text-snake-text-primary disabled:opacity-50">{prompt}</button>
-            ))}
-          </div>
-        </Card>
+    <section id="roy-conversation" aria-labelledby="roy-chat-title" className="flex h-[min(700px,85dvh)] lg:h-[min(840px,90dvh)] min-h-[520px] min-w-0 flex-col overflow-hidden bg-snake-app-elevated p-5 text-snake-text-on-dark sm:p-6">
+      <h2 id="roy-chat-title" className="text-xl font-semibold text-snake-brand">Snakk med Roy</h2>
+      <p className="mt-2 text-sm text-snake-text-on-dark-muted">Spør om et produkt, eller utforsk katalogen sammen med Roy.</p>
+      <div ref={logRef} role="log" tabIndex={0} aria-label="Samtale med Roy" aria-live="polite" aria-busy={busy} className="my-4 min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-deep p-3 focus-visible:outline-2 focus-visible:outline-snake-focus-on-dark lg:max-h-none">
+        {messages.length===0?<><ConversationBubble role="assistant" text="Hva vil du se nærmere på? Jeg kan hjelpe deg å finne frem i katalogen og forstå funnene i arbeidsrapporten."/>
+      <div className="mt-4 flex flex-wrap gap-2" aria-label="Hurtigspørsmål">{prompts.map(prompt=><button key={prompt} type="button" onClick={()=>setQuestion(prompt)} disabled={busy} className="min-h-9 rounded-snake-control border border-snake-border-on-dark-strong px-3 py-2 text-left text-xs text-snake-text-on-dark-muted hover:border-snake-brand hover:bg-snake-hero focus-visible:outline-2 focus-visible:outline-snake-focus disabled:opacity-50">{prompt}</button>)}</div>
+</>:null}
+        {messages.map((message,index)=><ConversationBubble key={index} role={message.role} text={message.text}/>)}
+        {answer && messages.at(-1)?.text!==answer?<ConversationBubble role="assistant" text={answer}/>:null}
+        {busy?<p className="px-4 text-sm text-snake-text-on-dark-muted">Roy undersøker…</p>:null}
       </div>
-    </div>
+
+      <label className="sr-only block text-sm font-semibold" htmlFor="roy-question">Skriv til Roy</label>
+      <div className="flex shrink-0 items-end gap-2 rounded-snake-action border border-snake-border-on-dark-strong bg-snake-app-deep p-2 focus-within:border-snake-focus">
+      <textarea rows={2} id="roy-question" value={question} onChange={(event)=>setQuestion(event.target.value)}
+        className="max-h-40 min-h-16 min-w-0 flex-1 resize-y bg-transparent p-2 text-sm text-snake-text-on-dark placeholder:text-snake-text-on-dark-muted outline-none"
+        placeholder="Spør om katalogen, et produkt, en SKU eller en Variant-ID…" />
+      <div className="shrink-0"><Button variant="brand" onClick={()=>void analyze()} disabled={busy || !question.trim()}>{busy?'Roy undersøker…':'Send'}</Button></div></div>
+      <p className="mt-4 text-sm text-snake-text-on-dark-muted">Roy vurderer katalogen og anbefaler tiltak. Han endrer ikke produkter.</p>
+    </section>
   );
+}
+
+function ConversationBubble({role,text}: ChatMessage) {
+  const isUser=role==='user';
+  return <div className={`rounded-snake-card border border-snake-border-on-dark-subtle p-3 sm:p-4 ${isUser?'ml-4 bg-[#DCE5EA] text-snake-text-primary sm:ml-12':'mr-4 bg-[#12566B] text-snake-text-on-dark sm:mr-12'}`}>
+    <p className="mb-2 text-sm font-semibold">{isUser?'Du':'Roy'}</p>
+    <p className="whitespace-pre-wrap break-words text-sm leading-6">{text}</p>
+  </div>;
 }

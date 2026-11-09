@@ -33,6 +33,19 @@ test('page only reads on opening and information remains behind disclosure',()=>
   const page=readFileSync('app/shopify/page.tsx','utf8');
   assert.doesNotMatch(page,/run_roy_review/);
   const ui=readFileSync('app/shopify/RoyWorkReport.tsx','utf8');
-  assert.match(ui,/priority<=2/);assert.match(ui,/slice\(0,5\)/);assert.match(ui,/aria-expanded/);
+  assert.match(ui,/priority<=2/);assert.match(ui,/slice\(0,3\)/);assert.match(ui,/aria-expanded/);
   assert.match(ui,/requestId.current \?\?=/);
+});
+
+test('conversation-first layout keeps quick questions unsent and report bounded',()=>{
+  const chat=readFileSync('app/shopify/RoyCatalogWorkspace.tsx','utf8');
+  assert.match(chat,/onClick=\{\(\)=>setQuestion\(prompt\)\}/);
+  assert.doesNotMatch(chat,/analyze\(prompt\)/);
+  assert.match(chat,/role="log"/);
+  assert.match(chat,/rows=\{2\}/);
+  const report=readFileSync('app/shopify/RoyWorkReport.tsx','utf8');
+  assert.ok(report.indexOf('{children}')<report.indexOf('<section aria-labelledby="roy-report-title"'));
+  assert.match(report,/3fr\)_minmax\(0,2fr/);
+  assert.match(report,/slice\(0,3\)/);
+  assert.match(report,/canRun\?<div/);
 });

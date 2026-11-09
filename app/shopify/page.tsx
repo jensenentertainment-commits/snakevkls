@@ -25,14 +25,9 @@ export default async function ShopifyPage() {
     } catch { reportError=true; }
   }
   return (
-    <main>
-      <header className="mb-6">
-        <p className="text-xs font-semibold uppercase tracking-[var(--snake-text-eyebrow-tracking)] text-snake-brand-strong">Shopify · Roy</p>
-        <h1 className="mt-2 text-[length:var(--snake-text-display-page-mobile-size)] font-semibold leading-[var(--snake-text-display-page-mobile-line-height)] text-snake-text-primary sm:text-[length:var(--snake-text-display-page-size)] sm:leading-[var(--snake-text-display-page-line-height)]">Produktverksted</h1>
-        <p className="mt-3 max-w-3xl text-snake-text-secondary">Les katalogen, finn kvalitetsproblemer og få konkrete produktfaglige anbefalinger for Varekompaniet.</p>
-      </header>
-      {reviewEnabled?<RoyWorkReport initial={report} loadError={reportError} canRun={profile.role==='admin'}/>:null}
-      <RoyCatalogWorkspace />
+    <main className="mx-auto max-w-7xl">
+      {reviewEnabled?<RoyWorkReport initial={report} loadError={reportError} canRun={profile.role==='admin'}><RoyCatalogWorkspace /></RoyWorkReport>:<header className="mb-6 text-snake-text-on-dark"><h1 className="text-3xl font-semibold">Roy</h1><p className="mt-1">Produktansvarlig</p><p className="mt-2 text-sm">Katalogkontroll er ikke aktivert.</p></header>}
+      {!reviewEnabled?<RoyCatalogWorkspace />:null}
     </main>
   );
 }

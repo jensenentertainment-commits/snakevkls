@@ -119,7 +119,7 @@ export function RoyCatalogWorkspace() {
       <div className="space-y-4">
         <Card className="p-5">
           <p className="flex items-center gap-2 font-semibold text-snake-text-primary"><ShieldCheck aria-hidden size={18} /> Read-only i v1</p>
-          <p className="mt-2 text-sm leading-6 text-snake-text-secondary">Ingen publisering, redigering, sync eller Shopify-skriving. Beskrivelse, SEO-felt og full bildegalleri finnes ikke i Snake-katalogen og markeres som kunnskapshull.</p>
+          <p className="mt-2 text-sm leading-6 text-snake-text-secondary">Ingen publisering, redigering, sync eller Shopify-skriving. Roy bruker sist lagrede katalogdata. En bildereferanse sier ikke noe om bildekvalitet eller et komplett bildegalleri.</p>
         </Card>
         <Card className="p-5">
           <p className="font-semibold text-snake-text-primary">Forslag</p>

@@ -23,7 +23,7 @@ export function requestedContentField(q: string): TargetField | "collections" | 
   if (/product category|shopify.?kategori|taksonomi/iu.test(q)) return "shopifyCategory";
   if (/produkttype|product.?type/iu.test(q)) return "productType";
   if (/handle|\burl\b/iu.test(q)) return "productHandle";
-  if (/bildereferanse|image.?reference|featured.?image/iu.test(q)) return "imageReference";
+  if (/\b(?:bilde|bilder|produktbilde|produktbilder|bildereferanser?|images?)\b|image.?reference|featured.?image/iu.test(q)) return "imageReference";
   if (/collection|kolleksjon/iu.test(q)) return "collections";
   if (/produktnavn|product.?name/iu.test(q)) return "productName";
   return null;
@@ -46,7 +46,7 @@ export function resolvePhase2aRoute(input: ValidChatInput): Phase2aRoute {
     if (/duplikat|inkonsisten|mangler sku|prioriter|audit/iu.test(q)) return { kind: "legacy" };
     if (field === "collections" && /ligger i|matcher/iu.test(q)) return { kind: "legacy" };
     if (/komplett|dekning|observert|hvor mange|foundation/iu.test(q)
-      || (field !== null && field !== "productType" && field !== "imageReference")) return { kind: "foundation", field };
+      || (field !== null && field !== "productType")) return { kind: "foundation", field };
     return { kind: "legacy" };
   }
   // Explicit IDs never fall back to a SKU or a conversational guess.
@@ -66,6 +66,7 @@ export function resolvePhase2aRoute(input: ValidChatInput): Phase2aRoute {
   }
   if (/hva kan du|hvilke felt|hva mangler du/iu.test(q)) return { kind: "capabilities" };
   if (qualityOnly) return { kind: "unsupported" };
+  if (field === "imageReference" && /mangler|uten|manglende|hvor mange|registrert|observert/iu.test(q)) return { kind: "foundation", field };
   // These established missing-type/collection searches remain legacy.
   if (field === "productType" || field === "collections" || field === "imageReference") return { kind: "legacy" };
   if (field !== null) return { kind: "clarify" };

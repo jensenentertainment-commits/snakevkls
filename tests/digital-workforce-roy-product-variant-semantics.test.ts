@@ -64,7 +64,7 @@ test("featured image reference supports presence only and freshness is natural",
   });
   assert.match(answer, /featured-image-referanse/iu);
   assert.match(answer, /sier ikke noe om bildekvaliteten/iu);
-  assert.match(answer, /20\. aug\. 2026/iu);
+  assert.match(answer, /20\.08\.2026 12:00/);
   assert.doesNotMatch(answer, /godt bilde|dårlig bilde/iu);
 });
 

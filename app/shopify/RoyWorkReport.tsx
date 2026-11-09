@@ -1,10 +1,10 @@
 'use client';
+import { formatRoyTime as time } from '@/lib/intelligence/roy/format-time';
 import { useRef, useState, type ReactNode } from 'react';
 import { Button } from '@/app/components/design-system/Button';
 import { Surface } from '@/app/components/design-system/Surface';
 import { parseReview, REVIEW_RULES, reviewIntroduction, type ReviewReport, type ReviewFinding } from '@/lib/intelligence/roy/review';
 
-const time = (s: string|null) => s ? new Date(s).toLocaleString('nb-NO',{timeZone:'Europe/Oslo'}) : 'Ikke observert';
 function Finding({finding:f, compact=false}: {finding:ReviewFinding;compact?:boolean}) {
   const rule=REVIEW_RULES[f.rule];
   const status=f.assessment==='unknown'?'Ikke vurderbar nå':f.state==='resolved'?'Løst':f.state==='out_of_scope'?'Utenfor aktiv katalog':f.event==='new'?'Nytt':f.event==='reopened'?'Gjenåpnet':'Eksisterende';

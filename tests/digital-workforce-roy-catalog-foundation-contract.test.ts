@@ -164,3 +164,35 @@ test("errors, incomplete payloads and unsafe integer counts never become empty-c
     assert.throws(() => parseRoyCatalogFoundation(value));
   }
 });
+
+test('natural image questions use canonical reader and preserve observed states', async () => {
+  const {resolvePhase2aRoute,readPhase2aContext}=await import('../lib/intelligence/roy/phase2a-context.ts');
+  const {presentPhase2a}=await import('../lib/intelligence/roy/phase2a-presentation.ts');
+  for(const question of ['Hvilke produkter mangler bilder?','Hvilke produkter mangler bildereferanser?','Vis produkter uten bilder','Finn manglende produktbilder','Hvor mange produkter mangler bilde?']) {
+    const route=resolvePhase2aRoute({question,history:[],page:'/shopify'});
+    assert.deepEqual(route,{kind:'foundation',field:'imageReference'});
+    for(const [products,unknown,present] of [[0,0,0],[5,2,1],[5,5,0],[5,0,5]]) {
+      const data=report(products,unknown);
+      data.fields.imageReference.presentCount=present;
+      data.fields.imageReference.missingCount-=present;
+      data.findings=data.findings.map(f=>f.code==="missing_image_reference"?{...f,affectedProductCount:products-unknown-present,examplesTruncated:products-unknown-present>0}:f).filter(f=>f.affectedProductCount>0);
+      const context=await readPhase2aContext(route,async name=>{assert.equal(name,'get_roy_catalog_foundation_v1');return {data,error:null};});
+      const answer=presentPhase2a(context,question);
+      assert.ok(answer.includes(`${present} til stede, ${products-unknown-present} observert tomme, ${unknown} ukjente produkter`));
+      assert.match(answer,/ikke bildekvalitet/);
+      assert.doesNotMatch(answer,/Jeg har ikke data|Roy v1/);
+    }
+    await assert.rejects(()=>readPhase2aContext(route,async()=>({data:null,error:'denied'})),/retrieval failed/);
+  }
+  assert.equal(resolvePhase2aRoute({question:'Hvilke produkter har dårlig bildekvalitet?',history:[],page:'/shopify'}).kind,'unsupported');
+  assert.deepEqual(resolvePhase2aRoute({question:'Har SKU ABC-123 bilde?',history:[],page:'/shopify'}),{kind:'targeted',sku:'ABC-123'});
+  assert.deepEqual(resolvePhase2aRoute({question:'Har Variant-ID 123 bilde?',history:[],page:'/shopify'}),{kind:'variant',variantId:'gid://shopify/ProductVariant/123'});
+});
+
+test('Roy timestamps use fixed Oslo format including DST and invalid values', async()=>{
+  const {formatRoyTime}=await import('../lib/intelligence/roy/format-time.ts');
+  assert.equal(formatRoyTime('2026-11-09T19:49:13Z'),'09.11.2026 20:49');
+  assert.equal(formatRoyTime('2026-07-01T22:05:00Z'),'02.07.2026 00:05');
+  assert.equal(formatRoyTime(null),'Ikke observert');
+  assert.equal(formatRoyTime('invalid'),'Ikke observert');
+});

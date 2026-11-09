@@ -104,7 +104,7 @@ export function RoyCatalogWorkspace() {
 </>:null}
         {messages.map((message,index)=><ConversationBubble key={index} role={message.role} text={message.text}/>)}
         {answer && messages.at(-1)?.text!==answer?<ConversationBubble role="assistant" text={answer}/>:null}
-        {busy?<p className="px-4 text-sm text-snake-text-on-dark-muted">Roy undersøker…</p>:null}
+        {busy?<div role="status" aria-label="Ser nærmere på spørsmålet ditt …" className="mr-4 rounded-snake-card border border-snake-border-on-dark-subtle bg-[#12566B] p-3 sm:mr-12 sm:p-4"><p className="mb-2 text-sm font-semibold">Roy</p><div aria-hidden="true" className="flex items-center gap-3"><span className="flex shrink-0 gap-1">{[0,1,2].map(i=><span key={i} style={{animationDelay:`${i*200}ms`,animationDuration:"1800ms"}} className="h-1.5 w-1.5 rounded-full bg-current motion-safe:animate-pulse motion-reduce:animate-none"/>)}</span><p className="text-sm leading-6">Ser nærmere på spørsmålet ditt …</p></div></div>:null}
       </div>
 
       <label className="sr-only block text-sm font-semibold" htmlFor="roy-question">Skriv til Roy</label>

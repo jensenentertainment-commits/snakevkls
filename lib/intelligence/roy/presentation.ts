@@ -1,3 +1,4 @@
+import { formatRoyTime } from "./format-time.ts";
 import type {
   RoyReceivedCatalogField,
   ShopifyCatalogContext,
@@ -299,7 +300,7 @@ function presentAudit(audit: NonNullable<ShopifyCatalogContext["audit"]>, object
 
 function formatTimestamp(value: string) {
   const date = new Date(value);
-  return Number.isNaN(date.valueOf()) ? value : new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Oslo" }).format(date);
+  return Number.isNaN(date.valueOf()) ? "Ikke observert" : formatRoyTime(value);
 }
 
 function productCount(count: number) {

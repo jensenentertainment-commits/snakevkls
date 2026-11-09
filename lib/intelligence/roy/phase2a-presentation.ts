@@ -1,3 +1,4 @@
+import { formatRoyTime } from "./format-time.ts";
 import { phase2aModelContext, requestedContentField, type Phase2aContext } from "./phase2a-context.ts";
 import { TARGET_FIELDS, type TargetField, type ObservedPreview } from "./targeted-content-contract.ts";
 
@@ -63,11 +64,12 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
     const timeLabels = { variantSyncedAt: "Variantsynkronisering", contentObservedAt: "Snake-innholdsobservasjon", collectionsObservedAt: "Komplett collection-observasjon", shopifyUpdatedAt: "Shopify-kildeoppdatering", contentPersistedAt: "Innhold lagret i databasen" };
     for (const [key, label] of Object.entries(timeLabels)) {
       const r = d.freshness[key as keyof typeof d.freshness];
-      lines.push(`${label}: ${r.timestampCount} av ${r.populationCount} ${r.populationUnit === "variant" ? "varianter" : "produkter"} med tidspunkt${r.oldest ? `, fra ${r.oldest} til ${r.newest}` : ""}.`);
+      lines.push(`${label}: ${r.timestampCount} av ${r.populationCount} ${r.populationUnit === "variant" ? "varianter" : "produkter"} med tidspunkt${r.oldest ? `, fra ${formatRoyTime(r.oldest)} til ${formatRoyTime(r.newest)}` : ""}.`);
     }
     if (!c.field || c.field.startsWith("seo")) lines.push(SEO_NOTE);
-    lines.push(`Hentet ${d.generatedAt}. Tidspunktene beskriver siste lagrede observasjoner, kan variere mellom synksider og gir ingen klassifisering som foreldet.`);
+    lines.push(`Hentet ${formatRoyTime(d.generatedAt)}. Tidspunktene beskriver siste lagrede observasjoner, kan variere mellom synksider og gir ingen klassifisering som foreldet.`);
     if (d.evidence.budgetLimited) lines.push("Eksempler er også begrenset av responsens bytebudsjett; aggregatene er uendret.");
+    if (c.field === "imageReference") lines.push("En featured-image-referanse dokumenterer ikke bildekvalitet, fungerende bilde-URL eller et komplett bildegalleri.");
     lines.push(QUALITY_NOTE);
     return lines.join("\n\n");
   }
@@ -86,7 +88,7 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
     if (v.variantName) lines.push(`Valgt variant: ${quote(v.variantName)}.`);
     if (v.priceMinor !== null && v.currency) lines.push(`Variantpris: ${(v.priceMinor / 100).toLocaleString("nb-NO")} ${quote(v.currency)}.`);
     else lines.push("Variantpris/valuta er ikke tilgjengelig i det mottatte variantgrunnlaget.");
-    lines.push(`Variantlager: ${v.quantity === null ? "ukjent" : v.quantity}. Sporing: ${v.inventoryTracked === null ? "ukjent" : v.inventoryTracked ? "aktiv" : "ikke aktiv"}. Lagerobservasjon: ${v.inventoryObservedAt ?? "ukjent"}.`);
+    lines.push(`Variantlager: ${v.quantity === null ? "ukjent" : v.quantity}. Sporing: ${v.inventoryTracked === null ? "ukjent" : v.inventoryTracked ? "aktiv" : "ikke aktiv"}. Lagerobservasjon: ${formatRoyTime(v.inventoryObservedAt)}.`);
     lines.push(`${d.variantCount} aktive varianter; ${d.siblingVariants.length} søskenvarianter vist${d.siblingsTruncated ? " (avgrenset utvalg)" : ""}.`);
     if (d.siblingVariants.length) lines.push(...d.siblingVariants.map(s => `- ${s.sku ? quote(s.sku) : "Uten vist SKU"}${s.variantName ? `: ${quote(s.variantName)}` : ""}${s.textTruncated ? " [avkortet/tilbakeholdt]" : ""}.`));
   }
@@ -94,17 +96,17 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
   if (general || field === "collections") {
     const m = d.canonicalCollections!;
     if (m.state === "unknown_or_incomplete") lines.push("Collection-medlemskap er ukjent/ufullstendig. Jeg kan ikke konkludere med at produktet har null collections.");
-    else if (m.membershipCount === 0) lines.push(`Komplett observasjon ${m.observedAt}: produktet har ingen collections.`);
-    else lines.push(`Komplett observasjon ${m.observedAt}: ${m.membershipCount} collection-medlemskap. Viste navn: ${m.names.map(quote).join(", ") || "ingen"}.${m.displayTruncated ? " Visningen er avkortet; kildeobservasjonen er fortsatt komplett." : ""}`);
+    else if (m.membershipCount === 0) lines.push(`Komplett observasjon ${formatRoyTime(m.observedAt)}: produktet har ingen collections.`);
+    else lines.push(`Komplett observasjon ${formatRoyTime(m.observedAt)}: ${m.membershipCount} collection-medlemskap. Viste navn: ${m.names.map(quote).join(", ") || "ingen"}.${m.displayTruncated ? " Visningen er avkortet; kildeobservasjonen er fortsatt komplett." : ""}`);
   }
   if (general || field?.startsWith("seo")) lines.push(SEO_NOTE);
   if (general || field === "productHandle") lines.push("En observert handle beviser ikke at en offentlig URL fungerer.");
   if (general || field === "shopifyCategory" || field === "productType") lines.push("Shopify Product Category og merchant-definert produkttype er separate felt.");
   if (general || field === "imageReference") lines.push("En featured-image-referanse dokumenterer ikke bildekvalitet eller et komplett bildegalleri.");
   if (general || /oppdatert|synk|tidspunkt|fersk|foreldet/iu.test(question)) {
-    lines.push(`Shopify-kildeoppdatering: ${content.shopifyUpdatedAt ?? "ukjent"}. Snake-innholdsobservasjon: ${content.contentObservedAt ?? "ukjent"}. Databaselagring: ${content.persistedAt ?? "ukjent"}. Variantsynkronisering: ${v.syncedAt ?? "ukjent"}. Hentet: ${d.generatedAt}.`);
+    lines.push(`Shopify-kildeoppdatering: ${formatRoyTime(content.shopifyUpdatedAt)}. Snake-innholdsobservasjon: ${formatRoyTime(content.contentObservedAt)}. Databaselagring: ${formatRoyTime(content.persistedAt)}. Variantsynkronisering: ${formatRoyTime(v.syncedAt)}. Hentet: ${formatRoyTime(d.generatedAt)}.`);
     lines.push("Dette er siste vellykkede lagrede observasjoner, ikke nødvendigvis utfallet av siste oppdateringsforsøk. Ingen terskel for foreldelse er brukt.", SOURCE_SCOPE);
-  } else if (field !== "collections") lines.push(`Siste vellykkede Snake-innholdsobservasjon: ${content.contentObservedAt ?? "ukjent"}. Dette er lagrede data, ikke live-verifisering.`);
+  } else if (field !== "collections") lines.push(`Siste vellykkede Snake-innholdsobservasjon: ${formatRoyTime(content.contentObservedAt)}. Dette er lagrede data, ikke live-verifisering.`);
   if (general || /kvalitet|god|dårlig|riktig|feil|relevan|optimaliser|rangering/iu.test(question)) lines.push(QUALITY_NOTE);
   return lines.join("\n\n");
 }

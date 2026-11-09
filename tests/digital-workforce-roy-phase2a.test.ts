@@ -15,6 +15,7 @@ import { executeReadOnlyWorkforceRequest } from "../lib/intelligence/workforce/r
 import { evaluateWorkforceAuthorization } from "../lib/intelligence/workforce/workforce-authorization.ts";
 import { shopifyPhase2aReadCatalogCapability } from "../lib/intelligence/workforce/capabilities/shopify-read-catalog.ts";
 
+function presentDetailed(c: Phase2aContext, q: string) { return presentPhase2a(c, q ? `${q} Vis detaljer.` : q); }
 const at = "2026-09-19T09:00:00Z";
 function target(): RoyTargetedContent {
   return {
@@ -50,7 +51,7 @@ test("exact Variant-ID routes to separate read RPC without SKU fallback", async 
 });
 
 test("multi-field product question includes description, image and both SEO fields", () => {
-  const answer = presentPhase2a(ctx(), "Har SKU ALB-ULL-001 beskrivelse, bilde og SEO-felt?");
+  const answer = presentDetailed(ctx(), "Har SKU ALB-ULL-001 beskrivelse, bilde og SEO-felt?");
   for (const label of ["Produktbeskrivelse:", "Featured-image-referanse:", "SEO-titteloverstyring:", "SEO-beskrivelsesoverstyring:"]) assert.ok(answer.includes(label), label);
 });
 
@@ -115,38 +116,38 @@ test("gate is server-only, exact opt-in and disabled when absent without modifyi
 test("strict targeted contract preserves separate timestamps and selected variant facts", () => {
   const d = parseRoyTargetedContent(target());
   assert.equal(d.selectedVariant?.quantity, 3); assert.notEqual(d.productContent?.contentObservedAt, d.productContent?.shopifyUpdatedAt);
-  assert.match(presentPhase2a(ctx(d), "Hva vet du om SKU VK-MOBSPIR-50?"), /Variantpris: 120/);
+  assert.match(presentDetailed(ctx(d), "Hva vet du om SKU VK-MOBSPIR-50?"), /Variantpris: 120/);
 });
 test("unknown canonical fields do not fall back to populated variant product names", () => {
   const d = target(); d.productContent = { contentObservedAt: null, shopifyUpdatedAt: null, persistedAt: null,
     fields: Object.fromEntries(TARGET_FIELDS.map(f => [f, { state: "unknown", value: null, truncated: false, withheld: false }])) as NonNullable<RoyTargetedContent["productContent"]>["fields"] };
-  const answer = presentPhase2a(ctx(d), "Har dette produktet en beskrivelse?");
+  const answer = presentDetailed(ctx(d), "Har dette produktet en beskrivelse?");
   assert.match(answer, /Produktbeskrivelse: ukjent/); assert.doesNotMatch(answer, /Produktbeskrivelse: observert/);
   d.productContent.fields.description.state = "missing";
   assert.throws(() => parseRoyTargetedContent(d), /observation state/);
 });
 test("observed missing SEO override does not assert rendered metadata missing", () => {
   const d = target(); d.productContent!.fields.seoTitleOverride = { state: "missing", value: null, truncated: false, withheld: false };
-  const answer = presentPhase2a(ctx(d), "Har det SEO-tittel?");
+  const answer = presentDetailed(ctx(d), "Har det SEO-tittel?");
   assert.match(answer, /Eksplisitt Shopify SEO-titteloverstyring: observert, men eksplisitt tom/);
   assert.match(answer, /beviser ikke at den gjengitte/);
 });
 test("category, product type, handle and image terminology remains factual", () => {
-  assert.match(presentPhase2a(ctx(), "Hvilken Shopify Product Category har det?"), /separate felt/);
-  assert.match(presentPhase2a(ctx(), "Hva er handle?"), /beviser ikke at en offentlig URL fungerer/);
-  assert.match(presentPhase2a(ctx(), "Har det bildereferanse?"), /ikke bildekvalitet eller et komplett bildegalleri/);
+  assert.match(presentDetailed(ctx(), "Hvilken Shopify Product Category har det?"), /separate felt/);
+  assert.match(presentDetailed(ctx(), "Hva er handle?"), /beviser ikke at en offentlig URL fungerer/);
+  assert.match(presentDetailed(ctx(), "Har det bildereferanse?"), /ikke bildekvalitet eller et komplett bildegalleri/);
 });
 test("unknown/incomplete collection count cannot be promoted to zero", () => {
   const d = target(); d.canonicalCollections = { state: "unknown_or_incomplete", observedAt: null, membershipCount: null, names: [], displayTruncated: false };
-  assert.match(presentPhase2a(ctx(d), "Hvilke collections ligger det i?"), /kan ikke konkludere/);
+  assert.match(presentDetailed(ctx(d), "Hvilke collections ligger det i?"), /kan ikke konkludere/);
   d.canonicalCollections.membershipCount = 0;
   assert.throws(() => parseRoyTargetedContent(d), /incomplete is not zero/);
 });
 test("complete zero and bounded complete memberships are different from unknown", () => {
-  assert.match(presentPhase2a(ctx(), "Hvilke collections ligger det i?"), /produktet har ingen collections/);
+  assert.match(presentDetailed(ctx(), "Hvilke collections ligger det i?"), /produktet har ingen collections/);
   const d = target(); d.canonicalCollections!.membershipCount = 30; d.canonicalCollections!.names = Array.from({ length: 24 }, (_, i) => `Name ${i}`); d.canonicalCollections!.displayTruncated = true;
-  assert.match(presentPhase2a(ctx(d), "Hvilke collections ligger det i?"), /30 collection-medlemskap/);
-  assert.match(presentPhase2a(ctx(d), "Hvilke collections ligger det i?"), /kildeobservasjonen er fortsatt komplett/);
+  assert.match(presentDetailed(ctx(d), "Hvilke collections ligger det i?"), /30 collection-medlemskap/);
+  assert.match(presentDetailed(ctx(d), "Hvilke collections ligger det i?"), /kildeobservasjonen er fortsatt komplett/);
   d.canonicalCollections!.displayTruncated = false;
   assert.throws(() => parseRoyTargetedContent(d), /missing display flag/);
 });
@@ -160,7 +161,7 @@ test("preview state survives truncated whitespace and withheld ID-containing sou
   const d = target(); d.productContent!.fields.description = { state: "present", value: " ".repeat(2048), truncated: true, withheld: false };
   assert.doesNotThrow(() => parseRoyTargetedContent(d));
   d.productContent!.fields.description = { state: "present", value: null, truncated: false, withheld: true };
-  assert.match(presentPhase2a(ctx(d), "Har det beskrivelse?"), /observert verdi; verdien er holdt tilbake/);
+  assert.match(presentDetailed(ctx(d), "Har det beskrivelse?"), /observert verdi; verdien er holdt tilbake/);
 });
 test("rejects extra keys, IDs in any text, bad timestamps and forged missing states", () => {
   for (const mutate of [
@@ -188,7 +189,7 @@ test("ambiguous/not-found responses never expose product observations", async ()
   for (const status of ["ambiguous", "not_found"] as const) {
     const d = target(); Object.assign(d, { status, selectedVariant: null, productContent: null, canonicalCollections: null, variantCount: 0 });
     const c = await readPhase2aContext({ kind: "targeted", sku: "X" }, async () => ({ data: d, error: null }));
-    assert.deepEqual(c.receivedFields, []); assert.match(presentPhase2a(c, ""), status === "ambiguous" ? /flere mulige/ : /fant ikke produktreferansen/);
+    assert.deepEqual(c.receivedFields, []); assert.match(presentDetailed(c, ""), status === "ambiguous" ? /flere mulige/ : /fant ikke produktreferansen/);
   }
 });
 test("merchant injection stays untrusted data; arbitrary model claims never reach presentation", () => {
@@ -215,8 +216,8 @@ test("foundation adapter keeps exact counts and does not invent per-product rece
   const c = await readPhase2aContext({ kind: "foundation", field: "description" }, async (name, args) => {
     assert.equal(name, "get_roy_catalog_foundation_v1"); assert.equal(args, undefined); return { data: d, error: null };
   });
-  assert.deepEqual(c.receivedFields, ["catalogFoundation"]); assert.match(presentPhase2a(c, ""), /0 produkter og 0 varianter/);
-  assert.match(presentPhase2a(c, ""), /ikke en uavhengig verifisert live/);
+  assert.deepEqual(c.receivedFields, ["catalogFoundation"]); assert.match(presentDetailed(c, ""), /0 produkter og 0 varianter/);
+  assert.match(presentDetailed(c, ""), /ikke en uavhengig verifisert live/);
   await assert.rejects(() => readPhase2aContext({ kind: "foundation", field: null }, async () => ({ data: null, error: "denied" })), /retrieval failed/);
 });
 
@@ -293,4 +294,20 @@ test("database fixture entry points retain guards and real writer concurrency ch
   assert.match(await read("roy-phase-2a-targeted-concurrent-reader.sql"), /begin read only;/);
   assert.match(await read("roy-phase-2a-targeted-concurrency-assertions.sql"), /overlapped before commit/);
   assert.match(await read("roy-phase-2a-catalog-foundation-concurrent-writer.sql"), /apply_shopify_sync_page_v2/);
+});
+
+ test('concise targeted responses retain selected facts and factual contract', () => {
+  const answer=presentPhase2a(ctx(), 'Har Variant-ID 123 bilde og SEO?');
+  assert.match(answer,/Bildereferanse/);assert.match(answer,/Egen SEO-tittel/);assert.match(answer,/Egen metabeskrivelse/);
+  assert.doesNotMatch(answer,/Variantsynkronisering|Databaselagring/);
+  const d=target(); d.productContent!.contentObservedAt=null; d.productContent!.shopifyUpdatedAt=null; d.productContent!.persistedAt=null; for(const field of TARGET_FIELDS) d.productContent!.fields[field]={state:'unknown',value:null,truncated:false,withheld:false};
+  assert.match(presentPhase2a(ctx(d),'Har SKU ABC beskrivelse?'),/ukjent/);
+});
+
+ test('short answers remain deterministic and reject unsupported model claims', () => {
+  const question='Har SKU ABC bilde og SEO?';
+  const c=ctx(); const answer=presentPhase2a(c,question);
+  assert.equal(isRoyAnswerValid(answer,outer(c),question),true);
+  assert.equal(isRoyAnswerValid(answer+' Alle bilder er flotte.',outer(c),question),false);
+  assert.deepEqual(resolvePhase2aRoute(input('Hvilke produkter mangler SEO-tittel og metabeskrivelse?')),{kind:'foundation',field:'seo'});
 });

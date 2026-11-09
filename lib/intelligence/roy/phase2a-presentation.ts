@@ -1,3 +1,5 @@
+import { quoteRoyText as quote, quoteRoyProductName } from "./display-text.ts";
+import { presentConcisePhase2a, wantsRoyDetails } from "./phase2a-concise.ts";
 import { formatRoyTime } from "./format-time.ts";
 import { phase2aModelContext, requestedContentField, type Phase2aContext } from "./phase2a-context.ts";
 import { TARGET_FIELDS, type TargetField, type ObservedPreview } from "./targeted-content-contract.ts";
@@ -9,13 +11,11 @@ const labels: Record<TargetField, string> = {
 };
 // Source values are quoted data. Never parse their contents as instructions or
 // promote them to findings. Escape Markdown/HTML and keep one physical line.
-function quote(value: string): string {
-  return `«${value.replace(/[\r\n\u2028\u2029]/gu, " ").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/[\\`*_{}\[\]()#!|]/g, "\\$&")}»`;
-}
+
 function fieldSentence(field: TargetField, f: ObservedPreview) {
   if (f.state === "unknown") return `${labels[field]}: ukjent – Snake har ingen vellykket kanonisk observasjon.`;
   if (f.state === "missing") return `${labels[field]}: observert, men eksplisitt tom/null.`;
-  return `${labels[field]}: observert verdi${f.withheld ? "; verdien er holdt tilbake fra visningen" : ` ${quote(f.value!)}${f.truncated ? " (avkortet forhåndsvisning)" : ""}`}.`;
+  return `${labels[field]}: observert verdi${f.withheld ? "; verdien er holdt tilbake fra visningen" : ` ${(field === "productName" ? quoteRoyProductName(f.value!) : quote(f.value!))}${f.truncated ? " (avkortet forhåndsvisning)" : ""}`}.`;
 }
 const SOURCE_SCOPE = "Dette er Snakes lagrede aktive Shopify-tilknyttede katalog, ikke en uavhengig verifisert live Shopify-katalog.";
 const SEO_NOTE = "Tom eksplisitt SEO-overstyring beviser ikke at den gjengitte søkemotortittelen/metabeskrivelsen mangler; Shopify kan bruke standardverdier.";
@@ -24,15 +24,16 @@ const QUALITY_NOTE = "Jeg kan beskrive observasjon og tilstedeværelse, men ikke
 export function presentPhase2a(raw: Phase2aContext, question: string): string {
   const c = phase2aModelContext(raw);
   if (c.source === "roy_phase2a_guidance_v1") {
-    if (c.reason === "clarify") return "Jeg kan ikke avgjøre hvilket produkt du mener. Oppgi én entydig SKU eller eksakt Shopify Variant-ID, så undersøker jeg det uten å gjette.";
+    if (c.reason === "clarify") return "Jeg er usikker på hva du viser til. Mener du katalogoversikten eller et bestemt produkt? For et produkt trenger jeg én entydig SKU eller eksakt Shopify Variant-ID.";
     if (c.reason === "unsupported") return QUALITY_NOTE;
     return "Jeg kan lese variantfakta og kanoniske observasjoner av produktbeskrivelse, eksplisitte SEO-overstyringer, handle, produkttype, Shopify Product Category og collections, samt avgrensede katalogaggregater. Ukjent er ikke manglende. " + QUALITY_NOTE;
   }
+  if (!wantsRoyDetails(question)) return presentConcisePhase2a(c, question);
   if (c.source === "roy_catalog_foundation_v1") {
     const d = c.data;
     const lines = [`Kataloggrunnlaget omfatter ${d.totals.productCount} produkter og ${d.totals.variantCount} varianter.`, SOURCE_SCOPE,
       `${d.contentCoverage.observedProductCount} produkter har observert kanonisk innhold; ${d.contentCoverage.unknownProductCount} har ukjent innhold.`];
-    const fields = c.field === "collections" ? [] : c.field ? [c.field] : TARGET_FIELDS;
+    const fields = c.field === "seo" ? ["seoTitleOverride", "seoDescriptionOverride"] as const : c.field === "collections" ? [] : c.field ? [c.field] : TARGET_FIELDS;
     for (const field of fields) {
       const key = field === "seoTitleOverride" ? "seoTitle" : field === "seoDescriptionOverride" ? "seoDescription" : field;
       const counts = d.fields[key];
@@ -43,7 +44,8 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
       lines.push(`Collections: ${m.unknownOrIncompleteProductCount} produkter har ukjent/ufullstendig observasjon. ${m.completeProductCount} har komplett observasjon: ${m.completeWithZeroCollectionsCount} uten collections og ${m.completeWithCollectionsCount} med medlemskap.`);
     }
     // Use only the RPC's globally allocated examples; never refill or infer counts.
-    const fieldCode: Record<TargetField | "collections", string[]> = {
+    const fieldCode: Record<TargetField | "collections" | "seo", string[]> = {
+      seo: ["missing_seo_title", "missing_seo_description"],
       productName: ["missing_product_name"], description: ["missing_description"], seoTitleOverride: ["missing_seo_title"],
       seoDescriptionOverride: ["missing_seo_description"], productHandle: ["missing_product_handle"], productType: ["missing_product_type"],
       shopifyCategory: ["missing_shopify_category"], imageReference: ["missing_image_reference"],
@@ -58,7 +60,7 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
       collections_complete_zero: "komplett observasjon uten collections",
     };
     for (const f of d.findings.filter(f => !c.field || fieldCode[c.field].includes(f.code))) {
-      if (f.examples.length) lines.push(`Avgrensede eksempler fra det kanoniske kataloggrunnlaget – ${findingLabel[f.code]}: ${f.examples.map(e => `${quote(e.productLabel)}${e.representativeSku ? ` (representativ SKU ${quote(e.representativeSku)})` : ""}${e.labelTruncated || e.skuTruncated ? " [avkortet]" : ""}`).join(", ")}.`);
+      if (f.examples.length) lines.push(`Avgrensede eksempler fra det kanoniske kataloggrunnlaget – ${findingLabel[f.code]}: ${f.examples.map(e => `${quoteRoyProductName(e.productLabel)}${e.representativeSku ? ` (representativ SKU ${quote(e.representativeSku)})` : ""}${e.labelTruncated || e.skuTruncated ? " [avkortet]" : ""}`).join(", ")}.`);
       if (f.examplesTruncated) lines.push(`Eksemplene for ${findingLabel[f.code]} er begrenset; antallet berørte produkter er ${f.affectedProductCount}.`);
     }
     const timeLabels = { variantSyncedAt: "Variantsynkronisering", contentObservedAt: "Snake-innholdsobservasjon", collectionsObservedAt: "Komplett collection-observasjon", shopifyUpdatedAt: "Shopify-kildeoppdatering", contentPersistedAt: "Innhold lagret i databasen" };
@@ -82,7 +84,7 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
   // Do not silently collapse a question about several facts to its first field.
   const topicCount = [/beskrivelse|produkttekst/iu, /bilde|image/iu, /seo|meta/iu, /collection|kolleksjon/iu].filter(pattern => pattern.test(question)).length;
   const general = !field || topicCount > 1;
-  const lines = [`Jeg fant ${v.productName ? quote(v.productName) : "produktet"}${v.sku ? ` (SKU ${quote(v.sku)})` : ""}.`];
+  const lines = [`Jeg fant ${v.productName ? quoteRoyProductName(v.productName) : "produktet"}${v.sku ? ` (SKU ${quote(v.sku)})` : ""}.`];
   if (v.textTruncated) lines.push("Variantens tekstfelt er avkortet eller holdt tilbake; ikke bruk forhåndsvisningen som en ny eksakt SKU.");
   if (general) {
     if (v.variantName) lines.push(`Valgt variant: ${quote(v.variantName)}.`);
@@ -92,7 +94,7 @@ export function presentPhase2a(raw: Phase2aContext, question: string): string {
     lines.push(`${d.variantCount} aktive varianter; ${d.siblingVariants.length} søskenvarianter vist${d.siblingsTruncated ? " (avgrenset utvalg)" : ""}.`);
     if (d.siblingVariants.length) lines.push(...d.siblingVariants.map(s => `- ${s.sku ? quote(s.sku) : "Uten vist SKU"}${s.variantName ? `: ${quote(s.variantName)}` : ""}${s.textTruncated ? " [avkortet/tilbakeholdt]" : ""}.`));
   }
-  for (const f of general ? TARGET_FIELDS : field === "collections" ? [] : [field!]) lines.push(fieldSentence(f, content.fields[f]));
+  for (const f of general ? TARGET_FIELDS : field === "seo" ? ["seoTitleOverride", "seoDescriptionOverride"] as const : field === "collections" ? [] : [field!]) lines.push(fieldSentence(f, content.fields[f]));
   if (general || field === "collections") {
     const m = d.canonicalCollections!;
     if (m.state === "unknown_or_incomplete") lines.push("Collection-medlemskap er ukjent/ufullstendig. Jeg kan ikke konkludere med at produktet har null collections.");

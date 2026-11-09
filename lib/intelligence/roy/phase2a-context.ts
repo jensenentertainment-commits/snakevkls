@@ -1,3 +1,4 @@
+import { isRoyEvidenceFollowUp } from "./follow-up.ts";
 import type { ValidChatInput } from "../shared/chat-input.ts";
 import { resolveMostRecentConversationReference } from "../shared/conversational-reference.ts";
 import { parseRoyCatalogFoundation, type RoyCatalogFoundation } from "./catalog-foundation-contract.ts";
@@ -6,19 +7,21 @@ import { parseRoyTargetedContent, TARGET_FIELDS, type RoyTargetedContent, type T
 export type Phase2aRoute =
   | { kind: "targeted"; sku: string }
   | { kind: "variant"; variantId: string }
-  | { kind: "foundation"; field: TargetField | "collections" | null }
+  | { kind: "foundation"; field: TargetField | "collections" | "seo" | null }
   | { kind: "clarify" | "unsupported" | "capabilities" | "legacy" };
 export type Phase2aContext =
   | { source: "roy_targeted_product_v1"; receivedFields: readonly string[]; data: RoyTargetedContent }
-  | { source: "roy_catalog_foundation_v1"; receivedFields: readonly string[]; field: TargetField | "collections" | null; data: RoyCatalogFoundation }
+  | { source: "roy_catalog_foundation_v1"; receivedFields: readonly string[]; field: TargetField | "collections" | "seo" | null; data: RoyCatalogFoundation }
   | { source: "roy_phase2a_guidance_v1"; receivedFields: readonly string[]; reason: "clarify" | "unsupported" | "capabilities" };
 
 export const TARGET_RECEIVED_FIELDS = ["selectedVariant", "siblingVariants", ...TARGET_FIELDS.map(f => `productContent.${f}`),
   "productContent.contentObservedAt", "productContent.shopifyUpdatedAt", "productContent.persistedAt", "canonicalCollections", "generatedAt"] as const;
 
-export function requestedContentField(q: string): TargetField | "collections" | null {
+export function requestedContentField(q: string): TargetField | "collections" | "seo" | null {
+  if (/seo.?tittel|metatittel|meta title|seo title/iu.test(q) && /seo.?beskrivelse|metabeskrivelse|meta description|seo description/iu.test(q)) return "seo";
   if (/seo.?beskrivelse|metabeskrivelse|meta description|seo description/iu.test(q)) return "seoDescriptionOverride";
-  if (/seo|metatittel|meta title/iu.test(q)) return "seoTitleOverride";
+  if (/seo.?tittel|metatittel|meta title|seo title/iu.test(q)) return "seoTitleOverride";
+  if (/\bseo\b/iu.test(q)) return "seo";
   if (/beskrivelse|produkttekst|description/iu.test(q)) return "description";
   if (/product category|shopify.?kategori|taksonomi/iu.test(q)) return "shopifyCategory";
   if (/produkttype|product.?type/iu.test(q)) return "productType";
@@ -60,6 +63,18 @@ export function resolvePhase2aRoute(input: ValidChatInput): Phase2aRoute {
   const explicit = skus(q);
   if (explicit.length > 1) return { kind: "clarify" };
   if (explicit.length === 1) return { kind: "targeted", sku: explicit[0] };
+  if (isRoyEvidenceFollowUp(q)) {
+    // Only user-authored context selects a read. Never mine assistant examples
+    // for identities, or skip an intervening unclear/new topic to an old SKU.
+    for (let i = input.history.length - 1; i >= 0; i--) {
+      const message = input.history[i];
+      if (message.role !== "user") continue;
+      if (isRoyEvidenceFollowUp(message.text) && skus(message.text).length === 0 && !/variant[ -]?id|gid:/iu.test(message.text)) continue;
+      const previous = resolvePhase2aRoute({ question: message.text, history: [], page: input.page });
+      return ["foundation", "targeted", "variant"].includes(previous.kind) ? previous : { kind: "clarify" };
+    }
+    return { kind: "clarify" };
+  }
   if (/\b(dette|det|denne|den|produktet|varen)\b/iu.test(q)) {
     const ref = resolveMostRecentConversationReference({ history: input.history, extract: skus, key: s => s });
     return ref.status === "resolved" ? { kind: "targeted", sku: ref.value } : { kind: "clarify" };

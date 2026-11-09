@@ -112,7 +112,7 @@ export function RoyCatalogWorkspace() {
       <textarea rows={2} id="roy-question" value={question} onChange={(event)=>setQuestion(event.target.value)}
         className="max-h-40 min-h-16 min-w-0 flex-1 resize-y bg-transparent p-2 text-sm text-snake-text-on-dark placeholder:text-snake-text-on-dark-muted outline-none"
         placeholder="Spør om katalogen, et produkt, en SKU eller en Variant-ID…" />
-      <div className="shrink-0"><Button variant="brand" onClick={()=>void analyze()} disabled={busy || !question.trim()}>{busy?'Roy undersøker…':'Send'}</Button></div></div>
+      <div className="shrink-0"><Button variant="brand" onClick={()=>void analyze()} disabled={busy || !question.trim()} loading={busy} loadingLabel="Roy undersøker…">Send</Button></div></div>
       <p className="mt-4 text-sm text-snake-text-on-dark-muted">Roy vurderer katalogen og anbefaler tiltak. Han endrer ikke produkter.</p>
     </section>
   );

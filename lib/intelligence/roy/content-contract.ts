@@ -28,11 +28,12 @@ const UNAVAILABLE_FIELD_TERMS: ReadonlyArray<{
 export function enforceRoyContentContract(
   answer: string,
   context: ShopifyCatalogContext,
+  question = "",
 ): string {
   // New factual path has no free-form model claims: validation and deterministic
   // rendering use the exact same observation contract as the model input.
-  if (context.phase2a) return presentPhase2a(context.phase2a, "");
-  return isRoyAnswerValid(answer, context)
+  if (context.phase2a) return presentPhase2a(context.phase2a, question);
+  return isRoyAnswerValid(answer, context, question)
     ? answer
     : buildSafeRoyFallback(context);
 }
@@ -40,8 +41,9 @@ export function enforceRoyContentContract(
 export function isRoyAnswerValid(
   answer: string,
   context: ShopifyCatalogContext,
+  question = "",
 ): boolean {
-  if (context.phase2a) return answer === presentPhase2a(context.phase2a, "");
+  if (context.phase2a) return answer === presentPhase2a(context.phase2a, question);
   const sections = parseSections(answer);
   if (!sections) return false;
 

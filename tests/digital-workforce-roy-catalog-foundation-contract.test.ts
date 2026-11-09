@@ -177,7 +177,7 @@ test('natural image questions use canonical reader and preserve observed states'
       data.fields.imageReference.missingCount-=present;
       data.findings=data.findings.map(f=>f.code==="missing_image_reference"?{...f,affectedProductCount:products-unknown-present,examplesTruncated:products-unknown-present>0}:f).filter(f=>f.affectedProductCount>0);
       const context=await readPhase2aContext(route,async name=>{assert.equal(name,'get_roy_catalog_foundation_v1');return {data,error:null};});
-      const answer=presentPhase2a(context,question);
+      const answer=presentPhase2a(context,question + " Vis detaljer.");
       assert.ok(answer.includes(`${present} til stede, ${products-unknown-present} observert tomme, ${unknown} ukjente produkter`));
       assert.match(answer,/ikke bildekvalitet/);
       assert.doesNotMatch(answer,/Jeg har ikke data|Roy v1/);
@@ -195,4 +195,45 @@ test('Roy timestamps use fixed Oslo format including DST and invalid values', as
   assert.equal(formatRoyTime('2026-07-01T22:05:00Z'),'02.07.2026 00:05');
   assert.equal(formatRoyTime(null),'Ikke observert');
   assert.equal(formatRoyTime('invalid'),'Ikke observert');
+});
+
+ test('concise catalog answers keep facts, SEO fields separate and examples bounded', async () => {
+  const {presentPhase2a}=await import('../lib/intelligence/roy/phase2a-presentation.ts');
+  const {resolvePhase2aRoute,readPhase2aContext}=await import('../lib/intelligence/roy/phase2a-context.ts');
+  for (const question of ['Hvilke produkter mangler SEO?','Hvilke produkter mangler bilder?','Hvilke produkter mangler beskrivelser?']) {
+    const route=resolvePhase2aRoute({question,history:[],page:'/shopify'});
+    assert.equal(route.kind,'foundation');
+    const data=withExamples(report(),[0,0,4,4,4,0,0,0,4]);
+    const before=JSON.stringify(data);
+    const c=await readPhase2aContext(route as Exclude<typeof route,{kind:'legacy'}>,async()=>({data,error:null}));
+    const answer=presentPhase2a(c,question);
+    assert.equal(JSON.stringify(data),before);
+    assert.doesNotMatch(answer,/Variantsynkronisering|Databaselagring|Hentet|bytebudsjett|kanonisk/);
+    assert.match(answer,/5.*ukjent/);
+    assert.ok((answer.match(/«Product /g)??[]).length<=3);
+    assert.match(answer,/lagrede katalogdata/);
+    if(question.includes('SEO')) {
+      assert.deepEqual(route,{kind:'foundation',field:'seo'});
+      assert.match(answer,/Egen SEO-tittel: 25/);
+      assert.match(answer,/Egen metabeskrivelse: 25/);
+      assert.doesNotMatch(answer,/50 produkter/);
+      assert.match(answer,/ikke nødvendigvis manglende SEO/);
+    }
+    const detailed=presentPhase2a(c,question+' Vis detaljert datagrunnlag og tidspunkter.');
+    assert.match(detailed,/Variantsynkronisering/);
+  }
+  for(const [products,unknown] of [[0,0],[5,5]]) {
+    const answer=presentPhase2a({source:'roy_catalog_foundation_v1',receivedFields:[],field:'imageReference',data:report(products,unknown)},'Hvilke produkter mangler bilder?');
+    assert.doesNotMatch(answer,/Eksempler|Ingen av de 5 produktene mangler/);
+  }
+});
+
+ test('healthy image observations produce a short conclusion without fabricated examples',async()=>{
+  const {presentPhase2a}=await import('../lib/intelligence/roy/phase2a-presentation.ts');
+  const d=report(5,0); d.fields.imageReference={presentCount:5,missingCount:0,unknownCount:0};
+  d.findings=d.findings.filter(f=>f.code!=='missing_image_reference');
+  const answer=presentPhase2a({source:'roy_catalog_foundation_v1',receivedFields:[],field:'imageReference',data:d},'Hvilke produkter mangler bilder?');
+  assert.match(answer,/^Ingen av de 5 produktene mangler bildereferanse/);
+  assert.doesNotMatch(answer,/Eksempler|synkronisering|Hentet/);
+  assert.ok(answer.length<500);
 });

@@ -65,4 +65,5 @@ export type LocationOption = {
   id: string;
   code: string;
   zone_id: string | null;
+  location_purpose?: string | null;
 };

@@ -171,7 +171,7 @@ function showToast(message: string, tone: "success" | "error" = "success") {
 
       supabase
         .from("locations")
-        .select("id, code, zone_id")
+        .select("id, code, zone_id, location_purpose")
         .eq("active", true)
         .order("code", { ascending: true }),
 

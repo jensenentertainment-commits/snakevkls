@@ -1,3 +1,4 @@
+import { LocationPicker } from "./LocationPicker";
 import type {
   LocationOption,
   ProductRow,
@@ -36,7 +37,7 @@ export default function EditPlacementModal({
 }: Props) {
   return (
   <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
-    <div className="w-full overflow-hidden rounded-t-[28px] border border-white/10 bg-white text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-[28px]">
+    <div className="max-h-[95dvh] w-full overflow-y-auto rounded-t-[28px] border border-white/10 bg-white text-neutral-950 shadow-2xl sm:max-w-md sm:rounded-[28px]">
       <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#055a7d]">
           Endre plassering
@@ -56,23 +57,7 @@ export default function EditPlacementModal({
           Lokasjon
         </label>
 
-        <select
-          id="placement-location"
-          value={newLocation}
-          autoFocus
-          onChange={(e) => setNewLocation(e.target.value)}
-          className="mt-2 w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-sm outline-none transition focus:border-[#055a7d]/50 focus:ring-2 focus:ring-[#055a7d]/10"
-        >
-          <option value="">Velg lokasjon</option>
-
-          {locations
-            .filter((location) => Boolean(location.zone_id))
-            .map((location) => (
-              <option key={location.id} value={location.id}>
-                {location.code}
-              </option>
-            ))}
-        </select>
+        <LocationPicker locations={locations} zones={zones} value={newLocation} onChange={setNewLocation} />
 
         <p className="mt-2 text-sm text-neutral-500">Sone: {zones.find((zone) => zone.id === locations.find((location) => location.id === newLocation)?.zone_id)?.code ?? "Velg lokasjon først"}</p>
         <label htmlFor="placement-quantity" className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">

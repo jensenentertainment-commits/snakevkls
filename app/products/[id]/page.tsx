@@ -48,7 +48,7 @@ useEffect(() => {
       supabase.from("zones").select("id, code, name").order("code"),
       supabase
         .from("locations")
-        .select("id, code, zone_id")
+        .select("id, code, zone_id, location_purpose")
         .eq("active", true)
         .order("code"),
     ]);

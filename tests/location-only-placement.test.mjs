@@ -60,7 +60,7 @@ test('retired zone batch endpoint never calls database and retains authorization
 });
 test('both product pages use location dialog; no zone-only write controls remain', () => {
   const modal = readFileSync('app/components/products/EditPlacementModal.tsx', 'utf8');
-  assert.equal((modal.match(/<select/g) ?? []).length, 1);
+  assert.match(modal, /<LocationPicker/);
   assert.match(modal, /value=\{newLocation\}/);
   assert.doesNotMatch(modal, /setNewZone|Ingen eksakt lokasjon/);
   for (const p of ['app/products/page.tsx', 'app/products/[id]/page.tsx']) {

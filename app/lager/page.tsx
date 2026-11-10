@@ -11,9 +11,9 @@ import {
   ArrowRight,
   Wrench,
 } from "lucide-react";
-import SnakeIntelligencePanel from "../components/SnakeIntelligencePanel";
-import SystemPulseBar from "../components/dashboard/SystemPulseBar";
-import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
+
+
+
 import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
@@ -30,10 +30,6 @@ export default async function HomePage() {
   missingLocationCount,
   missingSkuCount,
   emptyLocationCount,
-  quantityDiffCount,
-  placedProductCount,
-  activeProductCount,
-  locationsNoZoneCount,
 } = await getDashboardStats();
   const issueCount =
   missingLocationCount + missingSkuCount + emptyLocationCount;
@@ -123,28 +119,13 @@ const issueState: IssueCardState = hasIssues
   ];
 
 
-  const health = getWarehouseHealth({
-  missingLocationCount,
-  quantityDiffCount,
-  locationsWithoutZoneCount: locationsNoZoneCount,
-  placedCount: placedProductCount,
-});
+
 
   return (
   <>
-<SystemPulseBar
-  activeProducts={activeProductCount}
-  snakeHealth={health.score}
-/>
+
       <section className="overflow-hidden rounded-snake-panel bg-snake-workspace text-snake-text-primary shadow-snake-overlay">
-        <div className="bg-snake-hero px-4 py-4 text-snake-text-on-dark sm:px-6 sm:py-5">
-          <SnakeIntelligencePanel
-            missingLocationCount={missingLocationCount}
-            quantityDiffCount={quantityDiffCount}
-            locationsWithoutZoneCount={locationsNoZoneCount}
-            placedCount={placedProductCount}
-          />
-        </div>
+
  
         <div className="px-5 py-6 sm:px-8 sm:py-7">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">

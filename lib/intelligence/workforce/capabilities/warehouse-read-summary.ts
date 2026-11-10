@@ -4,8 +4,6 @@ export const warehouseReadSummaryCapability = {
   id: "warehouse.read_summary",
   effect: "read",
   dataSourceIds: [
-    "snake.knowledge",
-    "warehouse.dashboard_stats",
-    "warehouse.missing_location_products",
+    "warehouse.stored_stock",
   ],
 } as const satisfies ReadCapabilityDefinition;

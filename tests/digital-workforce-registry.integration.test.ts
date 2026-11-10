@@ -68,9 +68,8 @@ test("the first capability is closed and read-only", async () => {
 
   assert.match(capability, /id:\s*"warehouse\.read_summary"/);
   assert.match(capability, /effect:\s*"read"/);
-  assert.match(capability, /"snake\.knowledge"/);
-  assert.match(capability, /"warehouse\.dashboard_stats"/);
-  assert.match(capability, /"warehouse\.missing_location_products"/);
+  assert.match(capability, /"warehouse\.stored_stock"/);
+  assert.doesNotMatch(capability, /warehouse\.dashboard_stats|warehouse\.missing_location_products/);
   assert.doesNotMatch(
     capability,
     /\bexecute\b|\bwrite\b|\btool\b|\bhandoff\b|\bmemory\b/i

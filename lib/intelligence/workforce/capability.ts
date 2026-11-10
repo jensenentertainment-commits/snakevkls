@@ -14,6 +14,7 @@ export type DataSourceId =
   | "shopify.canonical_product_collections"
   | "shopify.catalog_foundation_v1"
   | "warehouse.dashboard_stats"
+  | "warehouse.stored_stock"
   | "warehouse.missing_location_products";
 
 export type ReadCapabilityDefinition = {

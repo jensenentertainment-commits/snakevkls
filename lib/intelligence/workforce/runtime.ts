@@ -2,7 +2,8 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import { buildArneModelInput } from "@/lib/intelligence/arne/chat-input-builder";
-import { buildBorreModelInput } from "@/lib/intelligence/borre/chat-input-builder";
+import { buildBorreConversationInput, respondBorre } from "@/lib/intelligence/borre/conversation-input";
+import { borreConversationProvider } from "@/lib/intelligence/borre/conversation-provider";
 import { buildRoyModelInput } from "@/lib/intelligence/roy/chat-input-builder";
 import { createRoyUserResponse } from "@/lib/intelligence/roy/presentation";
 import type { ShopifyCatalogContext } from "./contexts/shopify-catalog";
@@ -14,7 +15,6 @@ import { warehouseReadSummaryCapability } from "./capabilities/warehouse-read-su
 import { shopifyReadCatalogCapability, shopifyPhase2aReadCatalogCapability } from "./capabilities/shopify-read-catalog";
 import { royPhase2aEnabled } from "../roy/phase2a-gate";
 import { arneAdvisoryContextProvider } from "./contexts/arne-advisory-context-provider";
-import { warehouseSummaryProvider } from "./contexts/warehouse-summary-provider";
 import { shopifyCatalogProvider } from "./contexts/shopify-catalog-provider";
 import { getEmployeeDefinition } from "./registry";
 import {
@@ -85,11 +85,12 @@ export async function runReadOnlyEmployeeRequest(
       dependencies: {
         employee,
         capability: warehouseReadSummaryCapability,
-        provider: warehouseSummaryProvider,
-        buildModelInput: buildBorreModelInput,
-        createModelResponse: createModelResponse(
-          "Børre fikk ikke svart. Det er sjeldent, men tydeligvis mulig."
-        ),
+        provider: borreConversationProvider,
+        buildModelInput: buildBorreConversationInput,
+        createModelResponse: async ({ context, model, input }) => respondBorre(context, async () => {
+          const response = await getChatOpenAIClient().responses.create({ model, input });
+          return response.output_text || "Jeg fikk ikke svart. Ingen lagerdata er endret.";
+        }),
         logRun: logWorkforceRun,
         now: Date.now,
       },

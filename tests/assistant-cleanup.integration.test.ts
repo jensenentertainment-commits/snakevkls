@@ -31,7 +31,7 @@ test("/lager relies on the single floating chat from the root layout", async () 
 
   assert.equal((layout.match(/<AskBorre/g) ?? []).length, 1);
   assert.equal((warehouse.match(/<AskBorre/g) ?? []).length, 0);
-  assert.match(borrePage, /<AskBorre mode="page"\s*\/>/);
+  assert.match(borrePage, /<BorreWorkspace\s*\/>/);
 });
 
 test("BorrePanel renders the supplied message without hidden model I/O", async () => {

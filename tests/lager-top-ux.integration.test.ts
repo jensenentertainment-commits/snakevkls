@@ -9,24 +9,13 @@ function readProjectFile(file: string) {
   return readFileSync(join(root, file), "utf8");
 }
 
-test("Lager top keeps real status data and presents Snake Health once", () => {
+test("Lager omits legacy Borre assessments and Health without removing warehouse tools", () => {
   const page = readProjectFile("app/lager/page.tsx");
-  const pulse = readProjectFile(
-    "app/components/dashboard/SystemPulseBar.tsx",
-  );
-  const priority = readProjectFile(
-    "app/components/SnakeIntelligencePanel.tsx",
-  );
-
-  assert.match(page, /activeProducts=\{activeProductCount\}/);
-  assert.match(page, /snakeHealth=\{health\.score\}/);
-  assert.doesNotMatch(page, /lastSyncOk|emptyLocations=\{0\}/);
-  assert.doesNotMatch(pulse, /Shopify|lastSyncOk|emptyLocations/);
-
-  const visibleHealthLabels = [page, pulse, priority]
-    .join("\n")
-    .match(/Snake Health/g);
-  assert.equal(visibleHealthLabels?.length, 1);
+  assert.doesNotMatch(page, /SnakeIntelligencePanel|SystemPulseBar|getWarehouseHealth|Vurdert av Børre/);
+  for (const href of ["/products", "/locations", "/fix-locations", "/issues", "/viper", "/location-count", "/activities"]) {
+    assert.ok(page.includes('"'+href+'"'));
+  }
+  assert.ok(existsSync(join(root, "app/components/SnakeIntelligencePanel.tsx")));
 });
 
 test("Lager priority surface preserves recommendation and operative links", () => {

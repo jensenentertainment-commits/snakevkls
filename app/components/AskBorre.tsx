@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
+import { BorreFloatingChat } from "./BorreFloatingChat";
 
 type AskBorreMode = "floating" | "page";
 type AssistantVariant = "borre" | "arne";
@@ -44,7 +45,12 @@ const enabledRoutes = [
   "/viper",
 ];
 
-export default function AskBorre({
+export default function AskBorre(props: Props) {
+  if ((props.variant ?? "borre") === "borre" && (props.mode ?? "floating") === "floating") return <BorreFloatingChat />;
+  return <LegacyAskBorre {...props} />;
+}
+
+function LegacyAskBorre({
   mode = "floating",
  variant = "borre",
 }: Props) {

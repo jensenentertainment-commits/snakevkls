@@ -1,76 +1,49 @@
-import AskBorre from "../components/AskBorre";
-import SnakeNav from "../components/SnakeNav";
-import SnakeFooter from "../components/SnakeFooter";
-import { getDashboardStats } from "@/lib/dashboard";
-import { getWarehouseHealth } from "@/lib/intelligence/snake-intelligence";
+import { redirect } from "next/navigation";
+import { AuthenticatedAppShell } from "@/app/components/shell/AuthenticatedAppShell";
+import { Surface } from "@/app/components/design-system/Surface";
+import { requireRole } from "@/lib/auth/require-role";
+import { readConversationData } from "@/lib/intelligence/borre/conversation-data";
+import { buildWorkspaceOverview } from "@/lib/intelligence/borre/workspace-overview";
+import { formatRoyTime } from "@/lib/intelligence/roy/format-time";
+import { BorreWorkspace } from "./BorreWorkspace";
 
 export const dynamic = "force-dynamic";
 
 export default async function BorrePage() {
-  const stats = await getDashboardStats();
-
-  const health = getWarehouseHealth({
-    missingLocationCount: stats.missingLocationCount,
-    quantityDiffCount: stats.quantityDiffCount,
-    locationsWithoutZoneCount: stats.locationsNoZoneCount,
-    placedCount: stats.placedProductCount,
-  });
-
-  const observations = [
-    `${stats.quantityDiffCount} produkter har quantity diff.`,
-    `${stats.missingLocationCount} produkter mangler lokasjon.`,
-    `${stats.locationsNoZoneCount} lokasjoner mangler sone.`,
-    `Snake Health er ${health.score}/100 (${health.level}).`,
-    `Siste Shopify-sync: ${
-  stats.latestShopifySync
-    ? JSON.stringify(stats.latestShopifySync)
-    : "ukjent"
-}.`
-  ];
-
-  return (
-    <main className="min-h-screen bg-[#062f3b] text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
-
-        <section className="overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/30 sm:p-8">
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-[#b58a14]">
-            Snake Intelligence
-          </p>
-
-          <h1 className="mt-3 text-4xl font-black tracking-[-0.04em]">
-            Spør Børre
-          </h1>
-
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60">
-            Er du i tvil, spør Børre. Her kan du spørre om lagerstatus,
-            avvik, lokasjoner og hva som bør gjøres først.
-          </p>
-
-          <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_380px]">
-            <AskBorre mode="page" />
-
-            <aside className="rounded-[26px] border border-white/10 bg-black/15 p-5">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">
-                Børres observasjoner
-              </p>
-
-              <div className="mt-4 space-y-3">
-                {observations.map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-white/65"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </aside>
+  const auth = await requireRole(["admin", "user", "warehouse"]);
+  if (!auth.ok) redirect(auth.response.status === 401 ? "/login" : "/dashboard");
+  let overview: ReturnType<typeof buildWorkspaceOverview> | null = null;
+  let readAt: string | null = null;
+  try {
+    const data = await readConversationData({ kind: "summary" }, async (table, columns, from, to, filter) => {
+      let query = auth.authClient.from(table).select(columns, { count: "exact" }).order("id");
+      if (filter?.op === "in") query = query.in(filter.column, filter.value as string[]);
+      else if (filter?.op === "ilike") query = query.ilike(filter.column, filter.value as string);
+      else if (filter) query = query.eq(filter.column, filter.value as string);
+      return await query.range(from, to);
+    });
+    overview = buildWorkspaceOverview(data);
+    readAt = new Date().toISOString();
+  } catch { /* Unknown is explicit; never substitute old dashboard counts. */ }
+  return <AuthenticatedAppShell width="wide"><main className="mx-auto max-w-7xl">
+    <Surface as="section" variant="dark" className="overflow-hidden">
+      <header className="bg-snake-hero px-5 py-5 sm:px-8">
+        <h1 className="text-3xl font-semibold tracking-tight text-snake-text-on-dark">Børre</h1>
+        <p className="mt-1 text-lg text-snake-text-on-dark-muted">Lageransvarlig</p>
+      </header>
+      <div className="border-t border-snake-border-on-dark-subtle bg-snake-app-elevated px-5 py-3 text-sm text-snake-text-on-dark-muted">{readAt ? `Lagerdata lest ${formatRoyTime(readAt)} · Kun lesing` : "Lageroversikten er utilgjengelig · Du kan fortsatt prøve samtalen"}</div>
+      <div className="grid items-start lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <BorreWorkspace />
+        <aside aria-labelledby="borre-overview-title" className="min-w-0 self-stretch border-t border-snake-border-on-dark-default bg-snake-app-deep p-5 text-snake-text-on-dark sm:p-6 lg:border-l lg:border-t-0">
+          <h2 id="borre-overview-title" className="text-xl font-semibold text-snake-brand">Lageroversikt</h2>
+          <p className="mt-2 text-sm leading-6 text-snake-text-on-dark-muted">Fysisk lagerregistrering er ufullstendig eller ukjent. Tallene viser registreringer, ikke en bekreftet opptelling.</p>
+          <div className="mt-5 space-y-3">
+            <section className="rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-elevated p-4"><h3 className="text-sm font-semibold">Registrert Snake-beholdning</h3><p className="mt-2 text-2xl font-semibold">{overview?.registeredQuantity == null ? "Ukjent" : `${overview.registeredQuantity.toLocaleString("nb-NO")} enheter`}</p><p className="mt-2 text-sm leading-6 text-snake-text-on-dark-muted">Summert over alle tilgjengelige lagerposter, også varer på flere lokasjoner.</p></section>
+            <section className="rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-elevated p-4"><h3 className="text-sm font-semibold">Positiv beholdning uten gyldig lokasjon</h3><p className="mt-2 text-2xl font-semibold">{overview?.invalidPlacementRows == null ? "Ukjent" : `${overview.invalidPlacementRows} ${overview.invalidPlacementRows === 1 ? "lagerpost" : "lagerposter"}`}</p><p className="mt-2 text-sm leading-6 text-snake-text-on-dark-muted">{overview?.invalidPlacementRows === 0 ? "Ingen slike plasseringer i de leste dataene. Nullbeholdning regnes ikke som et plasseringsproblem." : "Spør Børre om plasseringene for å undersøke hva som er registrert."}</p></section>
           </div>
-        </section>
-
-        <SnakeFooter />
+          <details className="mt-5 text-sm leading-6 text-snake-text-on-dark-muted"><summary className="cursor-pointer font-semibold text-snake-text-on-dark">Om datagrunnlaget</summary><p className="mt-3">Oversikten leses fra Snake når siden åpnes. Lesingen er ikke et låst øyeblikksbilde. Samtalen henter aktuelle registreringer ved hvert oppslag.</p><p className="mt-3">Shopify-tall er lagrede observasjoner og kan være eldre. Forskjeller er ikke bekreftede telleavvik. Manglende SKU og tomme lokasjoner er ikke automatisk feil.</p></details>
+        </aside>
       </div>
-    </main>
-  );
+    </Surface>
+  </main></AuthenticatedAppShell>;
 }

@@ -307,8 +307,9 @@ test("server runtime authorizes before execution and defines no tools or routing
     runtime,
     /\btools\s*:|\btool_choice\s*:|\bfunction_call\s*:|\bhandoff\b|\brouteEmployee\b/i
   );
-  assert.match(runtime, /provider: warehouseSummaryProvider/);
+  assert.match(runtime, /provider: borreConversationProvider/);
+  assert.doesNotMatch(runtime, /provider: warehouseSummaryProvider/);
   assert.match(runtime, /provider: arneAdvisoryContextProvider/);
-  assert.match(runtime, /buildModelInput: buildBorreModelInput/);
+  assert.match(runtime, /buildModelInput: buildBorreConversationInput/);
   assert.match(runtime, /buildModelInput: buildArneModelInput/);
 });

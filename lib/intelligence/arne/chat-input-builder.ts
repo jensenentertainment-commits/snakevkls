@@ -32,17 +32,9 @@ Dette er bakgrunnsinformasjon om Snake.
 Den skal bare brukes når den er relevant for admins spørsmål.
 Ikke analyser eller foreslå tiltak utelukkende fordi informasjonen finnes her.
 
-=== Snake Knowledge ===
-
-${context.snakeKnowledge}
-
 === Development Context ===
 
 ${JSON.stringify(context.developmentContext, null, 2)}
-
-=== Operational Context ===
-
-${JSON.stringify(context.operationalContext, null, 2)}
 
 === Current Page ===
 

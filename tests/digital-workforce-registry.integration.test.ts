@@ -36,11 +36,7 @@ test("Arne declares the active prompt, model, and one read capability", async ()
   assert.match(capability, /id:\s*"snake\.assess_development"/);
   assert.match(capability, /effect:\s*"read"/);
   for (const sourceId of [
-    "snake.knowledge",
     "snake.development_context",
-    "warehouse.dashboard_stats",
-    "warehouse.missing_location_products",
-    "snake.latest_activity",
   ]) {
     assert.match(capability, new RegExp(`"${sourceId.replace(".", "\\.")}"`));
   }

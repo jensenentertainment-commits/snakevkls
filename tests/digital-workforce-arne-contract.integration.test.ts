@@ -45,6 +45,10 @@ test("Arne uses reviewed knowledge without operational claims or personal data",
   const rules = context.warehouseRules.join(" ");
   for (const phrase of ["SKU er valgfri", "Flere lagerposter", "Nullbeholdning", "ikke bekreftede feil", "skriver ikke beholdningsantallet", "Én aktiv", "Serveren validerer", "justerer ikke beholdningen automatisk"]) assert.ok(rules.includes(phrase), phrase);
   assert.match(context.knowledge.limitations, /Ingen aktuelle lagertall/);
+  assert.match(rules, /skriver ikke antall eller plasseringer/);
+  assert.match(rules, /lagret observasjon, ikke registrert Snake-beholdning/);
+  assert.match(context.responsibilities.join(" "), /Roy tilbyr ikke en Shopify–Snake-differanserapport/);
+  assert.match(context.responsibilities.join(" "), /Fysisk telling gjøres av ansatte i Lokasjonstelling/);
   const prompt = await source("lib/intelligence/arne/system.ts");
   assert.match(prompt, /Ikke anbefal full synkronisering eller lagerendringer uten konkret/);
   assert.match(prompt, /tidligere modellpåstander/);

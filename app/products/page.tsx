@@ -285,7 +285,7 @@ const {
         { id: "missing", label: "Mangler" },
         { id: "zone", label: "Har sone" },
         { id: "location", label: "Har lokasjon" },
-        { id: "diff", label: "Avvik" },
+        { id: "diff", label: "Beholdningsforskjeller" },
       ]}
       onChange={(id) => {
         const key = id as
@@ -411,7 +411,7 @@ const percent = Math.round((placed / total) * 100);
         return (
           <div className="flex items-center justify-between rounded-snake-action bg-snake-brand-strong/10 px-4 py-3">
             <span className="text-sm font-semibold text-snake-text-primary">
-              {diff} produkter har avvik
+              {diff} produkter har registrert beholdningsforskjell mellom Snake og Shopify
             </span>
 
             <button
@@ -451,9 +451,9 @@ const percent = Math.round((placed / total) * 100);
       {loading
         ? "Børre venter på produktdata."
         : diffCount > 0 && missingCount > 0
-          ? `Børre ser ${diffCount} avvik og ${missingCount} produkter uten plassering. Dette er ikke dekor.`
+          ? `${diffCount} produkter har forskjell mellom registrert Snake-beholdning og lagret Shopify-beholdning. ${missingCount} produkter mangler plassering. Forskjellene er ikke bekreftede lagerfeil.`
           : diffCount > 0
-            ? `Børre ser ${diffCount} avvik. Tallene bør få litt oppmerksomhet.`
+            ? `${diffCount} produkter har forskjell mellom registrert Snake-beholdning og lagret Shopify-beholdning. Dette er ikke bekreftede lagerfeil.`
             : missingCount > 0
               ? `Børre ser ${missingCount} produkter uten plassering. De trenger et hjem.`
               : "Børre finner ingen store produktproblemer akkurat nå."}

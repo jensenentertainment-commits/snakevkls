@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { ConversationPanelToggle } from "@/app/components/layout/ConversationLayout";
 import { Button } from "@/app/components/design-system/Button";
 
 
@@ -95,16 +96,17 @@ export function RoyCatalogWorkspace() {
   }
 
   return (
-    <section id="roy-conversation" aria-labelledby="roy-chat-title" className="flex h-[min(700px,85dvh)] lg:h-[min(840px,90dvh)] min-h-[520px] min-w-0 flex-col overflow-hidden bg-snake-app-elevated p-5 text-snake-text-on-dark sm:p-6">
-      <h2 id="roy-chat-title" className="text-xl font-semibold text-snake-brand">Snakk med Roy</h2>
+    <section id="roy-conversation" aria-labelledby="roy-chat-title" className="flex h-[min(680px,78dvh)] lg:h-[max(480px,calc(100dvh-260px))] min-h-[400px] min-w-0 flex-col overflow-hidden bg-snake-app-elevated p-4 text-snake-text-on-dark">
+      <div className="flex flex-wrap items-center justify-between gap-2"><h2 id="roy-chat-title" className="text-base font-semibold text-snake-brand">Snakk med Roy</h2>
+      <ConversationPanelToggle /></div>
       <p className="mt-2 text-sm text-snake-text-on-dark-muted">Spør om et produkt, eller utforsk katalogen sammen med Roy.</p>
-      <div ref={logRef} role="log" tabIndex={0} aria-label="Samtale med Roy" aria-live="polite" aria-busy={busy} className="my-4 min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-deep p-3 focus-visible:outline-2 focus-visible:outline-snake-focus-on-dark lg:max-h-none">
+      <div ref={logRef} role="log" tabIndex={0} aria-label="Samtale med Roy" aria-live="polite" aria-busy={busy} className="my-3 min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain rounded-snake-card border border-snake-border-on-dark-default bg-snake-app-deep p-3 focus-visible:outline-2 focus-visible:outline-snake-focus-on-dark lg:max-h-none">
         {messages.length===0?<><ConversationBubble role="assistant" text="Hva vil du se nærmere på? Jeg kan hjelpe deg å finne frem i katalogen og forstå funnene i arbeidsrapporten."/>
       <div className="mt-4 flex flex-wrap gap-2" aria-label="Hurtigspørsmål">{prompts.map(prompt=><button key={prompt} type="button" onClick={()=>setQuestion(prompt)} disabled={busy} className="min-h-9 rounded-snake-control border border-snake-border-on-dark-strong px-3 py-2 text-left text-xs text-snake-text-on-dark-muted hover:border-snake-brand hover:bg-snake-hero focus-visible:outline-2 focus-visible:outline-snake-focus disabled:opacity-50">{prompt}</button>)}</div>
 </>:null}
         {messages.map((message,index)=><ConversationBubble key={index} role={message.role} text={message.text}/>)}
         {answer && messages.at(-1)?.text!==answer?<ConversationBubble role="assistant" text={answer}/>:null}
-        {busy?<div role="status" aria-label="Ser nærmere på spørsmålet ditt …" className="mr-4 rounded-snake-card border border-snake-border-on-dark-subtle bg-[#12566B] p-3 sm:mr-12 sm:p-4"><p className="mb-2 text-sm font-semibold">Roy</p><div aria-hidden="true" className="flex items-center gap-3"><span className="flex shrink-0 gap-1">{[0,1,2].map(i=><span key={i} style={{animationDelay:`${i*200}ms`,animationDuration:"1800ms"}} className="h-1.5 w-1.5 rounded-full bg-current motion-safe:animate-pulse motion-reduce:animate-none"/>)}</span><p className="text-sm leading-6">Ser nærmere på spørsmålet ditt …</p></div></div>:null}
+        {busy?<div role="status" aria-label="Ser nærmere på spørsmålet ditt …" className="mr-4 rounded-snake-card border border-snake-border-on-dark-subtle bg-[#12566B] p-3 sm:mr-12 lg:mr-auto lg:ml-0 lg:max-w-[80%] sm:p-4"><p className="mb-2 text-sm font-semibold">Roy</p><div aria-hidden="true" className="flex items-center gap-3"><span className="flex shrink-0 gap-1">{[0,1,2].map(i=><span key={i} style={{animationDelay:`${i*200}ms`,animationDuration:"1800ms"}} className="h-1.5 w-1.5 rounded-full bg-current motion-safe:animate-pulse motion-reduce:animate-none"/>)}</span><p className="text-sm leading-6">Ser nærmere på spørsmålet ditt …</p></div></div>:null}
       </div>
 
       <label className="sr-only block text-sm font-semibold" htmlFor="roy-question">Skriv til Roy</label>
@@ -113,14 +115,14 @@ export function RoyCatalogWorkspace() {
         className="max-h-40 min-h-16 min-w-0 flex-1 resize-y bg-transparent p-2 text-sm text-snake-text-on-dark placeholder:text-snake-text-on-dark-muted outline-none"
         placeholder="Spør om katalogen, et produkt, en SKU eller en Variant-ID…" />
       <div className="shrink-0"><Button variant="brand" onClick={()=>void analyze()} disabled={busy || !question.trim()} loading={busy} loadingLabel="Roy undersøker…">Send</Button></div></div>
-      <p className="mt-4 text-sm text-snake-text-on-dark-muted">Roy vurderer katalogen og anbefaler tiltak. Han endrer ikke produkter.</p>
+      <p className="mt-2 text-xs text-snake-text-on-dark-muted">Roy vurderer katalogen og anbefaler tiltak. Han endrer ikke produkter.</p>
     </section>
   );
 }
 
 function ConversationBubble({role,text}: ChatMessage) {
   const isUser=role==='user';
-  return <div className={`rounded-snake-card border border-snake-border-on-dark-subtle p-3 sm:p-4 ${isUser?'ml-4 bg-[#DCE5EA] text-snake-text-primary sm:ml-12':'mr-4 bg-[#12566B] text-snake-text-on-dark sm:mr-12'}`}>
+  return <div className={`rounded-snake-card border border-snake-border-on-dark-subtle p-3 sm:p-4 ${isUser?'ml-4 bg-[#DCE5EA] text-snake-text-primary sm:ml-12 lg:ml-auto lg:mr-0 lg:max-w-[80%]':'mr-4 bg-[#12566B] text-snake-text-on-dark sm:mr-12 lg:mr-auto lg:ml-0 lg:max-w-[80%]'}`}>
     <p className="mb-2 text-sm font-semibold">{isUser?'Du':'Roy'}</p>
     <p className="whitespace-pre-wrap break-words text-sm leading-6">{text}</p>
   </div>;

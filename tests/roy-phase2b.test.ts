@@ -44,8 +44,12 @@ test('conversation-first layout keeps quick questions unsent and report bounded'
   assert.match(chat,/role="log"/);
   assert.match(chat,/rows=\{2\}/);
   const report=readFileSync('app/shopify/RoyWorkReport.tsx','utf8');
-  assert.ok(report.indexOf('{children}')<report.indexOf('<section aria-labelledby="roy-report-title"'));
-  assert.match(report,/3fr\)_minmax\(0,2fr/);
+  assert.match(report,/<ConversationLayout label="arbeidsrapport" sidebar=/);
+  const layout=readFileSync('app/components/layout/ConversationLayout.tsx','utf8');
+  assert.ok(layout.indexOf('{children}')<layout.indexOf('{sidebar}'));
+  assert.match(layout,/minmax\(0,1fr\)_320px/);
+  assert.match(layout,/hidden=\{!open\}/);
+  assert.match(layout,/aria-expanded=\{panel.open\}/);
   assert.match(report,/slice\(0,3\)/);
   assert.match(report,/canRun\?<div/);
 });

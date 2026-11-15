@@ -2,6 +2,7 @@
 import { formatRoyTime as time } from '@/lib/intelligence/roy/format-time';
 import { useRef, useState, type ReactNode } from 'react';
 import { Button } from '@/app/components/design-system/Button';
+import { ConversationLayout } from "@/app/components/layout/ConversationLayout";
 import { Surface } from '@/app/components/design-system/Surface';
 import { parseReview, REVIEW_RULES, reviewIntroduction, type ReviewReport, type ReviewFinding } from '@/lib/intelligence/roy/review';
 
@@ -46,18 +47,17 @@ export function RoyWorkReport({initial,loadError,canRun,children}: {initial:Revi
   }
   const top=report?.findings.filter(f=>f.state==='open'&&f.priority<=2).slice(0,3)??[];
   return <Surface as="section" variant="dark" className="overflow-hidden border border-snake-border-on-dark-default">
-    <header className="bg-snake-hero px-5 py-5 text-snake-text-on-dark sm:px-8">
-      <h1 className="text-[length:var(--snake-text-display-page-mobile-size)] font-semibold tracking-tight sm:text-[length:var(--snake-text-display-page-size)]">Roy</h1>
-      <p className="mt-1 text-lg">Produktansvarlig</p>
+    <header className="bg-snake-hero px-4 py-3 text-snake-text-on-dark sm:px-5">
+      <h1 className="text-2xl font-semibold tracking-tight">Roy</h1>
+      <p className="mt-0.5 text-sm">Produktansvarlig</p>
     </header>
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-snake-border-on-dark-subtle bg-snake-app-elevated px-5 py-3 text-snake-text-on-dark sm:px-8">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-snake-border-on-dark-subtle bg-snake-app-elevated px-4 py-2 text-snake-text-on-dark sm:px-5">
       <p className="text-sm" role="status">{busy?'Roy undersøker katalogen…':report?.run?`Siste katalogkontroll: ${time(report.run.completed_at)}`:error?'Rapportstatus er ikke tilgjengelig.':'Ingen katalogkontroll gjennomført.'}</p>
       {canRun?<div><Button variant="secondary" size="sm" onClick={()=>void run()} disabled={busy}>{busy?'Roy kontrollerer…':'Kontroller katalogen'}</Button></div>:null}
     </div>
-    <div className="grid items-start lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-    {children}
-    <section aria-labelledby="roy-report-title" className="min-w-0 self-stretch border-t border-snake-border-on-dark-default bg-snake-app-deep p-5 sm:p-6 lg:border-l lg:border-t-0">
-    <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="roy-report-title" className="text-xl font-semibold text-snake-brand">Siste arbeidsrapport</h2>
+    <ConversationLayout label="arbeidsrapport" sidebar={
+    <section aria-labelledby="roy-report-title" className="min-w-0 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="roy-report-title" className="text-base font-semibold text-snake-brand">Siste arbeidsrapport</h2>
 </div>
     {error?<p role="alert" className="mt-3 text-sm">{error}</p>:null}
     {report?.run?<>
@@ -69,5 +69,5 @@ export function RoyWorkReport({initial,loadError,canRun,children}: {initial:Revi
         <p className="my-3 text-sm text-snake-text-on-dark-muted">{report.run.summary.new} nye · {report.run.summary.resolved} løste · {report.run.summary.reopened} gjenåpnede registreringer, inkludert informasjon.</p><ul className="space-y-3">{report.findings.map(f=><Finding key={f.id} finding={f}/>)}</ul>
         {report.findings.length<report.total?<Button onClick={()=>void more()} disabled={busy}>Vis flere ({report.findings.length} av {report.total})</Button>:null}</div>:null}
     </>:<p className="mt-4 text-snake-text-on-dark-muted">{error?'Rapportstatus er ukjent inntil den kan leses igjen. Chatten kan brukes som før.':'Ingen lagret kontroll ennå. En administrator kan starte den første kontrollen. Chatten kan brukes som før.'}</p>}
-  </section></div></Surface>;
+  </section>}>{children}</ConversationLayout></Surface>;
 }

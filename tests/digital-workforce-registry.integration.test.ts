@@ -57,8 +57,22 @@ test("Borre declares the existing prompt, model policy, and one capability", asy
 
   assert.match(employee, /id:\s*"borre"/);
   assert.match(employee, /getSystemPrompt:\s*getBorreChatSystemPrompt/);
-  assert.match(employee, /id:\s*CHAT_MODEL/);
+  assert.match(employee, /id:\s*BORRE_ROY_MODEL/);
   assert.match(employee, /capabilityIds:\s*\[warehouseReadSummaryCapability\.id\]/);
+});
+
+test("Borre and Roy share Luna without changing Arne's model", async () => {
+  const [models, borre, roy, arne] = await Promise.all([
+    source("lib/intelligence/shared/chat-server.ts"),
+    source("lib/intelligence/workforce/employees/borre.ts"),
+    source("lib/intelligence/workforce/employees/roy.ts"),
+    source("lib/intelligence/workforce/employees/arne.ts"),
+  ]);
+  assert.match(models, /CHAT_MODEL = "gpt-5-mini"/);
+  assert.match(models, /BORRE_ROY_MODEL = "gpt-6-luna"/);
+  for (const employee of [borre, roy]) assert.match(employee, /id:\s*BORRE_ROY_MODEL/);
+  assert.match(arne, /id:\s*CHAT_MODEL/);
+  assert.doesNotMatch(arne, /BORRE_ROY_MODEL/);
 });
 
 test("the first capability is closed and read-only", async () => {

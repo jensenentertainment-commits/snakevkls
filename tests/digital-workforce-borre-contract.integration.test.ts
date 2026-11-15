@@ -25,8 +25,8 @@ test("Borre keeps the existing authenticated API and model contract", async () =
   assert.match(route, /employeeId: "borre"/);
   assert.match(route, /capabilityId: "warehouse\.read_summary"/);
   assert.match(route, /return NextResponse\.json\([\s\S]*\{ answer: result\.answer \}/);
-  assert.match(chatServer, /CHAT_MODEL = "gpt-5-mini"/);
-  assert.match(employee, /id:\s*CHAT_MODEL/);
+  assert.match(chatServer, /BORRE_ROY_MODEL = "gpt-6-luna"/);
+  assert.match(employee, /id:\s*BORRE_ROY_MODEL/);
   assert.match(employee, /getSystemPrompt:\s*getBorreChatSystemPrompt/);
   assert.match(runtime, /getChatOpenAIClient\(\)\.responses\.create\(request\)/);
   assert.match(chatUi, /"\/api\/borre\/ask"/);

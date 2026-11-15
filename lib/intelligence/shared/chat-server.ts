@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
 export const CHAT_MODEL = "gpt-5-mini";
+export const BORRE_ROY_MODEL = "gpt-6-luna";
 
 let openAIClient: OpenAI | null = null;
 

@@ -14,7 +14,8 @@ test("sidebar retains module roles, hides Lagersalg and exposes only existing em
       ? ["dashboard", "lager", "viper"] : ["dashboard", "lager", "viper", "shopify"]);
     assert.deepEqual(nav.employees.map(i => i.id), role === "warehouse" ? ["borre"] : ["borre", "roy"]);
     assert.deepEqual(nav.admin.map(i => i.id), role === "admin" ? ["settings", "labs"] : []);
-    assert.equal(nav.main.find(i => i.id === "lager")?.children.length, 7);
+    assert.equal(nav.main.find(i => i.id === "lager")?.children.length, 6);
+    assert.ok(!nav.main.find(i => i.id === "lager")?.children.some(i => i.href === "/fix-locations"));
     assert.equal(nav.main.find(i => i.id === "viper")?.children.length, role === "admin" ? 4 : 1);
   }
 });

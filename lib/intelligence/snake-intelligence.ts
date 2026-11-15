@@ -38,8 +38,8 @@ export function getRecommendedAction(metrics: SnakeMetrics): RecommendedAction {
     return {
       type: "missing-location",
       title: "Sett eksakte lokasjoner",
-      description: `${missingLocationCount} produkter mangler fast plassering. Start med ryddemodus.`,
-      href: "/fix-locations",
+      description: `${missingLocationCount} produkter mangler fast plassering. Kontroller plasseringen i produktvisningen.`,
+      href: "/products",
       priorityLabel: "Neste steg",
       level: missingLocationCount > 20 ? "high" : "medium",
     };

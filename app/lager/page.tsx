@@ -9,12 +9,10 @@ import {
   ScanLine,
   Activity,
   ArrowRight,
-  Wrench,
 } from "lucide-react";
 
 
 
-import { getDashboardStats } from "@/lib/dashboard";
 type IssueCardState = {
   border: string;
   bg: string;
@@ -25,38 +23,6 @@ type IssueCardState = {
 };
 export default async function HomePage() {
   await connection();
-
-  const {
-  missingLocationCount,
-  missingSkuCount,
-  emptyLocationCount,
-} = await getDashboardStats();
-  const issueCount =
-  missingLocationCount + missingSkuCount + emptyLocationCount;
-
-
-const hasIssues = issueCount > 0;
-const issueState: IssueCardState = hasIssues
-  ? {
-      border: "border-snake-danger-border",
-      bg: "bg-snake-danger-surface",
-      badge: "bg-snake-danger-surface text-snake-danger",
-      icon: "border-snake-danger-border bg-snake-danger-surface text-snake-danger ring-snake-danger-border",
-      action: "text-snake-danger",
-      hover: "hover:border-snake-danger-border hover:shadow-snake-panel",
-    }
-  : {
-      border: "border-snake-success-border",
-      bg: "bg-snake-success-surface",
-      badge: "bg-snake-success-surface text-snake-success",
-      icon: "border-snake-success-border bg-snake-success-surface text-snake-success ring-snake-success-border",
-      action: "text-snake-success",
-      hover: "hover:border-snake-success-border hover:shadow-snake-panel",
-    };
-
-    const shouldHighlightCleanup = hasIssues && issueCount > 0;
-
-    
 
   const modules = [
     {
@@ -80,28 +46,13 @@ const issueState: IssueCardState = hasIssues
     },
 
         
- {
-  href: "/fix-locations",
-  icon: <Wrench />,
-  title: "Ryddemodus",
-  label: shouldHighlightCleanup ? "Neste steg" : "Klar",
-  text: shouldHighlightCleanup
-    ? "Plasser produkter som mangler lokasjon."
-    : "Ingen akutt rydding nødvendig.",
-  body: shouldHighlightCleanup
-    ? "Går gjennom én vare av gangen og lar deg sette lokasjon uten å måtte hoppe mellom produkter og avvik."
-    : "Når nye produkter mangler lokasjon, blir ryddemodus anbefalt her.",
-  action: shouldHighlightCleanup ? "Start ryddemodus" : "Åpne ryddemodus",
-  highlight: shouldHighlightCleanup,
-},
-
     {
       href: "/issues",
       icon: <AlertTriangle />,
       title: "Avvik",
-      label: hasIssues ? `${issueCount} avvik` : "OK",
-      text: "Rydd feil som stopper plukk.",
-      body: "Produkter uten lokasjon, manglende SKU, tomme lokasjoner og strukturfeil samles her.",
+      label: "Kontroll",
+      text: "Kontroller registrerte plasseringer.",
+      body: "Positiv beholdning uten gyldig lokasjon og registreringskonflikter samles her. Manglende SKU og flere lokasjoner er normalt.",
       action: "Åpne avvik",
       
     },
@@ -149,7 +100,7 @@ const issueState: IssueCardState = hasIssues
               <ModuleCard
                 key={module.title}
                 {...module}
-                issueState={module.title === "Avvik" ? issueState : undefined}
+                issueState={undefined}
               />
             ))}
           </div>
@@ -177,7 +128,7 @@ const issueState: IssueCardState = hasIssues
               title="Aktivitetslogg"
               text="Siste endringer i lokasjoner, soner, varer og avvik."
               action="Åpne aktivitetslogg"
-              warning={hasIssues}
+              warning={false}
             />
           </div>
         </div>

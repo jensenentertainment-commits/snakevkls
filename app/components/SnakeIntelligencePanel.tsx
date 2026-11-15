@@ -127,7 +127,7 @@ export default function SnakeIntelligencePanel({
         <Metric
           value={missingLocationCount}
           label="Uten lokasjon"
-          href="/fix-locations"
+          href="/products"
         />
         <Metric
           value={locationsWithoutZoneCount}

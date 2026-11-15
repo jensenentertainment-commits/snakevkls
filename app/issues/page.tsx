@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
+import { inventoryIssues, readAllIssuePages, type IssueItem, type IssueProduct, type IssueInventory, type IssueLocation } from "@/lib/inventory/issues";
 import { supabase } from "@/lib/supabase";
 import { LagerToolbar } from "../components/lager/LagerToolbar";
 import { LagerHero } from "../components/lager/LagerHero";
@@ -12,49 +13,11 @@ import { LagerViewTabs } from "../components/lager/LagerViewTabs";
 type Severity = "critical" | "warning" | "info";
 type IssueFilter = "all" | Severity;
 
-type ProductRow = {
-  id: string;
-  sku: string | null;
-  product_name: string;
-  variant_name: string | null;
-  inventory: {
-  id: string;
-  quantity: number;
-  zone_id: string | null;
-  locations: {
-    id: string;
-    code: string;
-  } | null;
-}[];
-};
-
-type LocationRow = {
-  id: string;
-  code: string;
-  active: boolean;
-  zone_id: string | null;
-  zones: {
-    id: string;
-    code: string;
-    name: string;
-  } | null;
-  inventory: { id: string }[];
-};
-
-type IssueItem = {
-  id: string;
-  severity: Severity;
-  type: string;
-  title: string;
-  description: string;
-  meta?: string;
-  href: string;
-  action: string;
-};
-
 export default function IssuesPage() {
-  const [products, setProducts] = useState<ProductRow[]>([]);
-  const [locations, setLocations] = useState<LocationRow[]>([]);
+  const [products, setProducts] = useState<IssueProduct[]>([]);
+  const [locations, setLocations] = useState<IssueLocation[]>([]);
+  const [inventory, setInventory] = useState<IssueInventory[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState<IssueFilter>("all");
@@ -65,165 +28,21 @@ export default function IssuesPage() {
   }, []);
 
   async function loadData() {
-    setLoading(true);
-
-    const [productsRes, locationsRes] = await Promise.all([
-      supabase
-        .from("products")
-        .select(`
-          id,
-          sku,
-          product_name,
-          variant_name,
-          inventory (
-  id,
-  quantity,
-  zone_id,
-  locations (
-              id,
-              code
-            )
-          )
-        `)
-        .eq("active", true)
-        .order("product_name", { ascending: true }),
-
-      supabase
-        .from("locations")
-        .select(`
-          id,
-          code,
-          active,
-          zone_id,
-          zones (
-            id,
-            code,
-            name
-          ),
-          inventory (
-            id
-          )
-        `)
-        .order("code", { ascending: true }),
-    ]);
-
-    if (productsRes.error) console.error("Feil ved henting av produkter:", productsRes.error);
-    if (locationsRes.error) console.error("Feil ved henting av lokasjoner:", locationsRes.error);
-
-    setProducts((productsRes.data as unknown as ProductRow[]) ?? []);
-    setLocations((locationsRes.data as unknown as LocationRow[]) ?? []);
-    setLoading(false);
+    setLoading(true); setError(null);
+    try {
+      const [products, inventory, locations] = await Promise.all([
+        readAllIssuePages<IssueProduct>((from, to) => supabase.from("products").select("id,sku,product_name,variant_name").order("id").range(from,to)),
+        readAllIssuePages<IssueInventory>((from, to) => supabase.from("inventory").select("id,product_id,quantity,location_id,zone_id").order("id").range(from,to)),
+        readAllIssuePages<IssueLocation>((from, to) => supabase.from("locations").select("id,code,active,zone_id,zones(id,code)").order("id").range(from,to) as unknown as PromiseLike<{data: IssueLocation[] | null; error: unknown}>),
+      ]);
+      setProducts(products); setInventory(inventory); setLocations(locations);
+    } catch(error) {
+      setProducts([]); setInventory([]); setLocations([]);
+      setError(error instanceof Error ? error.message : "Kunne ikke hente avviksgrunnlaget");
+    } finally { setLoading(false); }
   }
 
-  const issues = useMemo(() => {
-    const productsWithoutZone = products.filter((product) => {
-  const inventory = product.inventory?.[0];
-  return !inventory?.zone_id;
-});
-
-const productsWithoutLocation = products.filter((product) => {
-  const inventory = product.inventory?.[0];
-  return inventory?.zone_id && !inventory.locations;
-});
-    const productsWithoutSku = products.filter((product) => !product.sku);
-
-    const productsWithMultipleLocations = products.filter(
-      (product) => (product.inventory?.length ?? 0) > 1
-    );
-
-    const locationsWithoutProducts = locations.filter(
-      (location) => (location.inventory?.length ?? 0) === 0
-    );
-
-    const locationsWithoutZone = locations.filter(
-      (location) => !location.zone_id
-    );
-
-    const list: IssueItem[] = [
-      ...productsWithoutZone.map((product) => ({
-  id: `product-zone-${product.id}`,
-  severity: "critical" as const,
-  type: "Produkt uten sone",
-  title: product.sku || "Produkt uten SKU",
-  description: product.product_name,
-  meta: product.variant_name || undefined,
-  href: "/products?status=missing",
-  action: "Sett sone",
-})),
-
-...productsWithoutLocation.map((product) => ({
-  id: `product-location-${product.id}`,
-  severity: "warning" as const,
-  type: "Produkt uten lokasjon",
-  title: product.sku || "Produkt uten SKU",
-  description: product.product_name,
-  meta: product.variant_name || undefined,
-  href: "/fix-locations",
-  action: "Sett lokasjon",
-})),
-
-      ...productsWithoutSku.map((product) => ({
-        id: `product-sku-${product.id}`,
-        severity: "critical" as const,
-        type: "Produkt uten SKU",
-        title: product.product_name,
-        description: "Produkt mangler SKU og blir vanskeligere å finne i søk.",
-        meta: product.variant_name || undefined,
-        href: "/products",
-        action: "Kontroller produkt",
-      })),
-
-      ...productsWithMultipleLocations.map((product) => ({
-        id: `product-multi-${product.id}`,
-        severity: "warning" as const,
-        type: "Flere lokasjoner",
-        title: product.sku || "Produkt uten SKU",
-        description: product.product_name,
-        meta:
-          product.inventory
-            ?.map((item) => item.locations?.code)
-            .filter(Boolean)
-            .join(", ") || undefined,
-        href: "/products",
-        action: "Kontroller",
-      })),
-
-      ...locationsWithoutZone.map((location) => ({
-        id: `location-zone-${location.id}`,
-        severity: "warning" as const,
-        type: "Lokasjon uten sone",
-        title: location.code,
-        description: "Lokasjonen bør knyttes til en sone for ryddigere struktur.",
-        meta: location.active ? "Aktiv" : "Inaktiv",
-        href: "/locations",
-        action: "Legg til sone",
-      })),
-
-      ...locationsWithoutProducts.map((location) => ({
-        id: `location-empty-${location.id}`,
-        severity: "info" as const,
-        type: "Tom lokasjon",
-        title: location.code,
-        description:
-          "Lokasjonen har ingen registrerte produkter. Dette kan være riktig, men bør være bevisst.",
-        meta: location.zones
-          ? `${location.zones.code} — ${location.zones.name}`
-          : "Mangler sone",
-        href: "/locations",
-        action: "Se lokasjon",
-      })),
-    ];
-
-    return {
-  productsWithoutZone,
-  productsWithoutLocation,
-      productsWithoutSku,
-      productsWithMultipleLocations,
-      locationsWithoutProducts,
-      locationsWithoutZone,
-      list,
-    };
-  }, [products, locations]);
+  const issues = useMemo(() => inventoryIssues(products, inventory, locations), [products, inventory, locations]);
 
   const filteredIssues = useMemo(() => {
     let result = issues.list;
@@ -257,8 +76,7 @@ const productsWithoutLocation = products.filter((product) => {
           <LagerHero
   eyebrow="SNAKE / Avvik"
   title="Avvik"
-  description="Lagerdata som kan skape feil i søk, lokasjon og plukk.
-                Kritiske avvik bør ryddes først"
+  description="Registrerte forhold som bør kontrolleres. Fysisk lagerregistrering kan være ufullstendig; listen bekrefter ikke fysiske lagerfeil."
   searchValue={query}
   onSearchChange={setQuery}
   searchPlaceholder="SKU, produktnavn, sone eller lokasjon"
@@ -283,17 +101,14 @@ const productsWithoutLocation = products.filter((product) => {
       <div className="rounded-snake-control border border-snake-border-on-dark-subtle bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
         Produkt{" "}
         <span className="ml-1 text-snake-text-on-dark-muted">
-          {issues.productsWithoutZone.length +
-  issues.productsWithoutLocation.length +
-  issues.productsWithoutSku.length +
-  issues.productsWithMultipleLocations.length}
+          {issues.productCount}
         </span>
       </div>
 
       <div className="rounded-snake-control bg-snake-app-elevated px-3 py-2 text-sm font-semibold text-snake-text-on-dark">
         Lokasjon{" "}
         <span className="ml-1 text-snake-text-on-dark-muted">
-          {issues.locationsWithoutProducts.length + issues.locationsWithoutZone.length}
+          {issues.locationCount}
         </span>
       </div>
     </>
@@ -309,15 +124,7 @@ const productsWithoutLocation = products.filter((product) => {
     </h2>
 
     <p className="mt-1 text-sm text-snake-text-secondary">
-      {loading
-        ? "Børre henter avvik."
-        : criticalCount > 0
-          ? `Børre ser ${criticalCount} kritiske avvik. Start der før lageret begynner å improvisere.`
-          : warningCount > 0
-            ? `Børre ser ${warningCount} ting som bør sjekkes. Ikke krise, men heller ikke pynt.`
-            : totalIssues > 0
-              ? `Børre ser ${totalIssues} avvik totalt. Det meste virker håndterbart.`
-              : "Børre finner ingen avvik akkurat nå. Dette er sjelden nok til å nevnes."}
+      {error ? "Avviksgrunnlaget er ikke tilgjengelig." : loading ? "Henter registrerte lagerforhold." : totalIssues > 0 ? totalIssues + " registrerte forhold bør kontrolleres." : "Ingen registreringsforhold funnet med disse kontrollene."}
     </p>
   </div>
 
@@ -339,10 +146,12 @@ const productsWithoutLocation = products.filter((product) => {
   </div>
 </div>
 
-              {loading ? (
+              {error ? (
+                <div role="alert" className="p-6"><p>{error}</p><button className="mt-3 underline" onClick={loadData}>Prøv igjen</button></div>
+              ) : loading ? (
                 <EmptyState text="Laster avvik..." />
               ) : filteredIssues.length === 0 ? (
-                <EmptyState text="Ingen avvik funnet. Mistenkelig ryddig." />
+                <EmptyState text="Ingen registreringsforhold i dette utvalget." />
               ) : (
                 <div className="divide-y divide-neutral-100">
                   {filteredIssues.map((issue) => (
@@ -356,18 +165,14 @@ const productsWithoutLocation = products.filter((product) => {
               <MiniSection
                 title="Produkter"
                 items={[
-                  ["Uten sone", issues.productsWithoutZone.length],
-["Uten lokasjon", issues.productsWithoutLocation.length],
-                  ["Uten SKU", issues.productsWithoutSku.length],
-                  ["Flere lokasjoner", issues.productsWithMultipleLocations.length],
+                  ["Lagerposter til kontroll", issues.productCount],
                 ]}
               />
 
               <MiniSection
                 title="Lokasjoner"
                 items={[
-                  ["Tomme lokasjoner", issues.locationsWithoutProducts.length],
-                  ["Uten sone", issues.locationsWithoutZone.length],
+                  ["Aktive uten gyldig sone", issues.locationCount],
                 ]}
               />
             </div>

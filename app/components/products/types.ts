@@ -32,6 +32,8 @@ export type ProductRow = {
 
   inventory: {
     id: string;
+    location_id?: string | null;
+    updated_at?: string;
     quantity: number;
     zone_id: string | null;
 

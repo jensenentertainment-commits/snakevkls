@@ -1,3 +1,4 @@
+import { placementRequest, type PlacementAction } from "@/lib/inventory/placement";
 import type { ProductRow } from "./types";
 
 type ToastTone = "success" | "error";
@@ -106,33 +107,21 @@ export function useProductsActions({
     }
   }
 
-  async function handleSave() {
+  async function handleSave(action: PlacementAction) {
     if (!editing || saveSaving) return;
     if (!newLocation) { showToast("Velg en konkret lokasjon", "error"); return; }
-
-    const quantity = Number(newQuantity);
-
-    if (!Number.isInteger(quantity) || quantity < 0) {
-      showToast("Antall må være 0 eller høyere", "error");
-      return;
-    }
 
     setSaveSaving(true);
 
     const existing = editing.inventory?.[0];
 
     try {
-      const res = await fetch("/api/inventory/set-location", {
+      const res = await fetch("/api/inventory/placement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          productId: editing.id,
-          inventoryId: existing?.id ?? null,
-          locationId: newLocation || null,
-          quantity,
-        }),
+        body: JSON.stringify(placementRequest(editing.id, existing, newLocation, newQuantity, action)),
       });
 
       const result = await res.json();

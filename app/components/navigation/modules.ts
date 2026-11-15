@@ -113,12 +113,6 @@ export const LAGER_MODULE_NAVIGATION = {
       label: "Lokasjoner",
     },
     {
-      href: "/fix-locations",
-      icon: Wrench,
-      id: "cleanup",
-      label: "Ryddemodus",
-    },
-    {
       href: "/issues",
       icon: ShieldAlert,
       id: "issues",

@@ -81,7 +81,6 @@ test("global and module navigation remain separate concerns", () => {
     "Oversikt",
     "Produkter",
     "Lokasjoner",
-    "Ryddemodus",
     "Avvik",
     "Telling",
     "Aktivitet",
@@ -90,6 +89,7 @@ test("global and module navigation remain separate concerns", () => {
     assert.doesNotMatch(globalBlock, new RegExp(`label: "${label}"`));
   }
 
+  assert.doesNotMatch(lagerBlock, /label: "Ryddemodus"/);
   assert.doesNotMatch(globalBlock, /Innstillinger|Labs/);
   assert.match(modules, /ADMIN_NAVIGATION_ITEMS/);
 });

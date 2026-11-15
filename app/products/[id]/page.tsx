@@ -1,5 +1,6 @@
 "use client";
 
+import { placementRequest, type PlacementAction } from "@/lib/inventory/placement";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -33,6 +34,7 @@ const [movementReason, setMovementReason] = useState("manual_sale");
 const [movementNote, setMovementNote] = useState("");
 
 const [saveSaving, setSaveSaving] = useState(false);
+const [placementError, setPlacementError] = useState<string | null>(null);
 const [movementSaving, setMovementSaving] = useState(false);
 
 
@@ -62,31 +64,19 @@ useEffect(() => {
 
 
 
-async function handleSavePlacement() {
-  if (!product?.id || !newLocation || !Number.isInteger(Number(newQuantity)) || Number(newQuantity) < 0) return;
-
-  setSaveSaving(true);
-
-  const response = await fetch("/api/inventory/set-location", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      productId: product.id,
-      inventoryId: inv?.id ?? null,
-      locationId: newLocation || null,
-      quantity: Number(newQuantity),
-    }),
+async function handleSavePlacement(action: PlacementAction) {
+ if (!product?.id || !newLocation || saveSaving) return;
+ setSaveSaving(true); setPlacementError(null);
+ try {
+  const response = await fetch("/api/inventory/placement", {
+   method: "POST", headers: { "Content-Type": "application/json" },
+   body: JSON.stringify(placementRequest(product.id, inv, newLocation, newQuantity, action)),
   });
-
-  setSaveSaving(false);
-
-  if (!response.ok) {
-    console.error(await response.json());
-    return;
-  }
-
-  setShowPlacementModal(false);
-  window.location.reload();
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || "Kunne ikke lagre plassering");
+  setShowPlacementModal(false); await load();
+ } catch(error) { setPlacementError(error instanceof Error ? error.message : "Kunne ikke lagre plassering"); }
+ finally { setSaveSaving(false); }
 }
 
 async function handleSaveMovement() {
@@ -137,6 +127,8 @@ async function handleSaveMovement() {
         image_url,
         shopify_quantity,
         inventory (
+          location_id,
+          updated_at,
           id,
           quantity,
           zone_id,
@@ -342,6 +334,7 @@ const { data: activityData } = await supabase
         </section>
 {showPlacementModal && (
   <EditPlacementModal
+ error={placementError}
     editing={product}
     locations={locations}
     zones={zones}

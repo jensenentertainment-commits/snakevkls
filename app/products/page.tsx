@@ -146,6 +146,8 @@ function showToast(message: string, tone: "success" | "error" = "success") {
   handle
 ),
           inventory (
+          location_id,
+          updated_at,
             id,
             quantity,
             zone_id,

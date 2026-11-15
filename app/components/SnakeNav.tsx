@@ -19,7 +19,6 @@ import {
   Search,
   Settings,
   TriangleAlert,
-  Wrench,
 } from "lucide-react";
 import { isRole, type Role } from "@/lib/auth/roles";
 
@@ -135,7 +134,6 @@ const pathname = usePathname();
 
   <div className="mx-1 h-6 w-px bg-white/10" />
 
-  <NavLink href="/fix-locations" label="Ryddemodus" icon={<Wrench />} pathname={pathname} />
   <NavLink href="/issues" label="Avvik" icon={<TriangleAlert />} pathname={pathname} />
   <NavLink href="/location-count" label="Telling" icon={<ClipboardCheck />} pathname={pathname} />
   <NavLink href="/activities" label="Aktivitet" icon={<Activity />} pathname={pathname} />

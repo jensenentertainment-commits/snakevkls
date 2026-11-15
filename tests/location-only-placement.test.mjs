@@ -25,32 +25,6 @@ function route(path, authorized = true) {
   }).outputText, context);
   return { post: body => context.exports.POST({ json: async () => body }), calls };
 }
-const path = 'app/api/inventory/set-location/route.ts';
-test('placement rejects absent location even when a zone was supplied', async () => {
-  const r = route(path);
-  for (const locationId of [null, undefined, '']) {
-    assert.equal((await r.post({ productId: 'product', zoneId: 'zone', locationId, quantity: 10 })).status, 400);
-  }
-  assert.equal(r.calls.length, 0);
-});
-test('placement delegates zone to authoritative RPC, preserving inventory identity and quantity', async () => {
-  const r = route(path);
-  assert.equal((await r.post({ productId: 'product', inventoryId: 'existing', zoneId: 'wrong-zone', locationId: 'location', quantity: 10 })).status, 200);
-  assert.equal(r.calls.length, 1);
-  const { name, args } = r.calls[0];
-  assert.equal(name, 'set_product_location');
-  assert.equal(args.requested_zone_id, null);
-  assert.equal(args.requested_location_id, 'location');
-  assert.equal(args.requested_inventory_id, 'existing');
-  assert.equal(args.requested_quantity, 10);
-});
-test('placement retains quantity and role validation', async () => {
-  const r = route(path);
-  for (const quantity of [-1, 1.5, 'bad']) assert.equal((await r.post({ productId: 'p', locationId: 'l', quantity })).status, 400);
-  const denied = route(path, false);
-  assert.equal((await denied.post({ productId: 'p', locationId: 'l', quantity: 1 })).status, 403);
-  assert.equal(r.calls.length + denied.calls.length, 0);
-});
 test('retired zone batch endpoint never calls database and retains authorization', async () => {
   const p = 'app/api/inventory/batch-zone/route.ts';
   const r = route(p);

@@ -70,6 +70,7 @@ test('Escape and blur close results without removing their reserved layout space
 test('modal only calls save explicitly and rejects missing eligible UUID', () => {
   const { default: Modal } = load('app/components/products/EditPlacementModal.tsx', {
     'react/jsx-runtime': jsx, './LocationPicker': { LocationPicker() {} },
+    react: { useState: value => [value, () => {}] },
   });
   let saves = 0;
   const render = newLocation => nodes(Modal({ editing: { sku: 'synthetic' }, locations, zones: [],

@@ -12,7 +12,7 @@ function readProjectFile(file: string) {
 test("Lager omits legacy Borre assessments and Health without removing warehouse tools", () => {
   const page = readProjectFile("app/lager/page.tsx");
   assert.doesNotMatch(page, /SnakeIntelligencePanel|SystemPulseBar|getWarehouseHealth|Vurdert av Børre/);
-  for (const href of ["/products", "/locations", "/fix-locations", "/issues", "/viper", "/location-count", "/activities"]) {
+  for (const href of ["/products", "/locations", "/issues", "/viper", "/location-count", "/activities"]) {
     assert.ok(page.includes('"'+href+'"'));
   }
   assert.ok(existsSync(join(root, "app/components/SnakeIntelligencePanel.tsx")));
@@ -29,7 +29,7 @@ test("Lager priority surface preserves recommendation and operative links", () =
 
   for (const href of [
     "/products?status=diff",
-    "/fix-locations",
+    "/products",
     "/locations",
   ]) {
     assert.match(priority, new RegExp(`href="${href.replace("?", "\\?")}"`));

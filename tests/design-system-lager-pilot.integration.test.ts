@@ -30,7 +30,7 @@ test("all Lager pilot routes have removed legacy navigation", () => {
   }
 });
 
-test("the Lager shell composes only the frozen layout contracts", () => {
+test("the Lager shell composes shared sidebar navigation and preserves role filtering", () => {
   const shell = readProjectFile(
     "app/components/lager/LagerAppShell.tsx",
   );
@@ -54,9 +54,10 @@ test("the Lager shell composes only the frozen layout contracts", () => {
   assert.match(routeShell, /<AppRouteShell>\{children\}<\/AppRouteShell>/);
   assert.match(appRouteShell, /isNavigationItemActive/);
   assert.match(appRouteShell, /<AuthenticatedAppShell/);
-  assert.match(authenticatedShell, /<AppShell/);
-  assert.match(authenticatedShell, /<AppNavbar/);
-  assert.match(authenticatedShell, /<ModuleNav/);
+  assert.match(authenticatedShell, /<SidebarShell/);
+  const sidebarShell = readProjectFile("app/components/layout/SidebarShell.tsx");
+  assert.match(sidebarShell, /<AppShell/);
+  assert.match(sidebarShell, /sidebarNavigation\(role, moduleNavigation\)/);
   assert.match(authenticatedShell, /visibleNavigationItems\(\s*moduleNavigation.items,\s*profile\?\.role/);
   assert.match(routeConfig, /moduleNavigation: LAGER_MODULE_NAVIGATION/);
   assert.match(rootLayout, /<AppRouteShell>\{children\}<\/AppRouteShell>/);

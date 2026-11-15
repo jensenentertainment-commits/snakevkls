@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
-import { AppNavbar, AppShell, ModuleNav } from "@/app/components/layout";
+import { SidebarShell } from "@/app/components/layout/SidebarShell";
 import { visibleNavigationItems } from "@/app/components/navigation/types";
 import type { ModuleNavigation } from "@/app/components/navigation";
 import { isRole, type Role } from "@/lib/auth/roles";
@@ -65,31 +65,20 @@ export function AuthenticatedAppShell({
   }, []);
 
   return (
-    <AppShell
-      moduleNav={
-        moduleNavigation ? (
-          <ModuleNav
-            navigation={{
-              ...moduleNavigation,
-              items: visibleNavigationItems(moduleNavigation.items, profile?.role),
-            }}
-          />
-        ) : undefined
-      }
-      navbar={
-        <AppNavbar
-          isAdmin={profile?.role === "admin"}
-          logoutSlot={<AppLogoutButton />}
-          role={profile?.role}
-          user={{
-            displayName: profile?.display_name ?? "Bruker",
-            roleLabel: profile ? ROLE_LABELS[profile.role] : undefined,
-          }}
-        />
-      }
+    <SidebarShell
+      moduleNavigation={moduleNavigation ? {
+        ...moduleNavigation,
+        items: visibleNavigationItems(moduleNavigation.items, profile?.role),
+      } : undefined}
+      role={profile?.role}
+      user={{
+        displayName: profile?.display_name ?? "Bruker",
+        roleLabel: profile ? ROLE_LABELS[profile.role] : undefined,
+      }}
+      logoutSlot={<AppLogoutButton />}
       width={width}
     >
       {children}
-    </AppShell>
+    </SidebarShell>
   );
 }

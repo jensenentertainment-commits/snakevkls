@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { AuthenticatedAppShell } from "@/app/components/shell/AuthenticatedAppShell";
 import { Surface } from "@/app/components/design-system/Surface";
 import { requireRole } from "@/lib/auth/require-role";
 import { readConversationData } from "@/lib/intelligence/borre/conversation-data";
@@ -25,7 +24,7 @@ export default async function BorrePage() {
     overview = buildWorkspaceOverview(data);
     readAt = new Date().toISOString();
   } catch { /* Unknown is explicit; never substitute old dashboard counts. */ }
-  return <AuthenticatedAppShell width="wide"><main className="mx-auto max-w-7xl">
+  return <><main className="mx-auto max-w-7xl">
     <Surface as="section" variant="dark" className="overflow-hidden">
       <header className="bg-snake-hero px-5 py-5 sm:px-8">
         <h1 className="text-3xl font-semibold tracking-tight text-snake-text-on-dark">Børre</h1>
@@ -45,5 +44,5 @@ export default async function BorrePage() {
         </aside>
       </div>
     </Surface>
-  </main></AuthenticatedAppShell>;
+  </main></>;
 }

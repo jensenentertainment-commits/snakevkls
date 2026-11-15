@@ -680,7 +680,7 @@ function Empty({ text }: { text: string }) {
 
 export default function ProductsPage() {
   return (
-    <RoleGate allowedRoles={["admin", "user", "warehouse"]}>
+    <RoleGate allowedRoles={["admin", "user", "warehouse"]} withinAppShell>
       <Suspense fallback={null}>
         <ProductsPageContent />
       </Suspense>

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AskBorre from "@/app/components/AskBorre";
-import SnakeNav from "@/app/components/SnakeNav";
 import SnakeFooter from "@/app/components/SnakeFooter";
 
 export default async function ArnePage() {
@@ -24,7 +23,6 @@ export default async function ArnePage() {
   return (
     <main className="min-h-screen bg-[#062f3b] text-white">
       <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 sm:py-5">
-        <SnakeNav />
 
         <header className="rounded-[32px] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/30 sm:p-8">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-[#b58a14]">

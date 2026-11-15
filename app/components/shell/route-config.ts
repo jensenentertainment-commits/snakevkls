@@ -54,6 +54,24 @@ if (
 
 export const APP_ROUTE_SHELLS = [
   {
+    id: "borre",
+    moduleNavigation: undefined,
+    navigationItem: { id: "borre", href: "/borre", label: "Børre" },
+    width: "wide",
+  },
+  {
+    id: "arne",
+    moduleNavigation: undefined,
+    navigationItem: { id: "arne", href: "/arne", label: "Arne" },
+    width: "wide",
+  },
+  {
+    id: "snakeboard",
+    moduleNavigation: undefined,
+    navigationItem: { id: "snakeboard", href: "/snakeboard", label: "Snakeboard" },
+    width: "wide",
+  },
+  {
     id: "viper",
     moduleNavigation: VIPER_MODULE_NAVIGATION,
     navigationItem: viperNavigationItem,

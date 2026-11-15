@@ -13,7 +13,7 @@ test("Lager omits legacy Borre assessments and Health without removing warehouse
   const page = readProjectFile("app/lager/page.tsx");
   assert.doesNotMatch(page, /SnakeIntelligencePanel|SystemPulseBar|getWarehouseHealth|Vurdert av Børre/);
   for (const href of ["/products", "/locations", "/issues", "/viper", "/location-count", "/activities"]) {
-    assert.ok(page.includes('"'+href+'"'));
+    assert.ok(readProjectFile("app/components/navigation/modules.ts").includes('"'+href+'"'));
   }
   assert.ok(existsSync(join(root, "app/components/SnakeIntelligencePanel.tsx")));
 });

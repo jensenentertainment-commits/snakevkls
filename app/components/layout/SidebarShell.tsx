@@ -105,12 +105,12 @@ export function SidebarShell({ children, role, user, logoutSlot, moduleNavigatio
   return <div className={cn("min-h-screen bg-snake-app lg:grid print:block", mode === "expanded" ? "lg:grid-cols-[16rem_minmax(0,1fr)]" : mode === "compact" ? "lg:grid-cols-[4.5rem_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,1fr)]")}>
     {mode !== "hidden" && <aside id="snake-desktop-navigation" aria-label="Hovedmeny" className="sticky top-0 hidden h-dvh flex-col border-r border-snake-border-on-dark-default bg-snake-app-deep text-snake-text-on-dark lg:flex print:hidden">
       <div className={cn("flex min-h-16 items-center px-3", mode === "compact" && "justify-center")}>
-        {mode === "expanded" && <Link href="/dashboard" className="mr-auto rounded-snake-control px-3 font-semibold tracking-widest text-snake-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark">SNAKE OS</Link>}
+        {mode === "expanded" && <Link href="/lager" className="mr-auto rounded-snake-control px-3 font-semibold tracking-widest text-snake-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark">SNAKE OS</Link>}
         <IconButton variant="ghost" className={control} title={mode === "compact" ? "Utvid meny" : "Komprimer meny"} aria-label={mode === "compact" ? "Utvid meny" : "Komprimer meny"} onClick={() => changeMode(mode === "compact" ? "expanded" : "compact")}>
           {mode === "compact" ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
         </IconButton>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-5"><NavigationContents compact={mode === "compact"} pathname={pathname} navigation={navigation} /></div>
+      <div className="snake-sidebar-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-5"><NavigationContents compact={mode === "compact"} pathname={pathname} navigation={navigation} /></div>
       <div className="border-t border-snake-border-on-dark-default p-2"><SidebarLink item={{ id: "account", href: "/account", label: "Konto", icon: UserRound }} compact={mode === "compact"} pathname={pathname} /></div>
     </aside>}
     <div className="min-w-0">
@@ -121,7 +121,7 @@ export function SidebarShell({ children, role, user, logoutSlot, moduleNavigatio
         <div className="flex min-h-16 items-center gap-3 px-4 sm:px-6">
           <button ref={menuButton} type="button" className={cn(linkClass, "hidden lg:flex", control)} aria-label={mode === "hidden" ? "Åpne navigasjon" : "Skjul navigasjon"} aria-expanded={mode !== "hidden"} onClick={() => changeMode(mode === "hidden" ? "expanded" : "hidden")}><Menu size={20} aria-hidden="true" /><span>{mode === "hidden" ? "Vis meny" : "Skjul meny"}</span></button>
           <button ref={mobileButton} type="button" className={cn(linkClass, "lg:hidden", control)} aria-label="Åpne navigasjon" aria-haspopup="dialog" onClick={openMobile}><Menu size={20} aria-hidden="true" /><span>Meny</span></button>
-          <Link href="/dashboard" className="rounded-snake-control text-sm font-semibold tracking-widest text-snake-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark">SNAKE OS</Link>
+          <Link href="/lager" className="rounded-snake-control text-sm font-semibold tracking-widest text-snake-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark">SNAKE OS</Link>
           <div className="ml-auto hidden text-sm text-snake-text-on-dark-muted xl:block"><AppClock /></div>
           <div className="ml-auto xl:ml-0"><AppUserMenu displayName={user.displayName} roleLabel={user.roleLabel} logoutSlot={logoutSlot} /></div>
         </div>
@@ -146,7 +146,7 @@ export function SidebarShell({ children, role, user, logoutSlot, moduleNavigatio
       className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none bg-transparent p-0 text-snake-text-on-dark backdrop:bg-snake-overlay open:flex print:hidden">
       <div className="flex h-full w-[min(22rem,calc(100%-2rem))] flex-col border-r border-snake-border-on-dark-default bg-snake-app-deep shadow-snake-overlay">
         <div className="flex min-h-16 shrink-0 items-center justify-between px-4"><h2 id="snake-mobile-menu-title" className="font-semibold tracking-widest text-snake-brand">SNAKE OS</h2><IconButton variant="ghost" className={control} aria-label="Lukk navigasjon" onClick={closeMobile}><X size={20} /></IconButton></div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-6"><NavigationContents compact={false} onNavigate={closeMobile} pathname={pathname} navigation={navigation} /></div>
+        <div className="snake-sidebar-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-6"><NavigationContents compact={false} onNavigate={closeMobile} pathname={pathname} navigation={navigation} /></div>
         <div className="shrink-0 border-t border-snake-border-on-dark-default px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2"><SidebarLink item={{ id: "account", href: "/account", label: "Konto" }} compact={false} onNavigate={closeMobile} pathname={pathname} />{logoutSlot}</div>
       </div>
     </dialog>

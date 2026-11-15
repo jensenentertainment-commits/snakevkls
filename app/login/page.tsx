@@ -9,7 +9,7 @@ function safeNextPath(value: string | string[] | undefined) {
     return value;
   }
 
-  return "/dashboard";
+  return "/lager";
 }
 
 export default async function LoginPage({

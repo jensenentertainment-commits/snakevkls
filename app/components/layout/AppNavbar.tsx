@@ -31,7 +31,7 @@ export type AppNavbarProps = {
 
 export function AppNavbar({
   adminItems = ADMIN_NAVIGATION_ITEMS,
-  homeHref = "/dashboard",
+  homeHref = "/lager",
   isAdmin = false,
   items = GLOBAL_NAVIGATION_ITEMS,
   logoutSlot,
@@ -51,7 +51,7 @@ export function AppNavbar({
     <header className="border-b border-snake-border-on-dark-subtle bg-snake-app-deep text-snake-text-on-dark print:hidden">
       <div className="mx-auto flex min-h-20 max-w-[var(--snake-shell-wide-max-width)] items-center gap-4 px-[var(--snake-page-gutter-mobile)] sm:px-[var(--snake-page-gutter-tablet)] lg:px-[var(--snake-page-gutter-desktop)]">
         <Link
-          aria-label="Snake OS – dashboard"
+          aria-label="Snake OS – lageroversikt"
           className="flex shrink-0 items-center gap-3 rounded-snake-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-snake-focus-on-dark"
           href={homeHref}
         >

@@ -28,5 +28,5 @@ test("login accepts only local post-authentication paths", async () => {
 
   assert.match(page, /value\.startsWith\("\/"\)/);
   assert.match(page, /!value\.startsWith\("\/\/"\)/);
-  assert.match(page, /return "\/dashboard"/);
+  assert.match(page, /return "\/lager"/);
 });

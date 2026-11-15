@@ -71,7 +71,7 @@ export async function updateSession(request: NextRequest) {
 
   if (hasAccess && isLoginPage) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/lager";
     return redirectWithCookies(url);
   }
 

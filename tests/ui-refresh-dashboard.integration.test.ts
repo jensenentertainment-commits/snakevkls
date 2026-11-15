@@ -10,7 +10,7 @@ function readProjectFile(file: string) {
 }
 
 test("Dashboard uses the generic shell without a module navbar", () => {
-  const dashboard = readProjectFile("app/dashboard/page.tsx");
+  const dashboard = readProjectFile("app/dashboard/LegacyDashboard.tsx");
   const config = readProjectFile("app/components/shell/route-config.ts");
 
   assert.match(config, /id: "dashboard"/);
@@ -19,7 +19,7 @@ test("Dashboard uses the generic shell without a module navbar", () => {
 });
 
 test("Dashboard exposes only the approved module set", () => {
-  const dashboard = readProjectFile("app/dashboard/page.tsx");
+  const dashboard = readProjectFile("app/dashboard/LegacyDashboard.tsx");
 
   for (const title of [
     "Lager",
@@ -40,14 +40,14 @@ test("Dashboard exposes only the approved module set", () => {
 });
 
 test("Lagersalg shortcuts are hidden while the module remains available", () => {
-  for (const file of ["app/dashboard/page.tsx", "app/lager/page.tsx"]) {
+  for (const file of ["app/dashboard/LegacyDashboard.tsx", "app/lager/page.tsx"]) {
     assert.doesNotMatch(readProjectFile(file), /warehouse-sales|Lagersalg/);
   }
   assert.match(readProjectFile("app/components/shell/route-config.ts"), /moduleNavigation: WAREHOUSE_SALES_MODULE_NAVIGATION/);
 });
 
 test("Dashboard preserves authentication and role filtering", () => {
-  const dashboard = readProjectFile("app/dashboard/page.tsx");
+  const dashboard = readProjectFile("app/dashboard/LegacyDashboard.tsx");
 
   assert.match(dashboard, /createClient\(\)/);
   assert.match(dashboard, /supabase\.auth\.getUser\(\)/);
@@ -58,7 +58,7 @@ test("Dashboard preserves authentication and role filtering", () => {
 });
 
 test("Dashboard content uses canonical tokens and frozen primitives", () => {
-  const dashboard = readProjectFile("app/dashboard/page.tsx");
+  const dashboard = readProjectFile("app/dashboard/LegacyDashboard.tsx");
 
   assert.match(dashboard, /import \{ Card, StatusBadge \}/);
   assert.doesNotMatch(dashboard, /#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(/i);

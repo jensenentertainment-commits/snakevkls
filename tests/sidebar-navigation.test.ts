@@ -11,7 +11,7 @@ test("sidebar retains module roles, hides Lagersalg and exposes only existing em
   for (const role of ["admin", "user", "warehouse"] as const) {
     const nav = sidebarNavigation(role);
     assert.deepEqual(nav.main.map(i => i.id), role === "warehouse"
-      ? ["dashboard", "lager", "viper"] : ["dashboard", "lager", "viper", "shopify"]);
+      ? ["lager", "viper"] : ["lager", "viper", "shopify"]);
     assert.deepEqual(nav.employees.map(i => i.id), role === "warehouse" ? ["borre"] : ["borre", "roy"]);
     assert.deepEqual(nav.admin.map(i => i.id), role === "admin" ? ["settings", "labs"] : []);
     assert.equal(nav.main.find(i => i.id === "lager")?.children.length, 6);

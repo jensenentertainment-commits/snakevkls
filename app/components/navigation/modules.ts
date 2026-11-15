@@ -29,7 +29,8 @@ export const GLOBAL_NAVIGATION_ITEMS = [
     icon: LayoutDashboard,
     id: "dashboard",
     label: "Dashboard",
-    roles: ["admin", "user", "warehouse"],
+    // Retained for legacy route matching; hidden for every role.
+    roles: [],
   },
   {
     href: "/lager",

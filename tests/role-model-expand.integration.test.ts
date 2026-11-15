@@ -16,7 +16,7 @@ test("the application contracts to exactly three target roles", async () => {
 
 test("navigation separates ordinary users from warehouse-only scope", async () => {
   const [dashboard, shell] = await Promise.all([
-    source("app/dashboard/page.tsx"),
+    source("app/dashboard/LegacyDashboard.tsx"),
     source("app/components/shell/AuthenticatedAppShell.tsx"),
   ]);
 

@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
 import { A4Preview } from "./A4Preview";
 import { a4Layout, locationLabelUrl } from "@/lib/labels/a4";
+import { createLabelQrCache, type QrVariant } from "@/lib/labels/qr-cache";
 
 type LabelFormat = "zebra" | "shipping" | "brother" | "a4";
 
@@ -21,7 +22,6 @@ type LocationLabel = {
 
 type LabelWithQr = LocationLabel & {
   qr: string;
-  a4Qr: string;
 };
 
 function getLocationPrefix(code: string) {
@@ -29,7 +29,9 @@ function getLocationPrefix(code: string) {
 }
 
 export default function LocationLabelsPage() {
-  const [labels, setLabels] = useState<LabelWithQr[]>([]);
+  const [locations, setLocations] = useState<LocationLabel[]>([]);
+  const [qrCache] = useState(() => createLabelQrCache((url, options) => QRCode.toDataURL(url, options)));
+  const [qrResult, setQrResult] = useState<{ source: LocationLabel[]; variant: QrVariant; labels: LabelWithQr[]; failed: boolean } | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
   const [copies, setCopies] = useState(1);
@@ -38,6 +40,11 @@ export default function LocationLabelsPage() {
   const a4Valid = a4Layout(a4Width, a4Height) !== null;
   const [loadError, setLoadError] = useState(false);
   const [labelFormat, setLabelFormat] = useState<LabelFormat>("zebra");
+  const qrVariant: QrVariant = labelFormat === "a4" ? "a4" : "standard";
+  const currentQr = qrResult?.source === locations && qrResult.variant === qrVariant;
+  const qrReady = !loading && !loadError && currentQr && !qrResult.failed;
+  const qrFailed = currentQr && qrResult.failed;
+  const labels = useMemo(() => qrReady ? qrResult.labels : locations.map(location => ({ ...location, qr: "" })), [qrReady, qrResult, locations]);
   const [query, setQuery] = useState("");
   const [zoneFilter, setZoneFilter] = useState("all");
   const [prefixFilter, setPrefixFilter] = useState("all");
@@ -145,31 +152,31 @@ const labelDimensions = {
       if (error) {
         setLoadError(true);
         console.error("Feil ved henting av labels:", error);
-        setLabels([]);
+        setLocations([]);
         setLoading(false);
         return;
       }
 
 
-      const withQr = await Promise.all(
-        ((data as unknown as LocationLabel[]) ?? []).map(async (location) => {
-          const url = locationLabelUrl(location.code);
-
-          const qr = await QRCode.toDataURL(url, {
-            width: 360,
-            margin: 1,
-          });
-          const a4Qr = await QRCode.toDataURL(url, { width: 600, margin: 4 });
-          return { ...location, qr, a4Qr };
-        })
-      );
-
-      setLabels(withQr);
+      setLocations((data as unknown as LocationLabel[]) ?? []);
       setLoading(false);
     }
 
     loadLabels();
   }, []);
+
+  useEffect(() => {
+    if (loading || loadError) return;
+    let cancelled = false;
+    void Promise.all(locations.map(async location => ({
+      ...location, qr: await qrCache.get(locationLabelUrl(location.code), qrVariant),
+    }))).then(result => {
+      if (!cancelled) setQrResult({ source: locations, variant: qrVariant, labels: result, failed: false });
+    }).catch(() => {
+      if (!cancelled) setQrResult({ source: locations, variant: qrVariant, labels: [], failed: true });
+    });
+    return () => { cancelled = true; };
+  }, [locations, loading, loadError, qrVariant, qrCache]);
 
   function toggleSelect(id: string) {
     setSelected((current) =>
@@ -375,7 +382,18 @@ const labelDimensions = {
                 Brother 103
               </button>
 
-              <button type="button" onClick={() => setLabelFormat("a4")} aria-pressed={labelFormat === "a4"} className="rounded-snake-control bg-snake-neutral-surface px-4 py-2 text-sm font-semibold">A4 – klippeetiketter</button>
+              <button
+                type="button"
+                onClick={() => setLabelFormat("a4")}
+                aria-pressed={labelFormat === "a4"}
+                className={`rounded-snake-control px-4 py-2 text-sm font-semibold ${
+                  labelFormat === "a4"
+                    ? "bg-snake-primary text-snake-text-on-dark"
+                    : "bg-snake-neutral-surface text-snake-text-secondary"
+                }`}
+              >
+                A4 – klippeetiketter
+              </button>
 
               <button
                 onClick={selectAll}
@@ -401,8 +419,8 @@ const labelDimensions = {
               />
 
               <button
-                onClick={() => { if (printableWithCopies.length && (labelFormat !== "a4" || a4Valid)) window.print(); }}
-                disabled={printableWithCopies.length === 0 || (labelFormat === "a4" && !a4Valid)}
+                onClick={() => { if (qrReady && printableWithCopies.length && (labelFormat !== "a4" || a4Valid)) window.print(); }}
+                disabled={!qrReady || printableWithCopies.length === 0 || (labelFormat === "a4" && !a4Valid)}
                 className="rounded-snake-control bg-snake-brand px-5 py-2 text-sm font-semibold text-snake-text-on-dark disabled:opacity-40"
               >
                 {selected.length === 0
@@ -476,7 +494,7 @@ const labelDimensions = {
           </div>}
         </header>
 
-        {loadError ? <p role="alert" className="no-print">Kunne ikke hente lokasjoner. Last siden på nytt før utskrift.</p> : loading ? (
+        {loadError ? <p role="alert" className="no-print">Kunne ikke hente lokasjoner. Last siden på nytt før utskrift.</p> : qrFailed ? <p role="alert" className="no-print">Kunne ikke lage QR-koder. Velg formatet på nytt eller last siden på nytt før utskrift.</p> : !qrReady ? (
           <div className="no-print rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">
             Lager QR-koder...
           </div>
@@ -489,7 +507,7 @@ const labelDimensions = {
             Ingen lokasjoner matcher søket eller filtrene.
           </div>
         ) : labelFormat === "a4" ? (
-          <A4Preview labels={printableWithCopies.map(label => ({ ...label, qr: label.a4Qr }))} width={a4Width} height={a4Height} selected={selected} onSelect={toggleSelect} />
+          <A4Preview labels={printableWithCopies} width={a4Width} height={a4Height} selected={selected} onSelect={toggleSelect} />
         ) : (
           <div className="preview-scroll h-[620px] overflow-y-auto rounded-snake-card bg-snake-neutral-surface p-4">
           <section className="label-grid grid min-h-[520px] grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:grid-cols-3">

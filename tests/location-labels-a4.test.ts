@@ -3,6 +3,16 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { a4Layout, splitLabelSheets, locationLabelUrl, A4_MARGIN, A4_GAP } from "../lib/labels/a4.ts";
 
+test("all label formats use the same selected and unselected styling", () => {
+  const source = readFileSync("app/locations/labels/page.tsx", "utf8");
+  const buttons = [...source.matchAll(/<button\b[\s\S]*?<\/button>/g)].map(match => match[0]);
+  for (const format of ["zebra", "shipping", "brother", "a4"]) {
+    const button = buttons.find(value => value.includes(`setLabelFormat("${format}")`));
+    assert.ok(button, `Missing ${format} button`);
+    assert.ok(button.replace(/\s+/g, " ").includes(`labelFormat === "${format}" ? "bg-snake-primary text-snake-text-on-dark" : "bg-snake-neutral-surface text-snake-text-secondary"`));
+  }
+});
+
 test("A4 chooses maximum uniform grid, portrait on ties", () => {
   assert.equal(a4Layout(90, 40)?.orientation, "portrait");
   assert.equal(a4Layout(90, 40)?.capacity, 12);

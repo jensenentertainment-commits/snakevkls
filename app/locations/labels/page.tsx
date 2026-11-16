@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { supabase } from "@/lib/supabase";
+import { A4Preview } from "./A4Preview";
+import { a4Layout, locationLabelUrl } from "@/lib/labels/a4";
 
-type LabelFormat = "zebra" | "shipping" | "brother";
+type LabelFormat = "zebra" | "shipping" | "brother" | "a4";
 
 type LocationLabel = {
   id: string;
@@ -19,6 +21,7 @@ type LocationLabel = {
 
 type LabelWithQr = LocationLabel & {
   qr: string;
+  a4Qr: string;
 };
 
 function getLocationPrefix(code: string) {
@@ -30,6 +33,10 @@ export default function LocationLabelsPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
   const [copies, setCopies] = useState(1);
+  const [a4Width, setA4Width] = useState(90);
+  const [a4Height, setA4Height] = useState(40);
+  const a4Valid = a4Layout(a4Width, a4Height) !== null;
+  const [loadError, setLoadError] = useState(false);
   const [labelFormat, setLabelFormat] = useState<LabelFormat>("zebra");
   const [query, setQuery] = useState("");
   const [zoneFilter, setZoneFilter] = useState("all");
@@ -66,7 +73,7 @@ const labelDimensions = {
     codeWidth: 74,
     codeWidthFactor: 0.58,
   },
-}[labelFormat];
+}[labelFormat === "a4" ? "zebra" : labelFormat];
 
   const zoneOptions = useMemo(() => {
     const zones = new Map<string, string>();
@@ -136,24 +143,24 @@ const labelDimensions = {
         .order("code", { ascending: true });
 
       if (error) {
+        setLoadError(true);
         console.error("Feil ved henting av labels:", error);
         setLabels([]);
         setLoading(false);
         return;
       }
 
-      const origin = window.location.origin;
 
       const withQr = await Promise.all(
         ((data as unknown as LocationLabel[]) ?? []).map(async (location) => {
-          const url = `${origin}/locations/${encodeURIComponent(location.code)}`;
+          const url = locationLabelUrl(location.code);
 
           const qr = await QRCode.toDataURL(url, {
             width: 360,
             margin: 1,
           });
-
-          return { ...location, qr };
+          const a4Qr = await QRCode.toDataURL(url, { width: 600, margin: 4 });
+          return { ...location, qr, a4Qr };
         })
       );
 
@@ -257,7 +264,7 @@ const labelDimensions = {
 }
         @media print {
           @page {
-            size: ${labelDimensions.pageSize};
+            size: ${labelFormat === "a4" ? `A4 ${a4Layout(a4Width, a4Height)?.orientation ?? "portrait"}` : labelDimensions.pageSize};
             margin: 0;
           }
 
@@ -327,7 +334,7 @@ const labelDimensions = {
               </p>
 
               <p className="mt-2 text-xs text-snake-text-muted">
-                Format: {labelDimensions.name}.{" "}
+                Format: {labelFormat === "a4" ? "A4 – klippeetiketter" : labelDimensions.name}.{" "}
                 {selected.length === 0
                   ? `${filteredLabels.length} av ${labels.length} aktive lokasjoner vises og printes.`
                   : `${printable.length} av ${filteredLabels.length} synlige lokasjoner valgt.`}
@@ -368,6 +375,8 @@ const labelDimensions = {
                 Brother 103
               </button>
 
+              <button type="button" onClick={() => setLabelFormat("a4")} aria-pressed={labelFormat === "a4"} className="rounded-snake-control bg-snake-neutral-surface px-4 py-2 text-sm font-semibold">A4 – klippeetiketter</button>
+
               <button
                 onClick={selectAll}
                 className="rounded-snake-control bg-snake-neutral-surface px-4 py-2 text-sm font-semibold text-snake-text-secondary"
@@ -392,8 +401,8 @@ const labelDimensions = {
               />
 
               <button
-                onClick={() => window.print()}
-                disabled={labels.length === 0}
+                onClick={() => { if (printableWithCopies.length && (labelFormat !== "a4" || a4Valid)) window.print(); }}
+                disabled={printableWithCopies.length === 0 || (labelFormat === "a4" && !a4Valid)}
                 className="rounded-snake-control bg-snake-brand px-5 py-2 text-sm font-semibold text-snake-text-on-dark disabled:opacity-40"
               >
                 {selected.length === 0
@@ -451,9 +460,23 @@ const labelDimensions = {
               Vis alle
             </button>
           </div>
+          {labelFormat === "a4" && <div className="mt-4 space-y-2 text-sm">
+            <div className="flex flex-wrap gap-4">
+              <div className="flex w-full max-w-xs flex-col gap-2">
+                <label>Bredde (mm) <input className="w-24 rounded border p-2" type="number" min={60} max={277} step={1} value={a4Width || ""} onChange={e => setA4Width(Number(e.target.value))} /></label>
+                <input aria-label="Juster bredde" aria-valuetext={`${a4Width} millimeter`} className="h-8 w-full cursor-pointer accent-snake-primary focus-visible:outline-2 focus-visible:outline-offset-2" type="range" min={60} max={277} step={1} value={a4Width} onChange={e => setA4Width(Number(e.target.value))} />
+              </div>
+              <div className="flex w-full max-w-xs flex-col gap-2">
+                <label>Høyde (mm) <input className="w-24 rounded border p-2" type="number" min={30} max={277} step={1} value={a4Height || ""} onChange={e => setA4Height(Number(e.target.value))} /></label>
+                <input aria-label="Juster høyde" aria-valuetext={`${a4Height} millimeter`} className="h-8 w-full cursor-pointer accent-snake-primary focus-visible:outline-2 focus-visible:outline-offset-2" type="range" min={30} max={277} step={1} value={a4Height} onChange={e => setA4Height(Number(e.target.value))} />
+              </div>
+            </div>
+            {!a4Valid && <p role="alert">Velg minst 60 × 30 mm og maksimalt 277 mm per side. Etiketten må få plass innenfor A4-arkets 10 mm marger. Små mål gir ikke nok plass til lesbar kode og QR.</p>}
+            <p>10 mm arkmarg · 2 mm mellom etikettene. Skriv ut i 100 % / faktisk størrelse på A4, uten topp- og bunntekst. QR-kodene peker til Snake i produksjon.</p>
+          </div>}
         </header>
 
-        {loading ? (
+        {loadError ? <p role="alert" className="no-print">Kunne ikke hente lokasjoner. Last siden på nytt før utskrift.</p> : loading ? (
           <div className="no-print rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">
             Lager QR-koder...
           </div>
@@ -465,8 +488,10 @@ const labelDimensions = {
           <div className="no-print rounded-snake-action bg-snake-surface p-6 text-sm text-snake-text-muted">
             Ingen lokasjoner matcher søket eller filtrene.
           </div>
+        ) : labelFormat === "a4" ? (
+          <A4Preview labels={printableWithCopies.map(label => ({ ...label, qr: label.a4Qr }))} width={a4Width} height={a4Height} selected={selected} onSelect={toggleSelect} />
         ) : (
-          <div className="h-[620px] overflow-y-auto rounded-snake-card bg-snake-neutral-surface p-4">
+          <div className="preview-scroll h-[620px] overflow-y-auto rounded-snake-card bg-snake-neutral-surface p-4">
           <section className="label-grid grid min-h-[520px] grid-cols-1 content-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {printableWithCopies.map((location) => {
               return (

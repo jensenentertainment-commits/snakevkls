@@ -42,7 +42,7 @@ test("Location label formats use physical pages and print-only content", () => {
     labels,
     /brother:[\s\S]+?width: "103mm",[\s\S]+?height: "70mm",[\s\S]+?pageSize: "103mm 70mm"/,
   );
-  assert.match(labels, /@page \{[\s\S]+?size: \$\{labelDimensions\.pageSize\};[\s\S]+?margin: 0/);
+  assert.match(labels, /@page \{[\s\S]+?size: \$\{[^\n]+labelDimensions\.pageSize\};[\s\S]+?margin: 0/);
   assert.doesNotMatch(labels, /size: var\(--label-width\) var\(--label-height\)/);
   assert.match(labels, /page-break-after: always/);
   assert.match(labels, /break-after: page/);

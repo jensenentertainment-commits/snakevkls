@@ -1,3 +1,4 @@
+import { assertAiAssistantsEnabled } from "../assistant-availability";
 import "server-only";
 
 import OpenAI from "openai";
@@ -9,6 +10,7 @@ export const BORRE_ROY_MODEL = "gpt-6-luna";
 let openAIClient: OpenAI | null = null;
 
 export function getChatOpenAIClient() {
+  assertAiAssistantsEnabled();
   if (!openAIClient) {
     openAIClient = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,

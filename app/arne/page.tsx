@@ -1,9 +1,11 @@
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AskBorre from "@/app/components/AskBorre";
 import SnakeFooter from "@/app/components/SnakeFooter";
 
 export default async function ArnePage() {
+  if (!AI_ASSISTANTS_ENABLED) redirect("/lager");
   const supabase = await createClient();
 
   const {

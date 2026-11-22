@@ -1,5 +1,8 @@
 "use client";
 
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
+
+
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
@@ -46,6 +49,7 @@ const enabledRoutes = [
 ];
 
 export default function AskBorre(props: Props) {
+  if (!AI_ASSISTANTS_ENABLED) return null;
   if ((props.variant ?? "borre") === "borre" && (props.mode ?? "floating") === "floating") return <BorreFloatingChat />;
   return <LegacyAskBorre {...props} />;
 }

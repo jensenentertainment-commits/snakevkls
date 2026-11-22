@@ -1,3 +1,4 @@
+import { assertAiAssistantsEnabled } from "../assistant-availability";
 import "server-only";
 
 import { randomUUID } from "node:crypto";
@@ -46,6 +47,7 @@ type RuntimeRequest = (
 export async function runReadOnlyEmployeeRequest(
   input: RuntimeRequest
 ): Promise<ReadOnlyWorkforceRunResult> {
+  assertAiAssistantsEnabled();
   const runId = randomUUID();
   const authorization = authorizeWorkforceRequest({
     userId: input.userId,

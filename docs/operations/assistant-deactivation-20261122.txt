@@ -1,0 +1,24 @@
+Assistant deactivation release, 2026-11-22
+
+Scope: common disabled code switch; hide assistant entry points; redirect
+/borre, /arne, /borre/pro and /shopify to /lager; reject assistant chat and
+Roy report APIs; guard workforce runtime and OpenAI client. Retain code,
+authorization, database objects, history and indirect dependencies.
+
+Local validation: 12 gate/navigation tests passed; 161 existing regression
+tests passed and one pre-existing assertion failed. TypeScript and production
+build passed. Targeted ESLint: zero errors, three existing SnakeNav warnings.
+Built application HTTP checks: three chat POST routes and Roy review GET/POST
+returned 403 AI_ASSISTANTS_DISABLED. Isolated tests observed zero external calls.
+
+Known pre-existing test failure, intentionally unchanged:
+tests/design-system-navigation.integration.test.ts:168 asserts that no page
+imports components/layout. Baseline commit b1f73c2 already has
+app/borre/page.tsx:2 importing components/layout/ConversationLayout.
+This assertion conflicts with the existing conversation layout, independently
+of assistant deactivation. Do not interpret the regression selection as all green.
+
+No API keys changed or revoked. Old deployments remain potential AI entry points.
+See assistant-deployment-inventory-20261122.json; credential validity per
+deployment is not verified. Key revocation or old-deployment restriction requires
+separate approval. Local test artifacts and credentials are excluded from release.

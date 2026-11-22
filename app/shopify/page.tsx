@@ -1,3 +1,4 @@
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
 import { redirect } from "next/navigation";
 import { RoyCatalogWorkspace } from "./RoyCatalogWorkspace";
 import { createClient } from "@/lib/supabase/server";
@@ -8,6 +9,7 @@ import { parseReview, type ReviewReport } from '@/lib/intelligence/roy/review';
 export const dynamic = "force-dynamic";
 
 export default async function ShopifyPage() {
+  if (!AI_ASSISTANTS_ENABLED) redirect("/lager");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");

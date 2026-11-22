@@ -1,3 +1,4 @@
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
 import { redirect } from "next/navigation";
 import { ConversationLayout } from "@/app/components/layout/ConversationLayout";
 import { Surface } from "@/app/components/design-system/Surface";
@@ -10,6 +11,7 @@ import { BorreWorkspace } from "./BorreWorkspace";
 export const dynamic = "force-dynamic";
 
 export default async function BorrePage() {
+  if (!AI_ASSISTANTS_ENABLED) redirect("/lager");
   const auth = await requireRole(["admin", "user", "warehouse"]);
   if (!auth.ok) redirect(auth.response.status === 401 ? "/login" : "/dashboard");
   let overview: ReturnType<typeof buildWorkspaceOverview> | null = null;

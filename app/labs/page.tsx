@@ -1,5 +1,8 @@
 "use client";
 
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
+
+
 import Link from "next/link";
 import SnakeHero from "../components/SnakeHero";
 import RoleGate from "../components/auth/RoleGate";
@@ -32,11 +35,11 @@ export default function LabsPage() {
             <SnakeHero
               eyebrow="Snake OS"
               title="Operativsystemet bak Varekompaniet"
-              description="Adminverktøy for produktflyt, Shopify-kontroll, migrering, AI og datavask. SOS når nettbutikken trenger rydding."
+              description="Adminverktøy for produktflyt, Shopify-kontroll, migrering og datavask. SOS når nettbutikken trenger rydding."
             />
 
             <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {modules.map((module) => {
+              {modules.filter(module => AI_ASSISTANTS_ENABLED || module.href !== "/arne").map((module) => {
                 const isActive = module.status === "Aktiv";
 
                 return (
@@ -90,7 +93,7 @@ export default function LabsPage() {
                 {[
                   ["Shopify", "Tilkoblet"],
                   ["Snake WMS", "Aktiv"],
-                  ["Snake AI", "Under utvikling"],
+                  ...(AI_ASSISTANTS_ENABLED ? [["Snake AI", "Under utvikling"]] : []),
                 ].map(([label, value]) => (
                   <div
                     key={label}

@@ -1,3 +1,4 @@
+import { AI_ASSISTANTS_ENABLED, assistantsDisabledResponse } from "@/lib/intelligence/assistant-availability";
 import { NextResponse } from "next/server";
 import { requireRole } from "@/lib/auth/require-role";
 import { validateChatInput } from "@/lib/intelligence/shared/chat-input";
@@ -9,6 +10,7 @@ import {
 import { runReadOnlyEmployeeRequest } from "@/lib/intelligence/workforce/runtime";
 
 export async function POST(req: Request) {
+  if (!AI_ASSISTANTS_ENABLED) return assistantsDisabledResponse();
   try {
   const auth = await requireRole(["admin", "user", "warehouse"]);
     if (!auth.ok) return auth.response;

@@ -1,3 +1,4 @@
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AskBorre from "./components/AskBorre";
@@ -35,7 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AppRouteShell>{children}</AppRouteShell>
-        <AskBorre />
+        {AI_ASSISTANTS_ENABLED && <AskBorre />}
       </body>
     </html>
   );

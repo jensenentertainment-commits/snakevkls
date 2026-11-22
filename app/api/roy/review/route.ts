@@ -1,9 +1,11 @@
+import { AI_ASSISTANTS_ENABLED, assistantsDisabledResponse } from "@/lib/intelligence/assistant-availability";
 import { NextResponse } from 'next/server';
 import { requireRole } from '@/lib/auth/require-role';
 import { royPhase2bEnabled } from '@/lib/intelligence/roy/phase2b-gate';
 import { parseReview, reviewError } from '@/lib/intelligence/roy/review';
 
 export async function GET(request: Request) {
+  if (!AI_ASSISTANTS_ENABLED) return assistantsDisabledResponse();
   const auth = await requireRole(['admin','user']);
   if (!auth.ok) return auth.response;
   if (!royPhase2bEnabled()) return NextResponse.json({error:'Rapporten er ikke aktivert.'},{status:404});
@@ -17,6 +19,7 @@ export async function GET(request: Request) {
   catch { return NextResponse.json({error:'Rapporten kunne ikke leses.'},{status:503}); }
 }
 export async function POST(request: Request) {
+  if (!AI_ASSISTANTS_ENABLED) return assistantsDisabledResponse();
   const auth = await requireRole(['admin']);
   if (!auth.ok) return auth.response;
   if (!royPhase2bEnabled()) return NextResponse.json({error:'Kontrollen er ikke aktivert.'},{status:404});

@@ -1,3 +1,4 @@
+import { AI_ASSISTANTS_ENABLED } from "../../../lib/intelligence/assistant-availability.ts";
 import { PackageSearch, UserRound } from "lucide-react";
 import { ADMIN_NAVIGATION_ITEMS, GLOBAL_NAVIGATION_ITEMS, LAGER_MODULE_NAVIGATION, VIPER_MODULE_NAVIGATION } from "./modules.ts";
 import { isNavigationItemActive, visibleNavigationItems, type NavigationItem, type ModuleNavigation } from "./types.ts";
@@ -21,7 +22,7 @@ export function sidebarNavigation(role?: Role, currentModule?: ModuleNavigation)
   if (!role) return { main: [], employees: [], admin: [] };
   const modules: readonly ModuleNavigation[] = [LAGER_MODULE_NAVIGATION, VIPER_MODULE_NAVIGATION];
   return {
-    main: visibleNavigationItems(GLOBAL_NAVIGATION_ITEMS, role).map(item => {
+    main: visibleNavigationItems(GLOBAL_NAVIGATION_ITEMS, role).filter(item => AI_ASSISTANTS_ENABLED || item.id !== "shopify").map(item => {
       const moduleNav = modules.find(entry => entry.id === item.id) ??
         (currentModule?.id === item.id ? currentModule : undefined);
       const children = moduleNav ? visibleNavigationItems(moduleNav.items, role).map(child => {
@@ -29,7 +30,7 @@ export function sidebarNavigation(role?: Role, currentModule?: ModuleNavigation)
       }) : [];
       return { ...item, children };
     }),
-    employees: visibleNavigationItems(EMPLOYEE_NAVIGATION_ITEMS, role),
+    employees: AI_ASSISTANTS_ENABLED ? visibleNavigationItems(EMPLOYEE_NAVIGATION_ITEMS, role) : [],
     admin: visibleNavigationItems(ADMIN_NAVIGATION_ITEMS, role),
   };
 }

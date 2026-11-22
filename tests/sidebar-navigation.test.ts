@@ -7,12 +7,11 @@ test("sidebar fails closed until role is known", () => {
   assert.deepEqual(sidebarNavigation(), { main: [], employees: [], admin: [] });
 });
 
-test("sidebar retains module roles, hides Lagersalg and exposes only existing employees", () => {
+test("sidebar retains module roles, hides sales and disabled assistant entry points", () => {
   for (const role of ["admin", "user", "warehouse"] as const) {
     const nav = sidebarNavigation(role);
-    assert.deepEqual(nav.main.map(i => i.id), role === "warehouse"
-      ? ["lager", "viper"] : ["lager", "viper", "shopify"]);
-    assert.deepEqual(nav.employees.map(i => i.id), role === "warehouse" ? ["borre"] : ["borre", "roy"]);
+    assert.deepEqual(nav.main.map(i => i.id), ["lager", "viper"]);
+    assert.deepEqual(nav.employees.map(i => i.id), []);
     assert.deepEqual(nav.admin.map(i => i.id), role === "admin" ? ["settings", "labs"] : []);
     assert.equal(nav.main.find(i => i.id === "lager")?.children.length, 6);
     assert.ok(!nav.main.find(i => i.id === "lager")?.children.some(i => i.href === "/fix-locations"));
@@ -24,8 +23,8 @@ test("existing product, pick and employee routes retain navigation identity", ()
   const nav = sidebarNavigation("admin");
   assert.ok(isNavigationItemActive("/products/example", nav.main.find(i => i.id === "lager")!));
   assert.ok(isNavigationItemActive("/viper/picks/example", nav.main.find(i => i.id === "viper")!));
-  assert.equal(nav.employees.find(i => i.id === "roy")?.href, "/shopify");
-  assert.equal(nav.employees.find(i => i.id === "borre")?.href, "/borre");
+  assert.equal(nav.employees.length, 0);
+
   assert.ok(!isNavigationItemActive("/viper-other", nav.main.find(i => i.id === "viper")!));
 });
 

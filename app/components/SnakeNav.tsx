@@ -1,5 +1,8 @@
 "use client";
 
+import { AI_ASSISTANTS_ENABLED } from "@/lib/intelligence/assistant-availability";
+
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -171,7 +174,7 @@ const pathname = usePathname();
 
 
 
-<Link
+{AI_ASSISTANTS_ENABLED && <Link
   href="/borre"
   title="Børre"
   className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] transition ${
@@ -182,7 +185,7 @@ const pathname = usePathname();
 >
   <Bot className="h-4 w-4" />
   BØRRE
-</Link>
+</Link>}
 
         
 

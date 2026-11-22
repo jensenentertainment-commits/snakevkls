@@ -1,0 +1,198 @@
+{
+  "checked": "2026-11-22",
+  "note": "Read-only inventory. Potential AI-capable deployments; no key values read and no paid calls performed. Credential validity per deployment is unverified.",
+  "deployments": [
+    {
+      "id": "dpl_HikUiZt8DcNNZmDnocUdvZtYL937",
+      "url": "snakevkls-yh9b-h7w6ye2lo-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "b1f73c29e64ffe7d087bf2fdd83b4d461b791c46",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_BAmBeamvzGBx3GVY7nFCi7n71jbk",
+      "url": "snakevkls-yh9b-hsmg990un-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "2cc0adac3bd356d9997dae612e1951339f486684",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_5pw1yfFUD6Q7MNUViVvC7ZSXXSme",
+      "url": "snakevkls-yh9b-gzhbpqxb8-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "790e03780ad6746e7c52d8c923ba8e0cf538c4ff",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_Co3fFueg4FYU8z7kRU4zxPTkiDBM",
+      "url": "snakevkls-yh9b-l5st8z6id-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "ac54656f850fd92ac5d16d459725d143dc57a3b5",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_AnPsRKB3KFsMqaFxL4DsQpj9kaHK",
+      "url": "snakevkls-yh9b-i4cyrhrhn-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "57d55ba3cc742e5900ad92f5bb41798bc3929511",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_A9gTEzg1vCjKqsC63Gh1i47dNQpx",
+      "url": "snakevkls-yh9b-6q73qu6rk-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "3f99cf64619bda1e5b285d675d2cfd8024eee4ac",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_ErQ6mbWZgonNiBi7nqeCQEP1HU6z",
+      "url": "snakevkls-yh9b-72edd85ey-lrjensens-projects.vercel.app",
+      "target": "preview",
+      "state": "READY",
+      "commit": "142813a5082ed6a86365e606c0f85ce63f2962ac",
+      "branch": "codex/api-key-preview"
+    },
+    {
+      "id": "dpl_CDsBtvZgSBJ7TYVbd5rDfkF7MuTH",
+      "url": "snakevkls-yh9b-8qhfr8ts5-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "142813a5082ed6a86365e606c0f85ce63f2962ac",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_ALT8YwEbGE8RJsq6KNWPJgEf14BH",
+      "url": "snakevkls-yh9b-qktkyr8hd-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "142813a5082ed6a86365e606c0f85ce63f2962ac",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_HNAKaawd2ZygL5oXFApGyVwb9NAh",
+      "url": "snakevkls-yh9b-q16mehepk-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "7b91df17690deb963c651547c96813aa8b1f2d29",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_5E6jWP3hfRU7sBhibHMP7sPsQVU2",
+      "url": "snakevkls-yh9b-gc7i8oxpq-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "df09b13cce7fd81b8b5f152833b78f53752db96d",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_HGYCbuKXfVuRZ1fAGfHq9z9kkhAN",
+      "url": "snakevkls-yh9b-ixl1jkflv-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "1ddd3626d589ecd442f1c6e88a9073dcc015d993",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_6HdvF7vwBsz5St2DsFDnVwvGD49q",
+      "url": "snakevkls-yh9b-cgnj5xal5-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "ef2626a3e49406bf99491a6b3cdb5726ea53d316",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_Br3UgXQBHzgvehToxidgVNkYcY2e",
+      "url": "snakevkls-yh9b-35tyob0aj-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "8e58aafdc1f3336e6b1b31020159c77b9660cec7",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_A8Nj73mwGNjBGooUe7vvfpwt1dk2",
+      "url": "snakevkls-yh9b-8lkfyl93h-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "01154cc74171e348f0577728abb962b31032891a",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_HRPQqJniCuh5xCDFddmQv3oMydX2",
+      "url": "snakevkls-yh9b-jbha0kfet-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "4119a964b53a8a24bb1bcf1f420064467f05738c",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_5us1FaJzkmVvxhPP9XkkEifxHgtX",
+      "url": "snakevkls-yh9b-nnr3fndj9-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "9f220cc077cba8f79af5686598d59279a2a8d37e",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_GwH6h52FEXHoRPaS6cqePpoSxcUq",
+      "url": "snakevkls-yh9b-rgmwogsnp-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "8236458fae79bf4f0a4e01427b259966502a46ad",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_4FY7sj82YUX65eULWr3UVYNHncsk",
+      "url": "snakevkls-yh9b-htm4ciaje-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "7deaaf7230b5fbc72c9f384c1b6e737c6f1079a1",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_5VZw2j78rEGCT8gBdrP6tEokWm6F",
+      "url": "snakevkls-yh9b-7uudq2lm7-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "7deaaf7230b5fbc72c9f384c1b6e737c6f1079a1",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_4gcKzHE8Src27tpgsKqdo3Z8PdTF",
+      "url": "snakevkls-yh9b-6mtavcppf-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "5548de1345a9209d3946c1fd21347db6123ee9cf",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_HhhwSijPyyrXwMtoRXpGZAWXDwLS",
+      "url": "snakevkls-yh9b-i8chuiod6-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "5548de1345a9209d3946c1fd21347db6123ee9cf",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_2qX4sKPHKgw6zMNg8fij7aKtqrVH",
+      "url": "snakevkls-yh9b-7lxpffwjc-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "f1ea4709adf29fa1e8e0fbdcd989867a23219fff",
+      "branch": "master"
+    },
+    {
+      "id": "dpl_8tSFP4io8mrvciNhb5snWoDyYbJS",
+      "url": "snakevkls-yh9b-m9mbf0u8c-lrjensens-projects.vercel.app",
+      "target": "production",
+      "state": "READY",
+      "commit": "9d07ddeb9279efbb48e950102a55495378a7f3cd",
+      "branch": "master"
+    }
+  ]
+}

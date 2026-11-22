@@ -389,12 +389,12 @@ await logActivity({
                     </h2>
                     <p className="mt-1 text-sm text-snake-text-secondary">
   {loading
-    ? "Børre henter lokasjoner."
+    ? "Henter lokasjoner."
     : emptyLocationCount > 0
-      ? `Børre ser ${emptyLocationCount} tomme lokasjoner. Det kan være helt greit, eller lageret har vært kreativt.`
+      ? `${emptyLocationCount} lokasjoner uten registrerte lagerposter.`
       : missingZoneCount > 0
-        ? `Børre ser ${missingZoneCount} lokasjoner uten sone. Det er vanskelig å sortere ting uten rammer.`
-        : "Børre finner ingen store lokasjonsproblemer akkurat nå."}
+        ? `${missingZoneCount} lokasjoner uten registrert sone.`
+        : "Alle lokasjoner har registrert sone og lagerposter."}
 </p>
                   </div>
 
